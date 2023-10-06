@@ -1,0 +1,13 @@
+{
+    "name": "accessibility",
+    "version": "1.0.0",
+    "ccmodHumanName": "Accessibility",
+    "description": "Accessibility",
+    "plugin": "plugin.js",
+    "ccmodDependencies": {},
+    "devDependencies": {
+        "eslint": "^8.50.0",
+        "eslint-config-prettier": "^9.0.0",
+        "prettier": "3.0.3"
+    }
+}

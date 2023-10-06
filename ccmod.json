@@ -1,0 +1,8 @@
+{
+    "id": "accessibility",
+    "version": "1.0.0",
+    "name": "Accessibility",
+    "description": "Accessibility",
+    "plugin": "plugin.js"
+  }
+  
