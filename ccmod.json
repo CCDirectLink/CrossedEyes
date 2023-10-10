@@ -1,8 +1,16 @@
 {
-    "id": "accessibility",
-    "version": "1.0.0",
-    "name": "Accessibility",
-    "description": "Accessibility",
-    "plugin": "plugin.js"
+    "id": "crossedeyes",
+    "version": "0.0.1",
+    "name": "CrossedEyes",
+    "description": "Accessibility mod for CrossCode",
+    "plugin": "plugin.js",
+	"icons": {
+		"24": "icon/icon.png"
+	},
+	"dependencies": {
+		"input-api": ">=1.0.0",
+		"crosscode": ">=1.4.0",
+		"post-game": ">=1.4.0"
+	}
   }
   

@@ -1,1 +1,6 @@
+package-lock.json
+plugin.js
+*.ccmod
+*.png~
+*.kra~
 node_modules

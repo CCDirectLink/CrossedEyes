@@ -1,13 +1,26 @@
 {
-    "name": "accessibility",
-    "version": "1.0.0",
-    "ccmodHumanName": "Accessibility",
-    "description": "Accessibility",
+    "name": "crossedeyes",
+    "version": "0.0.1",
+    "scripts": {
+        "start": "esbuild --target=es2018 --format=esm --platform=node --bundle --sourcemap=inline --outfile=plugin.js src/plugin.ts",
+        "watch": "esbuild --target=es2018 --format=esm --platform=node --bundle --sourcemap=inline --watch --outfile=plugin.js src/plugin.ts",
+        "build": "esbuild --target=es2018 --format=esm --platform=node --bundle --outfile='plugin.js' 'src/plugin.ts'"
+    },
+    "license": "GPLv3",
+    "ccmodHumanName": "CrossedEyes",
+    "description": "Accessibility mod for CrossCode",
     "plugin": "plugin.js",
     "ccmodDependencies": {},
     "devDependencies": {
+        "@types/node": "^20.4.4",
+        "@typescript-eslint/eslint-plugin": "^6.2.0",
+        "@typescript-eslint/parser": "^6.2.0",
+        "esbuild": "^0.18.15",
+        "typescript": "^5.2.2",
         "eslint": "^8.50.0",
         "eslint-config-prettier": "^9.0.0",
-        "prettier": "3.0.3"
+        "prettier": "3.0.3",
+        "ultimate-crosscode-typedefs": "github:krypciak/ultimate-crosscode-typedefs",
+        "cc-vim": "github:krypciak/cc-vim"
     }
 }
