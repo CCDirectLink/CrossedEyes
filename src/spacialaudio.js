@@ -4,7 +4,7 @@ const c_res = {};
 const c_tmpPos = {x: 0, y: 0, z: 0};
 const c_tmpPoint = {x: 0, y: 0, z: 0};
 
-export default class SpacialAudio {
+export class SpacialAudio {
     initPrestart() {
         const zero = Vec3.createC(0, 0, 0);
         const SoundHandleBase = ig.Class.extend({

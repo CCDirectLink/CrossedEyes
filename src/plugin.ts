@@ -1,4 +1,5 @@
-import SpacialAudio from "spacialaudio"
+import { Mod1 } from 'cc-blitzkrieg/src/types'
+import { SpacialAudio } from 'spacialaudio'
 
 function addVimBindings() {
     if (window.vim) { /* optional dependency https://github.com/krypciak/cc-vim */
@@ -8,8 +9,6 @@ function addVimBindings() {
 export default class CrossedEyes {
     dir: string
     mod: Mod1
-
-    selectionMode: string = 'puzzle'
 
     constructor(mod: Mod1) {
         this.dir = mod.baseDirectory
