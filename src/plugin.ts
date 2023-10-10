@@ -1,5 +1,7 @@
 import { Mod1 } from 'cc-blitzkrieg/src/types'
 import { SpacialAudio } from './spacialaudio'
+import type * as _ from 'cc-vim'
+
 function addVimBindings() {
     if (window.vim) { /* optional dependency https://github.com/krypciak/cc-vim */
     }

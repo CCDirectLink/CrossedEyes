@@ -2,8 +2,6 @@
     "include": [
         "src",
         "node_modules/ultimate-crosscode-typedefs/crosscode-ccloader-all.d.ts",
-        "node_modules/cc-vim/src/global.d.ts",
-        "node_modules/cc-blitzkrieg/types/plugin.d.ts",
     ],
     "compilerOptions": {
         "target": "ES2018",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
