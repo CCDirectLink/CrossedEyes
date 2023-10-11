@@ -1,6 +1,7 @@
 import { Mod1 } from 'cc-blitzkrieg/src/types'
 import { SpacialAudio } from './spacialaudio'
 import type * as _ from 'cc-vim'
+import { MenuOptions } from './options'
 
 function addVimBindings() {
     if (window.vim) { /* optional dependency https://github.com/krypciak/cc-vim */
@@ -20,11 +21,13 @@ export default class CrossedEyes {
 
     async prestart() {
         addVimBindings()
+        MenuOptions.initPrestart()
         const spacialAudio: SpacialAudio = new SpacialAudio()
-        spacialAudio.initPrestart()
+        spacialAudio.initSpacialAudio()
+        spacialAudio.initLoudWalls()
     }
 
     async poststart() {
-
+        MenuOptions.initPoststart()
     }
 }
