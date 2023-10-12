@@ -232,7 +232,7 @@ export class SpacialAudio {
                 }
 
                 const speed = mapNumber(check.distance, 0, range, 1, 0.5)
-                console.log(new Date().toUTCString(), 'play at', check.pos.x, check.pos.y, check.pos.z, 'distance', check.distance, 'speed', speed)
+                // console.log(new Date().toUTCString(), 'play at', check.pos.x, check.pos.y, check.pos.z, 'distance', check.distance, 'speed', speed)
                 const handle = sound.play(false, {
                     speed,
                 })
