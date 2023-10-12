@@ -35,7 +35,6 @@ declare global {
                 width: number, height: number, zHeight: number, collType: ig.COLLTYPE,
                 entryException: null, collisionList: any[], onGround?: boolean): boolean
         }
-        var SoundHandleBase: ig.SoundHandleBaseConstructor
         interface Entity {
             isBallDestroyer?(collPos: Vec3, collRes: { dir: Vec2 }, c?: boolean): boolean
         }
@@ -52,8 +51,8 @@ declare global {
             offset: Vec2
 
             setFixPosition(this: this, point: Vec3, range?: number, type?: ig.SOUND_RANGE_TYPE): void
-            setEntityPosition(this: this, entity: unknown, align: unknown, offset: unknown, range?: number, type?: ig.SOUND_RANGE_TYPE): void
-            _updateEntityPos(this: this, force: boolean): void
+            setEntityPosition(this: this, entity: ig.Entity, align: ig.ENTITY_ALIGN, offset: null, range?: number, type?: ig.SOUND_RANGE_TYPE): void
+            _updateEntityPos(this: this, force?: boolean): void
 
             isLooping(this: this): boolean
             getPlayTime(this: this): number
@@ -64,7 +63,31 @@ declare global {
         }
         var SoundHandleBase: ig.SoundHandleBaseConstructor
 
-        interface SoundHandleWebAudio extends ig.SoundHandleBase { }
+        interface SoundHandleWebAudio extends ig.SoundHandleBase {
+            _buffer: null | AudioBufferSourceNode
+            _volume: number
+            _speed: number
+            _time: number
+            _duration: number
+            _offset: number
+            _startTime: number
+            _nodeSource: null | ig.WebAudioBufferGain
+            _nodePosition: PannerNode
+            _loop: boolean
+            _playing: boolean
+            _fadeTimer: number
+            _fadeIn: boolean
+            _fadeDuration: number
+            _contextTimeOnStart: number
+            _contextTimeOnPause: number
+            
+            _setPosition(this: this): void
+            play(this: this): void
+        }
+        interface SoundHandleWebAudioConstructor extends ImpactClass<ig.SoundHandleWebAudio> {
+            new (): ig.SoundHandleWebAudio
+        }
+        var SoundHandleWebAudio: ig.SoundHandleWebAudioConstructor
 
         interface SoundPlaySettings {
             fadeDuration?: number
@@ -80,6 +103,7 @@ declare global {
         interface SoundManager {
             _solveGroupRequests(this: this, group: { playing: ig.SoundHandleBase[], requests: ig.SoundHandleBase[] }): void
             playSoundHandle(this: this, a: ig.SoundHandleBase, group: { playing: ig.SoundHandleBase[], requests: ig.SoundHandleBase[] }): void
+            connectSound(this: this, connectObj: { connect(gain: GainNode): void }): void
         }
     
         namespace SoundHelper {
