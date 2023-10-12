@@ -2,6 +2,7 @@ import { Mod1 } from 'cc-blitzkrieg/src/types'
 import { SpacialAudio } from './spacialaudio'
 import type * as _ from 'cc-vim'
 import { MenuOptions } from './options'
+import { PuzzleBeeper } from './puzzle'
 
 function addVimBindings() {
     if (window.vim) { /* optional dependency https://github.com/krypciak/cc-vim */
@@ -25,6 +26,9 @@ export default class CrossedEyes {
         const spacialAudio: SpacialAudio = new SpacialAudio()
         spacialAudio.initSpacialAudio()
         spacialAudio.initLoudWalls()
+
+        const puzzleBeeper: PuzzleBeeper = new PuzzleBeeper()
+        puzzleBeeper.initPrestart()
     }
 
     async poststart() {
