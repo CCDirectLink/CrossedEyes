@@ -3,7 +3,7 @@ name: Release pack
 on:
     push:
         branches:
-            - main
+            - master
 
 jobs: 
     release:
@@ -45,7 +45,7 @@ jobs:
                 git config --global user.name "${GITHUB_ACTOR}"
                 git config --global --add safe.directory /github/workspaces
                 git commit -m "$VERSION"
-                git push origin HEAD:main
+                git push origin HEAD:master
 
             - name: Create and push a new tag
               run: |

@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
     push:
         branches:
-          - main
+          - master
 
 
 jobs:
@@ -19,4 +19,4 @@ jobs:
               run: sudo apt update; sudo apt install npm
 
             - name: Compile
-              run: npm install; npm run build
+              run: npm install; npm run start
