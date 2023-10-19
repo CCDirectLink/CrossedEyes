@@ -6,14 +6,11 @@ import { PuzzleBeeper } from './puzzle'
 import { LoudWalls } from './loudwalls'
 import { SoundManager } from './sound-manager'
 
-function addVimBindings() {
-    if (window.vim) { /* optional dependency https://github.com/krypciak/cc-vim */
-    }
-}
-
 export default class CrossedEyes {
     dir: string
     mod: Mod1
+
+    puzzleBeeper!: PuzzleBeeper
 
     constructor(mod: Mod1) {
         this.dir = mod.baseDirectory
@@ -23,15 +20,25 @@ export default class CrossedEyes {
     }
 
     async prestart() {
-        addVimBindings()
+        this.addVimAliases()
         MenuOptions.initPrestart()
         SoundManager.preloadSounds()
         new SpacialAudio().initSpacialAudio()
         new LoudWalls().initLoudWalls()
-        new PuzzleBeeper().initPrestart()
+
+        this.puzzleBeeper = new PuzzleBeeper()
+        this.puzzleBeeper.initPrestart()
     }
 
     async poststart() {
         MenuOptions.initPoststart()
+    }
+
+    addVimAliases() {
+        if (window.vim) { /* optional dependency https://github.com/krypciak/cc-vim */
+            vim.addAlias('crossedeyes', 'reset-puzzle', 'Reset puzzle step index', (ingame: boolean) => ingame && blitzkrieg.currSel.name == 'puzzle', () => {
+                this.puzzleBeeper.stepI = 0
+            })
+        }
     }
 }

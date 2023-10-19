@@ -16,6 +16,8 @@ export type SoundQueueEntry = {
 })
 
 export class SoundManager {
+    private static soundQueue: SoundQueueEntry[] = []
+
     static sounds = {
         countdown1: 'media/sound/misc/countdown-1.ogg',
         countdown2: 'media/sound/misc/countdown-2.ogg',
@@ -29,6 +31,7 @@ export class SoundManager {
         heatMode: 'media/sound/move/heat-mode.ogg',
         waveMode: 'media/sound/move/wave-mode.ogg',
         shockMode: 'media/sound/move/shock-mode.ogg',
+        hitCounterEcho: 'media/sound/battle/hit-counter-echo.ogg',
     }
     static getElementName(element: sc.ELEMENT): 'neutralMode' | 'coldMode' | 'heatMode' | 'waveMode' | 'shockMode' {
         switch(element) {
@@ -63,24 +66,38 @@ export class SoundManager {
         SoundManager.playSound(name, speed, soundPos)
     }
 
-    static playSoundQueue(queue: SoundQueueEntry[]) {
-        if (queue.length === 0) { return }
-        const e = queue[0]
-        const play: boolean = e.condition ? e.condition() : true
-        if (play) {
-            if (e.relativePos) {
-                SoundManager.playSoundAtRelative(e.name, e.speed ?? 1, e.pos)
-            } else {
-                SoundManager.playSound(e.name, e.speed ?? 1, e.pos)
-            }
+    static appendQueue(queue: SoundQueueEntry[]) {
+        const isPlaying: boolean = SoundManager.soundQueue.length != 0
+        this.soundQueue.push(...queue)
+        if (! isPlaying) {
+            SoundManager.playQueueEntry(this.soundQueue[0], SoundManager.soundQueue)
         }
-        e.action && e.action(play)
-        queue.shift()
-        if (queue.length === 0) { return }
+    }
+
+    static clearQueue() { SoundManager.soundQueue = [] }
+
+    static playQueueEntry(e: SoundQueueEntry, queue: SoundQueueEntry[]) {
+        if (!e || queue.length === 0) { return }
+
+        const action = () => {
+            const play: boolean = e.condition ? e.condition() : true
+            if (play) {
+                if (e.relativePos) {
+                    SoundManager.playSoundAtRelative(e.name, e.speed ?? 1, e.pos)
+                } else {
+                    SoundManager.playSound(e.name, e.speed ?? 1, e.pos)
+                }
+            }
+            e.action && e.action(play)
+            queue.shift()
+            if (queue.length === 0) { return }
+            SoundManager.playQueueEntry(queue[0], queue)
+        }
+
         if (e.wait === undefined || e.wait === 0) {
-            SoundManager.playSoundQueue(queue)
+            action()
         } else {
-            setTimeout(() => SoundManager.playSoundQueue(queue), e.wait)
+            setTimeout(action, e.wait)
         }
     }
 }
