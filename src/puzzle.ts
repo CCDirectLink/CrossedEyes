@@ -2,7 +2,7 @@ import type * as _ from 'cc-blitzkrieg'
 import { MenuOptions } from './options'
 import { mapNumber } from './spacial-audio'
 import type { PuzzleSelection, PuzzleSelectionStep } from 'cc-blitzkrieg/types/puzzle-selection'
-import { SoundManager } from './sound-manager'
+import { SoundManager, SoundQueueEntry } from './sound-manager'
 
 function isAiming(): boolean {
     return ig.input.state('aim') || ig.gamepad.isRightStickDown()
@@ -24,6 +24,7 @@ class AimHandler {
 
     lockedIn: boolean = false
     normalBeepSlience: boolean = false
+    shotCount: number = 0
 
     newAim!: Vec2
 
@@ -43,18 +44,24 @@ class AimHandler {
         if (!this.pb.moveToHandler.lockedIn) { this.lockedIn = false; return }
         if (!ig.game || !ig.game.playerEntity || !MenuOptions.puzzleEnabled) { return }
 
-        const nowt: number = sc.stats.getMap('player', 'playtime') * 1000
+        const nowt: number = ig.game.now
 
         if (this.lockedIn) {
             if (sc.control.thrown()) {
-                this.lockedIn = false
-                this.pb.moveToHandler.lockedIn = false
-                this.pb.stepI++
-                if (this.pb.stepI == 1) {
-                    this.puzzleStartTime = nowt
+                if (this.shotCount) {
+                    this.shotCount--
                 }
-                return
+                if (! this.shotCount) {
+                    this.lockedIn = false
+                    this.pb.moveToHandler.lockedIn = false
+                    this.pb.stepI++
+                    if (this.pb.stepI == 1) {
+                        this.puzzleStartTime = nowt
+                    }
+                    return
+                }
             }
+            if (this.shotCount) { return }
             const wait = 200
             if (! this.shootSoundPlayed) {
                 const lastStep = this.pb.currentSel.data.recordLog!.steps[this.pb.stepI - 1]
@@ -71,16 +78,26 @@ class AimHandler {
                 if (!this.shootSoundPlayed && play) {
                     this.shootSoundPlayed = true
 
-                    SoundManager.appendQueue([
-                        { wait, name: 'hitCounterEcho', speed: 1.1, condition: () => this.lockedIn },
-                    ])
+                    const entry: SoundQueueEntry = { wait, name: 'hitCounterEcho', speed: 1.1, condition: () => this.lockedIn }
+                    const queue: SoundQueueEntry[] = [ entry ]
+                    const waitBetweenSounds: number = 100
+                    if (step && step.shotCount) {
+                        this.shotCount = step.shotCount + 1
+                        for (let i = 0; i < step.shotCount; i++) {
+                            const ne = { ...entry }
+                            ne.wait = waitBetweenSounds
+                            queue.push(ne)
+                        }
+                    }
+
+                    SoundManager.appendQueue(queue)
                 }
             }
         } else {
             this.shootSoundPlayed = false
         }
 
-
+        if (this.shotCount) { return }
         if (! step || ! step.pos) { return }
         const targetDeg = (step.shootAngle! + 360) % 360
         if (! targetDeg) { return }
@@ -183,7 +200,7 @@ class MoveToHandler {
                     this.lockedIn = true
                     this.softLockout = false
                     
-                    ig.game.playerEntity.setPos(pos.x, pos.y, pos.z)
+                    ig.game.playerEntity.setPos(pos.x, pos.y, pos.z, true)
                     ig.game.playerEntity.coll.vel = Vec3.create()
                     sc.model.player.setCore(sc.PLAYER_CORE.MOVE, false)
                     setTimeout(() => sc.model.player.setCore(sc.PLAYER_CORE.MOVE, true), 700)
@@ -265,7 +282,7 @@ export class PuzzleBeeper {
                     self.currentSel = sel
                     self.stepI = 0
                     if (self.currentSel.data.completionType === blitzkrieg.PuzzleCompletionType.Normal) {
-                        self.cachedSolution = blitzkrieg.PuzzleSelectionManager.getPuzzleSolveCondition(sel).substring(1) as keyof ig.KnownVars
+                        self.cachedSolution = (blitzkrieg.PuzzleSelectionManager.getPuzzleSolveCondition(sel) ?? '.').substring(1) as keyof ig.KnownVars
                     }
                 }
                 switch (self.currentSel.data.completionType) {
