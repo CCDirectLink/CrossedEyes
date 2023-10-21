@@ -2,9 +2,9 @@ import type * as _ from 'cc-blitzkrieg'
 import { MenuOptions } from './options'
 import { mapNumber } from './spacial-audio'
 import type { PuzzleSelection, PuzzleSelectionStep } from 'cc-blitzkrieg/types/puzzle-selection'
-import { SoundManager, SoundQueueEntry } from './sound-manager'
+import { PuzzleSounds } from './sound-manager'
 
-function isAiming(): boolean {
+export function isAiming(): boolean {
     return ig.input.state('aim') || ig.gamepad.isRightStickDown()
 }
 
@@ -44,7 +44,7 @@ class AimHandler {
         if (!this.pb.moveToHandler.lockedIn) { this.lockedIn = false; return }
         if (!ig.game || !ig.game.playerEntity || !MenuOptions.puzzleEnabled) { return }
 
-        const nowt: number = ig.game.now
+        const now: number = ig.game.now /* set by cc-blitzkrieg */
 
         if (this.lockedIn) {
             if (sc.control.thrown()) {
@@ -56,7 +56,7 @@ class AimHandler {
                     this.pb.moveToHandler.lockedIn = false
                     this.pb.stepI++
                     if (this.pb.stepI == 1) {
-                        this.puzzleStartTime = nowt
+                        this.puzzleStartTime = now
                     }
                     return
                 }
@@ -67,7 +67,7 @@ class AimHandler {
                 const lastStep = this.pb.currentSel.data.recordLog!.steps[this.pb.stepI - 1]
                 let play: boolean = false
                 if (lastStep && !lastStep.split) {
-                    const realDiffTime = Math.round((nowt - this.puzzleStartTime) * sc.options.get('assist-puzzle-speed'))
+                    const realDiffTime = Math.round((now - this.puzzleStartTime) * sc.options.get('assist-puzzle-speed'))
                     const diff = realDiffTime - step.endFrame
                     // console.log(diff, step.endFrame, realDiffTime)
                     if (diff > -wait) {
@@ -77,32 +77,18 @@ class AimHandler {
 
                 if (!this.shootSoundPlayed && play) {
                     this.shootSoundPlayed = true
-
-                    const entry: SoundQueueEntry = { wait, name: 'hitCounterEcho', speed: 1.1, condition: () => this.lockedIn }
-                    const queue: SoundQueueEntry[] = [ entry ]
-                    const waitBetweenSounds: number = 100
-                    if (step && step.shotCount) {
-                        this.shotCount = step.shotCount + 1
-                        for (let i = 0; i < step.shotCount; i++) {
-                            const ne = { ...entry }
-                            ne.wait = waitBetweenSounds
-                            queue.push(ne)
-                        }
-                    }
-
-                    SoundManager.appendQueue(queue)
+                    this.shotCount = PuzzleSounds.shootNow(wait, () => this.lockedIn, step.shotCount)
                 }
             }
         } else {
             this.shootSoundPlayed = false
         }
 
-        if (this.shotCount) { return }
-        if (! step || ! step.pos) { return }
+        if (this.shotCount || ! step || ! step.pos) { return }
         const targetDeg = (step.shootAngle! + 360) % 360
         if (! targetDeg) { return }
 
-        const r: number = 15
+        const r: number = 4*16
         const theta: number = targetDeg * (Math.PI / 180)
         
         this.newAim = Vec2.createC(r * Math.cos(theta), r * Math.sin(theta))
@@ -124,45 +110,32 @@ class AimHandler {
             if (! this.lockedIn) {
                 this.lockedIn = true
                 this.normalBeepSlience = true
-                SoundManager.appendQueue([
-                    {            name: 'countdown1', relativePos: true, pos: this.newAim },
-                    { wait: 200, name: 'countdown2', relativePos: true, pos: this.newAim },
-                    { wait: 100, name: SoundManager.getElementName(step.element), speed: 1.2,
-                        condition: () => isAiming() && step.element !== sc.model.player.currentElementMode,
-                        action: () => {
-                            this.normalBeepSlience = false
-                            this.lastBeepTime = ig.game.now
-                        },
-                    },
-                ])
+                PuzzleSounds.aimLockin(this.newAim, step.element, () => {
+                    this.normalBeepSlience = false
+                    this.lastBeepTime = ig.game.now
+                })
             }
         } else if (this.lockedIn) {
             this.lockedIn = false
             this.normalBeepSlience = true
 
-            SoundManager.clearQueue()
-            SoundManager.appendQueue([
-                {            name: 'countdown2', relativePos: true, pos: this.newAim },
-                { wait: 200, name: 'countdown1', relativePos: true, pos: this.newAim,
-                    action: () => {
-                        this.normalBeepSlience = false
-                        this.lastBeepTime = ig.game.now
-                    }},
-            ])
+            PuzzleSounds.aimLockout(this.newAim, () => {
+                this.normalBeepSlience = false
+                this.lastBeepTime = ig.game.now
+            })
             return
         }
         if (this.lockedIn || this.normalBeepSlience) { return }
 
-        const timeDiff = nowt - this.lastBeepTime
+        const timeDiff = now - this.lastBeepTime
         const time: number = dist >= this.minDegDistToSpeedup ? this.farAwayFreq : 
             Math.max(
             mapNumber(deg, targetDeg - this.minDegDistToSpeedup, targetDeg, this.farAwayFreq, this.maxFreq),
             mapNumber(deg, targetDeg + this.minDegDistToSpeedup, targetDeg, this.farAwayFreq, this.maxFreq))
 
         if (timeDiff >= time) {
-            const speed: number = 1
-            SoundManager.playSoundAtRelative('computerBeep', speed, this.newAim)
-            this.lastBeepTime = nowt
+            PuzzleSounds.aimGuide(1, this.newAim)
+            this.lastBeepTime = now
         }
     }
 }
@@ -190,7 +163,6 @@ class MoveToHandler {
         const playerPos: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
         const dist: number = Vec3.distance(pos, playerPos)
 
-        const self = this
         let lockout: boolean = false
         if (dist <= this.lockinDist && pos.z == playerPos.z) {
             Vec3.add(playerPos, ig.game.playerEntity.coll.vel)
@@ -200,20 +172,16 @@ class MoveToHandler {
                     this.lockedIn = true
                     this.softLockout = false
                     
-                    ig.game.playerEntity.setPos(pos.x, pos.y, pos.z, true)
+                    ig.game.playerEntity.setPos(pos.x, pos.y, pos.z)
                     ig.game.playerEntity.coll.vel = Vec3.create()
                     sc.model.player.setCore(sc.PLAYER_CORE.MOVE, false)
                     setTimeout(() => sc.model.player.setCore(sc.PLAYER_CORE.MOVE, true), 700)
 
                     this.normalBeepSlience = true
-                    SoundManager.appendQueue([
-                        {            name: 'countdown1', pos, speed: 1.2, },
-                        { wait: 150, name: 'countdown2', pos, speed: 1.2,
-                            action() {
-                                self.normalBeepSlience = false
-                                self.lastBeepTime = ig.game.now
-                        },},
-                    ])
+                    PuzzleSounds.moveLockin(pos, () => {
+                        this.normalBeepSlience = false
+                        this.lastBeepTime = ig.game.now
+                    })
                     return
                 } else if (dist !== 0) {
                     lockout = true
@@ -230,27 +198,24 @@ class MoveToHandler {
             this.lockedIn = false
             this.normalBeepSlience = true
 
-            SoundManager.appendQueue([
-                {            name: 'countdown2', pos, speed: 1.2 },
-                { wait: 150, name: 'countdown1', pos, speed: 1.2, action: () => {
-                    this.normalBeepSlience = false
-                    this.lastBeepTime = ig.game.now
-                }},
-            ])
+            PuzzleSounds.moveLockout(pos, () => {
+                this.normalBeepSlience = false
+                this.lastBeepTime = ig.game.now
+            })
             return
         }
-        if (this.lockedIn) { return }
-        if (this.normalBeepSlience) { return }
 
-        const nowt: number = ig.game.now
-        const timeDiff = nowt - this.lastBeepTime
+        if (this.lockedIn || this.normalBeepSlience) { return }
+
+        const now: number = ig.game.now
+        const timeDiff = now - this.lastBeepTime
         const time: number = dist >= this.minDistToSpeedup ? this.farAwayFreq : 
             mapNumber(dist, this.minDistToSpeedup, 0, this.farAwayFreq, this.maxFreq)
 
         if (timeDiff >= time) {
             const speed: number = 1
-            SoundManager.playSound('trainCudeHide', speed, pos)
-            this.lastBeepTime = nowt
+            PuzzleSounds.moveGuide(speed, pos)
+            this.lastBeepTime = now
         }
     }
 }
@@ -289,13 +254,8 @@ export class PuzzleBeeper {
                     case blitzkrieg.PuzzleCompletionType.Normal: {
                         if (ig.vars.get(self.cachedSolution!)) {
                             if (self.stepI > 0) {
-                                SoundManager.clearQueue()
-                                SoundManager.appendQueue([
-                                    {            name: 'botSuccess' },
-                                    { wait: 20,  name: 'counter' },
-                                    { wait: 150, name: 'botSuccess' },
-                                ])
                                 self.stepI = 0
+                                PuzzleSounds.puzzleSolved()
                             }
                             return
                         }

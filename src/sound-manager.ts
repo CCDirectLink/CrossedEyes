@@ -1,3 +1,5 @@
+import { isAiming } from './puzzle'
+
 export type SoundQueueEntry = {
     name: keyof typeof SoundManager.sounds
     wait?: number
@@ -99,5 +101,76 @@ export class SoundManager {
         } else {
             setTimeout(action, e.wait)
         }
+    }
+}
+
+
+export class PuzzleSounds {
+    static puzzleSolved() {
+        SoundManager.clearQueue()
+        SoundManager.appendQueue([
+            {            name: 'botSuccess' },
+            { wait: 20,  name: 'counter' },
+            { wait: 150, name: 'botSuccess' },
+        ])
+    }
+
+    static moveGuide(speed: number, pos: Vec3) {
+        SoundManager.playSound('trainCudeHide', speed, pos)
+    }
+
+    static moveLockin(pos: Vec3, action: () => void) {
+        SoundManager.appendQueue([
+            {            name: 'countdown1', pos, speed: 1.2, },
+            { wait: 150, name: 'countdown2', pos, speed: 1.2, action },
+        ])
+    }
+    static moveLockout(pos: Vec3, action: () => void) {
+        SoundManager.appendQueue([
+            {            name: 'countdown2', pos, speed: 1.2, },
+            { wait: 150, name: 'countdown1', pos, speed: 1.2, action },
+        ])
+    }
+
+
+
+    static aimLockin(pos: Vec2, element: sc.ELEMENT, action: () => void) {
+        SoundManager.appendQueue([
+            {            name: 'countdown1', relativePos: true, pos },
+            { wait: 200, name: 'countdown2', relativePos: true, pos },
+            { wait: 100, name: SoundManager.getElementName(element), speed: 1.2, action,
+                condition: () => isAiming() && element !== sc.model.player.currentElementMode,
+            }
+        ])
+    }
+
+    static aimLockout(pos: Vec2, action: () => void) {
+        SoundManager.clearQueue()
+        SoundManager.appendQueue([
+            {            name: 'countdown2', relativePos: true, pos },
+            { wait: 200, name: 'countdown1', relativePos: true, pos, action },
+        ])
+    }
+
+    static aimGuide(speed: number, pos: Vec2) {
+        SoundManager.playSoundAtRelative('computerBeep', speed, pos)
+    }
+
+    static shootNow(wait: number, lockinCheck: () => boolean, shotCount?: number): number {
+        const entry: SoundQueueEntry = { wait, name: 'hitCounterEcho', speed: 1.1, condition: lockinCheck }
+        const queue: SoundQueueEntry[] = [ entry ]
+        const waitBetweenSounds: number = 100
+        let ret: number = 0
+        if (shotCount) {
+            ret = shotCount + 1
+            for (let i = 0; i < shotCount; i++) {
+                const ne = { ...entry }
+                ne.wait = waitBetweenSounds
+                queue.push(ne)
+            }
+        }
+
+        SoundManager.appendQueue(queue)
+        return ret
     }
 }
