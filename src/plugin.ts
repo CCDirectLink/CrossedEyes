@@ -5,12 +5,14 @@ import { MenuOptions } from './options'
 import { PuzzleBeeper } from './puzzle'
 import { LoudWalls } from './loudwalls'
 import { SoundManager } from './sound-manager'
+import { TTS } from './tts'
 
 export default class CrossedEyes {
     dir: string
     mod: Mod1
 
     puzzleBeeper!: PuzzleBeeper
+    tts!: TTS
 
     constructor(mod: Mod1) {
         this.dir = mod.baseDirectory
@@ -28,10 +30,14 @@ export default class CrossedEyes {
 
         this.puzzleBeeper = new PuzzleBeeper()
         this.puzzleBeeper.initPrestart()
+
+        this.tts = new TTS()
+        this.tts.initPrestart()
     }
 
     async poststart() {
         MenuOptions.initPoststart()
+        this.tts.initPoststart()
     }
 
     addVimAliases() {

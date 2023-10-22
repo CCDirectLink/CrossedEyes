@@ -11,14 +11,14 @@ export class LoudWalls {
         ig.Game.inject({
             spawnEntity(entity, x, y, z, settings, showAppearEffects) {
                 const result = this.parent(entity, x, y, z, settings, showAppearEffects)
-                if (MenuOptions.loudWallsEnabled) { return result }
+                if (! MenuOptions.loudWallsEnabled) { return result }
                 // @ts-ignore fails at ig.ENTITY.Enemy
                 if (result && (entity === 'Enemy' || (typeof entity !== 'string' && entity === ig.ENTITY.Enemy))) {
                     ig.SoundHelper.playAtEntity(wallHum, result, true, {
                         fadeDuration: 0
                     }, 16 * 16)
                 }
-                return result;
+                return result
             },
         })
 

@@ -2,6 +2,7 @@ const header: string = 'crossedeyes'
 const spacialAudioToggleId: string = `${header}-spacialaudio`
 const loudWallsToggleId: string = `${header}-loudwalls`
 const puzzleToggleId: string = `${header}-puzzle`
+const ttsToogleId: string = `${header}-tts`
 
 export class MenuOptions {
     static get spacialAudioEnabled(): boolean { return sc.options?.get(spacialAudioToggleId) as boolean }
@@ -12,6 +13,9 @@ export class MenuOptions {
 
     static get puzzleEnabled(): boolean { return sc.options?.get(puzzleToggleId) as boolean && MenuOptions.spacialAudioEnabled }
     static set puzzleEnabled(value: boolean) { sc.options?.set(puzzleToggleId, value) }
+
+    static get ttsEnabled(): boolean { return sc.options?.get(ttsToogleId) as boolean }
+    static set ttsEnabled(value: boolean) { sc.options?.set(ttsToogleId, value) }
 
     static initPrestart() {
         sc.OPTIONS_DEFINITION[spacialAudioToggleId] = {
@@ -33,6 +37,12 @@ export class MenuOptions {
             cat: sc.OPTION_CATEGORY.ASSISTS,
             header,
         }
+        sc.OPTIONS_DEFINITION[ttsToogleId] = {
+            type: 'CHECKBOX',
+            init: true,
+            cat: sc.OPTION_CATEGORY.ASSISTS,
+            header,
+        }
     }
 
     static initPoststart() {
@@ -47,7 +57,11 @@ export class MenuOptions {
         }
         ig.lang.labels.sc.gui.options[puzzleToggleId] = {
             name: 'Puzzle beeps',
-            description: 'write later'
+            description: 'Solve puzzles blindfolded'
+        }
+        ig.lang.labels.sc.gui.options[ttsToogleId] = {
+            name: 'Gui TTS',
+            description: 'Read gui text out loud'
         }
 
     }
