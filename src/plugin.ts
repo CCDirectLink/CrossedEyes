@@ -5,7 +5,7 @@ import { MenuOptions } from './options'
 import { PuzzleBeeper } from './puzzle'
 import { LoudWalls } from './loudwalls'
 import { SoundManager } from './sound-manager'
-import { TTS } from './tts'
+import { TTS } from './tts/tts'
 
 export default class CrossedEyes {
     dir: string

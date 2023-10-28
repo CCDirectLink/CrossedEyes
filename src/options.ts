@@ -1,21 +1,27 @@
+import { TTSTypes } from "./tts/tts"
+
 const header: string = 'crossedeyes'
 const spacialAudioToggleId: string = `${header}-spacialaudio`
 const loudWallsToggleId: string = `${header}-loudwalls`
 const puzzleToggleId: string = `${header}-puzzle`
-const ttsToogleId: string = `${header}-tts`
+
+const ttsHeader = 'crossedeyes-tts'
+const ttsToogleId: string = `${ttsHeader}`
+const ttsTypeId: string = `${ttsHeader}-type`
+const ttsSpeedId: string = `${ttsHeader}-speed`
+const ttsVoulmeId: string = `${ttsHeader}-volume`
+const ttsPitchId: string = `${ttsHeader}-pitch`
 
 export class MenuOptions {
     static get spacialAudioEnabled(): boolean { return sc.options?.get(spacialAudioToggleId) as boolean }
-    static set spacialAudioEnabled(value: boolean) { sc.options?.set(spacialAudioToggleId, value) }
-
     static get loudWallsEnabled(): boolean { return sc.options?.get(loudWallsToggleId) as boolean && MenuOptions.spacialAudioEnabled }
-    static set loudWallsEnabled(value: boolean) { sc.options?.set(loudWallsToggleId, value) }
-
     static get puzzleEnabled(): boolean { return sc.options?.get(puzzleToggleId) as boolean && MenuOptions.spacialAudioEnabled }
-    static set puzzleEnabled(value: boolean) { sc.options?.set(puzzleToggleId, value) }
 
     static get ttsEnabled(): boolean { return sc.options?.get(ttsToogleId) as boolean }
-    static set ttsEnabled(value: boolean) { sc.options?.set(ttsToogleId, value) }
+    static get ttsType(): TTSTypes { return sc.options?.get(ttsTypeId) as TTSTypes }
+    static get ttsSpeed(): number { return sc.options?.get(ttsSpeedId) as number }
+    static get ttsVolume(): number{ return sc.options?.get(ttsVoulmeId) as number }
+    static get ttsPitch(): number{ return sc.options?.get(ttsPitchId) as number }
 
     static initPrestart() {
         sc.OPTIONS_DEFINITION[spacialAudioToggleId] = {
@@ -37,11 +43,67 @@ export class MenuOptions {
             cat: sc.OPTION_CATEGORY.ASSISTS,
             header,
         }
+
         sc.OPTIONS_DEFINITION[ttsToogleId] = {
             type: 'CHECKBOX',
             init: true,
             cat: sc.OPTION_CATEGORY.ASSISTS,
-            header,
+            header: ttsHeader,
+            hasDivider: true,
+        }
+
+        sc.OPTIONS_DEFINITION[ttsTypeId] = {
+            type: 'BUTTON_GROUP',
+            init: TTSTypes['Built-in'],
+            data: Object.entries(TTSTypes).splice(Object.keys(TTSTypes).length/2).reduce((acc, [k, _], i) => {
+                if (typeof k === 'string') { acc[k] = i }
+                return acc
+            }, {} as { [key: string]: number }),
+            cat: sc.OPTION_CATEGORY.ASSISTS,
+            header: ttsHeader,
+        }
+
+        {
+            const min = 0.8, max = 5, step = 0.1
+            const data: Record<number, number> = {}
+            for (let i = min, h = 0; i.round(2) <= max; i += step, h++) { data[h] = i.round(2) }
+            sc.OPTIONS_DEFINITION[ttsSpeedId] = {
+                type: 'OBJECT_SLIDER',
+                cat: sc.OPTION_CATEGORY.ASSISTS,
+                header: ttsHeader,
+                data,
+                init: 1,
+                fill: true,
+                showPercentage: true,
+            }
+        }
+        {
+            const min = 0, max = 1, step = 0.1
+            const data: Record<number, number> = {}
+            for (let i = min, h = 0; i.round(2) <= max; i += step, h++) { data[h] = i.round(2) }
+            sc.OPTIONS_DEFINITION[ttsVoulmeId] = {
+                type: 'OBJECT_SLIDER',
+                cat: sc.OPTION_CATEGORY.ASSISTS,
+                header: ttsHeader,
+                data,
+                init: 1,
+                fill: true,
+                showPercentage: true,
+            }
+        }
+        {
+            const min = 0.5, max = 2, step = 0.1
+            const data: Record<number, number> = {}
+            for (let i = min, h = 0; i.round(2) <= max; i += step, h++) { data[h] = i.round(2) }
+            sc.OPTIONS_DEFINITION[ttsPitchId] = {
+                type: 'OBJECT_SLIDER',
+                cat: sc.OPTION_CATEGORY.ASSISTS,
+                header: ttsHeader,
+                data,
+                init: 1,
+                fill: true,
+                showPercentage: true,
+            }
         }
     }
 
@@ -59,10 +121,27 @@ export class MenuOptions {
             name: 'Puzzle beeps',
             description: 'Solve puzzles blindfolded'
         }
+		ig.lang.labels.sc.gui.options.headers[ttsHeader] = 'TTS'
         ig.lang.labels.sc.gui.options[ttsToogleId] = {
-            name: 'Gui TTS',
+            name: 'Enable',
             description: 'Read gui text out loud'
         }
-
+        ig.lang.labels.sc.gui.options[ttsTypeId] = {
+            name: 'Type',
+            description: 'Reader type',
+            group: Object.keys(sc.OPTIONS_DEFINITION[ttsTypeId].data as Record<string, number>),
+        }
+        ig.lang.labels.sc.gui.options[ttsVoulmeId] = {
+            name: 'Volume',
+            description: ''
+        }
+        ig.lang.labels.sc.gui.options[ttsSpeedId] = {
+            name: 'Speed',
+            description: ''
+        }
+        ig.lang.labels.sc.gui.options[ttsPitchId] = {
+            name: 'Pitch',
+            description: ''
+        }
     }
 }
