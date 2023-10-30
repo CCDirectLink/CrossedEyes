@@ -6,7 +6,7 @@ import { TTSSpeechSynthesisAPI } from './tts-speech-synthesis'
 export interface TTSInterface {
     init(queue: TTS['speakQueue'], increseQueueId: () => number): Promise<void>
     isReady(): boolean
-    speak(text: string, pitch: number, speed: number, volume: number): void
+    speak(text: string): void
     interrupt(): void
 }
 
@@ -29,13 +29,12 @@ export class TTS {
 
     async initPrestart() {
         injectTextGathering(
-            (text: string) => this.ttsInstance.speak(text, MenuOptions.ttsPitch, MenuOptions.ttsSpeed, MenuOptions.ttsVolume),
+            (text: string) => this.ttsInstance.speak(text),
             () => { this.clearQueue() }
         )
     }
 
     async initPoststart() {
-        console.log(MenuOptions.ttsType)
         switch (MenuOptions.ttsType) {
             case TTSTypes['Built-in']:
                 this.ttsInstance = new TTSSpeechSynthesisAPI()

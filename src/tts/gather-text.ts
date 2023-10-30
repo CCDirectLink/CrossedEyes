@@ -90,8 +90,48 @@ export function injectTextGathering(speakCall: (text: string) => void, interrupt
 
     ig.EVENT_STEP.SHOW_AR_MSG.inject({
         start(...args) {
-            MenuOptions.ttsEnabled && speak(this.text)
+            MenuOptions.ttsEnabled && speakInterrupt(this.text)
             return this.parent(...args)
+        },
+    })
+
+    sc.OptionsTabBox.inject({
+        showMenu() {
+            MenuOptions.ttsEnabled && speakInterrupt('Options menu, General')
+            this.parent()
+        }
+    })
+
+    let tabChangedTime: number = 0
+    sc.ItemTabbedBox.TabButton.inject({
+        onPressedChange(pressed: boolean) {
+            if (pressed && MenuOptions.ttsEnabled) {
+                speakInterrupt(this.text)
+                tabChangedTime = Date.now()
+            }
+            return this.parent(pressed)
+        },
+    })
+    sc.OptionRow.inject({
+        init(option, row, rowGroup, local, width, height) {
+            this.parent(option, row, rowGroup, local, width, height)
+            this._rowGroup.elements[this.row].forEach(e => e.optionRow = this)
+        },
+    })
+
+    sc.RowButtonGroup.inject({
+        init() {
+            this.parent()
+            this.addSelectionCallback((button?: ig.FocusGui) => {
+                if (MenuOptions.ttsEnabled) {
+                    const or: sc.OptionRow = (button as sc.RowButtonGroup['elements'][0][0]).optionRow
+                    const entry: { name: string, description: string } = ig.lang.labels.sc.gui.options[or.optionName]
+                    if (entry) {
+                        const text: string = `${entry.name}: ${entry.description}`
+                        speakInterrupt(text)
+                    }
+                }
+            })
         },
     })
 }

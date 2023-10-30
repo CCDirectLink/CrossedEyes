@@ -132,7 +132,11 @@ declare global {
         var Camera: ig.CameraConstructor
         var camera: ig.Camera
     }
-
+    namespace sc {
+        interface RowButtonGroup {
+            elements: (ig.FocusGui & { optionRow: sc.OptionRow })[][]
+        }
+    }
     var Constants: {
         BALL_HEIGHT: 12
         BALL_SIZE: 8
