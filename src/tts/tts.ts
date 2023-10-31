@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options'
+import { MenuOptions, ttsTypeId } from '../options'
 import { injectTextGathering } from './gather-text'
 import { TTSScreenReader } from './tts-screen-reader'
 import { TTSSpeechSynthesisAPI } from './tts-speech-synthesis'
@@ -20,6 +20,7 @@ export class TTS {
     speakQueueId: number = 0
 
     ttsInstance!: TTSInterface
+    lastOption: number = -1
 
     clearQueue() {
         this.speakQueue = {}
@@ -32,18 +33,31 @@ export class TTS {
             (text: string) => this.ttsInstance && this.ttsInstance.speak(text),
             () => { this.clearQueue() }
         )
+        const self = this
+        sc.OptionModel.inject({
+            set(option: string, value: any) {
+                this.parent(option, value)
+                option == ttsTypeId && self.setup()
+            },
+        })
+    }
+    setup() {
+        if (this.lastOption != MenuOptions.ttsType) {
+            this.lastOption = MenuOptions.ttsType
+            switch (MenuOptions.ttsType) {
+                case TTSTypes['Built-in']:
+                    this.ttsInstance = new TTSSpeechSynthesisAPI()
+                    break
+                case TTSTypes['Screen reader']: 
+                    this.ttsInstance = new TTSScreenReader()
+                    break
+                default: throw new Error()
+            }
+            this.ttsInstance.init(this.speakQueue, () => this.speakQueueId++)
+        }
     }
 
     async initPoststart() {
-        switch (MenuOptions.ttsType) {
-            case TTSTypes['Built-in']:
-                this.ttsInstance = new TTSSpeechSynthesisAPI()
-                break
-            case TTSTypes['Screen reader']: 
-                this.ttsInstance = new TTSScreenReader()
-                break
-            default: throw new Error()
-        }
-        this.ttsInstance.init(this.speakQueue, () => this.speakQueueId++)
+        this.setup()
     }
 }
