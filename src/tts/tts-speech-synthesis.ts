@@ -38,7 +38,6 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
 
         this.voices = await this.getVoices()
         if (this.voices.length == 0) {
-            debugger
             console.log('tts initialization failed')
             return
         }

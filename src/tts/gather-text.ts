@@ -93,9 +93,15 @@ export function injectTextGathering(speakCall: (text: string) => void, interrupt
         }
     })
 
+    let ignoreButtonFrom: number = 0
     sc.ButtonGui.inject({
         focusGained() {
-            MenuOptions.ttsMenuEnabled && speakInterrupt(this.text)
+            if (MenuOptions.ttsMenuEnabled) {
+                const diff = Date.now() - ignoreButtonFrom
+                if (diff > 50) {
+                    speakInterrupt(this.text)
+                }
+            }
             return this.parent()
         },
     })
@@ -120,7 +126,8 @@ export function injectTextGathering(speakCall: (text: string) => void, interrupt
     sc.OptionsTabBox.inject({
         showMenu() {
             if (MenuOptions.ttsMenuEnabled) {
-                connect = { count: 2, template: 'Options menu, General, ${1}', args: [] }
+                connect = { count: 1, template: 'Options menu, Category General: ${0}', args: [] }
+                ignoreButtonFrom = Date.now()
             }
             this.parent()
         }
@@ -129,7 +136,8 @@ export function injectTextGathering(speakCall: (text: string) => void, interrupt
     sc.ItemTabbedBox.TabButton.inject({
         onPressedChange(pressed: boolean) {
             if (pressed && MenuOptions.ttsMenuEnabled) {
-                connect = { count: 2, template: '${0}, ${2}, ${1}', args: [getReadableText(this.text!.toString())] }
+                connect = { count: 1, template: 'Category ${0}: ${1}', args: [getReadableText(this.text!.toString())] }
+                ignoreButtonFrom = Date.now()
             }
             return this.parent(pressed)
         },
@@ -160,6 +168,7 @@ export function injectTextGathering(speakCall: (text: string) => void, interrupt
     }
 
     let lastButtonGroup: string | undefined
+    let lastRowButtonGroupSpeak: number = 0
     sc.RowButtonGroup.inject({
         init() {
             this.parent()
@@ -168,7 +177,8 @@ export function injectTextGathering(speakCall: (text: string) => void, interrupt
                     const or: sc.OptionRow = (button as sc.RowButtonGroup['elements'][0][0])?.optionRow
                     if (! or) { return }
                     const entry: { name: string, description: string } = ig.lang.labels.sc.gui.options[or.optionName]
-                    if (entry) {
+                    if (entry && Date.now() - lastRowButtonGroupSpeak > 100) {
+                        lastRowButtonGroupSpeak = Date.now()
                         if (or.option.type == 'BUTTON_GROUP') {
                             if (or.optionName == lastButtonGroup) { return }
                             const index: number = sc.options.get(or.optionName) as number

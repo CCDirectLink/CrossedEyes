@@ -134,7 +134,7 @@ export class MenuOptions {
         ig.lang.labels.sc.gui.options[puzzleToggleId] = { name: 'Puzzle assist', description: 'Solve puzzles blindfolded!' }
 		ig.lang.labels.sc.gui.options.headers[ttsHeader] = 'TTS'
         ig.lang.labels.sc.gui.options[ttsToogleId] = { name: 'Enable TTS', description: 'Enable TTS' }
-        ig.lang.labels.sc.gui.options[ttsTypeId] = { name: 'TTS Type', description: 'Reader type',
+        ig.lang.labels.sc.gui.options[ttsTypeId] = { name: 'TTS Type', description: 'Reader type, Requires a restart!',
             group: Object.keys(sc.OPTIONS_DEFINITION[ttsTypeId].data as Record<string, number>),
         }
         ig.lang.labels.sc.gui.options[ttsCharToogleId] = { name: 'TTS Character text', description: 'Read character text' }
