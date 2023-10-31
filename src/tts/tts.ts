@@ -27,9 +27,9 @@ export class TTS {
         this.ttsInstance?.interrupt()
     }
 
-    async initPrestart() {
+    constructor() { /* in prestart */
         injectTextGathering(
-            (text: string) => this.ttsInstance.speak(text),
+            (text: string) => this.ttsInstance && this.ttsInstance.speak(text),
             () => { this.clearQueue() }
         )
     }

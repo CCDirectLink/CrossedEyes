@@ -7,21 +7,29 @@ const puzzleToggleId: string = `${header}-puzzle`
 
 const ttsHeader = 'crossedeyes-tts'
 const ttsToogleId: string = `${ttsHeader}`
+const ttsCharToogleId: string = `${ttsHeader}-chartts`
+const ttsMenuToogleId: string = `${ttsHeader}-menutts`
 const ttsTypeId: string = `${ttsHeader}-type`
 const ttsSpeedId: string = `${ttsHeader}-speed`
 const ttsVoulmeId: string = `${ttsHeader}-volume`
 const ttsPitchId: string = `${ttsHeader}-pitch`
 
-export class MenuOptions {
-    static get spacialAudioEnabled(): boolean { return sc.options?.get(spacialAudioToggleId) as boolean }
-    static get loudWallsEnabled(): boolean { return sc.options?.get(loudWallsToggleId) as boolean && MenuOptions.spacialAudioEnabled }
-    static get puzzleEnabled(): boolean { return sc.options?.get(puzzleToggleId) as boolean && MenuOptions.spacialAudioEnabled }
+function opt(id: string): any {
+    return sc.options?.get(id)
+}
 
-    static get ttsEnabled(): boolean { return sc.options?.get(ttsToogleId) as boolean }
-    static get ttsType(): TTSTypes { return sc.options?.get(ttsTypeId) as TTSTypes }
-    static get ttsSpeed(): number { return sc.options?.get(ttsSpeedId) as number }
-    static get ttsVolume(): number{ return sc.options?.get(ttsVoulmeId) as number }
-    static get ttsPitch(): number{ return sc.options?.get(ttsPitchId) as number }
+export class MenuOptions {
+    static get spacialAudioEnabled(): boolean { return opt(spacialAudioToggleId) }
+    static get loudWallsEnabled(): boolean { return opt(loudWallsToggleId) && MenuOptions.spacialAudioEnabled }
+    static get puzzleEnabled(): boolean { return opt(puzzleToggleId) && MenuOptions.spacialAudioEnabled }
+
+    static get ttsEnabled(): boolean { return opt(ttsToogleId) }
+    static get ttsCharEnabled(): boolean { return opt(ttsCharToogleId) && MenuOptions.ttsEnabled }
+    static get ttsMenuEnabled(): boolean { return opt(ttsMenuToogleId) && MenuOptions.ttsEnabled }
+    static get ttsType(): TTSTypes { return opt(ttsTypeId) }
+    static get ttsSpeed(): number { return opt(ttsSpeedId) }
+    static get ttsVolume(): number { return opt(ttsVoulmeId) }
+    static get ttsPitch(): number { return opt(ttsPitchId) }
 
     static initPrestart() {
         sc.OPTIONS_DEFINITION[spacialAudioToggleId] = {
@@ -59,6 +67,18 @@ export class MenuOptions {
                 if (typeof k === 'string') { acc[k] = i }
                 return acc
             }, {} as { [key: string]: number }),
+            cat: sc.OPTION_CATEGORY.ASSISTS,
+            header: ttsHeader,
+        }
+        sc.OPTIONS_DEFINITION[ttsCharToogleId] = {
+            type: 'CHECKBOX',
+            init: true,
+            cat: sc.OPTION_CATEGORY.ASSISTS,
+            header: ttsHeader,
+        }
+        sc.OPTIONS_DEFINITION[ttsMenuToogleId] = {
+            type: 'CHECKBOX',
+            init: true,
             cat: sc.OPTION_CATEGORY.ASSISTS,
             header: ttsHeader,
         }
@@ -109,39 +129,18 @@ export class MenuOptions {
 
     static initPoststart() {
 		ig.lang.labels.sc.gui.options.headers[header] = 'CrossedEyes'
-        ig.lang.labels.sc.gui.options[spacialAudioToggleId] = {
-            name: 'Enable spacial audio',
-            description: 'Makes it so you can clearly tell from where the sound is coming from'
-        }
-        ig.lang.labels.sc.gui.options[loudWallsToggleId] = {
-            name: 'Loud walls',
-            description: 'Make the walls directonaly beep when you approach them'
-        }
-        ig.lang.labels.sc.gui.options[puzzleToggleId] = {
-            name: 'Puzzle beeps',
-            description: 'Solve puzzles blindfolded'
-        }
+        ig.lang.labels.sc.gui.options[spacialAudioToggleId] = { name: 'Enable spacial audio', description: 'Makes it so you can clearly tell from where the sound is coming from' }
+        ig.lang.labels.sc.gui.options[loudWallsToggleId] = { name: 'Loud walls', description: 'Make the walls directonaly beep when you approach them' }
+        ig.lang.labels.sc.gui.options[puzzleToggleId] = { name: 'Puzzle assist', description: 'Solve puzzles blindfolded!' }
 		ig.lang.labels.sc.gui.options.headers[ttsHeader] = 'TTS'
-        ig.lang.labels.sc.gui.options[ttsToogleId] = {
-            name: 'Enable',
-            description: 'Read gui text out loud'
-        }
-        ig.lang.labels.sc.gui.options[ttsTypeId] = {
-            name: 'Type',
-            description: 'Reader type',
+        ig.lang.labels.sc.gui.options[ttsToogleId] = { name: 'Enable TTS', description: 'Enable TTS' }
+        ig.lang.labels.sc.gui.options[ttsTypeId] = { name: 'TTS Type', description: 'Reader type',
             group: Object.keys(sc.OPTIONS_DEFINITION[ttsTypeId].data as Record<string, number>),
         }
-        ig.lang.labels.sc.gui.options[ttsVoulmeId] = {
-            name: 'Volume',
-            description: ''
-        }
-        ig.lang.labels.sc.gui.options[ttsSpeedId] = {
-            name: 'Speed',
-            description: ''
-        }
-        ig.lang.labels.sc.gui.options[ttsPitchId] = {
-            name: 'Pitch',
-            description: ''
-        }
+        ig.lang.labels.sc.gui.options[ttsCharToogleId] = { name: 'TTS Character text', description: 'Read character text' }
+        ig.lang.labels.sc.gui.options[ttsMenuToogleId] = { name: 'TTS Menu text', description: 'Read menu text' }
+        ig.lang.labels.sc.gui.options[ttsVoulmeId] = { name: 'TTS Volume', description: 'TTS voulme (doesn\'t work)' }
+        ig.lang.labels.sc.gui.options[ttsSpeedId] = { name: 'TTS Speed', description: 'TTS speed' }
+        ig.lang.labels.sc.gui.options[ttsPitchId] = { name: 'TTS Pitch', description: 'TTS pitch' }
     }
 }

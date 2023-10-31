@@ -229,7 +229,7 @@ export class PuzzleBeeper {
     cachedSolution!: keyof ig.KnownVars
     finishCondition: string = ''
 
-    initPrestart() {
+    constructor() { /* in prestart */
         blitzkrieg.sels.puzzle.loadAll()
 
         this.aimHandler.initPrestart()

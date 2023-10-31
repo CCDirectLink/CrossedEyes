@@ -6,6 +6,7 @@ import { PuzzleBeeper } from './puzzle'
 import { LoudWalls } from './loudwalls'
 import { SoundManager } from './sound-manager'
 import { TTS } from './tts/tts'
+import { SpecialAction } from './special-action'
 
 export default class CrossedEyes {
     dir: string
@@ -13,6 +14,7 @@ export default class CrossedEyes {
 
     puzzleBeeper!: PuzzleBeeper
     tts!: TTS
+    specialAction!: SpecialAction
 
     constructor(mod: Mod1) {
         this.dir = mod.baseDirectory
@@ -27,17 +29,15 @@ export default class CrossedEyes {
         SoundManager.preloadSounds()
         new SpacialAudio().initSpacialAudio()
         new LoudWalls().initLoudWalls()
-
+        this.specialAction = new SpecialAction()
         this.puzzleBeeper = new PuzzleBeeper()
-        this.puzzleBeeper.initPrestart()
-
         this.tts = new TTS()
-        this.tts.initPrestart()
     }
 
     async poststart() {
         MenuOptions.initPoststart()
         this.tts.initPoststart()
+        this.specialAction.initPoststart()
     }
 
     addVimAliases() {

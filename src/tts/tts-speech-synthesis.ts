@@ -49,7 +49,7 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
     getVoices(): Promise<SpeechSynthesisVoice[]> {
         return new Promise(resolve => {
             let voices = speechSynthesis.getVoices()
-            if (voices.length) {
+            if (voices.length > 0) {
                 resolve(voices)
                 return
             }
