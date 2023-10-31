@@ -35,10 +35,10 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
     async init(queue: TTS['speakQueue'], increaseQueueId: () => number) {
         this.queue = queue
         this.increaseQueueId = increaseQueueId
-        this.getVoices()
 
         this.voices = await this.getVoices()
         if (this.voices.length == 0) {
+            debugger
             console.log('tts initialization failed')
             return
         }
@@ -53,10 +53,12 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
                 resolve(voices)
                 return
             }
-            speechSynthesis.onvoiceschanged = () => {
+            setInterval(() => {
                 voices = speechSynthesis.getVoices()
-                resolve(voices)
-            }
+                if (voices.length > 0) {
+                    resolve(voices)
+                }
+            }, 100)
         })
     }
 
