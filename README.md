@@ -5,7 +5,7 @@
 
 ### Please report all bugs on the [CrossCode Modding](https://discord.com/invite/3Xw69VjXfW) discord
 
-[![Releases](https://github.com/CCDirectLink/organization/blob/master/assets/badges/releases%402x.png)](https://github.com/krypciak/cc-shaduungeon/releases/latest/)
+[![Releases](https://github.com/CCDirectLink/organization/blob/master/assets/badges/releases%402x.png)](https://github.com/CCDirectLink/CrossedEyes/releases/latest/)
 
 | Dependencies |  |
 | --------------------------------------- | --------------------------------------- |
