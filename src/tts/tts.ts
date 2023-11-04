@@ -1,5 +1,5 @@
 import { MenuOptions, ttsTypeId } from '../options'
-import { injectTextGathering } from './gather-text'
+import { TextGather } from './gather-text'
 import { TTSScreenReader } from './tts-screen-reader'
 import { TTSSpeechSynthesisAPI } from './tts-speech-synthesis'
 
@@ -29,7 +29,7 @@ export class TTS {
     }
 
     constructor() { /* in prestart */
-        injectTextGathering(
+        new TextGather(
             (text: string) => this.ttsInstance && this.ttsInstance.speak(text),
             () => { this.clearQueue() }
         )

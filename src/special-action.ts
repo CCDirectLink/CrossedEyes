@@ -1,8 +1,12 @@
 export class SpecialAction {
     private static instance: SpecialAction
 
-    private l2r2LastActivated: number = 0
-    private callbacks: Record<string, () => void> = {}
+    private actions: Record<SpecialAction.Actions, { check: () => boolean, lastActivated: number, callbacks: Record<string, () => void> }> = {
+        // 'L1R1': { check: () => ig.gamepad.isButtonDown(ig.BUTTONS.RIGHT_TRIGGER) && ig.gamepad.isButtonDown(ig.BUTTONS.LEFT_TRIGGER), lastActivated: 0, callbacks: {} },
+        // 'L2R2': { check: () => ig.gamepad.isButtonDown(ig.BUTTONS.RIGHT_TRIGGER) && ig.gamepad.isButtonDown(ig.BUTTONS.LEFT_TRIGGER), lastActivated: 0, callbacks: {} },
+        'LSP': { check: () => ig.gamepad.isButtonDown(ig.BUTTONS.LEFT_STICK), lastActivated: 0, callbacks: {} },
+        'RSP': { check: () => ig.gamepad.isButtonDown(ig.BUTTONS.RIGHT_STICK), lastActivated: 0, callbacks: {} },
+    }
 
     constructor() { /* in prestart */
         SpecialAction.instance = this
@@ -12,16 +16,23 @@ export class SpecialAction {
     }
 
     onPreUpdate() { /* run by ig.game.addons.preUpdate */
-        const l2r2 = ig.gamepad.isButtonDown(ig.BUTTONS.RIGHT_TRIGGER) && ig.gamepad.isButtonDown(ig.BUTTONS.LEFT_TRIGGER)
-        if (l2r2) {
-            if (Date.now() - this.l2r2LastActivated > 30) {
-                Object.values(this.callbacks).forEach(c => c())
+        for (const actionName of Object.keys(this.actions) as (SpecialAction.Actions)[]) {
+            const action = this.actions[actionName]
+            const active: boolean = action.check()
+            if (active) {
+                if (Date.now() - action.lastActivated > 30) {
+                    Object.values(action.callbacks).forEach(c => c())
+                }
+                action.lastActivated = Date.now()
             }
-            this.l2r2LastActivated = Date.now()
         }
     }
 
-    static setListener(name: string, callback: () => void) {
-        SpecialAction.instance.callbacks[name] = callback
+    static setListener(type: SpecialAction.Actions, name: string, callback: () => void) {
+        SpecialAction.instance.actions[type].callbacks[name] = callback
     }
+}
+
+export namespace SpecialAction {
+    export type Actions = 'LSP' | 'RSP' //'L1R1' | 'L2R2'
 }
