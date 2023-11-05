@@ -21,7 +21,7 @@ export class SpacialAudio {
                     align: null,
                     offset: null,
                     range: range || 1600,
-                    rangeType: type || ig.SOUND_RANGE_TYPE.CIRCULAR
+                    rangeType: type || ig.SOUND_RANGE_TYPE.CIRULAR
                 }
             },
             setEntityPosition(entity: ig.Entity, align: ig.ENTITY_ALIGN, offset: null, range?: number | undefined, type?: ig.SOUND_RANGE_TYPE | undefined): void {
@@ -34,7 +34,7 @@ export class SpacialAudio {
                     align: align,
                     offset: offset,
                     range: range || 1600,
-                    rangeType: type || ig.SOUND_RANGE_TYPE.CIRCULAR
+                    rangeType: type || ig.SOUND_RANGE_TYPE.CIRULAR
                 }
                 this._updateEntityPos(true)
             },
