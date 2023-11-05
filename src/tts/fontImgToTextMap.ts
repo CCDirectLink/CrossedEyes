@@ -1,5 +1,9 @@
 export const fontImgToNameMap: Record<string, string> = {
-    'twitter': 'twitter',
+    ...(() => {
+        const obj: Record<string, string> = {}
+        for (let i = 0; i < 256; i++) { obj[`keyCode-${i}`] = `Key ${String.fromCharCode(i)}` }
+        return obj
+    })(),
     'left-stick': 'Gamepad: left stick,',
     'right-stick': 'Gamepad: right stick,',
     'gamepad-left': 'Gamepad: left,',
@@ -27,6 +31,17 @@ export const fontImgToNameMap: Record<string, string> = {
     'guard': 'Gamepad: A,',
     'throw': 'Gamepad: R1,',
     'special': 'Gamepad: R2,',
+
+    'twitter': 'twitter',
+    'menu': '',
+    'help2': '',
+    'language-0': '',
+    'language-1': '',
+    'language-2': '',
+    'language-3': '',
+    'language-4': '',
+    'language-5': '',
+    'diff-2': '',
 }
 
 
