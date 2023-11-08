@@ -7,6 +7,7 @@ import { LoudWalls } from './loudwalls'
 import { SoundManager } from './sound-manager'
 import { TTS } from './tts/tts'
 import { SpecialAction } from './special-action'
+import { EntityBeeper } from './entity-beeper'
 
 export default class CrossedEyes {
     dir: string
@@ -28,10 +29,11 @@ export default class CrossedEyes {
         MenuOptions.initPrestart()
         SoundManager.preloadSounds()
         new SpacialAudio().initSpacialAudio()
-        new LoudWalls().initLoudWalls()
+        new LoudWalls()
         this.specialAction = new SpecialAction()
         this.puzzleBeeper = new PuzzleBeeper()
         this.tts = new TTS()
+        new EntityBeeper()
     }
 
     async poststart() {

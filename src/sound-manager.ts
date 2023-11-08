@@ -4,6 +4,7 @@ export type SoundQueueEntry = {
     name: keyof typeof SoundManager.sounds
     wait?: number
     speed?: number
+    volume?: number
     condition?: () => boolean
     action?: (played: boolean) => void
 } & ({
@@ -19,6 +20,7 @@ export type SoundQueueEntry = {
 
 export class SoundManager {
     private static soundQueue: SoundQueueEntry[] = []
+    static continiousSounds: Record<string, ig.SoundHandleWebAudio> = {}
 
     static sounds = {
         countdown1: 'media/sound/misc/countdown-1.ogg',
@@ -34,6 +36,8 @@ export class SoundManager {
         waveMode: 'media/sound/move/wave-mode.ogg',
         shockMode: 'media/sound/move/shock-mode.ogg',
         hitCounterEcho: 'media/sound/battle/hit-counter-echo.ogg',
+        wallHum: 'media/sound/wall-hum.ogg',
+        wall: 'media/sound/crossedeyes/wall.ogg',
     }
     static getElementName(element: sc.ELEMENT): 'neutralMode' | 'coldMode' | 'heatMode' | 'waveMode' | 'shockMode' {
         switch(element) {
@@ -48,24 +52,25 @@ export class SoundManager {
     static preloadSounds() {
         Object.values(SoundManager.sounds).forEach(str => new ig.Sound(str))
     }
-    static playSoundPath(path: string, speed: number, pos?: Vec3) {
-        const sound = new ig.Sound(path)
-        const handle = sound.play(false, {
+    static playSoundPath(path: string, speed: number, volume: number = 1, pos?: Vec3): ig.SoundHandleWebAudio {
+        const sound = new ig.Sound(path, volume)
+        const handle: ig.SoundHandleWebAudio = sound.play(false, {
             speed
         })
         pos && handle.setFixPosition(pos, 100*16)
+        return handle
     }
 
-    static playSound(name: keyof typeof SoundManager.sounds, speed: number, pos?: Vec3) {
-        SoundManager.playSoundPath(SoundManager.sounds[name], speed, pos)
+    static playSound(name: keyof typeof SoundManager.sounds, speed: number, volume?: number, pos?: Vec3): ig.SoundHandleWebAudio {
+        return SoundManager.playSoundPath(SoundManager.sounds[name], speed, volume, pos)
     }
     
-    static playSoundAtRelative(name: keyof typeof SoundManager.sounds, speed: number, pos: Vec2) {
+    static playSoundAtRelative(name: keyof typeof SoundManager.sounds, speed: number, volume: number, pos: Vec2): ig.SoundHandleWebAudio {
         const soundPosVec2: Vec2 = Vec2.create(pos)
         Vec2.add(soundPosVec2, ig.game.playerEntity.coll.pos)
         const soundPos: Vec3 = Vec3.createC(soundPosVec2.x, soundPosVec2.y, ig.game.playerEntity.coll.pos.z)
         
-        SoundManager.playSound(name, speed, soundPos)
+        return SoundManager.playSound(name, speed, volume, soundPos)
     }
 
     static appendQueue(queue: SoundQueueEntry[]) {
@@ -85,9 +90,9 @@ export class SoundManager {
             const play: boolean = e.condition ? e.condition() : true
             if (play) {
                 if (e.relativePos) {
-                    SoundManager.playSoundAtRelative(e.name, e.speed ?? 1, e.pos)
+                    SoundManager.playSoundAtRelative(e.name, e.speed ?? 1, e.volume ?? 1, e.pos)
                 } else {
-                    SoundManager.playSound(e.name, e.speed ?? 1, e.pos)
+                    SoundManager.playSound(e.name, e.speed ?? 1, e.volume ?? 1, e.pos)
                 }
             }
             e.action && e.action(play)
@@ -102,8 +107,27 @@ export class SoundManager {
             setTimeout(action, e.wait)
         }
     }
-}
 
+    static playContiniousSound(id: string, soundName: keyof typeof SoundManager.sounds, speed: number = 1, volume?: number, pos?: Vec3): ig.SoundHandleWebAudio {
+        if (this.continiousSounds[id]) {
+            this.continiousSounds[id].stop()
+        }
+        return this.continiousSounds[id] = pos ?
+            SoundManager.playSound(soundName, speed, volume, pos) :
+            SoundManager.playSound(soundName, speed, volume)
+    }
+
+    static stopContiniousSound(id: string) {
+        if (this.continiousSounds[id]) {
+            this.continiousSounds[id].stop()
+            delete this.continiousSounds[id]
+        }
+    }
+
+    static isContiniousSoundPlaying(id: string): boolean {
+        return !!this.continiousSounds[id]
+    }
+}
 
 export class PuzzleSounds {
     static puzzleSolved() {
@@ -116,7 +140,7 @@ export class PuzzleSounds {
     }
 
     static moveGuide(speed: number, pos: Vec3) {
-        SoundManager.playSound('trainCudeHide', speed, pos)
+        SoundManager.playSound('trainCudeHide', speed, 1, pos)
     }
 
     static moveLockin(pos: Vec3, action: () => void) {
@@ -132,7 +156,13 @@ export class PuzzleSounds {
         ])
     }
 
-
+    static moveWaitFinished() {
+        SoundManager.clearQueue()
+        SoundManager.appendQueue([
+            {            name: 'botSuccess' },
+        ])
+    }
+    
 
     static aimLockin(pos: Vec2, element: sc.ELEMENT, action: () => void) {
         SoundManager.appendQueue([
@@ -153,7 +183,7 @@ export class PuzzleSounds {
     }
 
     static aimGuide(speed: number, pos: Vec2) {
-        SoundManager.playSoundAtRelative('computerBeep', speed, pos)
+        SoundManager.playSoundAtRelative('computerBeep', speed, 1, pos)
     }
 
     static shootNow(wait: number, lockinCheck: () => boolean, shotCount?: number): number {

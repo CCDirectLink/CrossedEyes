@@ -3,6 +3,7 @@ import { TTSTypes } from "./tts/tts"
 const header: string = 'crossedeyes'
 const spacialAudioToggleId: string = `${header}-spacialaudio`
 const loudWallsToggleId: string = `${header}-loudwalls`
+const loudEntitiesToogleId: string = `${header}-loudentities`
 const puzzleToggleId: string = `${header}-puzzle`
 
 const ttsHeader = 'crossedeyes-tts'
@@ -21,6 +22,7 @@ function opt(id: string): any {
 export class MenuOptions {
     static get spacialAudioEnabled(): boolean { return opt(spacialAudioToggleId) }
     static get loudWallsEnabled(): boolean { return opt(loudWallsToggleId) && MenuOptions.spacialAudioEnabled }
+    static get loudEntitiesEnabled(): boolean { return opt(loudEntitiesToogleId) && MenuOptions.spacialAudioEnabled }
     static get puzzleEnabled(): boolean { return opt(puzzleToggleId) && MenuOptions.spacialAudioEnabled }
 
     static get ttsEnabled(): boolean { return opt(ttsToogleId) }
@@ -40,6 +42,12 @@ export class MenuOptions {
             hasDivider: true
         }
         sc.OPTIONS_DEFINITION[loudWallsToggleId] = {
+            type: 'CHECKBOX',
+            init: true,
+            cat: sc.OPTION_CATEGORY.ASSISTS,
+            header,
+        }
+        sc.OPTIONS_DEFINITION[loudEntitiesToogleId] = {
             type: 'CHECKBOX',
             init: true,
             cat: sc.OPTION_CATEGORY.ASSISTS,
@@ -131,7 +139,9 @@ export class MenuOptions {
 		ig.lang.labels.sc.gui.options.headers[header] = 'CrossedEyes'
         ig.lang.labels.sc.gui.options[spacialAudioToggleId] = { name: 'Enable spacial audio', description: 'Makes it so you can clearly tell from where the sound is coming from' }
         ig.lang.labels.sc.gui.options[loudWallsToggleId] = { name: 'Loud walls', description: 'Make the walls directonaly beep when you approach them' }
+        ig.lang.labels.sc.gui.options[loudEntitiesToogleId] = { name: 'Entity noises', description: 'Makes entities emit noise while nearby' }
         ig.lang.labels.sc.gui.options[puzzleToggleId] = { name: 'Puzzle assist', description: 'Solve puzzles blindfolded!' }
+
 		ig.lang.labels.sc.gui.options.headers[ttsHeader] = 'TTS'
         ig.lang.labels.sc.gui.options[ttsToogleId] = { name: 'Enable TTS', description: 'Enable TTS' }
         ig.lang.labels.sc.gui.options[ttsTypeId] = { name: 'TTS Type', description: 'Reader type, Requires a restart!',

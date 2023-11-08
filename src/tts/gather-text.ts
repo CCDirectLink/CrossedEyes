@@ -159,7 +159,6 @@ export class TextGather {
                 return this.parent(...args)
             },
         })
-
         
         sc.InputForcer.inject({
             setEntry(action, title, textKeyboard, textGamepad) {
@@ -170,6 +169,8 @@ export class TextGather {
                     }
                     this.parent(action, title, textKeyboard, textGamepad)
                     self.speak( `${ig.LangLabel.getText(title as ig.LangLabel.Data)}: ${textGamepad}`)
+                } else {
+                    this.parent(action, title, textKeyboard, textGamepad)
                 }
             },
             _endBlock() {

@@ -1,46 +1,47 @@
 import { MenuOptions } from './options'
-import { mapNumber } from './spacial-audio';
+import { SoundManager } from './sound-manager';
 
 const c_res = {}
 const c_tmpPos: Vec3 = { x: 0, y: 0, z: 0}
 const c_tmpPoint: Vec3 = { x: 0, y: 0, z: 0}
 
 export class LoudWalls {
-    initLoudWalls() {
-        const wallHum = new ig.Sound('media/sound/wall-hum.ogg');
+    private handles: Record<string, ig.SoundHandleWebAudio> = {}
+    constructor() { /* in prestart */
+        const self = this
+        ig.ENTITY.Player.inject({
+            update() {
+                this.parent()
+                MenuOptions.loudWallsEnabled && self.handleWallSound()
+            }
+        })
         ig.Game.inject({
-            spawnEntity(entity, x, y, z, settings, showAppearEffects) {
-                const result = this.parent(entity, x, y, z, settings, showAppearEffects)
-                if (! MenuOptions.loudWallsEnabled) { return result }
-                // @ts-ignore fails at ig.ENTITY.Enemy
-                if (result && (entity === 'Enemy' || (typeof entity !== 'string' && entity === ig.ENTITY.Enemy))) {
-                    ig.SoundHelper.playAtEntity(wallHum, result, true, {
-                        fadeDuration: 0
-                    }, 16 * 16)
+            setPaused(paused: boolean) {
+                this.parent(paused)
+                if (paused && self.handles) {
+                    Object.values(self.handles).forEach(h => h?.setFixPosition(Vec3.createC(-1000, -1000, 0), 0))
                 }
-                return result
             },
         })
+    }
 
-        const dirs: [Vec2, ig.SoundWebAudio][] = [
-            [{ x: 0, y: 1 }, new ig.Sound('media/sound/misc/computer-beep-success.ogg')],
-            // [{ x: 1, y: 1 }, new ig.Sound('media/sound/misc/computer-beep-success.ogg')],
-            [{ x: 1, y: 0 }, new ig.Sound('media/sound/misc/computer-beep-success.ogg')],
-            // [{ x: 1, y: -1 }, new ig.Sound('media/sound/misc/computer-beep-success.ogg')],
-            [{ x: 0, y: -1 }, new ig.Sound('media/sound/misc/computer-beep-success.ogg')],
-            // [{ x: -1, y: -1 }, new ig.Sound('media/sound/misc/computer-beep-success.ogg')],
-            [{ x: -1, y: 0 }, new ig.Sound('media/sound/misc/computer-beep-success.ogg')],
-            // [{ x: -1, y: 1 }, new ig.Sound('media/sound/misc/computer-beep-success.ogg')],
+    private handleWallSound() {
+        const dirs: [string, Vec2][] = [
+            ['wallDown',  { x: 0, y: 1 }],
+            ['wallRight', { x: 1, y: 0 }],
+            ['wallUp',    { x: 0, y: -1 }],
+            ['wallLeft',  { x: -1, y: 0 }],
         ]
-
-
-        const freq: number = 1000;
         const range: number = 5 * 16;
-        let nextDir = 0;
-        setInterval(() => {
-            if (! MenuOptions.loudWallsEnabled) { return }
-            const [dir, sound] = dirs[nextDir];
-            const check = this._checkDirection(dir, range);
+        for (const [dirId, dir] of dirs) {
+            let handle = this.handles[dirId]
+            if (! handle || ! handle._playing) {
+                handle = this.handles[dirId] = new ig.Sound(SoundManager.sounds.wall).play(true, {
+                    speed: 1,
+                })
+                handle.setFixPosition(Vec3.createC(-1000, -1000, 0), 0)
+            }
+            const check = this.checkDirection(dir, range)
             if (check.type === 'collided') {
                 if (check.distance <= range * 0.02) {
                     check.pos.z = 0
@@ -48,19 +49,26 @@ export class LoudWalls {
                     Vec3.length(check.pos, range * 0.021)
                     Vec3.add(check.pos, ig.game.playerEntity.getAlignedPos(ig.ENTITY_ALIGN.CENTER, c_tmpPos))
                 }
-
-                const speed = mapNumber(check.distance, 0, range, 1, 0.5)
+                // const speed = mapNumber(check.distance, 0, range, 1, 0.5)
                 // console.log(new Date().toUTCString(), 'play at', check.pos.x, check.pos.y, check.pos.z, 'distance', check.distance, 'speed', speed)
-                const handle = sound.play(false, {
-                    speed,
-                })
-                handle.setFixPosition(check.pos, range)
+                
+                // if (handle.pos && Vec3.equal(handle.pos.point3d, Vec3.createC(-1000, -1000, 0))) {
+                //     console.log('turning on:', dirId)
+                // }
+                if (handle.pos && ! Vec3.equal(handle.pos.point3d, check.pos)) {
+                    handle.setFixPosition(check.pos, range)
+                }
+                // const dist: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
+                // Vec3.sub(dist, check.pos)
+                // console.log(dist, Vec2.create(ig.game.playerEntity.face))
+            } else if (! handle.pos || ! Vec3.equal(handle.pos.point3d, Vec3.createC(-1000, -1000, 0))) {
+                handle.setFixPosition(Vec3.createC(-1000, -1000, 0), 0)
+                // console.log('turning off:', dirId)
             }
-            nextDir = (nextDir + 1) % dirs.length
-        }, freq / dirs.length)
+        }
     }
 
-    _checkDirection(dir: Vec2, distance: number): { type: 'none' | 'blocked' | 'collided', pos: Vec3, distance: number } {
+    private checkDirection(dir: Vec2, distance: number): { type: 'none' | 'blocked' | 'collided', pos: Vec3, distance: number } {
         if (!ig.game || !ig.game.playerEntity) {
             return { type: 'none', pos: Vec3.createC(0, 0, 0), distance }
         }

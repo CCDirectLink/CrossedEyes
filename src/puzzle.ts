@@ -11,8 +11,6 @@ export function isAiming(): boolean {
 class AimHandler {
     constructor(public pb: PuzzleBeeper) {}
 
-    puzzleStartTime!: number
-
     farAwayFreq: number = 1300
     maxFreq: number = 0
 
@@ -41,7 +39,7 @@ class AimHandler {
     }
 
     handleAim(step: PuzzleSelectionStep) {
-        if (!this.pb.moveToHandler.lockedIn) { this.lockedIn = false; return }
+        if (!this.pb.moveToHandler.lockedIn || !this.pb.moveToHandler.passToAim) { this.lockedIn = false; return }
         if (!ig.game || !ig.game.playerEntity || !MenuOptions.puzzleEnabled) { return }
 
         const now: number = ig.game.now /* set by cc-blitzkrieg */
@@ -56,7 +54,7 @@ class AimHandler {
                     this.pb.moveToHandler.lockedIn = false
                     this.pb.stepI++
                     if (this.pb.stepI == 1) {
-                        this.puzzleStartTime = now
+                        this.pb.puzzleStartTime = now
                     }
                     return
                 }
@@ -67,7 +65,7 @@ class AimHandler {
                 const lastStep = this.pb.currentSel.data.recordLog!.steps[this.pb.stepI - 1]
                 let play: boolean = false
                 if (lastStep && !lastStep.split) {
-                    const realDiffTime = Math.round((now - this.puzzleStartTime) * sc.options.get('assist-puzzle-speed'))
+                    const realDiffTime = Math.round((now - this.pb.puzzleStartTime) * sc.options.get('assist-puzzle-speed'))
                     const diff = realDiffTime - step.endFrame
                     // console.log(diff, step.endFrame, realDiffTime)
                     if (diff > -wait) {
@@ -156,12 +154,36 @@ class MoveToHandler {
     lockedIn: boolean = false
     softLockout: boolean = false
     allowRelock: boolean = false
+    passToAim: boolean = false
     
     handleMoveTo(step: PuzzleSelectionStep) {
         const pos: Vec3 & { level: number } = step.pos
         
         const playerPos: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
         const dist: number = Vec3.distance(pos, playerPos)
+
+        const now: number = ig.game.now /* set by cc-blitzkrieg */
+        if (this.lockedIn) {
+            if (step.shootAngle === undefined) {
+                const lastStep = this.pb.currentSel.data.recordLog!.steps[this.pb.stepI - 1]
+                if (lastStep) {
+                    const realDiffTime = Math.round((now - this.pb.puzzleStartTime) * sc.options.get('assist-puzzle-speed'))
+                    const diff = realDiffTime - step.endFrame
+                    if (diff > 0) {
+                        this.lockedIn = false
+                        this.passToAim = false
+                        this.softLockout = false
+                        this.pb.stepI++
+                        if (this.pb.stepI == 1) {
+                            this.pb.puzzleStartTime = now
+                        }
+                        PuzzleSounds.moveWaitFinished()
+                        return
+                    }
+                }
+
+            }
+        }
 
         let lockout: boolean = false
         if (dist <= this.lockinDist && pos.z == playerPos.z) {
@@ -182,6 +204,11 @@ class MoveToHandler {
                         this.normalBeepSlience = false
                         this.lastBeepTime = ig.game.now
                     })
+
+                    if (step.shootAngle) {
+                        this.passToAim = true
+
+                    }
                     return
                 } else if (dist !== 0) {
                     lockout = true
@@ -196,6 +223,7 @@ class MoveToHandler {
         }
         if (lockout) {
             this.lockedIn = false
+            this.passToAim = false
             this.normalBeepSlience = true
 
             PuzzleSounds.moveLockout(pos, () => {
@@ -207,7 +235,6 @@ class MoveToHandler {
 
         if (this.lockedIn || this.normalBeepSlience) { return }
 
-        const now: number = ig.game.now
         const timeDiff = now - this.lastBeepTime
         const time: number = dist >= this.minDistToSpeedup ? this.farAwayFreq : 
             mapNumber(dist, this.minDistToSpeedup, 0, this.farAwayFreq, this.maxFreq)
@@ -224,9 +251,10 @@ export class PuzzleBeeper {
     aimHandler: AimHandler = new AimHandler(this)
     moveToHandler: MoveToHandler = new MoveToHandler(this)
 
+    puzzleStartTime!: number
     stepI: number = 0
     currentSel!: PuzzleSelection
-    cachedSolution!: keyof ig.KnownVars
+    cachedSolution!: [keyof ig.KnownVars, any]
     finishCondition: string = ''
 
     constructor() { /* in prestart */
@@ -234,6 +262,8 @@ export class PuzzleBeeper {
 
         this.aimHandler.initPrestart()
         
+        // @ts-expect-error
+        window.puzzlesolver = this
         const self = this
         ig.ENTITY.Player.inject({
             update() {
@@ -247,12 +277,12 @@ export class PuzzleBeeper {
                     self.currentSel = sel
                     self.stepI = 0
                     if (self.currentSel.data.completionType === blitzkrieg.PuzzleCompletionType.Normal) {
-                        self.cachedSolution = (blitzkrieg.PuzzleSelectionManager.getPuzzleSolveCondition(sel) ?? '.').substring(1) as keyof ig.KnownVars
+                        self.cachedSolution = (blitzkrieg.PuzzleSelectionManager.getPuzzleSolveCondition(sel) ?? '.') as [keyof ig.KnownVars, any]
                     }
                 }
                 switch (self.currentSel.data.completionType) {
                     case blitzkrieg.PuzzleCompletionType.Normal: {
-                        if (ig.vars.get(self.cachedSolution!)) {
+                        if (ig.vars.get(self.cachedSolution![0].substring(1)) == self.cachedSolution[1]) {
                             if (self.stepI > 0) {
                                 self.stepI = 0
                                 PuzzleSounds.puzzleSolved()
@@ -271,7 +301,14 @@ export class PuzzleBeeper {
                 if (!step || !step.pos) { return }
                 self.moveToHandler.handleMoveTo(step)
                 self.aimHandler.handleAim(step)
-            }
+            },
+            varsChanged() {
+                this.parent!()
+                if (MenuOptions.puzzleEnabled && this.floating && ig.vars.get("playerVar.staticFloat")) {
+                    this.configs.normal.clearOverwrite()
+                    this.configs.aiming.clearOverwrite()
+                }
+            },
         })
     }
 }
