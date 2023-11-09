@@ -40,6 +40,7 @@ export class LoudWalls {
             ['wallUp',    { x: 0, y: -1 }],
             ['wallLeft',  { x: -1, y: 0 }],
         ]
+        const playerFaceAngle: number = Vec2.clockangle(ig.game.playerEntity.face) * 180 / Math.PI
         for (const [dirId, dir] of dirs) {
             let handle = this.handles[dirId]
             if (! handle || ! handle._playing) {
@@ -48,7 +49,7 @@ export class LoudWalls {
                 })
                 turnOffHandle(handle)
             }
-            const check = this.checkDirection(dir, range)
+            const check = this.checkDirection(Vec2.create(dir), range)
             if (check.type === 'collided') {
                 if (check.distance <= range * 0.02) {
                     check.pos.z = 0
@@ -59,18 +60,25 @@ export class LoudWalls {
                 // const speed = mapNumber(check.distance, 0, range, 1, 0.5)
                 // console.log(new Date().toUTCString(), 'play at', check.pos.x, check.pos.y, check.pos.z, 'distance', check.distance, 'speed', speed)
                 
-                // if (handle.pos && Vec3.equal(handle.pos.point3d, Vec3.createC(-1000, -1000, 0))) {
-                //     console.log('turning on:', dirId)
-                // }
                 if (! handle.pos || ! Vec3.equal(handle.pos.point3d, check.pos)) {
                     handle.setFixPosition(check.pos, range)
+                }
+
+                const dirFaceAngle: number = Vec2.clockangle(dir) * 180 / Math.PI
+                const angleDist: number = Math.min(
+                    Math.abs(playerFaceAngle - dirFaceAngle),
+                    360 - Math.abs(playerFaceAngle - dirFaceAngle)
+                )
+                if (angleDist >= 140) { /* is behind the player */
+                    handle._nodeSource!.bufferNode.playbackRate.value = 0.7
+                } else {
+                    handle._nodeSource!.bufferNode.playbackRate.value = 1
                 }
                 // const dist: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
                 // Vec3.sub(dist, check.pos)
                 // console.log(dist, Vec2.create(ig.game.playerEntity.face))
             } else if (! handle.pos || ! isHandleOff(handle)) {
                 turnOffHandle(handle)
-                // console.log('turning off:', dirId)
             }
         }
     }
