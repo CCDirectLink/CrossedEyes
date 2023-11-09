@@ -5,6 +5,14 @@ const c_res = {}
 const c_tmpPos: Vec3 = { x: 0, y: 0, z: 0}
 const c_tmpPoint: Vec3 = { x: 0, y: 0, z: 0}
 
+const range: number = 5 * 16
+function turnOffHandle(handle: ig.SoundHandleWebAudio) {
+    handle.setFixPosition(Vec3.createC(-1000, -1000, 0), range)
+}
+function isHandleOff(handle: ig.SoundHandleWebAudio) {
+    return handle.pos?.point3d == Vec3.createC(-1000, -1000, 0)
+}
+
 export class LoudWalls {
     private handles: Record<string, ig.SoundHandleWebAudio> = {}
     constructor() { /* in prestart */
@@ -32,14 +40,13 @@ export class LoudWalls {
             ['wallUp',    { x: 0, y: -1 }],
             ['wallLeft',  { x: -1, y: 0 }],
         ]
-        const range: number = 5 * 16;
         for (const [dirId, dir] of dirs) {
             let handle = this.handles[dirId]
             if (! handle || ! handle._playing) {
                 handle = this.handles[dirId] = new ig.Sound(SoundManager.sounds.wall).play(true, {
                     speed: 1,
                 })
-                handle.setFixPosition(Vec3.createC(-1000, -1000, 0), 0)
+                turnOffHandle(handle)
             }
             const check = this.checkDirection(dir, range)
             if (check.type === 'collided') {
@@ -55,14 +62,14 @@ export class LoudWalls {
                 // if (handle.pos && Vec3.equal(handle.pos.point3d, Vec3.createC(-1000, -1000, 0))) {
                 //     console.log('turning on:', dirId)
                 // }
-                if (handle.pos && ! Vec3.equal(handle.pos.point3d, check.pos)) {
+                if (! handle.pos || ! Vec3.equal(handle.pos.point3d, check.pos)) {
                     handle.setFixPosition(check.pos, range)
                 }
                 // const dist: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
                 // Vec3.sub(dist, check.pos)
                 // console.log(dist, Vec2.create(ig.game.playerEntity.face))
-            } else if (! handle.pos || ! Vec3.equal(handle.pos.point3d, Vec3.createC(-1000, -1000, 0))) {
-                handle.setFixPosition(Vec3.createC(-1000, -1000, 0), 0)
+            } else if (! handle.pos || ! isHandleOff(handle)) {
+                turnOffHandle(handle)
                 // console.log('turning off:', dirId)
             }
         }

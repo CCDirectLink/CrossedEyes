@@ -16,7 +16,7 @@ export class SpacialAudio {
                 this.pos = {
                     get point(): Vec3 { throw new Error('cannot get audio pos directly') },
                     set point(_) { throw new Error('cannot set audio pos directly') },
-                    point3d: Vec3.createC(point.x, point.y, point.z),
+                    point3d: Vec3.create(point),
                     entity: null,
                     align: null,
                     offset: null,
