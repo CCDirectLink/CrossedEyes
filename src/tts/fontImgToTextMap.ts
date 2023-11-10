@@ -42,6 +42,9 @@ export const fontImgToNameMap: Record<string, string> = {
     'language-4': '',
     'language-5': '',
     'diff-2': '',
+    '<': '',
+    '>': '',
+    'tech': '',
 }
 
 

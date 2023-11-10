@@ -63,16 +63,13 @@ export class LoudWalls {
                 if (! handle.pos || ! Vec3.equal(handle.pos.point3d, check.pos)) {
                     handle.setFixPosition(check.pos, range)
                 }
-
-                const dirFaceAngle: number = Vec2.clockangle(dir) * 180 / Math.PI
-                const angleDist: number = Math.min(
-                    Math.abs(playerFaceAngle - dirFaceAngle),
-                    360 - Math.abs(playerFaceAngle - dirFaceAngle)
-                )
-                if (angleDist >= 140) { /* is behind the player */
-                    handle._nodeSource!.bufferNode.playbackRate.value = 0.7
-                } else {
-                    handle._nodeSource!.bufferNode.playbackRate.value = 1
+                if (handle._nodeSource) {
+                    const dirFaceAngle: number = Vec2.clockangle(dir) * 180 / Math.PI
+                    const angleDist: number = Math.min(
+                        Math.abs(playerFaceAngle - dirFaceAngle),
+                        360 - Math.abs(playerFaceAngle - dirFaceAngle)
+                    )
+                    handle._nodeSource.bufferNode.playbackRate.value = angleDist >= 140 ? 0.7 : 1
                 }
                 // const dist: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
                 // Vec3.sub(dist, check.pos)

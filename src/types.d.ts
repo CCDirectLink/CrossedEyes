@@ -15,6 +15,13 @@ declare global {
         }
 
         type SoundHandle = ig.SoundHandleWebAudio // | ig.SoundHandleDefault
+
+        namespace ENTITY {
+            interface Enemy {
+                playAtSoundHandle: ig.SoundHandleWebAudio
+            }
+
+        }
     }
     namespace sc {
         interface RowButtonGroup {

@@ -28,28 +28,45 @@ export function getRelativePlayerToObjectPosition(objectPosition: Vec2) : 'facin
     return relativePositionFromAngle(angle)
 }
 
-
-function isEnemy(e: ig.Entity): e is ig.ENTITY.Enemy {
-    return e && 'enemyName' in e
-}
-
 export class EntityBeeper {
     minRadius: number = 12*16
 
     constructor() { /* in prestart */
         const self = this
 
-        const wallHum = new ig.Sound(SoundManager.sounds.wallHum)
-        ig.Game.inject({
-            spawnEntity(entity, x, y, z, settings, showAppearEffects) {
-                const e = this.parent(entity, x, y, z, settings, showAppearEffects)
-                if (MenuOptions.loudEntitiesEnabled && isEnemy(e) && e.enemyType.path != 'target-bot') {
-                    console.log(e, e.enemyType.path)
-                    ig.SoundHelper.playAtEntity(wallHum, e, true, {
+        const wallHum = new ig.Sound(SoundManager.sounds.wallHum, 1)
+        ig.ENTITY.Enemy.inject({
+            playAtSoundHandle: null,
+            show() {
+                if (MenuOptions.loudEntitiesEnabled) {
+                    this.playAtSoundHandle = ig.SoundHelper.playAtEntity(wallHum, this, true, {
                         fadeDuration: 0
                     }, 16 * 16)
                 }
-                return e
+                return this.parent()
+            },
+            hide() {
+                this.parent()
+                this.playAtSoundHandle?.stop()
+            },
+            onKill() {
+                this.parent()
+                this.playAtSoundHandle?.stop()
+            },
+            update() {
+                this.parent()
+                if (this.playAtSoundHandle?._nodeSource) {
+                    const pFaceAngle: number = Vec2.clockangle(ig.game.playerEntity.face) * 180 / Math.PI
+                    const diffPos: Vec2 = Vec2.create(ig.game.playerEntity.coll.pos)
+                    Vec2.sub(diffPos, this.coll.pos)
+                    const diffAngle: number = Vec2.clockangle(diffPos) * 180 / Math.PI
+
+                    const angleDist: number = Math.min(
+                        Math.abs(pFaceAngle - diffAngle),
+                        360 - Math.abs(pFaceAngle - diffAngle)
+                    )
+                    this.playAtSoundHandle._nodeSource.bufferNode.playbackRate.value = angleDist < 40 ? 0.75 : 1
+                }
             },
         })
 
