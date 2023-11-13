@@ -1,4 +1,5 @@
 import { MenuOptions } from './options'
+import { Pauseable } from './plugin';
 import { SoundManager } from './sound-manager';
 
 const c_res = {}
@@ -13,7 +14,7 @@ function isHandleOff(handle: ig.SoundHandleWebAudio) {
     return handle.pos?.point3d == Vec3.createC(-1000, -1000, 0)
 }
 
-export class LoudWalls {
+export class LoudWalls implements Pauseable {
     private handles: Record<string, ig.SoundHandleWebAudio> = {}
     constructor() { /* in prestart */
         const self = this
@@ -26,14 +27,21 @@ export class LoudWalls {
         ig.Game.inject({
             setPaused(paused: boolean) {
                 this.parent(paused)
-                if (paused && self.handles) {
-                    Object.values(self.handles).forEach(h => h?.setFixPosition(Vec3.createC(-1000, -1000, 0), 0))
-                }
+                paused && self.pauseAll
             },
         })
     }
 
+    pause(): void {
+        if (this.handles) {
+            Object.values(this.handles).forEach(h => h?.setFixPosition(Vec3.createC(-1000, -1000, 0), 0))
+        }
+        
+    }
+    resume(): void { }
+
     private handleWallSound() {
+        if (ig.game.events.blockingEventCall) { return }
         const dirs: [string, Vec2][] = [
             ['wallDown',  { x: 0, y: 1 }],
             ['wallRight', { x: 1, y: 0 }],

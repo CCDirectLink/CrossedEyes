@@ -269,7 +269,7 @@ export class PuzzleBeeper {
             update() {
                 this.parent()
 
-                if (!ig.game || !ig.game.playerEntity || !MenuOptions.puzzleEnabled) { return }
+                if (!ig.game || !ig.game.playerEntity || !MenuOptions.puzzleEnabled || sc.message.blocking) { return }
 
                 const sel: PuzzleSelection = blitzkrieg.sels.puzzle.inSelStack.peek()
                 if (!sel || !sel.data.recordLog || sel.data.recordLog.steps.length == 0) { return }
