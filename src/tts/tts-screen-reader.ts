@@ -10,7 +10,7 @@ export class TTSScreenReader implements TTSInterface {
         this.increaseQueueId = increaseQueueId
 
         const gameDiv = document.getElementById('game')!
-        gameDiv.setAttribute('aria-live', 'polite')
+        gameDiv.setAttribute('aria-live', 'assertive')
     }
 
     isReady(): boolean {
@@ -19,7 +19,7 @@ export class TTSScreenReader implements TTSInterface {
 
     speak(text: string): void {
         // @ts-expect-error
-        ig.system.canvas.setAttribute('aria-label', text + '')
+        ig.system.canvas.setAttribute('aria-label', text)
     }
-    interrupt(): void { }
+    interrupt(): void { this.speak('') }
 }

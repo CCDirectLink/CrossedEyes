@@ -269,6 +269,7 @@ export class PuzzleBeeper {
             update() {
                 this.parent()
 
+                const a = true; if (a) { return }
                 if (!ig.game || !ig.game.playerEntity || !MenuOptions.puzzleEnabled || sc.message.blocking) { return }
 
                 const sel: PuzzleSelection = blitzkrieg.sels.puzzle.inSelStack.peek()

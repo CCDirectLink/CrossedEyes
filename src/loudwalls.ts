@@ -27,7 +27,7 @@ export class LoudWalls implements Pauseable {
         ig.Game.inject({
             setPaused(paused: boolean) {
                 this.parent(paused)
-                paused && self.pauseAll
+                paused && self.pause()
             },
         })
     }

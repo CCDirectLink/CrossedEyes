@@ -193,6 +193,64 @@ export class TextGather {
             },
             keep: false,
         }
+
+        sc.QUICK_MENU_TYPES.PuzzleElements.inject({
+            focusGained() {
+                this.parent()
+                MenuOptions.ttsMenuEnabled && self.speak(this.nameGui.title.text)
+                SpecialAction.setListener('LSP', 'hintDescription', () => {
+                    MenuOptions.ttsMenuEnabled && self.speak(this.nameGui.description.text)
+                })
+            },
+            focusLost() {
+                this.parent()
+                self.interrupt()
+                SpecialAction.setListener('LSP', 'hintDescription', () => { })
+            },
+        })
+        sc.QUICK_MENU_TYPES.NPC.inject({
+            focusGained() {
+                this.parent()
+                MenuOptions.ttsMenuEnabled && self.speak(`NPC: ${this.nameGui.name.text}`)
+            },
+            focusLost() {
+                this.parent()
+                self.interrupt()
+            },
+        })
+
+        sc.QuickMenuModel.inject({
+            enterQuickMenu() {
+                this.parent()
+                MenuOptions.ttsMenuEnabled && self.speak('Quick Menu')
+            },
+            exitQuickMenu() {
+                this.parent()
+                self.interrupt()
+            }
+        })
+
+        sc.RingMenuButton.inject({
+            focusGained() {
+                this.parent()
+                if (MenuOptions.ttsMenuEnabled) {
+                    let text: string | undefined
+                    switch (this.state) {
+                        case sc.QUICK_MENU_STATE.NONE: break;
+                        case sc.QUICK_MENU_STATE.ITEMS: text = 'Items'; break
+                        case sc.QUICK_MENU_STATE.CHECK: text = 'Analysis'; break
+                        case sc.QUICK_MENU_STATE.PARTY: text = 'Party'; break
+                        case sc.QUICK_MENU_STATE.MAP: text = 'Map'; break
+                    }
+                    if (text) {
+                        self.speak(text)
+                        SpecialAction.setListener('LSP', 'quickMenuDescription', () => {
+                            MenuOptions.ttsMenuEnabled && this.focus && self.speak(this.data)
+                        })
+                    }
+                }
+            }
+        })
     }
 
     private menu() {

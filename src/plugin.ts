@@ -8,6 +8,7 @@ import { SoundManager } from './sound-manager'
 import { TTS } from './tts/tts'
 import { SpecialAction } from './special-action'
 import { EntityBeeper } from './entity-beeper'
+import { PuzzleElementsAnalysis } from './puzzle-analyze/puzzle-analyze'
 
 export interface Pauseable {
     pause(): void
@@ -42,6 +43,7 @@ export default class CrossedEyes {
         this.pauseables.push(
             new LoudWalls(),
         )
+        new PuzzleElementsAnalysis()
         this.specialAction = new SpecialAction()
         this.puzzleBeeper = new PuzzleBeeper()
         this.tts = new TTS()
