@@ -262,8 +262,6 @@ export class PuzzleBeeper {
 
         this.aimHandler.initPrestart()
         
-        // @ts-expect-error
-        window.puzzlesolver = this
         const self = this
         ig.ENTITY.Player.inject({
             update() {

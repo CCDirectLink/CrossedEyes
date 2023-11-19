@@ -57,7 +57,7 @@ export class LoudWalls implements Pauseable {
                 })
                 turnOffHandle(handle)
             }
-            const check = this.checkDirection(Vec2.create(dir), range)
+            const check = LoudWalls.checkDirection(Vec2.create(dir), range)
             if (check.type === 'collided') {
                 if (check.distance <= range * 0.02) {
                     check.pos.z = 0
@@ -88,7 +88,7 @@ export class LoudWalls implements Pauseable {
         }
     }
 
-    private checkDirection(dir: Vec2, distance: number): { type: 'none' | 'blocked' | 'collided', pos: Vec3, distance: number } {
+    static checkDirection(dir: Vec2, distance: number): { type: 'none' | 'blocked' | 'collided', pos: Vec3, distance: number, hitE?: ig.Physics.CollEntry[] } {
         if (!ig.game || !ig.game.playerEntity) {
             return { type: 'none', pos: Vec3.createC(0, 0, 0), distance }
         }
@@ -132,10 +132,10 @@ export class LoudWalls implements Pauseable {
 
         for (const { entity } of hitEntityList) {
             if (entity.ballDestroyer || (entity.isBallDestroyer && entity.isBallDestroyer(c_tmpPoint, result))) {
-                return { type: 'blocked', pos: c_tmpPoint, distance: result.dist * distance }
+                return { type: 'blocked', pos: c_tmpPoint, distance: result.dist * distance, hitE: hitEntityList }
             }
         }
-        
-        return { type: 'collided', pos: c_tmpPoint, distance: result.dist * distance }
+ 
+        return { type: 'collided', pos: c_tmpPoint, distance: result.dist * distance, hitE: hitEntityList }
     }
 }

@@ -23,6 +23,8 @@ export class PuzzleElementsAnalysis {
     puzzleTypes = [PuzzleExtensionBounceBlock, PuzzleExtensionBounceSwitch, PuzzleExtensionSwitch,
         PuzzleExtensionDoor, PuzzleExtensionTeleportField, PuzzleExtensionTeleportGround, PuzzleExtensionEnemy]
 
+    quickMenuAnalysisInstance!: sc.QuickMenuAnalysis
+
     setupGui() {
         const self = this
         let soundHandle: ig.SoundHandleWebAudio | undefined
@@ -125,11 +127,11 @@ export class PuzzleElementsAnalysis {
 
         this.setupGui()
 
-        let quickMenuAnalysisInstance: sc.QuickMenuAnalysis
+        const self = this
         sc.QuickMenuAnalysis.inject({
             init() {
                 this.parent()
-                quickMenuAnalysisInstance = this
+                self.quickMenuAnalysisInstance = this
             }
         })
 
@@ -143,7 +145,7 @@ export class PuzzleElementsAnalysis {
                     if (add != 0) {
                         const pPos: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
                         const sorted: sc.QuickMenuTypesBase[] =
-                            quickMenuAnalysisInstance.entities.filter(e => e)
+                            self.quickMenuAnalysisInstance.entities.filter(e => e)
                                 .sort((a, b) => Vec3.distance(a.entity.coll.pos, pPos) - Vec3.distance(b.entity.coll.pos, pPos))
                         if (currentSelectIndex == -1) {
                             currentSelectIndex = 0
