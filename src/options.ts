@@ -18,6 +18,9 @@ const ttsPitchId: string = `${ttsHeader}-pitch`
 function opt(id: string): any {
     return sc.options?.get(id)
 }
+function sopt(id: string, v: any) {
+    sc.options?.set(id, v)
+}
 
 export class MenuOptions {
     static get spacialAudioEnabled(): boolean { return opt(spacialAudioToggleId) }
@@ -29,9 +32,14 @@ export class MenuOptions {
     static get ttsCharEnabled(): boolean { return opt(ttsCharToogleId) && MenuOptions.ttsEnabled }
     static get ttsMenuEnabled(): boolean { return opt(ttsMenuToogleId) && MenuOptions.ttsEnabled }
     static get ttsType(): TTSTypes { return opt(ttsTypeId) }
+    static set ttsType(v: TTSTypes) { sopt(ttsTypeId, v) }
     static get ttsSpeed(): number { return opt(ttsSpeedId) }
     static get ttsVolume(): number { return opt(ttsVoulmeId) }
     static get ttsPitch(): number { return opt(ttsPitchId) }
+
+    static save() {
+        sc.options.persistOptions()
+    }
 
     static initPrestart() {
         sc.OPTIONS_DEFINITION[spacialAudioToggleId] = {

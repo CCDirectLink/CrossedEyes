@@ -2,6 +2,8 @@ import { MenuOptions } from '../options'
 import { TTS, TTSInterface } from './tts'
 
 export class TTSSpeechSynthesisAPI implements TTSInterface {
+    onReady!: () => void
+
     voiceName: string = 'English (Received Pronunciation)+Annie espeak-ng'
     voices!: SpeechSynthesisVoice[]
     voice!: SpeechSynthesisVoice
@@ -32,7 +34,8 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
         }
     }
 
-    async init(queue: TTS['speakQueue'], increaseQueueId: () => number) {
+    async init(queue: TTS['speakQueue'], increaseQueueId: () => number, onReady: () => void) {
+        this.onReady = onReady
         this.queue = queue
         this.increaseQueueId = increaseQueueId
 
@@ -43,6 +46,7 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
         }
         this.voice = this.getVoice()
         console.log(this.voice)
+        this.onReady()
     }
 
     getVoices(): Promise<SpeechSynthesisVoice[]> {

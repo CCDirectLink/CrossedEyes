@@ -10,23 +10,23 @@ import { SpecialAction } from './special-action'
 import { EntityBeeper } from './entity-beeper'
 import { PuzzleElementsAnalysis } from './puzzle-analyze/puzzle-analyze'
 import { AimAnalyzer } from './puzzle-analyze/aim-analyze'
+import { AddonInstaller } from './tts/tts-nvda'
 
 export interface Pauseable {
     pause(): void
     resume(): void
 }
 export default class CrossedEyes {
-    dir: string
+    static dir: string
     mod: Mod1
 
     puzzleBeeper!: PuzzleBeeper
-    tts!: TTS
     specialAction!: SpecialAction
 
     pauseables: Pauseable[] = []
 
     constructor(mod: Mod1) {
-        this.dir = mod.baseDirectory
+        CrossedEyes.dir = mod.baseDirectory
         this.mod = mod
         this.mod.isCCL3 = mod.findAllAssets ? true : false
         this.mod.isCCModPacked = mod.baseDirectory.endsWith('.ccmod/')
@@ -48,7 +48,7 @@ export default class CrossedEyes {
         new AimAnalyzer(puzzleElementAnalysis)
         this.specialAction = new SpecialAction()
         this.puzzleBeeper = new PuzzleBeeper()
-        this.tts = new TTS()
+        TTS.global = new TTS()
         new EntityBeeper()
 
         const self = this
@@ -64,11 +64,18 @@ export default class CrossedEyes {
                 }
             }
         })
+
+        sc.TitleScreenButtonGui.inject({
+            show() {
+                this.parent()
+                TTS.global.addReadyCallback(() => AddonInstaller.askForAddonInstall())
+            },
+        })
     }
 
     async poststart() {
         MenuOptions.initPoststart()
-        this.tts.initPoststart()
+        TTS.global.initPoststart()
         this.specialAction.initPoststart()
     }
 

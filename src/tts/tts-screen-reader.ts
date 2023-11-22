@@ -5,12 +5,13 @@ export class TTSScreenReader implements TTSInterface {
     increaseQueueId!: () => number
 
 
-    async init(queue: TTS['speakQueue'], increaseQueueId: () => number) {
+    async init(queue: TTS['speakQueue'], increaseQueueId: () => number, onReady: () => void) {
         this.queue = queue
         this.increaseQueueId = increaseQueueId
 
         const gameDiv = document.getElementById('game')!
         gameDiv.setAttribute('aria-live', 'assertive')
+        onReady()
     }
 
     isReady(): boolean {

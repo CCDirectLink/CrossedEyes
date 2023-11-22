@@ -226,7 +226,10 @@ export class TextGather {
             },
             exitQuickMenu() {
                 this.parent()
-                self.interrupt()
+                /* how is this called in the title screen???? dont know */
+                if (sc.model.currentState == sc.GAME_MODEL_STATE.GAME) {
+                    self.interrupt()
+                }
             }
         })
 
