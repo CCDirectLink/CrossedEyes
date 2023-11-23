@@ -1,4 +1,5 @@
 import { MenuOptions } from '../options'
+import { PauseListener } from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { TextGather } from '../tts/gather-text'
@@ -20,16 +21,45 @@ export interface PuzzleExtension {
     getDataFromEntity<T extends ig.Entity>(entity: T): PuzzleExtensionData
 }
 
-export class PuzzleElementsAnalysis {
+let soundHandle: ig.SoundHandleWebAudio | undefined
+
+export class PuzzleElementsAnalysis implements PauseListener {
+    static deactivateHint() {
+        if (soundHandle) {
+            soundHandle.stop()
+            soundHandle = undefined
+            TextGather.g.interrupt()
+            SpecialAction.setListener('LSP', 'hintDescription', () => { })
+        }
+    }
+    static activeHint(hint: { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui }}) {
+        PuzzleElementsAnalysis.deactivateHint()
+        const dist = Vec3.distance(ig.game.playerEntity.coll.pos, hint.entity.coll.pos)
+        const maxRange = 16 * 30
+        const diff = maxRange - dist
+        const range = diff > maxRange*0.4 ? maxRange : Math.floor(dist * 2)
+
+        soundHandle = new ig.Sound(SoundManager.sounds.wall, 1).play()
+        soundHandle.setEntityPosition(hint.entity, ig.ENTITY_ALIGN.CENTER, null, range, ig.SOUND_RANGE_TYPE.CIRULAR)
+        soundHandle.play()
+        MenuOptions.ttsMenuEnabled && TextGather.g.speak(hint.nameGui.title.text)
+        SpecialAction.setListener('LSP', 'hintDescription', () => {
+            MenuOptions.ttsMenuEnabled && TextGather.g.speak(hint.nameGui.description.text)
+        })
+    }
+
     registeredTypes: Record<string, PuzzleExtension>
     puzzleTypes = [PuzzleExtensionBounceBlock, PuzzleExtensionBounceSwitch, PuzzleExtensionSwitch,
         PuzzleExtensionDoor, PuzzleExtensionTeleportField, PuzzleExtensionTeleportGround, PuzzleExtensionEnemy]
 
     quickMenuAnalysisInstance!: sc.QuickMenuAnalysis
 
+    pause() {
+        PuzzleElementsAnalysis.deactivateHint()
+    }
+
     setupGui() {
         const self = this
-        let soundHandle: ig.SoundHandleWebAudio | undefined
 
         sc.QUICK_MENU_TYPES.PuzzleElements = sc.QuickMenuTypesBase.extend({
             init(type: string, settings: sc.QuickMenuTypesBaseSettings, screen: sc.QuickFocusScreen) {
@@ -58,24 +88,11 @@ export class PuzzleElementsAnalysis {
             },
             focusGained() {
                 this.nameGui.doStateTransition('DEFAULT')
-                if (!soundHandle) {
-                    soundHandle = ig.SoundHelper.playAtEntity(new ig.Sound(SoundManager.sounds.wall), this.entity, true, {
-                        speed: 1
-                    }, 10000)
-                }
-                MenuOptions.ttsMenuEnabled && TextGather.g.speak(this.nameGui.title.text)
-                SpecialAction.setListener('LSP', 'hintDescription', () => {
-                    MenuOptions.ttsMenuEnabled && TextGather.g.speak(this.nameGui.description.text)
-                })
+                PuzzleElementsAnalysis.activeHint(this)
             },
             focusLost() {
                 this.nameGui.doStateTransition('HIDDEN')
-                if (soundHandle) {
-                    soundHandle.stop()
-                    soundHandle = undefined
-                }
-                TextGather.g.interrupt()
-                SpecialAction.setListener('LSP', 'hintDescription', () => { })
+                PuzzleElementsAnalysis.deactivateHint()
             },
             alignGuiPosition() {
                 this.parent()

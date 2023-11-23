@@ -30,9 +30,9 @@ export class SpacialAudio {
                     get point(): Vec3 { throw new Error('cannot get audio pos directly') },
                     set point(_) { throw new Error('cannot set audio pos directly') },
                     point3d: Vec3.createC(0, 0, 0),
-                    entity: entity,
-                    align: align,
-                    offset: offset,
+                    entity,
+                    align,
+                    offset,
                     range: range || 1600,
                     rangeType: type || ig.SOUND_RANGE_TYPE.CIRULAR
                 }

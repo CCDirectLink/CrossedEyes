@@ -12,9 +12,9 @@ import { PuzzleElementsAnalysis } from './puzzle-analyze/puzzle-analyze'
 import { AimAnalyzer } from './puzzle-analyze/aim-analyze'
 import { AddonInstaller } from './tts/tts-nvda'
 
-export interface Pauseable {
-    pause(): void
-    resume(): void
+export interface PauseListener {
+    pause?(): void
+    resume?(): void
 }
 export default class CrossedEyes {
     static dir: string
@@ -23,7 +23,7 @@ export default class CrossedEyes {
     puzzleBeeper!: PuzzleBeeper
     specialAction!: SpecialAction
 
-    pauseables: Pauseable[] = []
+    pauseables: PauseListener[] = []
 
     constructor(mod: Mod1) {
         CrossedEyes.dir = mod.baseDirectory
@@ -33,7 +33,7 @@ export default class CrossedEyes {
     }
 
     private pauseAll() {
-        this.pauseables.forEach(p => p.pause())
+        this.pauseables.forEach(p => p.pause && p.pause())
     }
 
     async prestart() {
@@ -41,11 +41,12 @@ export default class CrossedEyes {
         MenuOptions.initPrestart()
         SoundManager.preloadSounds()
         new SpacialAudio().initSpacialAudio()
+        const puzzleElementAnalysis = new PuzzleElementsAnalysis()
         this.pauseables.push(
             new LoudWalls(),
+            puzzleElementAnalysis,
+            new AimAnalyzer(puzzleElementAnalysis),
         )
-        const puzzleElementAnalysis = new PuzzleElementsAnalysis()
-        new AimAnalyzer(puzzleElementAnalysis)
         this.specialAction = new SpecialAction()
         this.puzzleBeeper = new PuzzleBeeper()
         new TTS()
@@ -69,6 +70,14 @@ export default class CrossedEyes {
             show() {
                 this.parent()
                 TTS.g.addReadyCallback(() => AddonInstaller.askForAddonInstall())
+            },
+        })
+        ig.Game.inject({
+            setPaused(paused: boolean) {
+                this.parent(paused)
+                if (paused) {
+                    self.pauseAll()
+                }
             },
         })
     }

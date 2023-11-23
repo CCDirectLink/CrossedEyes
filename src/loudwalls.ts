@@ -1,5 +1,6 @@
 import { MenuOptions } from './options'
-import { Pauseable } from './plugin';
+import { PauseListener } from './plugin';
+import { AimAnalyzer } from './puzzle-analyze/aim-analyze';
 import { SoundManager } from './sound-manager';
 
 const c_res = {}
@@ -14,9 +15,12 @@ function isHandleOff(handle: ig.SoundHandleWebAudio) {
     return handle.pos?.point3d == Vec3.createC(-1000, -1000, 0)
 }
 
-export class LoudWalls implements Pauseable {
+export class LoudWalls implements PauseListener {
+    static g: LoudWalls
+
     private handles: Record<string, ig.SoundHandleWebAudio> = {}
     constructor() { /* in prestart */
+        LoudWalls.g = this
         const self = this
         ig.ENTITY.Player.inject({
             update() {
@@ -24,24 +28,16 @@ export class LoudWalls implements Pauseable {
                 MenuOptions.loudWallsEnabled && self.handleWallSound()
             }
         })
-        ig.Game.inject({
-            setPaused(paused: boolean) {
-                this.parent(paused)
-                paused && self.pause()
-            },
-        })
     }
 
     pause(): void {
         if (this.handles) {
             Object.values(this.handles).forEach(h => h?.setFixPosition(Vec3.createC(-1000, -1000, 0), 0))
         }
-        
     }
-    resume(): void { }
 
     private handleWallSound() {
-        if (ig.game.events.blockingEventCall) { return }
+        if (ig.game.events.blockingEventCall || AimAnalyzer.g.aimAnnounceOn) { return }
         const dirs: [string, Vec2][] = [
             ['wallDown',  { x: 0, y: 1 }],
             ['wallRight', { x: 1, y: 0 }],
@@ -65,8 +61,6 @@ export class LoudWalls implements Pauseable {
                     Vec3.length(check.pos, range * 0.021)
                     Vec3.add(check.pos, ig.game.playerEntity.getAlignedPos(ig.ENTITY_ALIGN.CENTER, c_tmpPos))
                 }
-                // const speed = mapNumber(check.distance, 0, range, 1, 0.5)
-                // console.log(new Date().toUTCString(), 'play at', check.pos.x, check.pos.y, check.pos.z, 'distance', check.distance, 'speed', speed)
                 
                 if (! handle.pos || ! Vec3.equal(handle.pos.point3d, check.pos)) {
                     handle.setFixPosition(check.pos, range)
@@ -79,9 +73,6 @@ export class LoudWalls implements Pauseable {
                     )
                     handle._nodeSource.bufferNode.playbackRate.value = angleDist >= 140 ? 0.7 : 1
                 }
-                // const dist: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
-                // Vec3.sub(dist, check.pos)
-                // console.log(dist, Vec2.create(ig.game.playerEntity.face))
             } else if (! handle.pos || ! isHandleOff(handle)) {
                 turnOffHandle(handle)
             }
