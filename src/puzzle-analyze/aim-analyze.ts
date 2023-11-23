@@ -1,4 +1,3 @@
-import type { UUID } from 'crypto'
 import { LoudWalls } from '../loudwalls'
 import { PuzzleElementsAnalysis } from './puzzle-analyze'
 import { MenuOptions } from '../options'
@@ -6,11 +5,13 @@ import { TextGather } from '../tts/gather-text'
 import { PauseListener } from '../plugin'
 import { isAiming } from '../puzzle'
 
+const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
+
 export class AimAnalyzer implements PauseListener {
     static g: AimAnalyzer
 
     recalculateEntities: boolean = true
-    lastSelected: UUID | undefined
+    lastSelected: string | undefined
     aimAnnounceOn: boolean = false
 
 
@@ -20,9 +21,8 @@ export class AimAnalyzer implements PauseListener {
         ig.Entity.inject({
             init(x, y, z, settings) {
                 this.parent(x, y, z, settings)
-                this.uuid = crypto.randomUUID()
+                this.uuid = crypto.randomBytes(20).toString('hex')
             },
-
         })
         ig.ENTITY.Player.inject({
             update() {

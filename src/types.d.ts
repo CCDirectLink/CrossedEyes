@@ -25,7 +25,7 @@ declare global {
             }
         }
         interface Entity {
-            uuid: UUID
+            uuid: string
         }
     }
     namespace sc {
