@@ -43,15 +43,17 @@ declare global {
         }
         
         interface PuzzleElementsMenu extends ig.BoxGui {
+            settings: sc.QuickMenuTypesBaseSettings
             ninepatch: ig.NinePatch
             title: sc.TextGui
             description: sc.TextGui
 
             setPosition(this: this, hook: ig.GuiHook, e: ig.Entity): void
             getCenter(this: this, a: ig.GuiHook): number
+            updateData(this: this): void
         }
         interface PuzzleElementsMenuConstructor extends ImpactClass<PuzzleElementsMenu> {
-            new (data: PuzzleExtensionData): PuzzleElementsMenu;
+            new (settings: sc.QuickMenuTypesBaseSettings): PuzzleElementsMenu;
         }
         var PuzzleElementsMenu: PuzzleElementsMenuConstructor;
 

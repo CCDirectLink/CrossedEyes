@@ -60,19 +60,25 @@ export class AimAnalyzer implements PauseListener {
                 const check = LoudWalls.checkDirection(aim, 20 * 16, ig.COLLTYPE.PROJECTILE)
 
                 if (check && check.hitE && check.hitE.length > 0) {
+                    if (this.recalculateEntities) {
+                         this.recalculateEntities = false
+                        setInterval(() => this.recalculateEntities = true, 1000)
+                        TextGather.g.ignoreInterrupt = true
+                        this.puzzleElementsAnalysis.quickMenuAnalysisInstance.show()
+                        this.puzzleElementsAnalysis.quickMenuAnalysisInstance.hide()
+                        this.puzzleElementsAnalysis.quickMenuAnalysisInstance.exit()
+                        TextGather.g.ignoreInterrupt = false
+                    } else {
+                        this.puzzleElementsAnalysis.quickMenuAnalysisInstance.entities.forEach(
+                            e => e instanceof sc.QUICK_MENU_TYPES.PuzzleElements && e.nameGui.updateData())
+                    }
                     for (let i = 0; i < Math.min(5, check.hitE.length); i++) {
                         const collE = check.hitE[i]
                         const e: ig.Entity = collE.entity
-                        if (e.uuid == this.lastSelected) { return }
                         if (e) {
-                            if (this.recalculateEntities && this.puzzleElementsAnalysis.quickMenuAnalysisInstance.entities.length == 0) {
-                                this.recalculateEntities = false
-                                this.puzzleElementsAnalysis.quickMenuAnalysisInstance.show()
-                                this.puzzleElementsAnalysis.quickMenuAnalysisInstance.hide()
-                                this.puzzleElementsAnalysis.quickMenuAnalysisInstance.exit()
-                            }
+                            if (e.uuid == this.lastSelected) { return }
                             const hint: sc.QuickMenuTypesBase | undefined =
-                                this.puzzleElementsAnalysis.quickMenuAnalysisInstance.entities.find(he => he.entity == e)
+                                this.puzzleElementsAnalysis.quickMenuAnalysisInstance.entities.find(he => he.entity.uuid == e.uuid)
                             if (hint && hint instanceof sc.QUICK_MENU_TYPES.PuzzleElements) {
                                 PuzzleElementsAnalysis.activeHint(hint)
                                 this.lastSelected = e.uuid
@@ -84,7 +90,7 @@ export class AimAnalyzer implements PauseListener {
                     PuzzleElementsAnalysis.deactivateHint()
                 }
             } else {
-                this.lastSelected = undefined
+                    this.lastSelected = undefined
                 PuzzleElementsAnalysis.deactivateHint()
             }
         }

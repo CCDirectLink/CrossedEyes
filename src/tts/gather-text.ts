@@ -34,6 +34,7 @@ export class TextGather {
 
     private connect: { count: number, template: string, args: sc.TextLike[] } | undefined
     private lastMessage: sc.TextLike = ''
+    ignoreInterrupt: boolean = false
 
     public speak(textLike: sc.TextLike): void {
         this.interrupt()
@@ -68,6 +69,12 @@ export class TextGather {
         this.speakCall = (text: string) => {
             speakCallCopy(text)
             this.lastMessage = text
+        }
+        const interruptCopy = interrupt
+        this.interrupt = () => {
+            if (! this.ignoreInterrupt) {
+                interruptCopy()
+            }
         }
         this.ingame()
         this.menu()

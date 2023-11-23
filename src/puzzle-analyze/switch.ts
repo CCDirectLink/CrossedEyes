@@ -17,7 +17,7 @@ export class PuzzleExtensionSwitch implements PuzzleExtension {
         if (!(e instanceof ig.ENTITY.Switch)) { throw new Error() }
 
         const name: string = `Switch, Status: ${e.isOn ? 'on' : 'off'}`
-        const description: string = `Hit with a ball or a melee to toogle.`
+        const description: string = `Hit with a ball or a melee to toggle.`
         return { name, description }
     }
 

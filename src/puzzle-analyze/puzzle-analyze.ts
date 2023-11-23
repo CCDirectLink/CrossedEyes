@@ -3,6 +3,7 @@ import { PauseListener } from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { TextGather } from '../tts/gather-text'
+import { PuzzleExtensionBlocker } from './blocker'
 import { PuzzleExtensionBounceBlock } from './bounce-block'
 import { PuzzleExtensionBounceSwitch } from './bounce-switch'
 import { PuzzleExtensionDoor } from './door'
@@ -50,7 +51,8 @@ export class PuzzleElementsAnalysis implements PauseListener {
 
     registeredTypes: Record<string, PuzzleExtension>
     puzzleTypes = [PuzzleExtensionBounceBlock, PuzzleExtensionBounceSwitch, PuzzleExtensionSwitch,
-        PuzzleExtensionDoor, PuzzleExtensionTeleportField, PuzzleExtensionTeleportGround, PuzzleExtensionEnemy]
+        PuzzleExtensionDoor, PuzzleExtensionTeleportField, PuzzleExtensionTeleportGround, PuzzleExtensionEnemy,
+        PuzzleExtensionBlocker]
 
     quickMenuAnalysisInstance!: sc.QuickMenuAnalysis
 
@@ -67,9 +69,7 @@ export class PuzzleElementsAnalysis implements PauseListener {
                 this.setIconColor(sc.ANALYSIS_COLORS.ORANGE)
                 this.showType = sc.SHOW_TYPE.INSTANT
 
-                const data: PuzzleExtensionData = self.registeredTypes[settings.puzzleType!].getDataFromEntity(settings.entity)
-
-                this.nameGui = new sc.PuzzleElementsMenu(data)
+                this.nameGui = new sc.PuzzleElementsMenu(settings)
                 this.nameGui.setPivot(this.nameGui.hook.size.x / 2, 0)
                 this.nameGui.hook.transitions = {
                     DEFAULT: { state: {}, time: 0.1, timeFunction: KEY_SPLINES.EASE },
@@ -92,7 +92,7 @@ export class PuzzleElementsAnalysis implements PauseListener {
             },
             focusLost() {
                 this.nameGui.doStateTransition('HIDDEN')
-                PuzzleElementsAnalysis.deactivateHint()
+                ! TextGather.g.ignoreInterrupt && PuzzleElementsAnalysis.deactivateHint()
             },
             alignGuiPosition() {
                 this.parent()
@@ -103,17 +103,21 @@ export class PuzzleElementsAnalysis implements PauseListener {
         sc.PuzzleElementsMenu = ig.BoxGui.extend({
             ninepatch: new ig.NinePatch("media/gui/menu.png", { width: 8, height: 8, left: 8, top: 8, right: 8, bottom: 8, offsets: { default: { x: 432, y: 304 }, flipped: { x: 456, y: 304 } } }),
             transitions: { HIDDEN: { state: { alpha: 0 }, time: 0.2, timeFunction: KEY_SPLINES.LINEAR }, DEFAULT: { state: {}, time: 0.2, timeFunction: KEY_SPLINES.EASE } },
-            init(data: PuzzleExtensionData) {
+            init(settings: sc.QuickMenuTypesBaseSettings) {
+                this.settings = settings
+                this.updateData()
+                this.parent(127, 17 + this.description.textBlock.size.y)
+                this.addChildGui(this.title)
+                this.addChildGui(this.description)
+                this.doStateTransition('HIDDEN', true)
+            },
+            updateData() {
+                const data: PuzzleExtensionData = self.registeredTypes[this.settings.puzzleType!].getDataFromEntity(this.settings.entity)
                 this.title = new sc.TextGui(data.name, { font: sc.fontsystem.smallFont })
                 this.title.setAlign(ig.GUI_ALIGN.X_CENTER, ig.GUI_ALIGN.Y_TOP)
                 this.title.setPos(0, 2)
                 this.description = new sc.TextGui(data.description, { font: sc.fontsystem.tinyFont, maxWidth: 120 })
-                this.parent(127, 17 + this.description.textBlock.size.y)
                 this.description.setPos(5, 15)
-
-                this.addChildGui(this.title)
-                this.addChildGui(this.description)
-                this.doStateTransition('HIDDEN', true)
             },
             setPosition(hook: ig.GuiHook, e: ig.Entity) {
                 if (hook.screenCoords) {
