@@ -24,6 +24,9 @@ declare global {
                 playAtSoundHandle: ig.SoundHandleWebAudio
             }
         }
+        interface Entity {
+            uuid: UUID
+        }
     }
     namespace sc {
         interface RowButtonGroup {

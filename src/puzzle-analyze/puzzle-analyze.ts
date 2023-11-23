@@ -1,5 +1,7 @@
 import { MenuOptions } from '../options'
 import { SoundManager } from '../sound-manager'
+import { SpecialAction } from '../special-action'
+import { TextGather } from '../tts/gather-text'
 import { PuzzleExtensionBounceBlock } from './bounce-block'
 import { PuzzleExtensionBounceSwitch } from './bounce-switch'
 import { PuzzleExtensionDoor } from './door'
@@ -61,6 +63,10 @@ export class PuzzleElementsAnalysis {
                         speed: 1
                     }, 10000)
                 }
+                MenuOptions.ttsMenuEnabled && TextGather.g.speak(this.nameGui.title.text)
+                SpecialAction.setListener('LSP', 'hintDescription', () => {
+                    MenuOptions.ttsMenuEnabled && TextGather.g.speak(this.nameGui.description.text)
+                })
             },
             focusLost() {
                 this.nameGui.doStateTransition('HIDDEN')
@@ -68,6 +74,8 @@ export class PuzzleElementsAnalysis {
                     soundHandle.stop()
                     soundHandle = undefined
                 }
+                TextGather.g.interrupt()
+                SpecialAction.setListener('LSP', 'hintDescription', () => { })
             },
             alignGuiPosition() {
                 this.parent()

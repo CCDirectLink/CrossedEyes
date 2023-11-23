@@ -18,7 +18,7 @@ export enum TTSTypes {
 }
 
 export class TTS {
-    static global: TTS
+    static g: TTS
 
     speakQueue: Record<number, any> = {}
     speakQueueId: number = 0
@@ -44,6 +44,7 @@ export class TTS {
     }
 
     constructor() { /* in prestart */
+        TTS.g = this
         this.textGather = new TextGather(
             (text: string) => this.ttsInstance && this.ttsInstance.speak(text),
             () => { this.clearQueue() }

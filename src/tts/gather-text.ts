@@ -30,10 +30,12 @@ function interpolateString(template: string, ...values: (string | number)[]): st
 const leaSounds: boolean = false
 
 export class TextGather {
+    static g: TextGather
+
     private connect: { count: number, template: string, args: sc.TextLike[] } | undefined
     private lastMessage: sc.TextLike = ''
 
-    private speak(textLike: sc.TextLike): void {
+    public speak(textLike: sc.TextLike): void {
         this.interrupt()
         if (this.connect?.count) {
             this.connect.count--
@@ -47,7 +49,7 @@ export class TextGather {
         }
     }
 
-    private speakArgs(template: string, ...textLikes: sc.TextLike[]) {
+    public speakArgs(template: string, ...textLikes: sc.TextLike[]) {
         const matchArr = template.match(interpolateStringRegex) ?? []
         if (textLikes.length < matchArr.length) {
             this.connect = { count: matchArr.length - textLikes.length, template, args: textLikes }
@@ -57,7 +59,8 @@ export class TextGather {
         }
     }
 
-    constructor(private speakCall: (text: string) => void, private interrupt: () => void) { /* in prestart */
+    constructor(private speakCall: (text: string) => void, public interrupt: () => void) { /* in prestart */
+        TextGather.g = this
         SpecialAction.setListener('RSP', 'repeatLast', () => {
             MenuOptions.ttsEnabled && this.speak(this.lastMessage)
         })
@@ -194,20 +197,6 @@ export class TextGather {
             keep: false,
         }
 
-        sc.QUICK_MENU_TYPES.PuzzleElements.inject({
-            focusGained() {
-                this.parent()
-                MenuOptions.ttsMenuEnabled && self.speak(this.nameGui.title.text)
-                SpecialAction.setListener('LSP', 'hintDescription', () => {
-                    MenuOptions.ttsMenuEnabled && self.speak(this.nameGui.description.text)
-                })
-            },
-            focusLost() {
-                this.parent()
-                self.interrupt()
-                SpecialAction.setListener('LSP', 'hintDescription', () => { })
-            },
-        })
         sc.QUICK_MENU_TYPES.NPC.inject({
             focusGained() {
                 this.parent()

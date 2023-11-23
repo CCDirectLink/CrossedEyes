@@ -57,7 +57,7 @@ export class LoudWalls implements Pauseable {
                 })
                 turnOffHandle(handle)
             }
-            const check = LoudWalls.checkDirection(Vec2.create(dir), range)
+            const check = LoudWalls.checkDirection(Vec2.create(dir), range, ig.COLLTYPE.PROJECTILE)
             if (check.type === 'collided') {
                 if (check.distance <= range * 0.02) {
                     check.pos.z = 0
@@ -88,7 +88,7 @@ export class LoudWalls implements Pauseable {
         }
     }
 
-    static checkDirection(dir: Vec2, distance: number): { type: 'none' | 'blocked' | 'collided', pos: Vec3, distance: number, hitE?: ig.Physics.CollEntry[] } {
+    static checkDirection(dir: Vec2, distance: number, collType: ig.COLLTYPE): { type: 'none' | 'blocked' | 'collided', pos: Vec3, distance: number, hitE?: ig.Physics.CollEntry[] } {
         if (!ig.game || !ig.game.playerEntity) {
             return { type: 'none', pos: Vec3.createC(0, 0, 0), distance }
         }
@@ -107,10 +107,12 @@ export class LoudWalls implements Pauseable {
 
         const result: ig.Physics.TraceResult = ig.game.physics.initTraceResult(c_res)
         const hitEntityList: ig.Physics.CollEntry[] = []
+        ig.game.physics._trackEntityTouch = true
         const collided: boolean = ig.game.trace(
             result, pos.x, pos.y, zPos, dir.x, dir.y,
             Constants.BALL_SIZE, Constants.BALL_SIZE, Constants.BALL_Z_HEIGHT,
-            ig.COLLTYPE.PROJECTILE, null, hitEntityList)
+            collType, null, hitEntityList)
+        ig.game.physics._trackEntityTouch = false
 
         if (! collided) {
             return { type: 'none', pos, distance }

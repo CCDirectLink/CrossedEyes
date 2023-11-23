@@ -48,7 +48,7 @@ export default class CrossedEyes {
         new AimAnalyzer(puzzleElementAnalysis)
         this.specialAction = new SpecialAction()
         this.puzzleBeeper = new PuzzleBeeper()
-        TTS.global = new TTS()
+        new TTS()
         new EntityBeeper()
 
         const self = this
@@ -68,14 +68,14 @@ export default class CrossedEyes {
         sc.TitleScreenButtonGui.inject({
             show() {
                 this.parent()
-                TTS.global.addReadyCallback(() => AddonInstaller.askForAddonInstall())
+                TTS.g.addReadyCallback(() => AddonInstaller.askForAddonInstall())
             },
         })
     }
 
     async poststart() {
         MenuOptions.initPoststart()
-        TTS.global.initPoststart()
+        TTS.g.initPoststart()
         this.specialAction.initPoststart()
     }
 

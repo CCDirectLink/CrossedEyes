@@ -76,7 +76,7 @@ export class AddonInstaller {
                 run()
             } else {
                 MenuOptions.ttsType = TTSTypes['Built-in']
-                TTS.global.addReadyCallback(() => run())
+                TTS.g.addReadyCallback(() => run())
             }
         }
     }
