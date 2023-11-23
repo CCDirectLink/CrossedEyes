@@ -48,8 +48,6 @@ class CrossCodeWebSocketClient:
 
 
 class AppModule(appModuleHandler.AppModule):
-    sleepMode = True
-
     def __init__(self, *args, **kwargs):
         super(AppModule, self).__init__(*args, **kwargs)
         self.client = CrossCodeWebSocketClient(self)
