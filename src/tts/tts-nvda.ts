@@ -13,7 +13,7 @@ export class TTSNvda implements TTSInterface {
     increaseQueueId!: () => number
 
     server!: WebSocketServer
-    socketSet!: Set<WebSocket>
+    sockets: WebSocket[] = []
 
     async init(queue: TTS['speakQueue'], increaseQueueId: () => number, onReady: () => void) {
         this.onReady = onReady
@@ -31,26 +31,28 @@ export class TTSNvda implements TTSInterface {
         const port = 16390
 
         this.server = new WebSocketServer({ host, port })
-        this.socketSet = new Set()
+        this.sockets = []
 
         this.server.on('connection', (socket: WebSocket) => {
             this.onReady()
-            this.socketSet.add(socket)
             this.speak('NVDA connected')
             socket.on('close', () => {
-                this.socketSet.delete(socket)
+                this.sockets.splice(this.sockets.indexOf(socket))
             })
+            this.sockets.forEach(s => s.close())
+            this.sockets = []
+            this.sockets.push(socket)
         })
     }
 
     sendCommand(command: string) {
-        for (const socket of Array.from(this.socketSet ?? [])) {
+        for (const socket of this.sockets) {
             socket.send(command)
         }
     }
 
     isReady(): boolean {
-        return this.socketSet && this.socketSet.size > 0
+        return this.sockets && this.sockets.length > 0
     }
 
     speak(text: string): void {
