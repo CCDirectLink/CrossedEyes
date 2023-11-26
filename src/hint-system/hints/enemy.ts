@@ -11,7 +11,7 @@ export class HEnemy implements Hint {
                 return {
                     type: 'Hints', hintName: self.entryName, hintType: 'Puzzle',
                     disabled: !(MenuOptions.puzzleEnabled && 
-                        (this.enemyType.path == 'target-bot' && (this.currentState == 'DO_HIT' || this.currentState == 'DO_NOT_HIT')))
+                        (this.enemyType.path == 'target-bot' && (this.currentState == 'DO_HIT' || this.currentState == 'DO_NOT_HIT'))),
                 }
             },
             isQuickMenuVisible() { return false },

@@ -8,7 +8,7 @@ export class HDoor implements Hint {
         const self = this
         ig.ENTITY.Door.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && this.condition.code != 'false') }
             },
             isQuickMenuVisible() { return true },
         })
@@ -29,7 +29,8 @@ export class HTeleportField implements Hint {
         const self = this
         ig.ENTITY.TeleportField.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle',
+                    disabled: !(MenuOptions.puzzleEnabled && this.interactEntry) }
             },
             isQuickMenuVisible() { return true },
         })
@@ -37,8 +38,9 @@ export class HTeleportField implements Hint {
     getDataFromEntity(e: ig.Entity): HintData {
         if (!(e instanceof ig.ENTITY.TeleportField)) { throw new Error() }
 
-        const name: string = `Teleport Field`
-        const description: string = `Transports you to a different map`
+        const text: string | undefined = (((e.interactEntry.gui.subGui as sc.IconHoverTextGui).getChildGuiByIndex(0).gui) as sc.TextGui).text?.toString()
+        const name: string = `Teleport Field${text ? ` to ${text}` : ''}`
+        const description: string = `Teleports you to ${text ? text : 'a different map'}`
         return { name, description }
     }
 }

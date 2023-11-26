@@ -41,7 +41,7 @@ export class HintSystem implements PauseListener {
         const diff = maxRange - dist
         const range = diff > maxRange * 0.4 ? maxRange : Math.floor(dist * 2)
 
-        soundHandle = new ig.Sound(SoundManager.sounds.wall, 1).play()
+        soundHandle = new ig.Sound(SoundManager.sounds.wall, 1.2).play()
         soundHandle.setEntityPosition(hint.entity, ig.ENTITY_ALIGN.CENTER, null, range, ig.SOUND_RANGE_TYPE.CIRULAR)
         soundHandle.play()
         MenuOptions.ttsMenuEnabled && TextGather.g.speak(hint.nameGui.title.text)
@@ -77,6 +77,25 @@ export class HintSystem implements PauseListener {
     setupGui() {
         const self = this
 
+        let lastFocusedHintPos: Vec2 = Vec2.create()
+        sc.QuickMenuTypesBase.inject({ /* fix issue where two hints can be focued at the same time */
+            isMouseOver() {
+                if (MenuOptions.puzzleEnabled && sc.quickmodel.isQuickCheck() && !ig.interact.isBlocked() && this.focusable &&
+                    sc.quickmodel.isDeviceSynced() && ig.input.currentDevice == ig.INPUT_DEVICES.GAMEPAD && !sc.quickmodel.cursorMoved) {
+
+                    var a: ig.GuiHook = this.hook!
+                    const pos: Vec2 = Vec2.createC(a.pos.x + Math.floor(a.size.x / 2), a.pos.y + Math.floor(a.size.y / 2))
+                    if (Math.floor(Vec2.distance(sc.quickmodel.cursor, pos)) <= 10) {
+                        if (Vec2.equal(lastFocusedHintPos, pos)) {
+                            return false
+                        }
+                        lastFocusedHintPos = pos
+                    }
+                }
+                return this.parent()
+            }
+        })
+
         sc.QUICK_MENU_TYPES.Hints = sc.QuickMenuTypesBase.extend({
             init(type: string, settings: sc.QuickMenuTypesBaseSettings, screen: sc.QuickFocusScreen) {
                 this.parent(type, settings, screen)
@@ -101,10 +120,12 @@ export class HintSystem implements PauseListener {
                 this.nameGui.doStateTransition('HIDDEN')
             },
             focusGained() {
+                this.parent()
                 this.nameGui.doStateTransition('DEFAULT')
                 HintSystem.activeHint(this)
             },
             focusLost() {
+                this.parent()
                 this.nameGui.doStateTransition('HIDDEN')
                 !TextGather.g.ignoreInterrupt && HintSystem.deactivateHint()
             },
@@ -126,7 +147,7 @@ export class HintSystem implements PauseListener {
                 this.doStateTransition('HIDDEN', true)
             },
             updateData(): number {
-                const [ title, desc ] = this.getText()
+                const [title, desc] = this.getText()
                 this.title = new sc.TextGui(title, { font: sc.fontsystem.smallFont })
                 this.title.setAlign(ig.GUI_ALIGN.X_CENTER, ig.GUI_ALIGN.Y_TOP)
                 this.title.setPos(0, 2)
@@ -192,7 +213,7 @@ export class HintSystem implements PauseListener {
     }
 
     constructor() { /* runs in prestart */
-        this.filterList = [ 'All', ...Object.keys(sc.QUICK_MENU_TYPES), ...HintTypes]
+        this.filterList = ['All', ...Object.keys(sc.QUICK_MENU_TYPES), ...HintTypes]
         this.filterList.slice(this.filterList.indexOf('Hints'))
         this.updateFilter()
 

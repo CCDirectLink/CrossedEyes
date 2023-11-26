@@ -7,14 +7,23 @@ export function overrideNPCHint() {
             const npc: ig.ENTITY.NPC = settings.entity as unknown as ig.ENTITY.NPC
             let text: string = ''
             let description: string = ''
-            if (npc.displayNameRandom) {
+            if (origText.startsWith('\\c[3]Trader')) {
+                text = origText
+                description = `Interactable ${origText}`
+            } else if (npc.displayNameRandom) {
                 text = `Random Player NPC named ${origText}`
                 description = text
-            // @ts-expect-error
-            } else if (npc.character.data.name) {
-
+            } else if (origText == 'Random NPC') {
+                text = 'Random NPC'
+                description = 'Unnamed NPC'
+            } else if (npc.character.data.name && ig.LangLabel.getText(npc.character.data.name) != 'MISSING LABEL') {
+                const name = ig.LangLabel.getText(npc.character.data.name)
+                text = `NPC ${name}`
+                description = `do to`
+            } else {
+                text = 'Random NPC'
+                description = 'Unnamed NPC'
             }
-            // console.log(npc.displayName, npc.displayNameRandom, npc.character.data.name)
             this.parent(() => {
                 return [text, description]
             })
@@ -28,6 +37,10 @@ export function overrideNPCHint() {
                 this.screen.subGuis.slice(this.screen.subGuis.indexOf(this.nameGui))
                 this.screen.removeChildGui(this.nameGui)
                 text = (this.nameGui as unknown as sc.QuickArrowBox).name.text!.toString()
+            } 
+            if (! this.focusable) {
+                this.focusable = true
+                text = 'Random NPC'
             }
             this.nameGui = new sc.NPCHintMenu(text, settings)
             this.nameGui.setPivot(this.nameGui.hook.size.x / 2, 0)
