@@ -15,10 +15,12 @@ function isHandleOff(handle: ig.SoundHandleWebAudio) {
     return handle.pos?.point3d == Vec3.createC(-1000, -1000, 0)
 }
 
+type CheckDirectionReturn = { type: 'none' | 'blocked' | 'collided', pos: Vec3, distance: number, hitE?: ig.Physics.CollEntry[] }
+
 export class LoudWalls implements PauseListener {
     static g: LoudWalls
 
-    private handles: Record<string, ig.SoundHandleWebAudio> = {}
+    private handles: Record<string, { handle: ig.SoundHandleWebAudio, sound: string }> = {}
     constructor() { /* in prestart */
         LoudWalls.g = this
         const self = this
@@ -32,7 +34,7 @@ export class LoudWalls implements PauseListener {
 
     pause(): void {
         if (this.handles) {
-            Object.values(this.handles).forEach(h => h?.setFixPosition(Vec3.createC(-1000, -1000, 0), 0))
+            Object.values(this.handles).forEach(h => h?.handle.setFixPosition(Vec3.createC(-1000, -1000, 0), 0))
         }
     }
 
@@ -46,40 +48,55 @@ export class LoudWalls implements PauseListener {
         ]
         const playerFaceAngle: number = Vec2.clockangle(ig.game.playerEntity.face) * 180 / Math.PI
         for (const [dirId, dir] of dirs) {
-            let handle = this.handles[dirId]
-            if (!handle || !handle._playing) {
-                handle = this.handles[dirId] = new ig.Sound(SoundManager.sounds.wall).play(true, {
-                    speed: 1,
-                })
-                turnOffHandle(handle)
-            }
-            const check = LoudWalls.checkDirection(Vec2.create(dir), range, ig.COLLTYPE.PROJECTILE)
-            if (check.type === 'collided') {
-                if (check.distance <= range * 0.02) {
-                    check.pos.z = 0
-                    Vec2.assign(check.pos, dir)
-                    Vec3.length(check.pos, range * 0.021)
-                    Vec3.add(check.pos, ig.game.playerEntity.getAlignedPos(ig.ENTITY_ALIGN.CENTER, c_tmpPos))
-                }
+            if (this.handleSoundAt(dirId, dir, playerFaceAngle, SoundManager.sounds.wall,
+                LoudWalls.checkDirection(Vec2.create(dir), range, ig.COLLTYPE.PROJECTILE))) { continue }
 
-                if (!handle.pos || !Vec3.equal(handle.pos.point3d, check.pos)) {
-                    handle.setFixPosition(check.pos, range)
-                }
-                if (handle._nodeSource) {
-                    const dirFaceAngle: number = Vec2.clockangle(dir) * 180 / Math.PI
-                    const angleDist: number = Math.min(
-                        Math.abs(playerFaceAngle - dirFaceAngle),
-                        360 - Math.abs(playerFaceAngle - dirFaceAngle)
-                    )
-                    handle._nodeSource.bufferNode.playbackRate.value = angleDist >= 140 ? 0.7 : 1
-                }
-            } else if (!handle.pos || !isHandleOff(handle)) {
+            const { handle } = this.handles[dirId] ?? { handle: undefined }
+            if (handle && (!handle.pos || !isHandleOff(handle))) {
                 turnOffHandle(handle)
             }
         }
     }
 
-    static checkDirection(dir: Vec2, distance: number, collType: ig.COLLTYPE): { type: 'none' | 'blocked' | 'collided', pos: Vec3, distance: number, hitE?: ig.Physics.CollEntry[] } {
+    private handleSoundAt(dirId: string, dir: Vec2, playerFaceAngle: number, soundName: string, check: CheckDirectionReturn): boolean {
+        let { handle, sound } = this.handles[dirId] ?? { handle: undefined, sound: undefined }
+        if (check.type === 'collided') {
+            if (!handle || !handle._playing || sound != soundName) {
+                this.handles[dirId] = {
+                    handle: new ig.Sound(soundName).play(true, {
+                        speed: 1,
+                    }),
+                    sound: soundName,
+                }
+                handle = this.handles[dirId].handle
+                turnOffHandle(handle)
+            }
+
+            if (check.distance <= range * 0.02) {
+                check.pos.z = 0
+                Vec2.assign(check.pos, dir)
+                Vec3.length(check.pos, range * 0.021)
+                Vec3.add(check.pos, ig.game.playerEntity.getAlignedPos(ig.ENTITY_ALIGN.CENTER, c_tmpPos))
+            }
+
+            if (!handle.pos || !Vec3.equal(handle.pos.point3d, check.pos)) {
+                handle.setFixPosition(check.pos, range)
+            }
+
+            if (handle._nodeSource) {
+                const dirFaceAngle: number = Vec2.clockangle(dir) * 180 / Math.PI
+                const angleDist: number = Math.min(
+                    Math.abs(playerFaceAngle - dirFaceAngle),
+                    360 - Math.abs(playerFaceAngle - dirFaceAngle)
+                )
+                handle._nodeSource.bufferNode.playbackRate.value = angleDist >= 140 ? 0.7 : 1
+            }
+            return true
+        }
+        return false
+    }
+
+    static checkDirection(dir: Vec2, distance: number, collType: ig.COLLTYPE): CheckDirectionReturn {
         if (!ig.game || !ig.game.playerEntity) {
             return { type: 'none', pos: Vec3.createC(0, 0, 0), distance }
         }
