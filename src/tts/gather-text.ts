@@ -204,17 +204,6 @@ export class TextGather {
             keep: false,
         }
 
-        sc.QUICK_MENU_TYPES.NPC.inject({
-            focusGained() {
-                this.parent()
-                MenuOptions.ttsMenuEnabled && self.speak(`NPC: ${this.nameGui.name.text}`)
-            },
-            focusLost() {
-                this.parent()
-                self.interrupt()
-            },
-        })
-
         sc.QuickMenuModel.inject({
             enterQuickMenu() {
                 this.parent()

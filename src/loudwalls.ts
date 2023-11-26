@@ -1,11 +1,11 @@
+import { AimAnalyzer } from './hint-system/aim-analyze'
 import { MenuOptions } from './options'
-import { PauseListener } from './plugin';
-import { AimAnalyzer } from './puzzle-analyze/aim-analyze';
-import { SoundManager } from './sound-manager';
+import { PauseListener } from './plugin'
+import { SoundManager } from './sound-manager'
 
 const c_res = {}
-const c_tmpPos: Vec3 = { x: 0, y: 0, z: 0}
-const c_tmpPoint: Vec3 = { x: 0, y: 0, z: 0}
+const c_tmpPos: Vec3 = { x: 0, y: 0, z: 0 }
+const c_tmpPoint: Vec3 = { x: 0, y: 0, z: 0 }
 
 const range: number = 5 * 16
 function turnOffHandle(handle: ig.SoundHandleWebAudio) {
@@ -39,15 +39,15 @@ export class LoudWalls implements PauseListener {
     private handleWallSound() {
         if (ig.game.events.blockingEventCall || AimAnalyzer.g.aimAnnounceOn) { return }
         const dirs: [string, Vec2][] = [
-            ['wallDown',  { x: 0, y: 1 }],
+            ['wallDown', { x: 0, y: 1 }],
             ['wallRight', { x: 1, y: 0 }],
-            ['wallUp',    { x: 0, y: -1 }],
-            ['wallLeft',  { x: -1, y: 0 }],
+            ['wallUp', { x: 0, y: -1 }],
+            ['wallLeft', { x: -1, y: 0 }],
         ]
         const playerFaceAngle: number = Vec2.clockangle(ig.game.playerEntity.face) * 180 / Math.PI
         for (const [dirId, dir] of dirs) {
             let handle = this.handles[dirId]
-            if (! handle || ! handle._playing) {
+            if (!handle || !handle._playing) {
                 handle = this.handles[dirId] = new ig.Sound(SoundManager.sounds.wall).play(true, {
                     speed: 1,
                 })
@@ -61,8 +61,8 @@ export class LoudWalls implements PauseListener {
                     Vec3.length(check.pos, range * 0.021)
                     Vec3.add(check.pos, ig.game.playerEntity.getAlignedPos(ig.ENTITY_ALIGN.CENTER, c_tmpPos))
                 }
-                
-                if (! handle.pos || ! Vec3.equal(handle.pos.point3d, check.pos)) {
+
+                if (!handle.pos || !Vec3.equal(handle.pos.point3d, check.pos)) {
                     handle.setFixPosition(check.pos, range)
                 }
                 if (handle._nodeSource) {
@@ -73,7 +73,7 @@ export class LoudWalls implements PauseListener {
                     )
                     handle._nodeSource.bufferNode.playbackRate.value = angleDist >= 140 ? 0.7 : 1
                 }
-            } else if (! handle.pos || ! isHandleOff(handle)) {
+            } else if (!handle.pos || !isHandleOff(handle)) {
                 turnOffHandle(handle)
             }
         }
@@ -89,7 +89,7 @@ export class LoudWalls implements PauseListener {
         ig.game.playerEntity.getAlignedPos(ig.ENTITY_ALIGN.CENTER, pos)
 
         let zPos: number = ig.game.playerEntity.coll.pos.z
-        if(ig.game.playerEntity.maxJumpHeight !== undefined && ig.game.playerEntity.maxJumpHeight >= 0) {
+        if (ig.game.playerEntity.maxJumpHeight !== undefined && ig.game.playerEntity.maxJumpHeight >= 0) {
             zPos = Math.min(ig.game.playerEntity.coll.pos.z, ig.game.playerEntity.maxJumpHeight)
         }
         zPos += Constants.BALL_HEIGHT
@@ -105,7 +105,7 @@ export class LoudWalls implements PauseListener {
             collType, null, hitEntityList)
         ig.game.physics._trackEntityTouch = false
 
-        if (! collided) {
+        if (!collided) {
             return { type: 'none', pos, distance }
         }
 
@@ -128,7 +128,7 @@ export class LoudWalls implements PauseListener {
                 return { type: 'blocked', pos: c_tmpPoint, distance: result.dist * distance, hitE: hitEntityList }
             }
         }
- 
+
         return { type: 'collided', pos: c_tmpPoint, distance: result.dist * distance, hitE: hitEntityList }
     }
 }

@@ -1,9 +1,9 @@
 import { LoudWalls } from '../loudwalls'
-import { PuzzleElementsAnalysis } from './puzzle-analyze'
 import { MenuOptions } from '../options'
 import { TextGather } from '../tts/gather-text'
 import { PauseListener } from '../plugin'
 import { isAiming } from '../puzzle'
+import { HintSystem } from './hint-system'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
@@ -14,8 +14,7 @@ export class AimAnalyzer implements PauseListener {
     lastSelected: string | undefined
     aimAnnounceOn: boolean = false
 
-
-    constructor(public puzzleElementsAnalysis: PuzzleElementsAnalysis) { /* in prestart */
+    constructor(public hintSystem: HintSystem) { /* in prestart */
         AimAnalyzer.g = this
         const self = this
         ig.Entity.inject({
@@ -63,35 +62,31 @@ export class AimAnalyzer implements PauseListener {
                     if (this.recalculateEntities) {
                          this.recalculateEntities = false
                         setInterval(() => this.recalculateEntities = true, 1000)
-                        TextGather.g.ignoreInterrupt = true
-                        this.puzzleElementsAnalysis.quickMenuAnalysisInstance.show()
-                        this.puzzleElementsAnalysis.quickMenuAnalysisInstance.hide()
-                        this.puzzleElementsAnalysis.quickMenuAnalysisInstance.exit()
-                        TextGather.g.ignoreInterrupt = false
+                        this.hintSystem.quickMenuAnalysisInstance.populateHintList()
                     } else {
-                        this.puzzleElementsAnalysis.quickMenuAnalysisInstance.entities.forEach(
-                            e => e instanceof sc.QUICK_MENU_TYPES.PuzzleElements && e.nameGui.updateData())
+                        this.hintSystem.quickMenuAnalysisInstance.entities.forEach(
+                            e => e instanceof sc.QUICK_MENU_TYPES.Hints && e.nameGui.updateData())
                     }
                     for (let i = 0; i < Math.min(5, check.hitE.length); i++) {
                         const collE = check.hitE[i]
                         const e: ig.Entity = collE.entity
                         if (e) {
                             if (e.uuid == this.lastSelected) { return }
-                            const hint: sc.QuickMenuTypesBase | undefined =
-                                this.puzzleElementsAnalysis.quickMenuAnalysisInstance.entities.find(he => he.entity.uuid == e.uuid)
-                            if (hint && hint instanceof sc.QUICK_MENU_TYPES.PuzzleElements) {
-                                PuzzleElementsAnalysis.activeHint(hint)
+                            const hint: sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Hints | undefined =
+                                this.hintSystem.quickMenuAnalysisInstance.entities.find(he => he.entity.uuid == e.uuid) as any
+                            if (hint) {
+                                HintSystem.activeHint(hint)
                                 this.lastSelected = e.uuid
                                 return
                             }
                         }
                     }
                     this.lastSelected = undefined
-                    PuzzleElementsAnalysis.deactivateHint()
+                    HintSystem.deactivateHint()
                 }
             } else {
                     this.lastSelected = undefined
-                PuzzleElementsAnalysis.deactivateHint()
+                HintSystem.deactivateHint()
             }
         }
     }

@@ -8,9 +8,9 @@ import { SoundManager } from './sound-manager'
 import { TTS } from './tts/tts'
 import { SpecialAction } from './special-action'
 import { EntityBeeper } from './entity-beeper'
-import { PuzzleElementsAnalysis } from './puzzle-analyze/puzzle-analyze'
-import { AimAnalyzer } from './puzzle-analyze/aim-analyze'
 import { AddonInstaller } from './tts/tts-nvda'
+import { AimAnalyzer } from './hint-system/aim-analyze'
+import { HintSystem } from './hint-system/hint-system'
 
 export interface PauseListener {
     pause?(): void
@@ -41,11 +41,11 @@ export default class CrossedEyes {
         MenuOptions.initPrestart()
         SoundManager.preloadSounds()
         new SpacialAudio().initSpacialAudio()
-        const puzzleElementAnalysis = new PuzzleElementsAnalysis()
+        const hintSystem = new HintSystem()
         this.pauseables.push(
             new LoudWalls(),
-            puzzleElementAnalysis,
-            new AimAnalyzer(puzzleElementAnalysis),
+            hintSystem,
+            new AimAnalyzer(hintSystem),
         )
         this.specialAction = new SpecialAction()
         this.puzzleBeeper = new PuzzleBeeper()

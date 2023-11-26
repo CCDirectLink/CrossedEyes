@@ -3,28 +3,29 @@ import { PauseListener } from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { TextGather } from '../tts/gather-text'
-import { PuzzleExtensionBlocker } from './blocker'
-import { PuzzleExtensionBounceBlock } from './bounce-block'
-import { PuzzleExtensionBounceSwitch } from './bounce-switch'
-import { PuzzleExtensionDoor } from './door'
-import { PuzzleExtensionEnemy } from './enemy'
-import { PuzzleExtensionSwitch } from './switch'
-import { PuzzleExtensionTeleportField } from './teleport-field'
-import { PuzzleExtensionTeleportGround } from './teleport-ground'
+import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
+import { HDestructible } from './hints/destructible'
+import { HEnemy } from './hints/enemy'
+import { HOneTimeSwitch, HSwitch } from './hints/switches'
+import { HDoor, HTeleportField, HTeleportGround } from './hints/tprs'
+import { HWalls } from './hints/walls'
+import { overrideNPCHint } from './npc-override'
 
-export interface PuzzleExtensionData {
+export const HintTypes = ['Puzzle', 'Plants'] as const
+
+export interface HintData {
     name: string
     description: string
 }
-export interface PuzzleExtension {
+export interface Hint {
     entryName: string
 
-    getDataFromEntity<T extends ig.Entity>(entity: T): PuzzleExtensionData
+    getDataFromEntity<T extends ig.Entity>(entity: T): HintData
 }
 
 let soundHandle: ig.SoundHandleWebAudio | undefined
 
-export class PuzzleElementsAnalysis implements PauseListener {
+export class HintSystem implements PauseListener {
     static deactivateHint() {
         if (soundHandle) {
             soundHandle.stop()
@@ -33,12 +34,12 @@ export class PuzzleElementsAnalysis implements PauseListener {
             SpecialAction.setListener('LSP', 'hintDescription', () => { })
         }
     }
-    static activeHint(hint: { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui }}) {
-        PuzzleElementsAnalysis.deactivateHint()
+    static activeHint(hint: { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui } }) {
+        HintSystem.deactivateHint()
         const dist = Vec3.distance(ig.game.playerEntity.coll.pos, hint.entity.coll.pos)
         const maxRange = 16 * 30
         const diff = maxRange - dist
-        const range = diff > maxRange*0.4 ? maxRange : Math.floor(dist * 2)
+        const range = diff > maxRange * 0.4 ? maxRange : Math.floor(dist * 2)
 
         soundHandle = new ig.Sound(SoundManager.sounds.wall, 1).play()
         soundHandle.setEntityPosition(hint.entity, ig.ENTITY_ALIGN.CENTER, null, range, ig.SOUND_RANGE_TYPE.CIRULAR)
@@ -49,27 +50,40 @@ export class PuzzleElementsAnalysis implements PauseListener {
         })
     }
 
-    registeredTypes: Record<string, PuzzleExtension>
-    puzzleTypes = [PuzzleExtensionBounceBlock, PuzzleExtensionBounceSwitch, PuzzleExtensionSwitch,
-        PuzzleExtensionDoor, PuzzleExtensionTeleportField, PuzzleExtensionTeleportGround, PuzzleExtensionEnemy,
-        PuzzleExtensionBlocker]
+    registeredTypes: Record<string, Hint>
+    puzzleTypes: (new () => Hint)[] = [
+        HBounceBlock,
+        HBounceSwitch,
+        HSwitch,
+        HDoor,
+        HTeleportField,
+        HTeleportGround,
+        HEnemy,
+        HOneTimeSwitch,
+        HWalls,
+        HDestructible,
+    ]
+    filterType: keyof typeof sc.QUICK_MENU_TYPES | 'All' = 'All'
+    filterHintType: typeof HintTypes[number] | undefined
+    filterList: string[]
+    filterIndex: number = 0
 
     quickMenuAnalysisInstance!: sc.QuickMenuAnalysis
 
     pause() {
-        PuzzleElementsAnalysis.deactivateHint()
+        HintSystem.deactivateHint()
     }
 
     setupGui() {
         const self = this
 
-        sc.QUICK_MENU_TYPES.PuzzleElements = sc.QuickMenuTypesBase.extend({
+        sc.QUICK_MENU_TYPES.Hints = sc.QuickMenuTypesBase.extend({
             init(type: string, settings: sc.QuickMenuTypesBaseSettings, screen: sc.QuickFocusScreen) {
                 this.parent(type, settings, screen)
                 this.setIconColor(sc.ANALYSIS_COLORS.ORANGE)
                 this.showType = sc.SHOW_TYPE.INSTANT
 
-                this.nameGui = new sc.PuzzleElementsMenu(settings)
+                this.nameGui = new sc.HintsMenu(settings)
                 this.nameGui.setPivot(this.nameGui.hook.size.x / 2, 0)
                 this.nameGui.hook.transitions = {
                     DEFAULT: { state: {}, time: 0.1, timeFunction: KEY_SPLINES.EASE },
@@ -88,11 +102,11 @@ export class PuzzleElementsAnalysis implements PauseListener {
             },
             focusGained() {
                 this.nameGui.doStateTransition('DEFAULT')
-                PuzzleElementsAnalysis.activeHint(this)
+                HintSystem.activeHint(this)
             },
             focusLost() {
                 this.nameGui.doStateTransition('HIDDEN')
-                ! TextGather.g.ignoreInterrupt && PuzzleElementsAnalysis.deactivateHint()
+                !TextGather.g.ignoreInterrupt && HintSystem.deactivateHint()
             },
             alignGuiPosition() {
                 this.parent()
@@ -100,24 +114,26 @@ export class PuzzleElementsAnalysis implements PauseListener {
             },
         })
 
-        sc.PuzzleElementsMenu = ig.BoxGui.extend({
+        sc.BasicHintMenu = ig.BoxGui.extend({
             ninepatch: new ig.NinePatch("media/gui/menu.png", { width: 8, height: 8, left: 8, top: 8, right: 8, bottom: 8, offsets: { default: { x: 432, y: 304 }, flipped: { x: 456, y: 304 } } }),
             transitions: { HIDDEN: { state: { alpha: 0 }, time: 0.2, timeFunction: KEY_SPLINES.LINEAR }, DEFAULT: { state: {}, time: 0.2, timeFunction: KEY_SPLINES.EASE } },
-            init(settings: sc.QuickMenuTypesBaseSettings) {
-                this.settings = settings
-                this.updateData()
-                this.parent(127, 17 + this.description.textBlock.size.y)
+            init(getText: () => [string, string]) {
+                this.getText = getText
+                const width = this.updateData()
+                this.parent(width, 17 + this.description.textBlock.size.y)
                 this.addChildGui(this.title)
                 this.addChildGui(this.description)
                 this.doStateTransition('HIDDEN', true)
             },
-            updateData() {
-                const data: PuzzleExtensionData = self.registeredTypes[this.settings.puzzleType!].getDataFromEntity(this.settings.entity)
-                this.title = new sc.TextGui(data.name, { font: sc.fontsystem.smallFont })
+            updateData(): number {
+                const [ title, desc ] = this.getText()
+                this.title = new sc.TextGui(title, { font: sc.fontsystem.smallFont })
                 this.title.setAlign(ig.GUI_ALIGN.X_CENTER, ig.GUI_ALIGN.Y_TOP)
                 this.title.setPos(0, 2)
-                this.description = new sc.TextGui(data.description, { font: sc.fontsystem.tinyFont, maxWidth: 120 })
+                const width = Math.max(127, 20 + this.title.textBlock.size.x)
+                this.description = new sc.TextGui(desc, { font: sc.fontsystem.tinyFont, maxWidth: width - 7 })
                 this.description.setPos(5, 15)
+                return width
             },
             setPosition(hook: ig.GuiHook, e: ig.Entity) {
                 if (hook.screenCoords) {
@@ -145,12 +161,44 @@ export class PuzzleElementsAnalysis implements PauseListener {
                 return a.pos.x + a.size.x / 2 - this.hook!.size.x / 2
             },
         })
+        sc.HintsMenu = sc.BasicHintMenu.extend({
+            init(settings: sc.QuickMenuTypesBaseSettings) {
+                this.parent(() => {
+                    const data: HintData = self.registeredTypes[settings.hintName!].getDataFromEntity(settings.entity)
+                    return [data.name, data.description]
+                })
+            },
+        })
+    }
+
+    updateFilter() {
+        if (this.filterIndex < 0) {
+            this.filterIndex = this.filterList.length - 1
+        } else if (this.filterIndex >= this.filterList.length) {
+            this.filterIndex = 0
+        }
+        const e = this.filterList[this.filterIndex]
+        if (e == 'All' || Object.keys(sc.QUICK_MENU_TYPES).indexOf(e) >= 0) {
+            this.filterType = e as this['filterType']
+            this.filterHintType = undefined
+        } else {
+            this.filterType = 'Hints'
+            this.filterHintType = e as this['filterHintType']
+        }
+        this.quickMenuAnalysisInstance?.hide()
+        this.quickMenuAnalysisInstance?.exit()
+        this.quickMenuAnalysisInstance?.show()
+        this.quickMenuAnalysisInstance?.enter()
     }
 
     constructor() { /* runs in prestart */
+        this.filterList = [ 'All', ...Object.keys(sc.QUICK_MENU_TYPES), ...HintTypes]
+        this.filterList.slice(this.filterList.indexOf('Hints'))
+        this.updateFilter()
+
         this.registeredTypes = {}
         for (const type of this.puzzleTypes) {
-            const inst: PuzzleExtension = new type()
+            const inst: Hint = new type()
             this.registeredTypes[inst.entryName] = inst
         }
 
@@ -197,11 +245,49 @@ export class PuzzleElementsAnalysis implements PauseListener {
                             prevEntry = entry
                         }
                     }
+
+                    let filterAdd = ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_LEFT) ? -1 :
+                        ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_RIGHT) ? 1 : 0
+                    if (filterAdd) {
+                        self.filterIndex += filterAdd
+                        self.updateFilter()
+                        MenuOptions.ttsEnabled && TextGather.g.speak(`${self.filterList[self.filterIndex]}`)
+                    } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_UP)) {
+                        MenuOptions.ttsEnabled && TextGather.g.speak(`Hint filter: ${self.filterList[self.filterIndex]}`)
+                    }
                 }
                 return this.parent(...args)
             },
+            populateHintList() {
+                this.entities.length = 0
+                for (const entity of ig.game.shownEntities) {
+                    if (entity && entity.getQuickMenuSettings && ((entity.isQuickMenuVisible && entity.isQuickMenuVisible()) || ig.EntityTools.isInScreen(entity, 0))) {
+                        const sett = entity.getQuickMenuSettings() as sc.QuickMenuTypesBaseSettings
+                        if (!sett.disabled && sc.QUICK_MENU_TYPES[sett.type] && (self.filterType == 'All' || sett.type == self.filterType)) {
+                            sett.entity = entity
+                            const ins = new sc.QUICK_MENU_TYPES[sett.type](sett.type, sett, this.focusContainer)
+
+                            if (sett.type == 'Hints' && ins instanceof sc.QUICK_MENU_TYPES.Hints &&
+                                self.filterHintType && sett.hintType != self.filterHintType) { continue }
+                            this.entities.push(ins)
+                        }
+                    }
+                }
+            },
             show() {
-                this.parent()
+                this.iconContainer.removeAllChildren()
+                this.entities.length = 0
+                this.buttonGroup.clear()
+                this.focusContainer.resetSubGuis()
+                this.populateHintList()
+                for (const e of this.entities) {
+                    e.alignGuiPosition(0, 0)
+                    this.iconContainer.addChildGui(e)
+                    e.show()
+                    this.buttonGroup.addFocusGui(e)
+                }
+                this.focusContainer.reset()
+                this.doStateTransition('DEFAULT')
                 currentSelectIndex = -1
             },
         })
@@ -215,5 +301,7 @@ export class PuzzleElementsAnalysis implements PauseListener {
                 this.parent()
             }
         })
+
+        overrideNPCHint()
     }
 }

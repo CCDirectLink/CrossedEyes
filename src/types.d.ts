@@ -1,11 +1,12 @@
+import { HintTypes } from './hint-system/hint-system'
 import { PuzzleElementsAnalysis } from './puzzle-analyze'
 import { PuzzleExtensionData } from './puzzle-analyze/puzzle-analyze'
 
-export {}
+export { }
 
 declare global {
     namespace ig {
-        interface SoundHandleBase  {
+        interface SoundHandleBase {
             pos: null | {
                 point: Vec2
                 point3d: Vec3, /* only thing modified */
@@ -23,6 +24,9 @@ declare global {
             interface Enemy {
                 playAtSoundHandle: ig.SoundHandleWebAudio
             }
+            interface WallBlocker {
+                parentWall: ig.ENTITY.WallBase
+            }
         }
         interface Entity {
             uuid: string
@@ -33,32 +37,52 @@ declare global {
             elements: (ig.FocusGui & { optionRow: sc.OptionRow })[][]
         }
         namespace QUICK_MENU_TYPES {
-            interface PuzzleElements extends sc.QuickMenuTypesBase {
-                nameGui: sc.PuzzleElementsMenu
+            interface Hints extends sc.QuickMenuTypesBase {
+                nameGui: sc.HintsMenu
             }
-            interface PuzzleElementsConstructor extends ImpactClass<PuzzleElements> {
-                new (type: string, settings: sc.QuickMenuTypesBaseSettings, screen: sc.QuickFocusScreen): PuzzleElements
+            interface HintsConstructor extends ImpactClass<Hints> {
+                new(type: string, settings: sc.QuickMenuTypesBaseSettings, screen: sc.QuickFocusScreen): Hints
             }
-            var PuzzleElements: PuzzleElementsConstructor
+            var Hints: HintsConstructor
+
+            interface NPC {
+                nameGui: sc.NPCHintMenu
+            }
         }
-        
-        interface PuzzleElementsMenu extends ig.BoxGui {
-            settings: sc.QuickMenuTypesBaseSettings
+        interface BasicHintMenu extends ig.BoxGui {
+            getText: () => [string, string]
             ninepatch: ig.NinePatch
             title: sc.TextGui
             description: sc.TextGui
 
             setPosition(this: this, hook: ig.GuiHook, e: ig.Entity): void
             getCenter(this: this, a: ig.GuiHook): number
-            updateData(this: this): void
+            updateData(this: this): number
         }
-        interface PuzzleElementsMenuConstructor extends ImpactClass<PuzzleElementsMenu> {
-            new (settings: sc.QuickMenuTypesBaseSettings): PuzzleElementsMenu;
+        interface BasicHintMenuConstructor extends ImpactClass<BasicHintMenu> {
+            new(getText: () => [string, string]): BasicHintMenu
         }
-        var PuzzleElementsMenu: PuzzleElementsMenuConstructor;
+        var BasicHintMenu: BasicHintMenuConstructor
+
+        interface HintsMenu extends sc.BasicHintMenu { }
+        interface HintsMenuConstructor extends ImpactClass<HintsMenu> {
+            new(settings: sc.QuickMenuTypesBaseSettings): HintsMenu
+        }
+        var HintsMenu: HintsMenuConstructor
+
+        interface NPCHintMenu extends sc.BasicHintMenu { }
+        interface NPCHintMenuConstructor extends ImpactClass<NPCHintMenu> {
+            new(text: string, settings: sc.QuickMenuTypesBaseSettings): NPCHintMenu
+        }
+        var NPCHintMenu: NPCHintMenuConstructor
 
         interface QuickMenuTypesBaseSettings {
-            puzzleType?: string
+            hintName?: string
+            hintType?: HintTypes
+        }
+
+        interface QuickMenuAnalysis {
+            populateHintList(this: this): void
         }
     }
 }
