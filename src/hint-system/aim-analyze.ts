@@ -54,8 +54,8 @@ export class AimAnalyzer implements PauseListener {
 
     handle() {
         if (this.aimAnnounceOn) {
-            if (isAiming() && ig.game.playerEntityCrosshairInstance?.active) {
-                const aim: Vec2 = Vec2.create(ig.game.playerEntityCrosshairInstance._aimDir) /* set by cc-blitzkrieg */
+            if (isAiming() && ig.game.playerEntity.gui.crosshair?.active) {
+                const aim: Vec2 = Vec2.create(ig.game.playerEntity.gui.crosshair._aimDir)
                 const check = LoudWalls.checkDirection(aim, 20 * 16, ig.COLLTYPE.PROJECTILE)
 
                 if (check && check.hitE && check.hitE.length > 0) {

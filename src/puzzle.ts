@@ -32,7 +32,7 @@ class AimHandler {
             deferredUpdate(): void {
                 this.parent()
                 if (self.lockedIn) {
-                    Vec2.assign(ig.game.playerEntityCrosshairInstance._aimDir, self.newAim)
+                    Vec2.assign(ig.game.playerEntity.gui.crosshair._aimDir, self.newAim)
                 }
             }
         })

@@ -1,4 +1,5 @@
 import { HintTypes } from './hint-system/hint-system'
+import { PlayerTraceResult } from './loudjump'
 import { PuzzleElementsAnalysis } from './puzzle-analyze'
 import { PuzzleExtensionData } from './puzzle-analyze/puzzle-analyze'
 
@@ -84,5 +85,22 @@ declare global {
         interface QuickMenuAnalysis {
             populateHintList(this: this): void
         }
+
+        interface CrossedEyesPositionPredictor extends ig.ActorEntity {
+            rfc: {
+                on: boolean
+                timer: number
+                startTime: number
+            }
+            rfcr: PlayerTraceResult
+
+            runPlayerTrace(this: this, seconds: number): PlayerTraceResult
+            runForward(this: this, seconds: number, fps: number = 30): PlayerTraceResult
+            stopRunning(this: this): void
+        }
+        interface CrossedEyesPositionPredictorConstructor extends ImpactClass<CrossedEyesPositionPredictor> {
+            new(x: number, y: number, z: number, settings: ig.Entity.Settings): CrossedEyesPositionPredictor
+        }
+        var CrossedEyesPositionPredictor: CrossedEyesPositionPredictorConstructor
     }
 }

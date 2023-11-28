@@ -11,6 +11,7 @@ import { EntityBeeper } from './entity-beeper'
 import { AddonInstaller } from './tts/tts-nvda'
 import { AimAnalyzer } from './hint-system/aim-analyze'
 import { HintSystem } from './hint-system/hint-system'
+import { LoudJump } from './loudjump'
 
 export interface PauseListener {
     pause?(): void
@@ -35,6 +36,9 @@ export default class CrossedEyes {
     private pauseAll() {
         this.pauseables.forEach(p => p.pause && p.pause())
     }
+    private resumeAll() {
+        this.pauseables.forEach(p => p.resume && p.resume())
+    }
 
     async prestart() {
         this.addVimAliases()
@@ -46,6 +50,7 @@ export default class CrossedEyes {
             new LoudWalls(),
             hintSystem,
             new AimAnalyzer(hintSystem),
+            new LoudJump(),
         )
         this.specialAction = new SpecialAction()
         this.puzzleBeeper = new PuzzleBeeper()
@@ -53,19 +58,6 @@ export default class CrossedEyes {
         new EntityBeeper()
 
         const self = this
-        ig.EventManager.inject({
-            clear() {
-                this.parent()
-                self.pauseAll()
-            },
-            _endEventCall(event) {
-                this.parent(event)
-                if (!this.blockingEventCall) {
-                    self.pauseAll()
-                }
-            }
-        })
-
         sc.TitleScreenButtonGui.inject({
             show() {
                 this.parent()
@@ -77,6 +69,8 @@ export default class CrossedEyes {
                 this.parent(paused)
                 if (paused) {
                     self.pauseAll()
+                } else {
+                    self.resumeAll()
                 }
             },
         })
