@@ -94,9 +94,9 @@ declare global {
             }
             rfcr: PlayerTraceResult
 
-            runPlayerTrace(this: this, seconds: number): PlayerTraceResult
-            runForward(this: this, seconds: number, fps: number = 30): PlayerTraceResult
+            runPlayerTrace(this: this, seconds: number, vel: number, fps: number = 30): PlayerTraceResult
             stopRunning(this: this): void
+            checkQuickRespawn(this: this): void
         }
         interface CrossedEyesPositionPredictorConstructor extends ImpactClass<CrossedEyesPositionPredictor> {
             new(x: number, y: number, z: number, settings: ig.Entity.Settings): CrossedEyesPositionPredictor
@@ -104,3 +104,4 @@ declare global {
         var CrossedEyesPositionPredictor: CrossedEyesPositionPredictorConstructor
     }
 }
+
