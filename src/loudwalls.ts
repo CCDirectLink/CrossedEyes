@@ -1,19 +1,14 @@
 import { AimAnalyzer } from './hint-system/aim-analyze'
+import { isFallingOrJumping } from './loudjump'
 import { MenuOptions } from './options'
 import { PauseListener } from './plugin'
-import { SoundManager } from './sound-manager'
+import { SoundManager, isHandleOff, turnOffHandle } from './sound-manager'
 
 const c_res = {}
 const c_tmpPos: Vec3 = { x: 0, y: 0, z: 0 }
 const c_tmpPoint: Vec3 = { x: 0, y: 0, z: 0 }
 
 const range: number = 5 * 16
-function turnOffHandle(handle: ig.SoundHandleWebAudio) {
-    handle.setFixPosition(Vec3.createC(-1000, -1000, 0), range)
-}
-function isHandleOff(handle: ig.SoundHandleWebAudio) {
-    return handle.pos?.point3d == Vec3.createC(-1000, -1000, 0)
-}
 
 type CheckDirectionReturn = { type: 'none' | 'blocked' | 'collided', pos: Vec3, distance: number, hitE?: ig.Physics.CollEntry[] }
 
@@ -39,7 +34,7 @@ export class LoudWalls implements PauseListener {
     }
 
     private handleWallSound() {
-        if (ig.game.events.blockingEventCall || AimAnalyzer.g.aimAnnounceOn) { return }
+        if (ig.game.events.blockingEventCall || AimAnalyzer.g.aimAnnounceOn || isFallingOrJumping(ig.game.playerEntity)) { return }
         const dirs: [string, Vec2][] = [
             ['wallDown', { x: 0, y: 1 }],
             ['wallRight', { x: 1, y: 0 }],
@@ -53,7 +48,7 @@ export class LoudWalls implements PauseListener {
 
             const { handle } = this.handles[dirId] ?? { handle: undefined }
             if (handle && (!handle.pos || !isHandleOff(handle))) {
-                turnOffHandle(handle)
+                turnOffHandle(handle, range)
             }
         }
     }
@@ -69,7 +64,7 @@ export class LoudWalls implements PauseListener {
                     sound: soundName,
                 }
                 handle = this.handles[dirId].handle
-                turnOffHandle(handle)
+                turnOffHandle(handle, range)
             }
 
             if (check.distance <= range * 0.02) {

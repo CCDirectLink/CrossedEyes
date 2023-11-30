@@ -57,12 +57,10 @@ export class TTSNvda implements TTSInterface {
 
     speak(text: string): void {
         this.sendCommand(`speak ${text}`)
-        console.log(text)
     }
 
     interrupt(): void {
         this.sendCommand('interrupt')
-        console.log('interrupt')
     }
 
 }

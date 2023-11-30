@@ -1,3 +1,5 @@
+import { SoundManager, isHandleOff, turnOffHandle } from './sound-manager'
+
 interface TickData {
     timerTimer: number
     timerLast: number
@@ -32,6 +34,11 @@ function advanceTime(start: number, add: number) {
     ig.system.tick = ig.system.actualTick * ig.system.timeFactor
 }
 
+export function isFallingOrJumping(e: ig.ActorEntity) {
+    return e.jumping || isFallTerrainOrHole(getTerrainButDefIsHole(e.coll, true))
+
+}
+
 export interface PlayerTraceResult {
     pos: Vec3
     collided?: boolean
@@ -61,6 +68,19 @@ function isFallTerrainOrHole(terrain: ig.TERRAIN) {
     return ig.terrain.isFallTerrain(terrain) || terrain == ig.TERRAIN.HOLE
 }
 
+function tpBackToPlayer(e: ig.Entity) {
+    const p = ig.game.playerEntity
+    const npos = p.coll.pos
+    e.setPos(npos.x, npos.y, npos.z, false)
+    e.coll.level = p.coll.level
+
+    Vec2.assignC(e.coll.accelDir, 0, 0)
+    Vec2.assignC(e.coll.vel, 0, 0)
+
+    e.coll.totalBlockTimer = 0
+    e.coll.partlyBlockTimer = 0
+}
+
 function initCrossedEyesPositionPredictor() {
     sc.CrossedEyesPositionPredictor = ig.ActorEntity.extend({
         rfc: { on: false, startTime: 0, timer: 0 },
@@ -77,23 +97,23 @@ function initCrossedEyesPositionPredictor() {
             this.parent()
             this.rfc.on && this.checkQuickRespawn()
             if (this.rfc.on) {
-                if (ig.CollTools.hasWallCollide(this.coll, 1)) {
-                    this.rfcr.collided = true
-                    this.stopRunning(); return
-                }
                 if (ig.CollTools.isPostMoveOverHole(this.coll, true)) {
                     this.rfcr.touchedEdge = true
                 }
                 if (this.jumping) {
                     this.rfcr.jumped = true
-                } else if (this.rfcr.jumped) {
+                } else if (this.rfcr.jumped && !isFallingOrJumping(this)) {
                     this.rfcr.jumpLanded = true
                     this.stopRunning(); return
                 }
-                if (!this.jumping && !isFallTerrainOrHole(getTerrainButDefIsHole(this.coll, true)) && 
-                    ig.Timer.time - this.rfc.startTime > this.rfc.timer) {
-
-                    this.stopRunning(); return
+                if (!this.jumping && !isFallingOrJumping(this)) {
+                    if (ig.CollTools.hasWallCollide(this.coll, 1)) {
+                        this.rfcr.collided = true
+                        this.stopRunning(); return
+                    }
+                    if (ig.Timer.time - this.rfc.startTime > this.rfc.timer) {
+                        this.stopRunning(); return
+                    }
                 }
             }
         },
@@ -102,8 +122,7 @@ function initCrossedEyesPositionPredictor() {
                 const e = ig.EntityTools.getGroundEntity(this)
                 if (!e || !(e instanceof ig.ENTITY.Elevator)) {
                     this.rfcr.fallType = ig.TERRAIN.HOLE
-                    this.stopRunning()
-                    return
+                    this.stopRunning(); return
                 }
             }
             if (!(this.coll.pos.z > this.coll.baseZPos || this.jumping || this.coll.zGravityFactor == 0)) {
@@ -123,13 +142,11 @@ function initCrossedEyesPositionPredictor() {
             }
             this.rfcr = { pos: Vec3.create() }
 
-            const npos = ig.game.playerEntity.coll.pos
-            this.setPos(npos.x, npos.y, npos.z, false)
+            tpBackToPlayer(this)
 
             this.coll.ignoreCollision = false
-            const speed: Vec2 = Vec2.create(this.face)
-            Vec2.mulC(speed, vel)
-            Vec2.assign(this.coll.accelDir, speed)
+            Vec2.assign(this.coll.accelDir, this.face)
+            this.coll.maxVel = ig.game.playerEntity.coll.maxVel * vel
 
             const save = saveTickData()
 
@@ -141,24 +158,38 @@ function initCrossedEyesPositionPredictor() {
                 this.coll.updated = 0 /* trick the game to think the entitiy was not just updated */
                 ig.game.physics.updateCollEntry(this.coll, [])
             }
-            this.rfcr.pos = Vec3.create(this.coll.pos)
 
             restoreTickData(save)
             // const time = ig.Timer.time - orig.timerTimer
             // console.log(`Tracking done, Time spend: ${time}`)
 
             this.stopRunning()
-            this.setPos(npos.x, npos.y, npos.z, true)
             return this.rfcr
         },
         stopRunning() {
-            this.rfc.on = false
-            Vec2.assignC(this.coll.accelDir, 0, 0)
-            Vec2.assignC(this.coll.vel, 0, 0)
-            this.coll.ignoreCollision = true
+            if (this.rfc.on) {
+                this.rfc.on = false
+                this.coll._killed = false
+
+                this.rfcr.pos = Vec3.create(this.coll.pos)
+                Vec2.assignC(this.coll.accelDir, 0, 0)
+                Vec2.assignC(this.coll.vel, 0, 0)
+                // this.coll.relativeVel = 0
+                this.coll.ignoreCollision = true
+                tpBackToPlayer(this)
+            }
         },
     })
 }
+
+enum TrackType {
+    Water,
+    Hole,
+    LowerLevel,
+    Land,
+    None,
+}
+
 
 export class LoudJump {
     predictor!: sc.CrossedEyesPositionPredictor
@@ -169,11 +200,20 @@ export class LoudJump {
     trackConfigs: {
         vel: number
         time: number
-        consider: (keyof PlayerTraceResult)[]
-    }[] = [
-            { vel: 1, time: 0.5, consider: ['fallType'], },
-            // { vel: 1, time: 0.75, consider: ['fallType'], },
+    }[] = [ /* travel the same distance but with different speed */
+            { vel: 0.7, time: 0.4285714285714286 },
+            { vel: 0.8, time: 0.375 },
+            { vel: 1, time: 0.3 },
         ]
+
+    checkDegrees: number[] = [ /* relative to player facing */
+        0,
+        //20, -20,
+        //30, -30
+    ]
+
+    dirHandles: { handle: ig.SoundHandleWebAudio, sound: string }[] = []
+    soundRange: number = 16 * 16
 
     constructor() { /* in prestart */
         const self = this
@@ -192,26 +232,102 @@ export class LoudJump {
                 self.handle()
             },
         })
+
+        sc.CrossCode.inject({
+            start(startMode, transitionTime) {
+                this.parent(startMode, transitionTime)
+                ig.game.teleport('crossedeyes/jumptest')
+            },
+        })
     }
+
     pause() { this.paused = true }
     resume() { this.paused = false }
 
     handle() {
         const p: ig.ENTITY.Player = ig.game.playerEntity
-        if (this.paused || ig.game.events.blockingEventCall || !this.predictor || !p || !p.coll?.pos ||
-            isFallTerrainOrHole(getTerrainButDefIsHole(ig.game.playerEntity.coll, true))) { return }
+        if (this.paused || ig.game.events.blockingEventCall || !this.predictor || !p || !p.coll?.pos || isFallingOrJumping(p)) {
+            this.dirHandles.forEach(o => o && turnOffHandle(o.handle, this.soundRange))
+            return
+        }
 
         if (ig.game.now - this.lastTrack > this.trackInterval) {
             this.lastTrack = ig.game.now
 
-            const results: PlayerTraceResult[] = []
-
-            for (const config of this.trackConfigs) {
-                this.predictor.face = Vec2.create(p.face)
-                const res: PlayerTraceResult = this.predictor.runPlayerTrace(config.time, config.vel)
-                results.push(res)
-                console.log(res.pos.x, res.pos.y, res.pos.z, 'coll', !!res.collided, 'edge:', !!res.touchedEdge, 'j:', !!res.jumped, 'l:', !!res.jumpLanded, 'fallType:', res.fallType)
+            for (let i = 0; i < this.checkDegrees.length; i++) {
+                const deg = this.checkDegrees[i]
+                let face: Vec2 = Vec2.create()
+                Vec2.rotate(ig.game.playerEntity.face, (deg * Math.PI) / 180, face)
+                const out = this.getTypeByTracking(face)
+                this.playRes(i, out.res, out.type)
             }
         }
+    }
+
+    playRes(i: number, res: PlayerTraceResult, type: TrackType) {
+        console.log(TrackType[type])
+        let { handle, sound } = this.dirHandles[i] ?? { handle: undefined, sound: undefined }
+        if (type == TrackType.None) {
+            if (handle && !isHandleOff(handle)) { turnOffHandle(handle, this.soundRange) }
+            return
+        }
+        let soundName: string = ''
+        let volume: number = 1
+        switch (type) {
+            case TrackType.Water: soundName = SoundManager.sounds.water; volume = 1.2; break
+            case TrackType.Hole: soundName = SoundManager.sounds.hole; break
+            case TrackType.LowerLevel: soundName = SoundManager.sounds.lower; break
+            case TrackType.Land: soundName = SoundManager.sounds.land; break
+        }
+
+        if (soundName) {
+            if (soundName && (!handle || !handle._playing || sound != soundName)) {
+                if (handle && handle._playing) { handle.stop() }
+                this.dirHandles[i] = {
+                    handle: new ig.Sound(soundName, volume).play(true, {
+                        speed: 1,
+                    }),
+                    sound: soundName,
+                }
+                handle = this.dirHandles[i].handle
+                turnOffHandle(handle, this.soundRange)
+            }
+            const pos: Vec3 = res.pos
+            if (!handle.pos || !Vec3.equal(handle.pos.point3d, pos)) {
+                handle.setFixPosition(pos, this.soundRange)
+            }
+        }
+    }
+
+    getTypeByTracking(face: Vec2): { res: PlayerTraceResult, type: TrackType } {
+        const results: { res: PlayerTraceResult, type: TrackType }[] = []
+
+        for (const config of this.trackConfigs) {
+            this.predictor.face = Vec2.create(face)
+            const res: PlayerTraceResult = this.predictor.runPlayerTrace(config.time, config.vel)
+            const type: TrackType = this.getTypeFromRes(res)
+            const obj = { res, type }
+            // console.log(res.pos.x, res.pos.y, res.pos.z, 'coll', !!res.collided, 'edge:', !!res.touchedEdge, 'j:', !!res.jumped, 'l:', !!res.jumpLanded, 'fallType:', res.fallType)
+            if (type == TrackType.Land) { return obj }
+            results.push(obj)
+        }
+        for (const res of results) {
+            if (res.type == TrackType.LowerLevel) { return res }
+        }
+        return results[0]
+    }
+
+
+    getTypeFromRes(res: PlayerTraceResult): TrackType {
+        if (res.jumped) {
+            if (res.fallType !== undefined) {
+                if (res.fallType == ig.TERRAIN.HOLE || res.fallType == ig.TERRAIN.HIGHWAY) { return TrackType.Hole }
+                if (res.fallType == ig.TERRAIN.WATER) { return TrackType.Water }
+            } else if (res.jumpLanded) {
+                if (ig.game.playerEntity.coll.pos.z - res.pos.z > 8) { return TrackType.LowerLevel }
+                return TrackType.Land
+            }
+        }
+        return TrackType.None
     }
 }

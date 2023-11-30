@@ -73,7 +73,6 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
         if (!this.isReady()) { return }
         text = text.trim()
         if (! text) { return }
-        console.log(text)
 
         const utter = new SpeechSynthesisUtterance(text)
         utter.pitch = MenuOptions.ttsPitch

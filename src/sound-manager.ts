@@ -1,5 +1,12 @@
 import { isAiming } from './puzzle'
 
+export function turnOffHandle(handle: ig.SoundHandleWebAudio, range: number) {
+    handle.setFixPosition(Vec3.createC(-1000, -1000, 0), range)
+}
+export function isHandleOff(handle: ig.SoundHandleWebAudio) {
+    return handle.pos?.point3d == Vec3.createC(-1000, -1000, 0)
+}
+
 export type SoundQueueEntry = {
     name: keyof typeof SoundManager.sounds
     wait?: number
@@ -38,6 +45,10 @@ export class SoundManager {
         hitCounterEcho: 'media/sound/battle/hit-counter-echo.ogg',
         wallHum: 'media/sound/wall-hum.ogg',
         wall: 'media/sound/crossedeyes/wall.ogg',
+        water: 'media/sound/background/waterfall.ogg',
+        hole: 'media/sound/crossedeyes/hole.ogg',
+        lower: 'media/sound/crossedeyes/lower.ogg',
+        land: 'media/sound/crossedeyes/land.ogg',
     }
     static getElementName(element: sc.ELEMENT): 'neutralMode' | 'coldMode' | 'heatMode' | 'waveMode' | 'shockMode' {
         switch(element) {
