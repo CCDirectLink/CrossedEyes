@@ -109,7 +109,7 @@ export default class CrossedEyes {
                 this._createButton(
                     'CrossedEyesTestMap',
                     this.buttons.last().hook.pos.y + 39,
-                    0,
+                    100 - this.buttons.length,
                     () => { startTestMap(self1) },
                 )
             },
