@@ -17,6 +17,7 @@ export interface PauseListener {
     pause?(): void
     resume?(): void
 }
+
 export default class CrossedEyes {
     static dir: string
     mod: Mod1
@@ -73,6 +74,58 @@ export default class CrossedEyes {
                     self.resumeAll()
                 }
             },
+        })
+
+        function godlikeStats() {
+            for (const k of Object.keys(sc.model.player.core) as unknown as sc.PLAYER_CORE[]) { sc.model.player.core[k] = true }
+        
+            sc.model.player.setSpLevel(4)
+            sc.model.player.setLevel(99)
+            sc.model.player.equip = {head:657,leftArm:577,rightArm:607,torso:583,feet:596}
+            for (let i = 0; i < sc.model.player.skillPoints.length; i++) { sc.model.player.skillPoints[i] = 200 }
+            for (let i = 0; i < 400; i++) { sc.model.player.learnSkill(i) }
+            for (let i = 0; i < sc.model.player.skillPoints.length; i++) { sc.model.player.skillPoints[i] = 0 }
+            sc.model.player.updateStats()
+        }
+
+        let startWithTestMap: boolean = false
+        function startTestMap(titleGuiInstance?: sc.TitleScreenButtonGui) {
+            startWithTestMap = true
+            ig.bgm.clear('MEDIUM_OUT')
+            if (titleGuiInstance) {
+                ig.interact.removeEntry(titleGuiInstance.buttonInteract)
+            } else {
+                ig.interact.entries.forEach((e) => ig.interact.removeEntry(e))
+            }
+            ig.game.start(sc.START_MODE.STORY, 0)
+            ig.game.setPaused(false)
+            godlikeStats()
+        }
+        sc.TitleScreenButtonGui.inject({
+            init() {
+                this.parent()
+                ig.lang.labels.sc.gui['title-screen']['CrossedEyesTestMap'] = 'CrossedEyes test map'
+                const self1 = this
+                this._createButton(
+                    'CrossedEyesTestMap',
+                    this.buttons.last().hook.pos.y + 39,
+                    0,
+                    () => { startTestMap(self1) },
+                )
+            },
+        })
+        sc.CrossCode.inject({
+            start(mode: sc.START_MODE | undefined, transitionTime: number | undefined) {
+                this.parent(mode, transitionTime)
+            },
+            transitionEnded() {
+                if (startWithTestMap) {
+                    ig.game.teleport('crossedeyes/test')
+                    startWithTestMap = false
+                } else {
+                    this.parent()
+                }
+            }
         })
     }
 

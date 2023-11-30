@@ -207,9 +207,19 @@ export class LoudJump {
         ]
 
     checkDegrees: number[] = [ /* relative to player facing */
+        // 0,
+        // 22.5, -22.5,
+        // 67.5, -67.5,
+        // 90, -90,
+        // 112.5, -112.5,
+        // 135, -135,
+        // 157.5, -157.5,
+        // 180,
         0,
-        //20, -20,
-        //30, -30
+        45, -45,
+        90, -90,
+        135, -135,
+        180
     ]
 
     dirHandles: { handle: ig.SoundHandleWebAudio, sound: string }[] = []
@@ -230,13 +240,6 @@ export class LoudJump {
             update() {
                 this.parent()
                 self.handle()
-            },
-        })
-
-        sc.CrossCode.inject({
-            start(startMode, transitionTime) {
-                this.parent(startMode, transitionTime)
-                ig.game.teleport('crossedeyes/jumptest')
             },
         })
     }
@@ -265,7 +268,7 @@ export class LoudJump {
     }
 
     playRes(i: number, res: PlayerTraceResult, type: TrackType) {
-        console.log(TrackType[type])
+        // console.log(TrackType[type])
         let { handle, sound } = this.dirHandles[i] ?? { handle: undefined, sound: undefined }
         if (type == TrackType.None) {
             if (handle && !isHandleOff(handle)) { turnOffHandle(handle, this.soundRange) }
@@ -274,10 +277,10 @@ export class LoudJump {
         let soundName: string = ''
         let volume: number = 1
         switch (type) {
-            case TrackType.Water: soundName = SoundManager.sounds.water; volume = 1.2; break
+            case TrackType.Water: soundName = SoundManager.sounds.water; volume = 1; break
             case TrackType.Hole: soundName = SoundManager.sounds.hole; break
             case TrackType.LowerLevel: soundName = SoundManager.sounds.lower; break
-            case TrackType.Land: soundName = SoundManager.sounds.land; break
+            case TrackType.Land: soundName = SoundManager.sounds.land; volume = 1; break
         }
 
         if (soundName) {
