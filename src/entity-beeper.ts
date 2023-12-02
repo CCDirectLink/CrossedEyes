@@ -5,14 +5,12 @@ export class EntityBeeper {
     minRadius: number = 12*16
 
     constructor() { /* in prestart */
-        const self = this
-
-        const wallHum = new ig.Sound(SoundManager.sounds.wallHum, 0.8)
+        const sound = new ig.Sound(SoundManager.sounds.entity, 0.8)
         ig.ENTITY.Enemy.inject({
             playAtSoundHandle: null,
             show() {
                 if (MenuOptions.loudEntitiesEnabled) {
-                    this.playAtSoundHandle = ig.SoundHelper.playAtEntity(wallHum, this, true, {
+                    this.playAtSoundHandle = ig.SoundHelper.playAtEntity(sound, this, true, {
                         fadeDuration: 0
                     }, 16 * 16)
                 }
