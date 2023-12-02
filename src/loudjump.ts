@@ -115,6 +115,7 @@ function initCrossedEyesPositionPredictor() {
                         this.stopRunning(); return
                     }
                 }
+                if (ig.Timer.time - this.rfc.startTime > 15) { this.stopRunning(); return }
             }
         },
         checkQuickRespawn() {
