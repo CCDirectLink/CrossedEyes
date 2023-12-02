@@ -7,9 +7,9 @@ export class HWalls implements Hint {
     constructor() { /* run in prestart */
         const self = this
         ig.ENTITY.WallBase.inject({
-            updateWallBlockers() {
+            updateWallBlockers(...args) {
                 for (const wall of this.wallBlockers) { wall.parentWall = this }
-                this.parent()
+                return this.parent(...args)
             },
         })
         ig.ENTITY.WallBlocker.inject({

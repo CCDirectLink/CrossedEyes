@@ -8,24 +8,24 @@ export class EntityBeeper {
         const sound = new ig.Sound(SoundManager.sounds.entity, 0.8)
         ig.ENTITY.Enemy.inject({
             playAtSoundHandle: null,
-            show() {
+            show(...args) {
                 if (MenuOptions.loudEntitiesEnabled) {
                     this.playAtSoundHandle = ig.SoundHelper.playAtEntity(sound, this, true, {
                         fadeDuration: 0
                     }, 16 * 16)
                 }
-                return this.parent()
+                return this.parent(...args)
             },
-            hide() {
-                this.parent()
+            hide(...args) {
+                this.parent(...args)
                 this.playAtSoundHandle?.stop()
             },
-            onKill() {
+            onKill(...args) {
                 this.parent()
-                this.playAtSoundHandle?.stop()
+                this.playAtSoundHandle?.stop(...args)
             },
-            update() {
-                this.parent()
+            update(...args) {
+                this.parent(...args)
                 if (this.playAtSoundHandle?._nodeSource) {
                     const pFaceAngle: number = Vec2.clockangle(ig.game.playerEntity.face) * 180 / Math.PI
                     const diffPos: Vec2 = Vec2.create(ig.game.playerEntity.coll.pos)
