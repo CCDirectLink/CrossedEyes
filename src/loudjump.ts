@@ -187,6 +187,7 @@ enum TrackType {
     Water,
     Hole,
     LowerLevel,
+    HigherLevel,
     Land,
     None,
 }
@@ -281,6 +282,7 @@ export class LoudJump {
             case TrackType.Water: soundName = SoundManager.sounds.water; volume = 1; break
             case TrackType.Hole: soundName = SoundManager.sounds.hole; break
             case TrackType.LowerLevel: soundName = SoundManager.sounds.lower; break
+            case TrackType.HigherLevel: soundName = SoundManager.sounds.higher; break
             case TrackType.Land: soundName = SoundManager.sounds.land; volume = 1; break
         }
 
@@ -315,9 +317,8 @@ export class LoudJump {
             if (type == TrackType.Land) { return obj }
             results.push(obj)
         }
-        for (const res of results) {
-            if (res.type == TrackType.LowerLevel) { return res }
-        }
+        for (const res of results) { if (res.type == TrackType.HigherLevel) { return res } }
+        for (const res of results) { if (res.type == TrackType.LowerLevel) { return res } }
         return results[0]
     }
 
@@ -328,7 +329,9 @@ export class LoudJump {
                 if (res.fallType == ig.TERRAIN.HOLE || res.fallType == ig.TERRAIN.HIGHWAY) { return TrackType.Hole }
                 if (res.fallType == ig.TERRAIN.WATER) { return TrackType.Water }
             } else if (res.jumpLanded) {
-                if (ig.game.playerEntity.coll.pos.z - res.pos.z > 8) { return TrackType.LowerLevel }
+                const diff = ig.game.playerEntity.coll.pos.z - res.pos.z
+                if (diff > 8) { return TrackType.LowerLevel }
+                else if (diff < 8) { return TrackType.HigherLevel }
                 return TrackType.Land
             }
         }

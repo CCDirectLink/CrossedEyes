@@ -47,6 +47,7 @@ export class SoundManager {
         water: 'media/sound/background/waterfall.ogg',
         hole: 'media/sound/crossedeyes/hole.ogg',
         lower: 'media/sound/crossedeyes/lower.ogg',
+        higher: 'media/sound/crossedeyes/higher.ogg',
         land: 'media/sound/crossedeyes/land.ogg',
         entity: 'media/sound/crossedeyes/entity.ogg',
     }
