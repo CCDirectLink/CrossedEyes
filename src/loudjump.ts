@@ -1,4 +1,4 @@
-import { SoundManager, isHandleOff, turnOffHandle } from './sound-manager'
+import { SoundManager } from './sound-manager'
 
 interface TickData {
     timerTimer: number
@@ -68,7 +68,7 @@ function isFallTerrainOrHole(terrain: ig.TERRAIN) {
     return ig.terrain.isFallTerrain(terrain) || terrain == ig.TERRAIN.HOLE
 }
 
-function tpBackToPlayer(e: ig.Entity) {
+function tpBackToPlayer(e: ig.ActorEntity) {
     const p = ig.game.playerEntity
     const npos = p.coll.pos
     e.setPos(npos.x, npos.y, npos.z, false)
@@ -79,6 +79,7 @@ function tpBackToPlayer(e: ig.Entity) {
 
     e.coll.totalBlockTimer = 0
     e.coll.partlyBlockTimer = 0
+    e.jumping = false
 }
 
 function initCrossedEyesPositionPredictor() {
@@ -109,7 +110,6 @@ function initCrossedEyesPositionPredictor() {
                 if (!this.jumping && !isFallingOrJumping(this)) {
                     if (ig.CollTools.hasWallCollide(this.coll, 1)) {
                         this.rfcr.collided = true
-                        // this.stopRunning(); return
                     }
                     if (ig.Timer.time - this.rfc.startTime > this.rfc.timer) {
                         this.stopRunning(); return
@@ -146,7 +146,8 @@ function initCrossedEyesPositionPredictor() {
             tpBackToPlayer(this)
 
             this.coll.ignoreCollision = false
-            Vec2.assign(this.coll.accelDir, this.face)
+
+            Vec2.assign(this.coll.accelDir, Vec2.normalize(this.face))
             this.coll.maxVel = ig.game.playerEntity.coll.maxVel * vel
 
             const save = saveTickData()
@@ -161,8 +162,7 @@ function initCrossedEyesPositionPredictor() {
             }
 
             restoreTickData(save)
-            // const time = ig.Timer.time - orig.timerTimer
-            // console.log(`Tracking done, Time spend: ${time}`)
+            // const time = ig.Timer.time - orig.timerTimer (`Tracking done, Time spend: ${time}`)
 
             this.stopRunning()
             return this.rfcr
@@ -175,7 +175,6 @@ function initCrossedEyesPositionPredictor() {
                 this.rfcr.pos = Vec3.create(this.coll.pos)
                 Vec2.assignC(this.coll.accelDir, 0, 0)
                 Vec2.assignC(this.coll.vel, 0, 0)
-                // this.coll.relativeVel = 0
                 this.coll.ignoreCollision = true
                 tpBackToPlayer(this)
             }
@@ -202,7 +201,8 @@ export class LoudJump {
     trackConfigs: {
         vel: number
         time: number
-    }[] = [ /* travel the same distance but with different speed */
+    }[] = [
+            /* travel the same distance but with different speed */
             { vel: 0.7, time: 0.4285714285714286 },
             { vel: 0.8, time: 0.375 },
             { vel: 1, time: 0.3 },
@@ -225,7 +225,6 @@ export class LoudJump {
     ]
 
     dirHandles: { handle: ig.SoundHandleWebAudio, sound: string }[] = []
-    soundRange: number = 16 * 16
 
     constructor() { /* in prestart */
         const self = this
@@ -252,7 +251,7 @@ export class LoudJump {
     handle() {
         const p: ig.ENTITY.Player = ig.game.playerEntity
         if (this.paused || ig.game.events.blockingEventCall || !this.predictor || !p || !p.coll?.pos || isFallingOrJumping(p)) {
-            this.dirHandles.forEach(o => o && turnOffHandle(o.handle, this.soundRange))
+            this.dirHandles.forEach(o => o && o.handle.stop())
             return
         }
 
@@ -273,15 +272,16 @@ export class LoudJump {
         // console.log(TrackType[type])
         let { handle, sound } = this.dirHandles[i] ?? { handle: undefined, sound: undefined }
         if (type == TrackType.None) {
-            if (handle && !isHandleOff(handle)) { turnOffHandle(handle, this.soundRange) }
+            if (handle && handle._playing) { handle.stop() }
             return
         }
         let soundName: string = ''
         let volume: number = 1
+        let range: number = 16 * 16
         switch (type) {
             case TrackType.Water: soundName = SoundManager.sounds.water; break
             case TrackType.Hole: soundName = SoundManager.sounds.hole; break
-            case TrackType.LowerLevel: soundName = SoundManager.sounds.lower; volume = 1.5; break
+            case TrackType.LowerLevel: soundName = SoundManager.sounds.lower; break
             case TrackType.HigherLevel: soundName = SoundManager.sounds.higher; break
             case TrackType.Land: soundName = SoundManager.sounds.land; break
         }
@@ -296,11 +296,10 @@ export class LoudJump {
                     sound: soundName,
                 }
                 handle = this.dirHandles[i].handle
-                turnOffHandle(handle, this.soundRange)
             }
             const pos: Vec3 = res.pos
             if (!handle.pos || !Vec3.equal(handle.pos.point3d, pos)) {
-                handle.setFixPosition(pos, this.soundRange)
+                handle.setFixPosition(pos, range)
             }
         }
     }
@@ -322,7 +321,6 @@ export class LoudJump {
         return results[0]
     }
 
-
     getTypeFromRes(res: PlayerTraceResult): TrackType {
         if (res.jumped) {
             if (res.fallType !== undefined) {
@@ -330,7 +328,6 @@ export class LoudJump {
                 if (res.fallType == ig.TERRAIN.WATER) { return TrackType.Water }
             } else if (res.jumpLanded) {
                 const diff = ig.game.playerEntity.coll.pos.z - res.pos.z
-                console.log(diff)
                 if (diff > 8) { return TrackType.LowerLevel }
                 else if (diff < -8) { return TrackType.HigherLevel }
                 return TrackType.Land
