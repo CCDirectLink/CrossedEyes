@@ -109,7 +109,7 @@ function initCrossedEyesPositionPredictor() {
                 if (!this.jumping && !isFallingOrJumping(this)) {
                     if (ig.CollTools.hasWallCollide(this.coll, 1)) {
                         this.rfcr.collided = true
-                        this.stopRunning(); return
+                        // this.stopRunning(); return
                     }
                     if (ig.Timer.time - this.rfc.startTime > this.rfc.timer) {
                         this.stopRunning(); return
@@ -279,11 +279,11 @@ export class LoudJump {
         let soundName: string = ''
         let volume: number = 1
         switch (type) {
-            case TrackType.Water: soundName = SoundManager.sounds.water; volume = 1; break
+            case TrackType.Water: soundName = SoundManager.sounds.water; break
             case TrackType.Hole: soundName = SoundManager.sounds.hole; break
-            case TrackType.LowerLevel: soundName = SoundManager.sounds.lower; break
+            case TrackType.LowerLevel: soundName = SoundManager.sounds.lower; volume = 1.5; break
             case TrackType.HigherLevel: soundName = SoundManager.sounds.higher; break
-            case TrackType.Land: soundName = SoundManager.sounds.land; volume = 1; break
+            case TrackType.Land: soundName = SoundManager.sounds.land; break
         }
 
         if (soundName) {
@@ -330,8 +330,9 @@ export class LoudJump {
                 if (res.fallType == ig.TERRAIN.WATER) { return TrackType.Water }
             } else if (res.jumpLanded) {
                 const diff = ig.game.playerEntity.coll.pos.z - res.pos.z
+                console.log(diff)
                 if (diff > 8) { return TrackType.LowerLevel }
-                else if (diff < 8) { return TrackType.HigherLevel }
+                else if (diff < -8) { return TrackType.HigherLevel }
                 return TrackType.Land
             }
         }
