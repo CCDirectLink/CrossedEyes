@@ -2,6 +2,7 @@ import { AimAnalyzer } from './hint-system/aim-analyze'
 import { isFallingOrJumping } from './loudjump'
 import { MenuOptions } from './options'
 import { PauseListener } from './plugin'
+import { isAiming } from './puzzle'
 import { SoundManager, isHandleOff, turnOffHandle } from './sound-manager'
 
 const c_res = {}
@@ -34,7 +35,10 @@ export class LoudWalls implements PauseListener {
     }
 
     private handleWallSound() {
-        if (ig.game.events.blockingEventCall || AimAnalyzer.g.aimAnnounceOn || isFallingOrJumping(ig.game.playerEntity)) { return }
+        if (ig.game.events.blockingEventCall || (AimAnalyzer.g.aimAnnounceOn && isAiming()) || isFallingOrJumping(ig.game.playerEntity)) {
+            this.pause()
+            return
+        }
         const dirs: [string, Vec2][] = [
             ['wallDown', { x: 0, y: 1 }],
             ['wallRight', { x: 1, y: 0 }],

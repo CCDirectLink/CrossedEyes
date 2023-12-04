@@ -1,3 +1,5 @@
+import { AimAnalyzer } from './hint-system/aim-analyze'
+import { isAiming } from './puzzle'
 import { SoundManager } from './sound-manager'
 
 interface TickData {
@@ -250,7 +252,8 @@ export class LoudJump {
 
     handle() {
         const p: ig.ENTITY.Player = ig.game.playerEntity
-        if (this.paused || ig.game.events.blockingEventCall || !this.predictor || !p || !p.coll?.pos || isFallingOrJumping(p)) {
+        if (this.paused || ig.game.events.blockingEventCall || !this.predictor || !p || !p.coll?.pos ||
+            isFallingOrJumping(p) || (AimAnalyzer.g.aimAnnounceOn && isAiming())) {
             this.dirHandles.forEach(o => o && o.handle.stop())
             return
         }
