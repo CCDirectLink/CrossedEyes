@@ -82,13 +82,13 @@ export class AddonInstaller {
     }
 
     private static async isNvdaRunning(): Promise<boolean> {
-        function isProcessRunning(name: string): Promise<boolean> {
-            return new Promise((resolve) => {
-                require('child_process').exec('wmic process where "name=\'' + name + '\'" get ExecutablePath', (_: string, __: string, stderr: string) => {
-                    resolve(stderr.trim() != 'No Instance(s) Available.')
-                })
-            })
-        }
+	function isProcessRunning(name: string): Promise<boolean> {
+	    return new Promise((resolve) => {
+		require('child_process').exec(`qprocess "${name}"`, (_: string, __: string, stderr: string) => {
+		    resolve(!stderr.trim())
+		})
+	    })
+	}
         return isProcessRunning('nvda.exe')
     }
 
