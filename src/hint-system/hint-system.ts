@@ -41,7 +41,7 @@ export class HintSystem implements PauseListener {
         const diff = maxRange - dist
         const range = diff > maxRange * 0.4 ? maxRange : Math.floor(dist * 2)
 
-        soundHandle = new ig.Sound(SoundManager.sounds.wall, 1.2).play()
+        soundHandle = new ig.Sound(SoundManager.sounds.hint, 1).play()
         soundHandle.setEntityPosition(hint.entity, ig.ENTITY_ALIGN.CENTER, null, range, ig.SOUND_RANGE_TYPE.CIRULAR)
         soundHandle.play()
         MenuOptions.ttsMenuEnabled && TextGather.g.speak(hint.nameGui.title.text)

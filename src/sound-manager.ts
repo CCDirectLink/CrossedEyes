@@ -43,6 +43,7 @@ export class SoundManager {
         waveMode: 'media/sound/move/wave-mode.ogg',
         shockMode: 'media/sound/move/shock-mode.ogg',
         hitCounterEcho: 'media/sound/battle/hit-counter-echo.ogg',
+
         wall: 'media/sound/crossedeyes/wall.ogg',
         water: 'media/sound/background/waterfall.ogg',
         hole: 'media/sound/crossedeyes/hole.ogg',
@@ -50,6 +51,7 @@ export class SoundManager {
         higher: 'media/sound/crossedeyes/higher.ogg',
         land: 'media/sound/crossedeyes/land.ogg',
         entity: 'media/sound/crossedeyes/entity.ogg',
+        hint: 'media/sound/crossedeyes/hint.ogg',
     }
     static getElementName(element: sc.ELEMENT): 'neutralMode' | 'coldMode' | 'heatMode' | 'waveMode' | 'shockMode' {
         switch(element) {
