@@ -16,7 +16,7 @@ export class HDoor implements Hint {
     getDataFromEntity(e: ig.Entity): HintData {
         if (!(e instanceof ig.ENTITY.Door)) { throw new Error() }
 
-        const name: string = `Door, active: ${e.active ? 'yes' : 'no'}`
+        const name: string = `Door, ${e.active ? 'active' : 'inactive'}`
         const description: string = `Transports you to a different map`
         return { name, description }
     }

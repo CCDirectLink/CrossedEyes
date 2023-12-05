@@ -6,7 +6,7 @@ import { TextGather } from '../tts/gather-text'
 import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
 import { HDestructible } from './hints/destructible'
 import { HEnemy } from './hints/enemy'
-import { HOneTimeSwitch, HSwitch } from './hints/switches'
+import { HMultiHitSwitch, HOneTimeSwitch, HSwitch } from './hints/switches'
 import { HDoor, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
 import { overrideNPCHint } from './npc-override'
@@ -55,11 +55,12 @@ export class HintSystem implements PauseListener {
         HBounceBlock,
         HBounceSwitch,
         HSwitch,
+        HOneTimeSwitch,
+        HMultiHitSwitch,
         HDoor,
         HTeleportField,
         HTeleportGround,
         HEnemy,
-        HOneTimeSwitch,
         HWalls,
         HDestructible,
     ]

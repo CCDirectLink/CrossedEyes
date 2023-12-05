@@ -16,7 +16,7 @@ export class HSwitch implements Hint {
     getDataFromEntity(e: ig.Entity): HintData {
         if (!(e instanceof ig.ENTITY.Switch)) { throw new Error() }
 
-        const name: string = `Switch, Status: ${e.isOn ? 'on' : 'off'}`
+        const name: string = `Switch, ${e.isOn ? 'on' : 'off'}`
         const description: string = `Hit with a ball or a melee to toggle.`
         return { name, description }
     }
@@ -39,6 +39,27 @@ export class HOneTimeSwitch implements Hint {
 
         const name: string = `One Time Switch`
         const description: string = `Hit with a ball or a melee to activate pernamently.`
+        return { name, description }
+    }
+}
+
+export class HMultiHitSwitch implements Hint {
+    entryName = 'MultiHitSwitch'
+
+    constructor() { /* run in prestart */
+        const self = this
+        ig.ENTITY.MultiHitSwitch.inject({
+            getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && !this.isOn) }
+            },
+            isQuickMenuVisible() { return false },
+        })
+    }
+    getDataFromEntity(e: ig.Entity): HintData {
+        if (!(e instanceof ig.ENTITY.MultiHitSwitch)) { throw new Error() }
+
+        const name: string = `Multi Hit Switch`
+        const description: string = `Hit with a ball or a melee ${e.hitsToActive} times in rapid succession to activate pernamently.`
         return { name, description }
     }
 }
