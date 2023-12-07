@@ -25,6 +25,9 @@ declare global {
             interface WallBlocker {
                 parentWall: ig.ENTITY.WallBase
             }
+            interface Destructible {
+                desType: keyof typeof sc.DESTRUCTIBLE_TYPE
+            }
         }
         interface Entity {
             uuid: string
