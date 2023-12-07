@@ -301,13 +301,6 @@ export class PuzzleBeeper {
                 self.moveToHandler.handleMoveTo(step)
                 self.aimHandler.handleAim(step)
             },
-            varsChanged() {
-                this.parent!()
-                if (MenuOptions.puzzleEnabled && this.floating && ig.vars.get("playerVar.staticFloat")) {
-                    this.configs.normal.clearOverwrite()
-                    this.configs.aiming.clearOverwrite()
-                }
-            },
         })
     }
 }
