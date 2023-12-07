@@ -68,6 +68,7 @@ export const expressionMap: Record<string, string> = {
     "FROWN": "Frown",
     "FROWN_AR": "Frown",
     "FUNNY_SMILE": "Funny smile",
+    "GLASS": "",
     "GLASS_ANGRY": "Angry",
     "GLASS_COOL": "",
     "GLASS_DEFAULT": "",

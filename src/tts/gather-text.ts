@@ -69,11 +69,13 @@ export class TextGather {
         this.speakCall = (text: string) => {
             speakCallCopy(text)
             this.lastMessage = text
+            // console.log(text)
         }
         const interruptCopy = interrupt
         this.interrupt = () => {
             if (! this.ignoreInterrupt) {
                 interruptCopy()
+                // console.log('interrupt')
             }
         }
         this.ingame()

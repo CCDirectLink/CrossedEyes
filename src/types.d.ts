@@ -22,15 +22,13 @@ declare global {
         type SoundHandle = ig.SoundHandleWebAudio // | ig.SoundHandleDefault
 
         namespace ENTITY {
-            interface Enemy {
-                playAtSoundHandle: ig.SoundHandleWebAudio
-            }
             interface WallBlocker {
                 parentWall: ig.ENTITY.WallBase
             }
         }
         interface Entity {
             uuid: string
+            playAtSoundHandle: ig.SoundHandleWebAudio
         }
     }
     namespace sc {
