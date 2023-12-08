@@ -52,6 +52,8 @@ export class SoundManager {
         land: 'media/sound/crossedeyes/land.ogg',
         entity: 'media/sound/crossedeyes/entity.ogg',
         hint: 'media/sound/crossedeyes/hint.ogg',
+        tpr: 'media/sound/crossedeyes/tpr.ogg',
+        npc: 'media/sound/crossedeyes/npc.ogg',
     }
     static getElementName(element: sc.ELEMENT): 'neutralMode' | 'coldMode' | 'heatMode' | 'waveMode' | 'shockMode' {
         switch(element) {

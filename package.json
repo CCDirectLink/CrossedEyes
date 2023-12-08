@@ -4,7 +4,7 @@
     "scripts": {
         "start": "esbuild --target=es2018 --format=esm --platform=node --bundle --sourcemap=inline --outfile=plugin.js src/plugin.ts",
         "watch": "esbuild --target=es2018 --format=esm --platform=node --bundle --sourcemap=inline --watch --outfile=plugin.js src/plugin.ts",
-        "build": "esbuild --target=es2018 --format=esm --platform=node --bundle --outfile='plugin.js' 'src/plugin.ts'"
+        "build": "esbuild --target=es2018 --format=esm --platform=node --bundle --minify --outfile='plugin.js' 'src/plugin.ts'"
     },
     "license": "GPLv3",
     "ccmodHumanName": "CrossedEyes",
