@@ -1,4 +1,4 @@
-import { isAiming } from './puzzle'
+import { isAiming } from './environment/puzzle'
 
 export function turnOffHandle(handle: ig.SoundHandleWebAudio, range: number) {
     handle.setFixPosition(Vec3.createC(-1000, -1000, 0), range)

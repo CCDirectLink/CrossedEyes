@@ -1,5 +1,5 @@
-import { MenuOptions } from "./options"
-import { SoundManager } from "./sound-manager"
+import { MenuOptions } from '../options'
+import { SoundManager } from '../sound-manager'
 
 function getSoundName(e: ig.Entity): string | undefined {
     if (e instanceof ig.ENTITY.Enemy ||

@@ -1,7 +1,7 @@
-import { AimAnalyzer } from './hint-system/aim-analyze'
-import { MenuOptions } from './options'
+import { AimAnalyzer } from '../hint-system/aim-analyze'
+import { MenuOptions } from '../options'
 import { isAiming } from './puzzle'
-import { SoundManager } from './sound-manager'
+import { SoundManager } from '../sound-manager'
 
 interface TickData {
     timerTimer: number

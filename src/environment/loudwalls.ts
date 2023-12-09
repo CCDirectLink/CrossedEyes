@@ -1,8 +1,8 @@
-import { AimAnalyzer } from './hint-system/aim-analyze'
-import { MenuOptions } from './options'
-import { PauseListener } from './plugin'
+import { AimAnalyzer } from '../hint-system/aim-analyze'
+import { MenuOptions } from '../options'
+import { PauseListener } from '../plugin'
 import { isAiming } from './puzzle'
-import { SoundManager, isHandleOff, turnOffHandle } from './sound-manager'
+import { SoundManager, isHandleOff, turnOffHandle } from '../sound-manager'
 
 const c_res = {}
 const c_tmpPos: Vec3 = { x: 0, y: 0, z: 0 }

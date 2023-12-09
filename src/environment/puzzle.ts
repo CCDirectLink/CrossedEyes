@@ -1,8 +1,8 @@
 import type * as _ from 'cc-blitzkrieg'
-import { MenuOptions } from './options'
-import { mapNumber } from './spacial-audio'
+import { MenuOptions } from '../options'
+import { mapNumber } from '../spacial-audio'
 import type { PuzzleSelection, PuzzleSelectionStep } from 'cc-blitzkrieg/types/puzzle-selection'
-import { PuzzleSounds } from './sound-manager'
+import { PuzzleSounds } from '../sound-manager'
 
 export function isAiming(): boolean {
     return ig.input.state('aim') || ig.gamepad.isRightStickDown()

@@ -1,8 +1,8 @@
-import { LoudWalls } from '../loudwalls'
+import { LoudWalls } from '../environment/loudwalls'
 import { MenuOptions } from '../options'
 import { TextGather } from '../tts/gather-text'
 import { PauseListener } from '../plugin'
-import { isAiming } from '../puzzle'
+import { isAiming } from '../environment/puzzle'
 import { HintSystem } from './hint-system'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
