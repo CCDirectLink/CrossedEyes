@@ -81,7 +81,6 @@ function tpBackToPlayer(e: ig.ActorEntity) {
 
     e.coll.totalBlockTimer = 0
     e.coll.partlyBlockTimer = 0
-    e.jumping = false
 }
 
 function initCrossedEyesPositionPredictor() {
@@ -146,11 +145,14 @@ function initCrossedEyesPositionPredictor() {
             this.rfcr = { pos: Vec3.create() }
 
             tpBackToPlayer(this)
+            const p = ig.game.playerEntity
+            this.jumping = p.jumping
+            this.coll.vel = Vec3.create(p.coll.vel)
 
             this.coll.ignoreCollision = false
 
             Vec2.assign(this.coll.accelDir, Vec2.normalize(this.face))
-            this.coll.maxVel = ig.game.playerEntity.coll.maxVel * vel
+            this.coll.maxVel = p.coll.maxVel * vel
 
             const save = saveTickData()
 
@@ -253,7 +255,7 @@ export class LoudJump {
     handle() {
         const p: ig.ENTITY.Player = ig.game.playerEntity
         if (this.paused || ig.game.events.blockingEventCall || !this.predictor || !p || !p.coll?.pos ||
-            isFallingOrJumping(p) || (AimAnalyzer.g.aimAnnounceOn && isAiming())) {
+            (AimAnalyzer.g.aimAnnounceOn && isAiming())) {
             this.dirHandles.forEach(o => o && o.handle.stop())
             return
         }

@@ -1,5 +1,4 @@
 import { AimAnalyzer } from './hint-system/aim-analyze'
-import { isFallingOrJumping } from './loudjump'
 import { MenuOptions } from './options'
 import { PauseListener } from './plugin'
 import { isAiming } from './puzzle'
@@ -35,7 +34,7 @@ export class LoudWalls implements PauseListener {
     }
 
     private handleWallSound() {
-        if (ig.game.events.blockingEventCall || (AimAnalyzer.g.aimAnnounceOn && isAiming()) || isFallingOrJumping(ig.game.playerEntity)) {
+        if (ig.game.events.blockingEventCall || (AimAnalyzer.g.aimAnnounceOn && isAiming())) {
             this.pause()
             return
         }
