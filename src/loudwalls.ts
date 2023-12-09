@@ -94,7 +94,7 @@ export class LoudWalls implements PauseListener {
         return false
     }
 
-    static checkDirection(dir: Vec2, distance: number, collType: ig.COLLTYPE): CheckDirectionReturn {
+    static checkDirection(dir: Vec2, distance: number, collType: ig.COLLTYPE, trackEntityTouch: boolean = true): CheckDirectionReturn {
         if (!ig.game || !ig.game.playerEntity) {
             return { type: 'none', pos: Vec3.createC(0, 0, 0), distance }
         }
@@ -113,12 +113,12 @@ export class LoudWalls implements PauseListener {
 
         const result: ig.Physics.TraceResult = ig.game.physics.initTraceResult(c_res)
         const hitEntityList: ig.Physics.CollEntry[] = []
-        ig.game.physics._trackEntityTouch = true
+        trackEntityTouch && (ig.game.physics._trackEntityTouch = true)
         const collided: boolean = ig.game.trace(
             result, pos.x, pos.y, zPos, dir.x, dir.y,
             Constants.BALL_SIZE, Constants.BALL_SIZE, Constants.BALL_Z_HEIGHT,
             collType, null, hitEntityList)
-        ig.game.physics._trackEntityTouch = false
+        trackEntityTouch && (ig.game.physics._trackEntityTouch = false)
 
         if (!collided) {
             return { type: 'none', pos, distance }

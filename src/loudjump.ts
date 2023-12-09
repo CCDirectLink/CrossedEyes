@@ -1,4 +1,5 @@
 import { AimAnalyzer } from './hint-system/aim-analyze'
+import { MenuOptions } from './options'
 import { isAiming } from './puzzle'
 import { SoundManager } from './sound-manager'
 
@@ -254,7 +255,7 @@ export class LoudJump {
 
     handle() {
         const p: ig.ENTITY.Player = ig.game.playerEntity
-        if (this.paused || ig.game.events.blockingEventCall || !this.predictor || !p || !p.coll?.pos ||
+        if (!MenuOptions.loudWallsEnabled || this.paused || ig.game.events.blockingEventCall || !this.predictor || !p || !p.coll?.pos ||
             (AimAnalyzer.g.aimAnnounceOn && isAiming())) {
             this.dirHandles.forEach(o => o && o.handle.stop())
             return

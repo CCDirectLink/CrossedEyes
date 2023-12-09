@@ -40,7 +40,7 @@ export class AimAnalyzer implements PauseListener {
                 this.parent()
                 if (sc.quickmodel.currentState == sc.QUICK_MENU_STATE.CHECK && MenuOptions.ttsEnabled && MenuOptions.puzzleEnabled) {
                     if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
-                        self.aimAnnounceOn = ! self.aimAnnounceOn
+                        self.aimAnnounceOn = !self.aimAnnounceOn
                         TextGather.g.speak(`Aim analysis ${self.aimAnnounceOn ? 'on' : 'off'}`)
                     }
                 }
@@ -56,11 +56,11 @@ export class AimAnalyzer implements PauseListener {
         if (this.aimAnnounceOn) {
             if (isAiming() && ig.game.playerEntity.gui.crosshair?.active) {
                 const aim: Vec2 = Vec2.create(ig.game.playerEntity.gui.crosshair._aimDir)
-                const check = LoudWalls.checkDirection(aim, 20 * 16, ig.COLLTYPE.PROJECTILE)
+                const check = LoudWalls.checkDirection(aim, 20 * 16, ig.COLLTYPE.BLOCK)
 
                 if (check && check.hitE && check.hitE.length > 0) {
                     if (this.recalculateEntities) {
-                         this.recalculateEntities = false
+                        this.recalculateEntities = false
                         setInterval(() => this.recalculateEntities = true, 1000)
                         this.hintSystem.quickMenuAnalysisInstance.populateHintList()
                     } else {
@@ -81,11 +81,15 @@ export class AimAnalyzer implements PauseListener {
                             }
                         }
                     }
+                    if (check.hitE.length == 2 && check.hitE[1].entity.isBall) { return }
+                    this.lastSelected = undefined
+                    HintSystem.deactivateHint()
+                } else {
                     this.lastSelected = undefined
                     HintSystem.deactivateHint()
                 }
             } else {
-                    this.lastSelected = undefined
+                this.lastSelected = undefined
                 HintSystem.deactivateHint()
             }
         }
