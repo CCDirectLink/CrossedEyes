@@ -248,6 +248,25 @@ export class LoudJump {
                 self.handle()
             },
         })
+
+        ig.ENTITY.JumpPanelFar.inject({ /* fix launch pad going crazy by removing the animations */
+            onTopEntityJumpFar(entity: ig.ENTITY.Combatant) {
+                if (self.predictor && self.predictor.rfc.on) {
+                    if (!this.condition.evaluate() && entity.party == sc.COMBATANT_PARTY.PLAYER) return false
+                    Vec2.assign(entity.coll.vel, this.panelType.dir)
+                    Vec2.length(entity.coll.vel, this.jumpDistance.speed)
+                    Vec2.assign(entity.coll.accelDir, this.panelType.dir)
+                    Vec2.assign(entity.face, this.panelType.dir)
+                    entity.coll.float.height
+                        ? entity.doFloatJump(10, this.jumpDistance.effectDuration + 0.1, this.jumpDistance.speed)
+                        : entity.doJump(this.jumpDistance.zVel, this.jumpDistance.height, this.jumpDistance.speed, 0, false)
+                    entity.coll.friction.air = 0
+                    return true
+                } else {
+                    return this.parent(entity)
+                }
+            },
+        })
     }
 
     pause() { this.paused = true }
