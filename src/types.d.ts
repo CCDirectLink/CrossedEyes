@@ -109,6 +109,14 @@ declare global {
             new(x: number, y: number, z: number, settings: ig.Entity.Settings): CrossedEyesPositionPredictor
         }
         var CrossedEyesPositionPredictor: CrossedEyesPositionPredictorConstructor
+
+        interface MapInteractEntry {
+            interactSoundType?: string
+            interactSoundHandle?: ig.SoundHandle
+            stateUpdate?: boolean
+
+            customUpdate(this: this): void
+        }
     }
 }
 

@@ -23,6 +23,7 @@ export interface PauseListener {
 export interface InitPoststart {
     initPoststart(): void
 }
+
 export default class CrossedEyes {
     static dir: string
     mod: Mod1
@@ -56,6 +57,7 @@ export default class CrossedEyes {
         new HintSystem()
         new AimAnalyzer()
         new LoudJump()
+        new InteratableHandler()
         new SpecialAction()
         new TTS()
         this.puzzleBeeper = new PuzzleBeeper()
@@ -134,6 +136,7 @@ export default class CrossedEyes {
                 }
             }
         })
+
     }
 
     async poststart() {

@@ -15,9 +15,6 @@ function getSoundName(e: ig.Entity): string | undefined {
 
         return SoundManager.sounds.tpr
     }
-    if (e instanceof ig.ENTITY.NPC) {
-        return SoundManager.sounds.npc
-    }
 }
 
 function playAt(e: ig.Entity) {
