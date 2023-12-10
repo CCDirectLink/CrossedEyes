@@ -12,6 +12,7 @@ import { AddonInstaller } from './tts/tts-nvda'
 import { AimAnalyzer } from './hint-system/aim-analyze'
 import { HintSystem } from './hint-system/hint-system'
 import { LoudJump } from './environment/loudjump'
+import { tweakFootsteps } from './environment/footstep'
 
 export interface PauseListener {
     pause?(): void
@@ -46,6 +47,7 @@ export default class CrossedEyes {
         MenuOptions.initPrestart()
         SoundManager.preloadSounds()
         new SpacialAudio().initSpacialAudio()
+        tweakFootsteps()
         const hintSystem = new HintSystem()
         this.pauseables.push(
             new LoudWalls(),
@@ -78,10 +80,10 @@ export default class CrossedEyes {
 
         function godlikeStats() {
             for (const k of Object.keys(sc.model.player.core) as unknown as sc.PLAYER_CORE[]) { sc.model.player.core[k] = true }
-        
+
             sc.model.player.setSpLevel(4)
             sc.model.player.setLevel(99)
-            sc.model.player.equip = {head:657,leftArm:577,rightArm:607,torso:583,feet:596}
+            sc.model.player.equip = { head: 657, leftArm: 577, rightArm: 607, torso: 583, feet: 596 }
             for (let i = 0; i < sc.model.player.skillPoints.length; i++) { sc.model.player.skillPoints[i] = 200 }
             for (let i = 0; i < 400; i++) { sc.model.player.learnSkill(i) }
             for (let i = 0; i < sc.model.player.skillPoints.length; i++) { sc.model.player.skillPoints[i] = 0 }

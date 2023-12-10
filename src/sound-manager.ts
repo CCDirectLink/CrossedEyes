@@ -7,6 +7,11 @@ export function isHandleOff(handle: ig.SoundHandleWebAudio) {
     return handle.pos?.point3d == Vec3.createC(-1000, -1000, 0)
 }
 
+export function mulSoundVol(s: ig.Sound, mul: number): ig.Sound {
+    return new ig.Sound(s.webAudioBuffer.path, s.volume * mul, s.variance, s.group)
+}
+
+
 export type SoundQueueEntry = {
     name: keyof typeof SoundManager.sounds
     wait?: number
@@ -56,7 +61,7 @@ export class SoundManager {
         npc: 'media/sound/crossedeyes/npc.ogg',
     }
     static getElementName(element: sc.ELEMENT): 'neutralMode' | 'coldMode' | 'heatMode' | 'waveMode' | 'shockMode' {
-        switch(element) {
+        switch (element) {
             case sc.ELEMENT.NEUTRAL: return 'neutralMode'
             case sc.ELEMENT.HEAT: return 'heatMode'
             case sc.ELEMENT.COLD: return 'coldMode'
@@ -73,26 +78,26 @@ export class SoundManager {
         const handle: ig.SoundHandleWebAudio = sound.play(false, {
             speed
         })
-        pos && handle.setFixPosition(pos, 100*16)
+        pos && handle.setFixPosition(pos, 100 * 16)
         return handle
     }
 
     static playSound(name: keyof typeof SoundManager.sounds, speed: number, volume?: number, pos?: Vec3): ig.SoundHandleWebAudio {
         return SoundManager.playSoundPath(SoundManager.sounds[name], speed, volume, pos)
     }
-    
+
     static playSoundAtRelative(name: keyof typeof SoundManager.sounds, speed: number, volume: number, pos: Vec2): ig.SoundHandleWebAudio {
         const soundPosVec2: Vec2 = Vec2.create(pos)
         Vec2.add(soundPosVec2, ig.game.playerEntity.coll.pos)
         const soundPos: Vec3 = Vec3.createC(soundPosVec2.x, soundPosVec2.y, ig.game.playerEntity.coll.pos.z)
-        
+
         return SoundManager.playSound(name, speed, volume, soundPos)
     }
 
     static appendQueue(queue: SoundQueueEntry[]) {
         const isPlaying: boolean = SoundManager.soundQueue.length != 0
         this.soundQueue.push(...queue)
-        if (! isPlaying) {
+        if (!isPlaying) {
             SoundManager.playQueueEntry(this.soundQueue[0], SoundManager.soundQueue)
         }
     }
@@ -149,8 +154,8 @@ export class PuzzleSounds {
     static puzzleSolved() {
         SoundManager.clearQueue()
         SoundManager.appendQueue([
-            {            name: 'botSuccess' },
-            { wait: 20,  name: 'counter' },
+            { name: 'botSuccess' },
+            { wait: 20, name: 'counter' },
             { wait: 150, name: 'botSuccess' },
         ])
     }
@@ -161,13 +166,13 @@ export class PuzzleSounds {
 
     static moveLockin(pos: Vec3, action: () => void) {
         SoundManager.appendQueue([
-            {            name: 'countdown1', pos, speed: 1.2, },
+            { name: 'countdown1', pos, speed: 1.2, },
             { wait: 150, name: 'countdown2', pos, speed: 1.2, action },
         ])
     }
     static moveLockout(pos: Vec3, action: () => void) {
         SoundManager.appendQueue([
-            {            name: 'countdown2', pos, speed: 1.2, },
+            { name: 'countdown2', pos, speed: 1.2, },
             { wait: 150, name: 'countdown1', pos, speed: 1.2, action },
         ])
     }
@@ -175,16 +180,17 @@ export class PuzzleSounds {
     static moveWaitFinished() {
         SoundManager.clearQueue()
         SoundManager.appendQueue([
-            {            name: 'botSuccess' },
+            { name: 'botSuccess' },
         ])
     }
-    
+
 
     static aimLockin(pos: Vec2, element: sc.ELEMENT, action: () => void) {
         SoundManager.appendQueue([
-            {            name: 'countdown1', relativePos: true, pos },
+            { name: 'countdown1', relativePos: true, pos },
             { wait: 200, name: 'countdown2', relativePos: true, pos },
-            { wait: 100, name: SoundManager.getElementName(element), speed: 1.2, action,
+            {
+                wait: 100, name: SoundManager.getElementName(element), speed: 1.2, action,
                 condition: () => isAiming() && element !== sc.model.player.currentElementMode,
             }
         ])
@@ -193,7 +199,7 @@ export class PuzzleSounds {
     static aimLockout(pos: Vec2, action: () => void) {
         SoundManager.clearQueue()
         SoundManager.appendQueue([
-            {            name: 'countdown2', relativePos: true, pos },
+            { name: 'countdown2', relativePos: true, pos },
             { wait: 200, name: 'countdown1', relativePos: true, pos, action },
         ])
     }
@@ -204,7 +210,7 @@ export class PuzzleSounds {
 
     static shootNow(wait: number, lockinCheck: () => boolean, shotCount?: number): number {
         const entry: SoundQueueEntry = { wait, name: 'hitCounterEcho', speed: 1.1, condition: lockinCheck }
-        const queue: SoundQueueEntry[] = [ entry ]
+        const queue: SoundQueueEntry[] = [entry]
         const waitBetweenSounds: number = 100
         let ret: number = 0
         if (shotCount) {

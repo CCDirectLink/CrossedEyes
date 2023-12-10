@@ -18,8 +18,14 @@ declare global {
                 rangeType: ig.SOUND_RANGE_TYPE
             }
         }
+        interface SoundWebAudio {
+            origVolume?: number
+        }
 
         type SoundHandle = ig.SoundHandleWebAudio // | ig.SoundHandleDefault
+        type Sound = ig.SoundWebAudio
+        type SoundConstructor = SoundWebAudioConstructor
+        var Sound: SoundConstructor
 
         namespace ENTITY {
             interface WallBlocker {
