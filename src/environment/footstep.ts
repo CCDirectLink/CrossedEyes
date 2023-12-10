@@ -38,14 +38,15 @@ export function tweakFootsteps() { /* runs in prestart */
                     const sound = getSoundFromColl(this.coll, this.soundType)
                     let spawnFx = false
                     if (this.coll._collData?.collided && this == ig.game.playerEntity as sc.ActorEntity) {
+                        const vol: number = Vec3.distance(Vec3.create(), this.coll.vel).map(40, 180, 1, 0.4)
                         if (frame == 2) {
                             ig.SoundHelper.playAtEntity(new ig.Sound(
                                 lastStep ? SoundManager.sounds.hitOrganic1 : SoundManager.sounds.hitOrganic2,
-                                0.45 * MenuOptions.footstepVolume), this, null, null, 700)
+                                0.45 * MenuOptions.footstepVolume * vol), this, null, null, 700)
                         } else if (frame == 5) {
                             ig.SoundHelper.playAtEntity(new ig.Sound(
                                 lastStep ? SoundManager.sounds.hitOrganic3 : SoundManager.sounds.hitOrganic4,
-                                0.45 * MenuOptions.footstepVolume), this, null, null, 700)
+                                0.45 * MenuOptions.footstepVolume * vol), this, null, null, 700)
                             lastStep = !lastStep
                         }
                     } else {
