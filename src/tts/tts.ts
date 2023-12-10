@@ -1,4 +1,5 @@
 import { MenuOptions, ttsTypeId } from '../options'
+import CrossedEyes from '../plugin'
 import { TextGather } from './gather-text'
 import { TTSNvda } from './tts-nvda'
 import { TTSScreenReader } from './tts-screen-reader'
@@ -45,6 +46,7 @@ export class TTS {
 
     constructor() { /* in prestart */
         TTS.g = this
+        CrossedEyes.initPoststarters.push(this)
         this.textGather = new TextGather(
             (text: string) => this.ttsInstance && this.ttsInstance.speak(text),
             () => { this.clearQueue() }

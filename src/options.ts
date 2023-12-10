@@ -1,3 +1,4 @@
+import CrossedEyes, { InitPoststart } from "./plugin"
 import { TTSTypes } from "./tts/tts"
 
 const header: string = 'crossedeyes'
@@ -23,7 +24,7 @@ function sopt(id: string, v: any) {
     sc.options?.set(id, v)
 }
 
-export class MenuOptions {
+export class MenuOptions implements InitPoststart {
     static get spacialAudioEnabled(): boolean { return opt(spacialAudioToggleId) }
     static get loudWallsEnabled(): boolean { return opt(loudWallsToggleId) && MenuOptions.spacialAudioEnabled }
     static get loudEntitiesEnabled(): boolean { return opt(loudEntitiesToogleId) && MenuOptions.spacialAudioEnabled }
@@ -43,7 +44,8 @@ export class MenuOptions {
         sc.options.persistOptions()
     }
 
-    static initPrestart() {
+    constructor() { /* in prestart */
+        CrossedEyes.initPoststarters.push(this)
         sc.OPTIONS_DEFINITION[spacialAudioToggleId] = {
             type: 'CHECKBOX',
             init: true,
@@ -159,7 +161,7 @@ export class MenuOptions {
         }
     }
 
-    static initPoststart() {
+    initPoststart() {
         ig.lang.labels.sc.gui.options.headers[header] = 'CrossedEyes'
         ig.lang.labels.sc.gui.options[spacialAudioToggleId] = { name: 'Enable spacial audio', description: 'Makes it so you can clearly tell from where the sound is coming from' }
         ig.lang.labels.sc.gui.options[loudWallsToggleId] = { name: 'Loud walls', description: 'Make the walls directonaly beep when you approach them' }

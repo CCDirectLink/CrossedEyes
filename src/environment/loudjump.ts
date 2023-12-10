@@ -2,6 +2,7 @@ import { AimAnalyzer } from '../hint-system/aim-analyze'
 import { MenuOptions } from '../options'
 import { isAiming } from './puzzle'
 import { SoundManager } from '../sound-manager'
+import CrossedEyes from '../plugin'
 
 interface TickData {
     timerTimer: number
@@ -232,6 +233,7 @@ export class LoudJump {
     dirHandles: { handle: ig.SoundHandleWebAudio, sound: string }[] = []
 
     constructor() { /* in prestart */
+        CrossedEyes.pauseables.push(this)
         const self = this
         initCrossedEyesPositionPredictor()
         ig.Game.inject({

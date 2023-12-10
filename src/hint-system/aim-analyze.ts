@@ -1,7 +1,7 @@
 import { LoudWalls } from '../environment/loudwalls'
 import { MenuOptions } from '../options'
 import { TextGather } from '../tts/gather-text'
-import { PauseListener } from '../plugin'
+import CrossedEyes, { PauseListener } from '../plugin'
 import { isAiming } from '../environment/puzzle'
 import { HintSystem } from './hint-system'
 
@@ -14,8 +14,9 @@ export class AimAnalyzer implements PauseListener {
     lastSelected: string | undefined
     aimAnnounceOn: boolean = false
 
-    constructor(public hintSystem: HintSystem) { /* in prestart */
+    constructor() { /* in prestart */
         AimAnalyzer.g = this
+        CrossedEyes.pauseables.push(this)
         const self = this
         ig.Entity.inject({
             init(x, y, z, settings) {
@@ -62,9 +63,9 @@ export class AimAnalyzer implements PauseListener {
                     if (this.recalculateEntities) {
                         this.recalculateEntities = false
                         setInterval(() => this.recalculateEntities = true, 1000)
-                        this.hintSystem.quickMenuAnalysisInstance.populateHintList()
+                        HintSystem.quickMenuAnalysisInstance.populateHintList()
                     } else {
-                        this.hintSystem.quickMenuAnalysisInstance.entities.forEach(
+                        HintSystem.quickMenuAnalysisInstance.entities.forEach(
                             e => e instanceof sc.QUICK_MENU_TYPES.Hints && e.nameGui.updateData())
                     }
                     for (let i = 0; i < Math.min(5, check.hitE.length); i++) {
@@ -73,7 +74,7 @@ export class AimAnalyzer implements PauseListener {
                         if (e) {
                             if (e.uuid == this.lastSelected) { return }
                             const hint: sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Hints | undefined =
-                                this.hintSystem.quickMenuAnalysisInstance.entities.find(he => he.entity.uuid == e.uuid) as any
+                                HintSystem.quickMenuAnalysisInstance.entities.find(he => he.entity.uuid == e.uuid) as any
                             if (hint) {
                                 HintSystem.activeHint(hint)
                                 this.lastSelected = e.uuid

@@ -37,8 +37,8 @@ export function overrideNPCHint() {
                 this.screen.subGuis.slice(this.screen.subGuis.indexOf(this.nameGui))
                 this.screen.removeChildGui(this.nameGui)
                 text = (this.nameGui as unknown as sc.QuickArrowBox).name.text!.toString()
-            } 
-            if (! this.focusable) {
+            }
+            if (!this.focusable) {
                 this.focusable = true
                 text = 'Random NPC'
             }

@@ -1,5 +1,5 @@
 import { MenuOptions } from '../options'
-import { PauseListener } from '../plugin'
+import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { TextGather } from '../tts/gather-text'
@@ -34,21 +34,23 @@ export class HintSystem implements PauseListener {
             SpecialAction.setListener('LSP', 'hintDescription', () => { })
         }
     }
-    static activeHint(hint: { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui } }) {
+    static activeHint(hint: { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui } }, playSound: boolean = true) {
         HintSystem.deactivateHint()
         const dist = Vec3.distance(ig.game.playerEntity.coll.pos, hint.entity.coll.pos)
         const maxRange = 16 * 30
         const diff = maxRange - dist
         const range = diff > maxRange * 0.4 ? maxRange : Math.floor(dist * 2)
 
-        const yDiff = ig.game.playerEntity.coll.pos.z - hint.entity.coll.pos.z
-        const playbackSpeed = Math.min(1.5, Math.max(0.5, 1 - (yDiff / 160)))
+        if (playSound) {
+            const yDiff = ig.game.playerEntity.coll.pos.z - hint.entity.coll.pos.z
+            const playbackSpeed = Math.min(1.5, Math.max(0.5, 1 - (yDiff / 160)))
 
-        soundHandle = new ig.Sound(SoundManager.sounds.hint, 1).play(undefined, {
-            speed: playbackSpeed
-        })
-        soundHandle.setEntityPosition(hint.entity, ig.ENTITY_ALIGN.CENTER, null, range, ig.SOUND_RANGE_TYPE.CIRULAR)
-        soundHandle.play()
+            soundHandle = new ig.Sound(SoundManager.sounds.hint, 1).play(undefined, {
+                speed: playbackSpeed
+            })
+            soundHandle.setEntityPosition(hint.entity, ig.ENTITY_ALIGN.CENTER, null, range, ig.SOUND_RANGE_TYPE.CIRULAR)
+            soundHandle.play()
+        }
 
         MenuOptions.ttsMenuEnabled && TextGather.g.speak(hint.nameGui.title.text)
         SpecialAction.setListener('LSP', 'hintDescription', () => {
@@ -75,7 +77,7 @@ export class HintSystem implements PauseListener {
     filterList: string[]
     filterIndex: number = 0
 
-    quickMenuAnalysisInstance!: sc.QuickMenuAnalysis
+    static quickMenuAnalysisInstance: sc.QuickMenuAnalysis
 
     pause() {
         HintSystem.deactivateHint()
@@ -213,13 +215,11 @@ export class HintSystem implements PauseListener {
             this.filterType = 'Hints'
             this.filterHintType = e as this['filterHintType']
         }
-        this.quickMenuAnalysisInstance?.hide()
-        this.quickMenuAnalysisInstance?.exit()
-        this.quickMenuAnalysisInstance?.show()
-        this.quickMenuAnalysisInstance?.enter()
+        HintSystem.quickMenuAnalysisInstance?.populateHintList()
     }
 
     constructor() { /* runs in prestart */
+        CrossedEyes.pauseables.push(this)
         this.filterList = ['All', ...Object.keys(sc.QUICK_MENU_TYPES), ...HintTypes]
         this.filterList.slice(this.filterList.indexOf('Hints'))
         this.updateFilter()
@@ -236,7 +236,7 @@ export class HintSystem implements PauseListener {
         sc.QuickMenuAnalysis.inject({
             init() {
                 this.parent()
-                self.quickMenuAnalysisInstance = this
+                HintSystem.quickMenuAnalysisInstance = this
             }
         })
 
@@ -250,7 +250,7 @@ export class HintSystem implements PauseListener {
                     if (add != 0) {
                         const pPos: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
                         const sorted: sc.QuickMenuTypesBase[] =
-                            self.quickMenuAnalysisInstance.entities.filter(e => e)
+                            HintSystem.quickMenuAnalysisInstance.entities.filter(e => e)
                                 .sort((a, b) => Vec3.distance(a.entity.coll.pos, pPos) - Vec3.distance(b.entity.coll.pos, pPos))
                         if (currentSelectIndex == -1) {
                             currentSelectIndex = 0

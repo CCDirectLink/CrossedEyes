@@ -1,3 +1,5 @@
+import CrossedEyes from './plugin'
+
 export class SpecialAction {
     private static instance: SpecialAction
 
@@ -10,6 +12,7 @@ export class SpecialAction {
 
     constructor() { /* in prestart */
         SpecialAction.instance = this
+        CrossedEyes.initPoststarters.push(this)
     }
     initPoststart() {
         ig.game.addons.preUpdate.push(this)

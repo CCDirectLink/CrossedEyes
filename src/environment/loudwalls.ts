@@ -1,6 +1,6 @@
 import { AimAnalyzer } from '../hint-system/aim-analyze'
 import { MenuOptions } from '../options'
-import { PauseListener } from '../plugin'
+import CrossedEyes, { PauseListener } from '../plugin'
 import { isAiming } from './puzzle'
 import { SoundManager, isHandleOff, turnOffHandle } from '../sound-manager'
 
@@ -18,6 +18,7 @@ export class LoudWalls implements PauseListener {
     private handles: Record<string, { handle: ig.SoundHandleWebAudio, sound: string }> = {}
     constructor() { /* in prestart */
         LoudWalls.g = this
+        CrossedEyes.pauseables.push(this)
         const self = this
         ig.ENTITY.Player.inject({
             update() {

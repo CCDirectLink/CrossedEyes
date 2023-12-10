@@ -46,7 +46,7 @@ export function tweakFootsteps() { /* runs in prestart */
                             ig.SoundHelper.playAtEntity(new ig.Sound(
                                 lastStep ? SoundManager.sounds.hitOrganic3 : SoundManager.sounds.hitOrganic4,
                                 0.45 * MenuOptions.footstepVolume), this, null, null, 700)
-                            lastStep = ! lastStep
+                            lastStep = !lastStep
                         }
                     } else {
                         if (frame == this.stepFx.frames[0]) {

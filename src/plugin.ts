@@ -13,20 +13,24 @@ import { AimAnalyzer } from './hint-system/aim-analyze'
 import { HintSystem } from './hint-system/hint-system'
 import { LoudJump } from './environment/loudjump'
 import { tweakFootsteps } from './environment/footstep'
+import { InteratableHandler } from './environment/interactables'
 
 export interface PauseListener {
     pause?(): void
     resume?(): void
 }
 
+export interface InitPoststart {
+    initPoststart(): void
+}
 export default class CrossedEyes {
     static dir: string
     mod: Mod1
 
     puzzleBeeper!: PuzzleBeeper
-    specialAction!: SpecialAction
 
-    pauseables: PauseListener[] = []
+    static pauseables: PauseListener[] = []
+    static initPoststarters: InitPoststart[] = []
 
     constructor(mod: Mod1) {
         CrossedEyes.dir = mod.baseDirectory
@@ -36,28 +40,25 @@ export default class CrossedEyes {
     }
 
     private pauseAll() {
-        this.pauseables.forEach(p => p.pause && p.pause())
+        CrossedEyes.pauseables.forEach(p => p.pause && p.pause())
     }
     private resumeAll() {
-        this.pauseables.forEach(p => p.resume && p.resume())
+        CrossedEyes.pauseables.forEach(p => p.resume && p.resume())
     }
 
     async prestart() {
         this.addVimAliases()
-        MenuOptions.initPrestart()
+        new MenuOptions()
         SoundManager.preloadSounds()
         new SpacialAudio().initSpacialAudio()
         tweakFootsteps()
-        const hintSystem = new HintSystem()
-        this.pauseables.push(
-            new LoudWalls(),
-            hintSystem,
-            new AimAnalyzer(hintSystem),
-            new LoudJump(),
-        )
-        this.specialAction = new SpecialAction()
-        this.puzzleBeeper = new PuzzleBeeper()
+        new LoudWalls()
+        new HintSystem()
+        new AimAnalyzer()
+        new LoudJump()
+        new SpecialAction()
         new TTS()
+        this.puzzleBeeper = new PuzzleBeeper()
         new EntityBeeper()
 
         const self = this
@@ -78,6 +79,10 @@ export default class CrossedEyes {
             },
         })
 
+        this.addTestMapTitleScreenButton()
+    }
+
+    addTestMapTitleScreenButton() {
         function godlikeStats() {
             for (const k of Object.keys(sc.model.player.core) as unknown as sc.PLAYER_CORE[]) { sc.model.player.core[k] = true }
 
@@ -122,7 +127,7 @@ export default class CrossedEyes {
             },
             transitionEnded() {
                 if (startWithTestMap) {
-                    ig.game.teleport('crossedeyes/test')
+                    ig.game.teleport('crossedeyes/test', new ig.TeleportPosition('entrance'), 'NEW')
                     startWithTestMap = false
                 } else {
                     this.parent()
@@ -132,9 +137,7 @@ export default class CrossedEyes {
     }
 
     async poststart() {
-        MenuOptions.initPoststart()
-        TTS.g.initPoststart()
-        this.specialAction.initPoststart()
+        CrossedEyes.initPoststarters.forEach(p => p.initPoststart())
     }
 
     addVimAliases() {
