@@ -59,6 +59,11 @@ export class SoundManager {
         hint: 'media/sound/crossedeyes/hint.ogg',
         tpr: 'media/sound/crossedeyes/tpr.ogg',
         npc: 'media/sound/crossedeyes/npc.ogg',
+
+        hitOrganic1: 'media/sound/battle/airon/hit-organic-1.ogg',
+        hitOrganic2: 'media/sound/battle/airon/hit-organic-2.ogg',
+        hitOrganic3: 'media/sound/battle/airon/hit-organic-3.ogg',
+        hitOrganic4: 'media/sound/battle/airon/hit-organic-4.ogg',
     }
     static getElementName(element: sc.ELEMENT): 'neutralMode' | 'coldMode' | 'heatMode' | 'waveMode' | 'shockMode' {
         switch (element) {
