@@ -12,8 +12,8 @@ import { AddonInstaller } from './tts/tts-nvda'
 import { AimAnalyzer } from './hint-system/aim-analyze'
 import { HintSystem } from './hint-system/hint-system'
 import { LoudJump } from './environment/loudjump'
-import { tweakFootsteps } from './environment/footstep'
 import { InteratableHandler } from './environment/interactables'
+import { MovementSoundTweaker } from './environment/movementSounds'
 
 export interface PauseListener {
     pause?(): void
@@ -50,9 +50,9 @@ export default class CrossedEyes {
     async prestart() {
         this.addVimAliases()
         new MenuOptions()
-        SoundManager.preloadSounds()
-        new SpacialAudio().initSpacialAudio()
-        tweakFootsteps()
+        new SoundManager()
+        new SpacialAudio()
+        new MovementSoundTweaker()
         new LoudWalls()
         new HintSystem()
         new AimAnalyzer()

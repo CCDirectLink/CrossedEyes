@@ -77,7 +77,16 @@ export class SoundManager {
         }
     }
 
-    static preloadSounds() {
+    constructor() { /* in prestart */
+        ig.Game.inject({
+            preloadLevel(mapName) {
+                ig.soundManager.reset() /* vanilla bug fix?? */
+                this.parent(mapName)
+            }
+        })
+        this.preloadSounds()
+    }
+    private preloadSounds() {
         Object.values(SoundManager.sounds).forEach(str => new ig.Sound(str))
     }
     static playSoundPath(path: string, speed: number, volume: number = 1, pos?: Vec3): ig.SoundHandleWebAudio {

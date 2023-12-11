@@ -31,6 +31,7 @@
 		{ "type": "TeleportGround", "x": 1314, "y": 715, "level": 2, "settings": { "size": { "x": 32, "y": 16 }, "mapId": 31, "zHeight": 32, "dir": "SOUTH", "map": "crossedeyes/test", "name": "tpg1", "marker": "tpg1" } },
 		{ "type": "WallHorizontal", "x": 269, "y": 208, "level": 2, "settings": { "size": { "x": 32, "y": 8 }, "mapId": 32, "leftEnd": "STOP", "rightEnd": "STOP", "collType": "BLOCK", "wallZHeight": 32, "condition": "!tmp.s1" } },
 		{ "type": "WallHorizontal", "x": 314, "y": 208, "level": 2, "settings": { "size": { "x": 32, "y": 8 }, "mapId": 34, "leftEnd": "STOP", "rightEnd": "STOP", "collType": "NPBLOCK", "wallZHeight": 32, "condition": "!tmp.s1" } },
+		{ "type": "EventTrigger", "x": 375, "y": 138, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 38, "event": [{ "entity": { "player": true }, "action": [{ "type": "REDUCE_HP", "basedOn": "MAX_HP", "factor": 1 }], "type": "DO_ACTION" }], "eventType": "INTERRUPTABLE", "startCondition": "tmp.die", "triggerType": "ALWAYS", "name": "dieEvent", "loadCondition": true, "endCondition": "false" } },
 		{
 			"type": "NPC",
 			"x": 707,
@@ -141,7 +142,8 @@
 		{ "type": "Enemy", "x": 546, "y": 206, "level": 2, "settings": { "name": "bot1", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 18 } },
 		{ "type": "Enemy", "x": 572, "y": 206, "level": 2, "settings": { "name": "bot2", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 19 } },
 		{ "type": "Enemy", "x": 598, "y": 206, "level": 2, "settings": { "name": "bot3", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_NOT_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 20 } },
-		{ "type": "Marker", "x": 42, "y": 690, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 36, "name": "entrance", "dir": "NORTH" } }
+		{ "type": "FloorSwitch", "x": 372, "y": 205, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 39, "name": "fs1", "switchType": "WHILE_ON_TOP", "variable": "tmp.die" } },
+		{ "type": "Marker", "x": 372, "y": 239, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 40, "name": "entrance", "dir": "NORTH", "spawnCondition": "true" } }
 	],
 	"layer": [
 		{

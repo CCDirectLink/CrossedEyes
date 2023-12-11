@@ -37,7 +37,7 @@ declare global {
         }
         interface Entity {
             uuid: string
-            playAtSoundHandle: ig.SoundHandleWebAudio
+            playAtSoundHandle?: ig.SoundHandleWebAudio
         }
     }
     namespace sc {

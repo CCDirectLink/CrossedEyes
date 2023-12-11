@@ -1,6 +1,5 @@
 import type * as _ from 'cc-blitzkrieg'
 import { MenuOptions } from '../options'
-import { mapNumber } from '../spacial-audio'
 import type { PuzzleSelection, PuzzleSelectionStep } from 'cc-blitzkrieg/types/puzzle-selection'
 import { PuzzleSounds } from '../sound-manager'
 
@@ -9,7 +8,7 @@ export function isAiming(): boolean {
 }
 
 class AimHandler {
-    constructor(public pb: PuzzleBeeper) {}
+    constructor(public pb: PuzzleBeeper) { }
 
     farAwayFreq: number = 1300
     maxFreq: number = 0
@@ -49,7 +48,7 @@ class AimHandler {
                 if (this.shotCount) {
                     this.shotCount--
                 }
-                if (! this.shotCount) {
+                if (!this.shotCount) {
                     this.lockedIn = false
                     this.pb.moveToHandler.lockedIn = false
                     this.pb.stepI++
@@ -61,7 +60,7 @@ class AimHandler {
             }
             if (this.shotCount) { return }
             const wait = 200
-            if (! this.shootSoundPlayed) {
+            if (!this.shootSoundPlayed) {
                 const lastStep = this.pb.currentSel.data.recordLog!.steps[this.pb.stepI - 1]
                 let play: boolean = false
                 if (lastStep && !lastStep.split) {
@@ -82,22 +81,22 @@ class AimHandler {
             this.shootSoundPlayed = false
         }
 
-        if (this.shotCount || ! step || ! step.pos) { return }
+        if (this.shotCount || !step || !step.pos) { return }
         const targetDeg = (step.shootAngle! + 360) % 360
-        if (! targetDeg) { return }
+        if (!targetDeg) { return }
 
-        const r: number = 4*16
+        const r: number = 4 * 16
         const theta: number = targetDeg * (Math.PI / 180)
-        
+
         this.newAim = Vec2.createC(r * Math.cos(theta), r * Math.sin(theta))
 
-        if (! isAiming()) {
+        if (!isAiming()) {
             this.lockedIn = false
             return
         }
-        if (!ig.game || !ig.game.playerEntity ||  !MenuOptions.puzzleEnabled) { return }
+        if (!ig.game || !ig.game.playerEntity || !MenuOptions.puzzleEnabled) { return }
         const deg = (ig.game.playerEntity.aimDegrees + 360) % 360 /* set by cc-blitzkrieg */
-        if (! deg) { return }
+        if (!deg) { return }
 
         const dist: number = Math.min(
             Math.abs(deg - targetDeg),
@@ -105,7 +104,7 @@ class AimHandler {
         ) /* distance between target and current aim */
 
         if (dist <= this.lockInDegDist) {
-            if (! this.lockedIn) {
+            if (!this.lockedIn) {
                 this.lockedIn = true
                 this.normalBeepSlience = true
                 PuzzleSounds.aimLockin(this.newAim, step.element, () => {
@@ -126,10 +125,10 @@ class AimHandler {
         if (this.lockedIn || this.normalBeepSlience) { return }
 
         const timeDiff = now - this.lastBeepTime
-        const time: number = dist >= this.minDegDistToSpeedup ? this.farAwayFreq : 
+        const time: number = dist >= this.minDegDistToSpeedup ? this.farAwayFreq :
             Math.max(
-            mapNumber(deg, targetDeg - this.minDegDistToSpeedup, targetDeg, this.farAwayFreq, this.maxFreq),
-            mapNumber(deg, targetDeg + this.minDegDistToSpeedup, targetDeg, this.farAwayFreq, this.maxFreq))
+                deg.map(targetDeg - this.minDegDistToSpeedup, targetDeg, this.farAwayFreq, this.maxFreq),
+                deg.map(targetDeg + this.minDegDistToSpeedup, targetDeg, this.farAwayFreq, this.maxFreq))
 
         if (timeDiff >= time) {
             PuzzleSounds.aimGuide(1, this.newAim)
@@ -139,7 +138,7 @@ class AimHandler {
 }
 
 class MoveToHandler {
-    constructor(public pb: PuzzleBeeper) {}
+    constructor(public pb: PuzzleBeeper) { }
 
     farAwayFreq: number = 1000
     maxFreq: number = 0
@@ -147,7 +146,7 @@ class MoveToHandler {
     lastBeepTime: number = 0
     normalBeepSlience: boolean = false
 
-    minDistToSpeedup: number = 8 * 16 
+    minDistToSpeedup: number = 8 * 16
     lockinDist: number = 2 * 16
     relockDist: number = 0.5 * 16
 
@@ -155,10 +154,10 @@ class MoveToHandler {
     softLockout: boolean = false
     allowRelock: boolean = false
     passToAim: boolean = false
-    
+
     handleMoveTo(step: PuzzleSelectionStep) {
         const pos: Vec3 & { level: number } = step.pos
-        
+
         const playerPos: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
         const dist: number = Vec3.distance(pos, playerPos)
 
@@ -189,11 +188,11 @@ class MoveToHandler {
         if (dist <= this.lockinDist && pos.z == playerPos.z) {
             Vec3.add(playerPos, ig.game.playerEntity.coll.vel)
             const distWithVel: number = Vec3.distance(pos, playerPos)
-            if (! this.softLockout || distWithVel <= this.relockDist) {
-                if (! this.lockedIn) {
+            if (!this.softLockout || distWithVel <= this.relockDist) {
+                if (!this.lockedIn) {
                     this.lockedIn = true
                     this.softLockout = false
-                    
+
                     ig.game.playerEntity.setPos(pos.x, pos.y, pos.z)
                     ig.game.playerEntity.coll.vel = Vec3.create()
                     sc.model.player.setCore(sc.PLAYER_CORE.MOVE, false)
@@ -236,8 +235,8 @@ class MoveToHandler {
         if (this.lockedIn || this.normalBeepSlience) { return }
 
         const timeDiff = now - this.lastBeepTime
-        const time: number = dist >= this.minDistToSpeedup ? this.farAwayFreq : 
-            mapNumber(dist, this.minDistToSpeedup, 0, this.farAwayFreq, this.maxFreq)
+        const time: number = dist >= this.minDistToSpeedup ? this.farAwayFreq :
+            dist.map(this.minDistToSpeedup, 0, this.farAwayFreq, this.maxFreq)
 
         if (timeDiff >= time) {
             const speed: number = 1
@@ -261,7 +260,7 @@ export class PuzzleBeeper {
         blitzkrieg.sels.puzzle.loadAll()
 
         this.aimHandler.initPrestart()
-        
+
         const self = this
         ig.ENTITY.Player.inject({
             update() {

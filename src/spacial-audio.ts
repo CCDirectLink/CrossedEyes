@@ -1,11 +1,7 @@
 import { MenuOptions } from './options'
 
-export function mapNumber(input: number, fromStart: number, fromEnd: number, toStart: number, toEnd: number) {
-    return fromEnd == fromStart ? toEnd : toStart + (toEnd - toStart) * ((input - fromStart) / (fromEnd - fromStart))
-}
-
 export class SpacialAudio {
-    initSpacialAudio() {
+    constructor() { /* in prestart */
         window.IG_FORCE_HTML5_AUDIO = true
         // @ts-expect-error
         ig.SOUND_RANGE_TYPE.CIRCULAR = 1 /* damn rfg how can a typo like this exist */

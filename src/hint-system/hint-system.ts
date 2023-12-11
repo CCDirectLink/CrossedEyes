@@ -9,7 +9,7 @@ import { HEnemy } from './hints/enemy'
 import { HMultiHitSwitch, HOneTimeSwitch, HSwitch } from './hints/switches'
 import { HDoor, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
-import { overrideNPCHint } from './npc-override'
+import { NPCHintMenu } from './npc-override'
 
 export const HintTypes = ['Puzzle', 'Plants'] as const
 
@@ -330,6 +330,6 @@ export class HintSystem implements PauseListener {
             }
         })
 
-        overrideNPCHint()
+        new NPCHintMenu()
     }
 }
