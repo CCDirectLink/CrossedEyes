@@ -1,9 +1,9 @@
 import { isAiming } from './environment/puzzle'
 
-export function turnOffHandle(handle: ig.SoundHandleWebAudio, range: number) {
+export function muteHandle(handle: ig.SoundHandleWebAudio, range: number) {
     handle.setFixPosition(Vec3.createC(-1000, -1000, 0), range)
 }
-export function isHandleOff(handle: ig.SoundHandleWebAudio) {
+export function isHandleMuted(handle: ig.SoundHandleWebAudio) {
     return handle.pos?.point3d == Vec3.createC(-1000, -1000, 0)
 }
 

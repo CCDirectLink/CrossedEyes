@@ -1,8 +1,8 @@
 import { AimAnalyzer } from '../hint-system/aim-analyze'
 import { MenuOptions } from '../options'
 import CrossedEyes, { PauseListener } from '../plugin'
+import { SoundManager, isHandleMuted, muteHandle } from '../sound-manager'
 import { isAiming } from './puzzle'
-import { SoundManager, isHandleOff, turnOffHandle } from '../sound-manager'
 
 const c_res = {}
 const c_tmpPos: Vec3 = { x: 0, y: 0, z: 0 }
@@ -35,7 +35,7 @@ export class LoudWalls implements PauseListener {
     }
 
     private handleWallSound() {
-        if (ig.game.events.blockingEventCall || (AimAnalyzer.g.aimAnnounceOn && isAiming())) {
+        if (ig.game.events.blockingEventCall) {
             this.pause()
             return
         }
@@ -51,8 +51,8 @@ export class LoudWalls implements PauseListener {
                 LoudWalls.checkDirection(Vec2.create(dir), range, ig.COLLTYPE.PROJECTILE))) { continue }
 
             const { handle } = this.handles[dirId] ?? { handle: undefined }
-            if (handle && (!handle.pos || !isHandleOff(handle))) {
-                turnOffHandle(handle, range)
+            if (handle && (!handle.pos || !isHandleMuted(handle))) {
+                muteHandle(handle, range)
             }
         }
     }
@@ -68,7 +68,7 @@ export class LoudWalls implements PauseListener {
                     sound: soundName,
                 }
                 handle = this.handles[dirId].handle
-                turnOffHandle(handle, range)
+                muteHandle(handle, range)
             }
 
             if (check.distance <= range * 0.02) {
@@ -89,6 +89,7 @@ export class LoudWalls implements PauseListener {
                     360 - Math.abs(playerFaceAngle - dirFaceAngle)
                 )
                 handle._nodeSource.bufferNode.playbackRate.value = angleDist >= 140 ? 0.7 : 1
+                handle._nodeSource.gainNode.gain.value = (AimAnalyzer.g.aimAnnounceOn && isAiming()) ? 0.4 : 1
             }
             return true
         }

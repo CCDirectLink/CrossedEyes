@@ -118,7 +118,7 @@ function initCrossedEyesPositionPredictor() {
                         this.stopRunning(); return
                     }
                 }
-                if (ig.Timer.time - this.rfc.startTime > 6) { this.stopRunning(); return }
+                if (ig.Timer.time - this.rfc.startTime > 15) { this.stopRunning(); return }
             }
         },
         checkQuickRespawn() {
@@ -276,8 +276,7 @@ export class LoudJump {
 
     handle() {
         const p: ig.ENTITY.Player = ig.game.playerEntity
-        if (!MenuOptions.loudWallsEnabled || this.paused || ig.game.events.blockingEventCall || !this.predictor || !p || !p.coll?.pos ||
-            (AimAnalyzer.g.aimAnnounceOn && isAiming())) {
+        if (!MenuOptions.loudWallsEnabled || this.paused || ig.game.events.blockingEventCall || !this.predictor || !p || !p.coll?.pos) {
             this.dirHandles.forEach(o => o && o.handle.stop())
             return
         }
@@ -327,6 +326,9 @@ export class LoudJump {
             const pos: Vec3 = res.pos
             if (!handle.pos || !Vec3.equal(handle.pos.point3d, pos)) {
                 handle.setFixPosition(pos, range)
+            }
+            if (handle._nodeSource) {
+                handle._nodeSource.gainNode.gain.value = (AimAnalyzer.g.aimAnnounceOn && isAiming()) ? 0.3 : 1
             }
         }
     }
