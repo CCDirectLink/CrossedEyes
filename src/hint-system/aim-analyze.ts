@@ -60,21 +60,13 @@ export class AimAnalyzer implements PauseListener {
                 const check = LoudWalls.checkDirection(aim, 20 * 16, ig.COLLTYPE.BLOCK)
 
                 if (check && check.hitE && check.hitE.length > 0) {
-                    if (this.recalculateEntities) {
-                        this.recalculateEntities = false
-                        setInterval(() => this.recalculateEntities = true, 1000)
-                        HintSystem.quickMenuAnalysisInstance.populateHintList()
-                    } else {
-                        HintSystem.quickMenuAnalysisInstance.entities.forEach(
-                            e => e instanceof sc.QUICK_MENU_TYPES.Hints && e.nameGui.updateData())
-                    }
                     for (let i = 0; i < Math.min(5, check.hitE.length); i++) {
                         const collE = check.hitE[i]
                         const e: ig.Entity = collE.entity
                         if (e) {
                             if (e.uuid == this.lastSelected) { return }
                             const hint: sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Hints | undefined =
-                                HintSystem.quickMenuAnalysisInstance.entities.find(he => he.entity.uuid == e.uuid) as any
+                                HintSystem.quickMenuAnalysisInstance.createHint(e) as any
                             if (hint) {
                                 HintSystem.activeHint(hint)
                                 this.lastSelected = e.uuid

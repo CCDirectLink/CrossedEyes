@@ -21,8 +21,7 @@ export class InteratableHandler implements PauseListener {
                             this.interactSoundType = SoundManager.sounds.interact
                             this.interactSoundHandle?.stop()
                             this.interactSoundHandle = ig.SoundHelper.playAtEntity(interactSound, this.entity, true, {}, 6 * 16)
-                            HintSystem.quickMenuAnalysisInstance.populateHintList()
-                            const hint = HintSystem.quickMenuAnalysisInstance.entities.find(o => o.entity == this.entity)
+                            const hint = HintSystem.quickMenuAnalysisInstance.createHint(this.entity)
                             if (!hint) {
                                 TextGather.g.speak('Unmapped interact hint')
                             } else {

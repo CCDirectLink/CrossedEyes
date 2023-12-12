@@ -286,19 +286,25 @@ export class HintSystem implements PauseListener {
                 }
                 return this.parent(...args)
             },
+            createHint(entity) {
+                if (entity && entity.getQuickMenuSettings && ((entity.isQuickMenuVisible && entity.isQuickMenuVisible()) || ig.EntityTools.isInScreen(entity, 0))) {
+                    const sett = entity.getQuickMenuSettings() as sc.QuickMenuTypesBaseSettings
+                    if (!sett.disabled && sc.QUICK_MENU_TYPES[sett.type] && (self.filterType == 'All' || sett.type == self.filterType)) {
+                        sett.entity = entity
+                        const ins = new sc.QUICK_MENU_TYPES[sett.type](sett.type, sett, this.focusContainer)
+
+                        if (sett.type == 'Hints' && ins instanceof sc.QUICK_MENU_TYPES.Hints &&
+                            self.filterHintType && sett.hintType != self.filterHintType) { return }
+                        return ins
+                    }
+                }
+            },
             populateHintList() {
                 this.entities.length = 0
                 for (const entity of ig.game.shownEntities) {
-                    if (entity && entity.getQuickMenuSettings && ((entity.isQuickMenuVisible && entity.isQuickMenuVisible()) || ig.EntityTools.isInScreen(entity, 0))) {
-                        const sett = entity.getQuickMenuSettings() as sc.QuickMenuTypesBaseSettings
-                        if (!sett.disabled && sc.QUICK_MENU_TYPES[sett.type] && (self.filterType == 'All' || sett.type == self.filterType)) {
-                            sett.entity = entity
-                            const ins = new sc.QUICK_MENU_TYPES[sett.type](sett.type, sett, this.focusContainer)
-
-                            if (sett.type == 'Hints' && ins instanceof sc.QUICK_MENU_TYPES.Hints &&
-                                self.filterHintType && sett.hintType != self.filterHintType) { continue }
-                            this.entities.push(ins)
-                        }
+                    const hint = this.createHint(entity)
+                    if (hint) {
+                        this.entities.push(hint)
                     }
                 }
             },
