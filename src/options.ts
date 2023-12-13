@@ -1,5 +1,5 @@
-import CrossedEyes, { InitPoststart } from "./plugin"
-import { TTSTypes } from "./tts/tts"
+import CrossedEyes, { InitPoststart } from './plugin'
+import { TTSTypes } from './tts/tts'
 
 const header: string = 'crossedeyes'
 const spacialAudioToggleId: string = `${header}-spacialaudio`

@@ -90,7 +90,7 @@ declare global {
         }
 
         interface QuickMenuAnalysis {
-            createHint(this: this, entity: ig.Entity): sc.QuickMenuTypesBase | undefined
+            createHint(this: this, entity: ig.Entity, filter: boolean = true): sc.QuickMenuTypesBase | undefined
             populateHintList(this: this): void
         }
 

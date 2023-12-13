@@ -58,7 +58,7 @@ function getTerrainButDefIsHole(coll: ig.CollEntry, precise?: boolean, andBelow?
     var e = coll.getCenter(b)
     if (coll._collData && coll._collData.groundEntry && coll._collData.groundEntry.entity.terrain) return coll._collData.groundEntry.entity.terrain
     var f = 0,
-        g = coll.level,
+        g = parseInt(coll.level),
         h = ig.game.getLevelHeight(g)
     do {
         f = ig.game.getLevelHeight(g)
@@ -118,7 +118,7 @@ function initCrossedEyesPositionPredictor() {
                         this.stopRunning(); return
                     }
                 }
-                if (ig.Timer.time - this.rfc.startTime > 15) { this.stopRunning(); return }
+                if (ig.Timer.time - this.rfc.startTime > 5) { this.stopRunning(); return }
             }
         },
         checkQuickRespawn() {
@@ -167,8 +167,9 @@ function initCrossedEyesPositionPredictor() {
                 ig.game.physics.updateCollEntry(this.coll, [])
             }
 
+            // const time = ig.Timer.time - this.rfc.startTime
+            // console.log((`Tracking done, Time spend: ${time}`))
             restoreTickData(save)
-            // const time = ig.Timer.time - orig.timerTimer (`Tracking done, Time spend: ${time}`)
 
             this.stopRunning()
             return this.rfcr
@@ -241,6 +242,16 @@ export class LoudJump {
                 this.parent()
                 const pos: Vec3 = ig.game.playerEntity.coll.pos
                 self.predictor = ig.game.spawnEntity(sc.CrossedEyesPositionPredictor, pos.x, pos.y, pos.z, {})
+
+                for (const level of Object.values(ig.game.levels)) {
+                    for (const map of level.maps ?? []) {
+                        if ('tilesetName' in map) {
+                            if (ig.terrain.tilesetIds[map.tilesetName as string] === undefined) {
+                                ig.terrain.tilesetIds[map.tilesetName as string] = new Array(2048).fill(2)
+                            }
+                        }
+                    }
+                }
             }
         })
 

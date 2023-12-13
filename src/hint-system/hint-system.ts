@@ -26,7 +26,9 @@ export interface Hint {
 let soundHandle: ig.SoundHandleWebAudio | undefined
 
 export class HintSystem implements PauseListener {
-    static deactivateHint() {
+    static g: HintSystem
+
+    deactivateHint() {
         if (soundHandle) {
             soundHandle.stop()
             soundHandle = undefined
@@ -34,8 +36,8 @@ export class HintSystem implements PauseListener {
             SpecialAction.setListener('LSP', 'hintDescription', () => { })
         }
     }
-    static activeHint(hint: { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui } }, playSound: boolean = true) {
-        HintSystem.deactivateHint()
+    activeHint(hint: { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui } }, playSound: boolean = true) {
+        this.deactivateHint()
         const dist = Vec3.distance(ig.game.playerEntity.coll.pos, hint.entity.coll.pos)
         const maxRange = 16 * 30
         const diff = maxRange - dist
@@ -77,10 +79,10 @@ export class HintSystem implements PauseListener {
     filterList: string[]
     filterIndex: number = 0
 
-    static quickMenuAnalysisInstance: sc.QuickMenuAnalysis
+    quickMenuAnalysisInstance!: sc.QuickMenuAnalysis
 
     pause() {
-        HintSystem.deactivateHint()
+        this.deactivateHint()
     }
 
     setupGui() {
@@ -131,12 +133,12 @@ export class HintSystem implements PauseListener {
             focusGained() {
                 this.parent()
                 this.nameGui.doStateTransition('DEFAULT')
-                HintSystem.activeHint(this)
+                self.activeHint(this)
             },
             focusLost() {
                 this.parent()
                 this.nameGui.doStateTransition('HIDDEN')
-                !TextGather.g.ignoreInterrupt && HintSystem.deactivateHint()
+                !TextGather.g.ignoreInterrupt && self.deactivateHint()
             },
             alignGuiPosition() {
                 this.parent()
@@ -215,11 +217,12 @@ export class HintSystem implements PauseListener {
             this.filterType = 'Hints'
             this.filterHintType = e as this['filterHintType']
         }
-        HintSystem.quickMenuAnalysisInstance?.populateHintList()
+        this.quickMenuAnalysisInstance?.populateHintList()
     }
 
     constructor() { /* runs in prestart */
         CrossedEyes.pauseables.push(this)
+        HintSystem.g = this
         this.filterList = ['All', ...Object.keys(sc.QUICK_MENU_TYPES), ...HintTypes]
         this.filterList.slice(this.filterList.indexOf('Hints'))
         this.updateFilter()
@@ -236,7 +239,7 @@ export class HintSystem implements PauseListener {
         sc.QuickMenuAnalysis.inject({
             init() {
                 this.parent()
-                HintSystem.quickMenuAnalysisInstance = this
+                self.quickMenuAnalysisInstance = this
             }
         })
 
@@ -250,7 +253,7 @@ export class HintSystem implements PauseListener {
                     if (add != 0) {
                         const pPos: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
                         const sorted: sc.QuickMenuTypesBase[] =
-                            HintSystem.quickMenuAnalysisInstance.entities.filter(e => e)
+                            self.quickMenuAnalysisInstance.entities.filter(e => e)
                                 .sort((a, b) => Vec3.distance(a.entity.coll.pos, pPos) - Vec3.distance(b.entity.coll.pos, pPos))
                         if (currentSelectIndex == -1) {
                             currentSelectIndex = 0
@@ -286,14 +289,14 @@ export class HintSystem implements PauseListener {
                 }
                 return this.parent(...args)
             },
-            createHint(entity) {
+            createHint(entity, filter = true) {
                 if (entity && entity.getQuickMenuSettings && ((entity.isQuickMenuVisible && entity.isQuickMenuVisible()) || ig.EntityTools.isInScreen(entity, 0))) {
                     const sett = entity.getQuickMenuSettings() as sc.QuickMenuTypesBaseSettings
-                    if (!sett.disabled && sc.QUICK_MENU_TYPES[sett.type] && (self.filterType == 'All' || sett.type == self.filterType)) {
+                    if (!sett.disabled && sc.QUICK_MENU_TYPES[sett.type] && (!filter || self.filterType == 'All' || sett.type == self.filterType)) {
                         sett.entity = entity
                         const ins = new sc.QUICK_MENU_TYPES[sett.type](sett.type, sett, this.focusContainer)
 
-                        if (sett.type == 'Hints' && ins instanceof sc.QUICK_MENU_TYPES.Hints &&
+                        if (filter && sett.type == 'Hints' && ins instanceof sc.QUICK_MENU_TYPES.Hints &&
                             self.filterHintType && sett.hintType != self.filterHintType) { return }
                         return ins
                     }

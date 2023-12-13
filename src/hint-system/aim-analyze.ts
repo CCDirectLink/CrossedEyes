@@ -66,9 +66,9 @@ export class AimAnalyzer implements PauseListener {
                         if (e) {
                             if (e.uuid == this.lastSelected) { return }
                             const hint: sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Hints | undefined =
-                                HintSystem.quickMenuAnalysisInstance.createHint(e) as any
+                                HintSystem.g.quickMenuAnalysisInstance.createHint(e) as any
                             if (hint) {
-                                HintSystem.activeHint(hint)
+                                HintSystem.g.activeHint(hint)
                                 this.lastSelected = e.uuid
                                 return
                             }
@@ -76,14 +76,14 @@ export class AimAnalyzer implements PauseListener {
                     }
                     if (check.hitE.length == 2 && check.hitE[1].entity.isBall) { return }
                     this.lastSelected = undefined
-                    HintSystem.deactivateHint()
+                    HintSystem.g.deactivateHint()
                 } else {
                     this.lastSelected = undefined
-                    HintSystem.deactivateHint()
+                    HintSystem.g.deactivateHint()
                 }
             } else {
                 this.lastSelected = undefined
-                HintSystem.deactivateHint()
+                HintSystem.g.deactivateHint()
             }
         }
     }
