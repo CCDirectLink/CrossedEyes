@@ -9,7 +9,7 @@ import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
 import { HDestructible } from './hints/destructible'
 import { HEnemy } from './hints/enemy'
 import { HMultiHitSwitch, HOneTimeSwitch, HSwitch } from './hints/switches'
-import { HDoor, HTeleportField, HTeleportGround } from './hints/tprs'
+import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
 import { NPCHintMenu } from './npc-override'
 
@@ -40,6 +40,7 @@ export class HintSystem implements PauseListener {
         HDoor,
         HTeleportField,
         HTeleportGround,
+        HElevator,
         HEnemy,
         HWalls,
         HDestructible,

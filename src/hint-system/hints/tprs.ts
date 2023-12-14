@@ -29,8 +29,10 @@ export class HTeleportField implements Hint {
         const self = this
         ig.ENTITY.TeleportField.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle',
-                    disabled: !(MenuOptions.puzzleEnabled && this.interactEntry) }
+                return {
+                    type: 'Hints', hintName: self.entryName, hintType: 'Puzzle',
+                    disabled: !(MenuOptions.puzzleEnabled && this.interactEntry)
+                }
             },
             isQuickMenuVisible() { return true },
         })
@@ -61,6 +63,27 @@ export class HTeleportGround implements Hint {
         if (!(e instanceof ig.ENTITY.TeleportGround)) { throw new Error() }
 
         const name: string = `Teleport Ground`
+        const description: string = `Transports you to a different map`
+        return { name, description }
+    }
+}
+
+export class HElevator implements Hint {
+    entryName = 'Elevator'
+
+    constructor() { /* run in prestart */
+        const self = this
+        sc.ElevatorSwitchEntity.inject({
+            getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && this.groundEntity.condition.code != 'false') }
+            },
+            isQuickMenuVisible() { return true },
+        })
+    }
+    getDataFromEntity(e: ig.Entity): HintData {
+        if (!(e instanceof sc.ElevatorSwitchEntity)) { throw new Error() }
+
+        const name: string = `Elevator${e.groundEntity.condition.evaluate() ? '' : ', inactive'}`
         const description: string = `Transports you to a different map`
         return { name, description }
     }

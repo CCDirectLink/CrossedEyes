@@ -32,6 +32,8 @@
 		{ "type": "WallHorizontal", "x": 269, "y": 208, "level": 2, "settings": { "size": { "x": 32, "y": 8 }, "mapId": 32, "leftEnd": "STOP", "rightEnd": "STOP", "collType": "BLOCK", "wallZHeight": 32, "condition": "!tmp.s1" } },
 		{ "type": "WallHorizontal", "x": 314, "y": 208, "level": 2, "settings": { "size": { "x": 32, "y": 8 }, "mapId": 34, "leftEnd": "STOP", "rightEnd": "STOP", "collType": "NPBLOCK", "wallZHeight": 32, "condition": "!tmp.s1" } },
 		{ "type": "EventTrigger", "x": 375, "y": 138, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 38, "event": [{ "entity": { "player": true }, "action": [{ "type": "REDUCE_HP", "basedOn": "MAX_HP", "factor": 1 }], "type": "DO_ACTION" }], "eventType": "INTERRUPTABLE", "startCondition": "tmp.die", "triggerType": "ALWAYS", "name": "dieEvent", "loadCondition": true, "endCondition": "false" } },
+		{ "type": "FloorSwitch", "x": 372, "y": 205, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 39, "name": "fs1", "switchType": "WHILE_ON_TOP", "variable": "tmp.die" } },
+		{ "type": "Marker", "x": 372, "y": 239, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 40, "name": "entrance", "dir": "NORTH", "spawnCondition": "true" } },
 		{
 			"type": "NPC",
 			"x": 707,
@@ -142,8 +144,27 @@
 		{ "type": "Enemy", "x": 546, "y": 206, "level": 2, "settings": { "name": "bot1", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 18 } },
 		{ "type": "Enemy", "x": 572, "y": 206, "level": 2, "settings": { "name": "bot2", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 19 } },
 		{ "type": "Enemy", "x": 598, "y": 206, "level": 2, "settings": { "name": "bot3", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_NOT_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 20 } },
-		{ "type": "FloorSwitch", "x": 372, "y": 205, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 39, "name": "fs1", "switchType": "WHILE_ON_TOP", "variable": "tmp.die" } },
-		{ "type": "Marker", "x": 372, "y": 239, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 40, "name": "entrance", "dir": "NORTH", "spawnCondition": "true" } }
+		{
+			"type": "Elevator",
+			"x": 1261,
+			"y": 650,
+			"level": 2,
+			"settings": {
+				"name": "elevator1",
+				"elevatorType": "cargoShip",
+				"condition": null,
+				"destinations": [
+					{ "label": { "de_DE": "", "en_US": "CrossedEyes test map", "langUid": 0, "fr_FR": "", "zh_CN": "", "ja_JP": "", "ko_KR": "", "zh_TW": "" }, "zMoveOffset": -48, "teleportMarker": "elevator1", "teleportMap": "crossedeyes/test", "activeCondition": "true" },
+					{ "label": { "de_DE": "", "en_US": "Door", "langUid": 0, "fr_FR": "", "zh_CN": "", "ja_JP": "", "ko_KR": "", "zh_TW": "" }, "zMoveOffset": -48, "teleportMarker": "door1", "teleportMap": "crossedeyes/test", "activeCondition": "null" }
+				],
+				"blockEventCondition": "map.destroyBoxes",
+				"marker": "",
+				"moveHeight": 32,
+				"mapId": 42,
+				"map": null,
+				"faceDir": "SOUTH"
+			}
+		}
 	],
 	"layer": [
 		{
