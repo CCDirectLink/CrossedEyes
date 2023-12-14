@@ -17,6 +17,7 @@ declare global {
                 range: number
                 rangeType: ig.SOUND_RANGE_TYPE
             }
+            dontPauseInQuickAnalysis?: boolean
         }
         interface SoundWebAudio {
             origVolume?: number

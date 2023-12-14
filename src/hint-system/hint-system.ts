@@ -1,8 +1,10 @@
+import { isAiming } from '../environment/puzzle'
 import { MenuOptions } from '../options'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { TextGather } from '../tts/gather-text'
+import { AimAnalyzer } from './aim-analyze'
 import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
 import { HDestructible } from './hints/destructible'
 import { HEnemy } from './hints/enemy'
@@ -23,42 +25,10 @@ export interface Hint {
     getDataFromEntity<T extends ig.Entity>(entity: T): HintData
 }
 
-let soundHandle: ig.SoundHandleWebAudio | undefined
+export type ReqHintEntry = { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui } }
 
 export class HintSystem implements PauseListener {
     static g: HintSystem
-
-    deactivateHint() {
-        if (soundHandle) {
-            soundHandle.stop()
-            soundHandle = undefined
-            TextGather.g.interrupt()
-            SpecialAction.setListener('LSP', 'hintDescription', () => { })
-        }
-    }
-    activeHint(hint: { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui } }, playSound: boolean = true) {
-        this.deactivateHint()
-        const dist = Vec3.distance(ig.game.playerEntity.coll.pos, hint.entity.coll.pos)
-        const maxRange = 16 * 30
-        const diff = maxRange - dist
-        const range = diff > maxRange * 0.4 ? maxRange : Math.floor(dist * 2)
-
-        if (playSound) {
-            const yDiff = ig.game.playerEntity.coll.pos.z - hint.entity.coll.pos.z
-            const playbackSpeed = Math.min(1.5, Math.max(0.5, 1 - (yDiff / 160)))
-
-            soundHandle = new ig.Sound(SoundManager.sounds.hint, 1).play(undefined, {
-                speed: playbackSpeed
-            })
-            soundHandle.setEntityPosition(hint.entity, ig.ENTITY_ALIGN.CENTER, null, range, ig.SOUND_RANGE_TYPE.CIRULAR)
-            soundHandle.play()
-        }
-
-        MenuOptions.ttsMenuEnabled && TextGather.g.speak(hint.nameGui.title.text)
-        SpecialAction.setListener('LSP', 'hintDescription', () => {
-            MenuOptions.ttsMenuEnabled && TextGather.g.speak(hint.nameGui.description.text)
-        })
-    }
 
     registeredTypes: Record<string, Hint>
     puzzleTypes: (new () => Hint)[] = [
@@ -81,8 +51,75 @@ export class HintSystem implements PauseListener {
 
     quickMenuAnalysisInstance!: sc.QuickMenuAnalysis
 
+    activeHints: ({ hint: ReqHintEntry, handle?: ig.SoundHandle, muted?: boolean } | undefined)[] = [undefined]
+
+    deactivateHint(index: number) {
+        const e = this.activeHints[index]
+        if (e) {
+            e.handle?.stop()
+            TextGather.g.interrupt()
+            if (index == 0) {
+                const mutedIndex = this.activeHints.findIndex(e => e?.muted)
+                if (mutedIndex != -1) {
+                    this.activeHints[mutedIndex]!.muted = false
+                }
+                this.activeHints[0] = undefined
+                SpecialAction.setListener('LSP', 'hintDescription', () => { })
+            } else {
+                this.activeHints.splice(index, 1)
+            }
+        }
+    }
+
+    activateHint(index: number, hint: ReqHintEntry, playSound: boolean = true, dontPauseInQuickAnalysis: boolean = false) {
+        this.deactivateHint(index)
+        if (index == -1) { index = this.activateHint.length }
+
+        let handle: ig.SoundHandle | undefined
+        if (index == 0) {
+            const foundIndex: number = this.activeHints.findIndex((e) => e?.hint.entity.uuid == hint.entity.uuid)
+            if (foundIndex != -1) {
+                const sameHint = this.activeHints[foundIndex]!
+                handle = sameHint.handle
+                sameHint.muted = true
+            }
+        }
+        if (playSound) {
+            handle = new ig.Sound(SoundManager.sounds.hint).play(true)
+            this.updateHintSound(hint, handle)
+            handle.play()
+            handle.dontPauseInQuickAnalysis = dontPauseInQuickAnalysis
+        }
+        this.activeHints[index] = { hint, handle }
+
+        MenuOptions.ttsMenuEnabled && TextGather.g.speak(hint.nameGui.title.text)
+        SpecialAction.setListener('LSP', 'hintDescription', () => {
+            MenuOptions.ttsMenuEnabled && TextGather.g.speak(hint.nameGui.description.text)
+        })
+    }
+
+    updateHintSound(hint: ReqHintEntry, handle: ig.SoundHandle) {
+        const dist = Vec3.distance(ig.game.playerEntity.coll.pos, hint.entity.coll.pos)
+        const maxRange = 16 * 30
+        const diff = maxRange - dist
+        const range = diff > maxRange * 0.4 ? maxRange : Math.floor(dist * 2)
+        handle.setEntityPosition(hint.entity, ig.ENTITY_ALIGN.CENTER, null, range, ig.SOUND_RANGE_TYPE.CIRULAR)
+        if (handle._nodePosition) {
+            handle._nodePosition.refDistance = 0.1 * handle.pos!.range
+            handle._nodePosition.maxDistance = handle.pos!.range
+        }
+        handle._setPosition()
+
+        const yDiff = ig.game.playerEntity.coll.pos.z - hint.entity.coll.pos.z
+        const playbackSpeed = Math.min(1.5, Math.max(0.5, 1 - (yDiff / 160)))
+        handle._speed = playbackSpeed
+        handle._nodeSource && (handle._nodeSource.bufferNode.playbackRate.value = playbackSpeed)
+    }
+
     pause() {
-        this.deactivateHint()
+        for (let i = 0; i < this.activateHint.length; i++) {
+            this.deactivateHint(i)
+        }
     }
 
     setupGui() {
@@ -133,12 +170,12 @@ export class HintSystem implements PauseListener {
             focusGained() {
                 this.parent()
                 this.nameGui.doStateTransition('DEFAULT')
-                self.activeHint(this)
+                self.activateHint(0, this)
             },
             focusLost() {
                 this.parent()
                 this.nameGui.doStateTransition('HIDDEN')
-                !TextGather.g.ignoreInterrupt && self.deactivateHint()
+                !TextGather.g.ignoreInterrupt && self.deactivateHint(0)
             },
             alignGuiPosition() {
                 this.parent()
@@ -147,7 +184,7 @@ export class HintSystem implements PauseListener {
         })
 
         sc.BasicHintMenu = ig.BoxGui.extend({
-            ninepatch: new ig.NinePatch("media/gui/menu.png", { width: 8, height: 8, left: 8, top: 8, right: 8, bottom: 8, offsets: { default: { x: 432, y: 304 }, flipped: { x: 456, y: 304 } } }),
+            ninepatch: new ig.NinePatch('media/gui/menu.png', { width: 8, height: 8, left: 8, top: 8, right: 8, bottom: 8, offsets: { default: { x: 432, y: 304 }, flipped: { x: 456, y: 304 } } }),
             transitions: { HIDDEN: { state: { alpha: 0 }, time: 0.2, timeFunction: KEY_SPLINES.LINEAR }, DEFAULT: { state: {}, time: 0.2, timeFunction: KEY_SPLINES.EASE } },
             init(getText: () => [string, string]) {
                 this.getText = getText
@@ -220,6 +257,21 @@ export class HintSystem implements PauseListener {
         this.quickMenuAnalysisInstance?.populateHintList()
     }
 
+    private checkHintTogglePressed() {
+        if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE2 /* x */)) {
+            const ahint = this.activeHints[0]
+            if (ahint) {
+                const foundIndex: number = this.activeHints.slice(1, 10000).findIndex((e) => e?.hint.entity.uuid == ahint.hint.entity.uuid)
+                if (foundIndex == -1) {
+                    this.activateHint(-1, ahint.hint, true, true)
+                    ahint.muted = true
+                } else {
+                    this.deactivateHint(foundIndex + 1)
+                }
+            }
+        }
+    }
+
     constructor() { /* runs in prestart */
         CrossedEyes.pauseables.push(this)
         HintSystem.g = this
@@ -236,18 +288,63 @@ export class HintSystem implements PauseListener {
         this.setupGui()
 
         const self = this
+
+        let justEnteredQuickMenu = false
+        sc.GameModel.inject({
+            enterQuickMenu() {
+                justEnteredQuickMenu = true
+                const ret: boolean = this.parent()
+                justEnteredQuickMenu = false
+                return ret
+            },
+        })
+        ig.SoundHandleWebAudio.inject({
+            pause(noFadeOut) {
+                if (!(this.dontPauseInQuickAnalysis && justEnteredQuickMenu)) {
+                    this.parent(noFadeOut)
+                }
+            },
+        })
+
+        ig.Game.inject({
+            update() {
+                this.parent()
+                for (const e of self.activeHints) {
+                    if (e && e.handle) {
+                        if (e.muted && e.handle._volume != 0) {
+                            e.handle._volume = 0
+                            e.handle._nodeSource && (e.handle._nodeSource!.gainNode.gain.value = 0)
+                        } else if (!e.muted && e.handle._volume == 0) {
+                            e.handle._volume = 1
+                            e.handle._nodeSource && (e.handle._nodeSource!.gainNode.gain.value = 1)
+                        }
+                        self.updateHintSound(e.hint, e.handle)
+                    }
+                }
+            },
+            preloadLevel(mapName) {
+                this.parent(mapName)
+                self.activeHints = [undefined]
+            }
+        })
         sc.QuickMenuAnalysis.inject({
             init() {
                 this.parent()
                 self.quickMenuAnalysisInstance = this
-            }
+            },
         })
 
+        ig.ENTITY.Player.inject({
+            update() {
+                this.parent()
+                if (AimAnalyzer.g.aimAnnounceOn && isAiming()) { self.checkHintTogglePressed() }
+            }
+        })
         let currentSelectIndex: number = -1
         let prevEntry: sc.QuickMenuTypesBase
         sc.QuickMenuAnalysis.inject({
             update(...args) {
-                if (sc.quickmodel.currentState == sc.QUICK_MENU_STATE.CHECK && MenuOptions.puzzleEnabled) {
+                if (sc.quickmodel.isQuickCheck() && MenuOptions.puzzleEnabled) {
                     let add = ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_SHOULDER) ? -1 :
                         ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_SHOULDER) ? 1 : 0
                     if (add != 0) {
@@ -286,6 +383,8 @@ export class HintSystem implements PauseListener {
                     } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_UP)) {
                         MenuOptions.ttsEnabled && TextGather.g.speak(`Hint filter: ${self.filterList[self.filterIndex]}`)
                     }
+
+                    self.checkHintTogglePressed()
                 }
                 return this.parent(...args)
             },

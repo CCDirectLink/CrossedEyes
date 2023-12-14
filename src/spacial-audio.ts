@@ -6,9 +6,9 @@ export class SpacialAudio {
         // @ts-expect-error
         ig.SOUND_RANGE_TYPE.CIRCULAR = 1 /* damn rfg how can a typo like this exist */
 
-         ig.SoundHandleWebAudio.inject({
+        ig.SoundHandleWebAudio.inject({
             setFixPosition(point: Vec3, range?: number | undefined, type?: ig.SOUND_RANGE_TYPE | undefined): void {
-                if (! MenuOptions.spacialAudioEnabled) { return this.parent(point, range, type) }
+                if (!MenuOptions.spacialAudioEnabled) { return this.parent(point, range, type) }
                 this.pos = {
                     get point(): Vec3 { throw new Error('cannot get audio pos directly') },
                     set point(_) { throw new Error('cannot set audio pos directly') },
@@ -21,7 +21,7 @@ export class SpacialAudio {
                 }
             },
             setEntityPosition(entity: ig.Entity, align: ig.ENTITY_ALIGN, offset: null, range?: number | undefined, type?: ig.SOUND_RANGE_TYPE | undefined): void {
-                if (! MenuOptions.spacialAudioEnabled) { return this.parent(entity, align, offset, range, type) }
+                if (!MenuOptions.spacialAudioEnabled) { return this.parent(entity, align, offset, range, type) }
                 this.pos = {
                     get point(): Vec3 { throw new Error('cannot get audio pos directly') },
                     set point(_) { throw new Error('cannot set audio pos directly') },
@@ -35,7 +35,7 @@ export class SpacialAudio {
                 this._updateEntityPos(true)
             },
             _updateEntityPos(force?: boolean): void {
-                if (! MenuOptions.spacialAudioEnabled) { return this.parent(force) }
+                if (!MenuOptions.spacialAudioEnabled) { return this.parent(force) }
                 if (this.pos && this.pos.entity) {
                     if (force || !this.pos.entity._killed) {
                         const pos = this.pos.entity.getAlignedPos(this.pos.align!, Vec3.create())
@@ -47,13 +47,13 @@ export class SpacialAudio {
                 }
             }
         })
-        
+
         const soundPosCache = Vec3.create()
         const playerPosCache = Vec3.create()
 
         ig.SoundHandleWebAudio.inject({
             play() {
-                if (! MenuOptions.spacialAudioEnabled) { return this.parent() }
+                if (!MenuOptions.spacialAudioEnabled) { return this.parent() }
                 if (!this._playing && this._buffer) {
                     const audioContext: ig.WebAudio = ig.soundManager.context
                     if (this.pos && !this._nodePosition) {
@@ -94,7 +94,7 @@ export class SpacialAudio {
                 }
             },
             _setPosition() {
-                if (! MenuOptions.spacialAudioEnabled) { return this.parent() }
+                if (!MenuOptions.spacialAudioEnabled) { return this.parent() }
                 if (this.pos) {
                     this._updateEntityPos()
                     if (this._nodePosition) {
@@ -131,12 +131,12 @@ export class SpacialAudio {
                 }
             },
         })
-        
+
         const groupPosCache = Vec3.create()
         ig.SoundManager.inject({
             _solveGroupRequests(group) {
-                if (! MenuOptions.spacialAudioEnabled) { return this.parent(group) }
-                if (group.playing.length > 0 && group.playing[group.playing.length - 1].getPlayTime() < 2/60) {
+                if (!MenuOptions.spacialAudioEnabled) { return this.parent(group) }
+                if (group.playing.length > 0 && group.playing[group.playing.length - 1].getPlayTime() < 2 / 60) {
                     return false
                 }
 
@@ -145,7 +145,7 @@ export class SpacialAudio {
                     if (requests[i].isLooping()) {
                         this.playSoundHandle(requests[i], group)
                         requests.splice(i, 1)
-                    } 
+                    }
                 }
 
                 let foundRequest: ig.SoundHandleBase | undefined
@@ -166,7 +166,7 @@ export class SpacialAudio {
                         foundRequest = requests[i]
                     }
                 }
-                for (let i = group.playing.length; i--;)  {
+                for (let i = group.playing.length; i--;) {
                     if (!group.playing[i].isLooping()) {
                         group.playing[i].stop()
                     }

@@ -10,7 +10,6 @@ const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 export class AimAnalyzer implements PauseListener {
     static g: AimAnalyzer
 
-    recalculateEntities: boolean = true
     lastSelected: string | undefined
     aimAnnounceOn: boolean = false
 
@@ -30,20 +29,12 @@ export class AimAnalyzer implements PauseListener {
                 self.handle()
             },
         })
-        ig.Game.inject({
-            preloadLevel(mapName) {
-                this.parent(mapName)
-                self.recalculateEntities = true
-            },
-        })
         sc.QuickMenuAnalysis.inject({
             update() {
                 this.parent()
-                if (sc.quickmodel.currentState == sc.QUICK_MENU_STATE.CHECK && MenuOptions.ttsEnabled && MenuOptions.puzzleEnabled) {
-                    if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
-                        self.aimAnnounceOn = !self.aimAnnounceOn
-                        TextGather.g.speak(`Aim analysis ${self.aimAnnounceOn ? 'on' : 'off'}`)
-                    }
+                if (sc.quickmodel.isQuickCheck() && MenuOptions.puzzleEnabled && ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
+                    self.aimAnnounceOn = !self.aimAnnounceOn
+                    MenuOptions.ttsEnabled && TextGather.g.speak(`Aim analysis ${self.aimAnnounceOn ? 'on' : 'off'}`)
                 }
             },
         })
@@ -68,7 +59,7 @@ export class AimAnalyzer implements PauseListener {
                             const hint: sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Hints | undefined =
                                 HintSystem.g.quickMenuAnalysisInstance.createHint(e) as any
                             if (hint) {
-                                HintSystem.g.activeHint(hint)
+                                HintSystem.g.activateHint(0, hint)
                                 this.lastSelected = e.uuid
                                 return
                             }
@@ -76,14 +67,14 @@ export class AimAnalyzer implements PauseListener {
                     }
                     if (check.hitE.length == 2 && check.hitE[1].entity.isBall) { return }
                     this.lastSelected = undefined
-                    HintSystem.g.deactivateHint()
+                    HintSystem.g.deactivateHint(0)
                 } else {
                     this.lastSelected = undefined
-                    HintSystem.g.deactivateHint()
+                    HintSystem.g.deactivateHint(0)
                 }
             } else {
                 this.lastSelected = undefined
-                HintSystem.g.deactivateHint()
+                HintSystem.g.deactivateHint(0)
             }
         }
     }

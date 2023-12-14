@@ -80,7 +80,7 @@ export class SoundManager {
     constructor() { /* in prestart */
         ig.Game.inject({
             preloadLevel(mapName) {
-                ig.soundManager.reset() /* vanilla bug fix?? */
+                ig.soundManager.reset() /* vanilla bug fix?? fixes issues with hint sounds persisting after death */
                 this.parent(mapName)
             }
         })

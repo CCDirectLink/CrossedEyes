@@ -26,7 +26,7 @@ export class InteratableHandler implements PauseListener {
                                 TextGather.g.speak('Unmapped interact hint')
                             } else {
                                 // @ts-expect-error
-                                HintSystem.g.activeHint(hint, false)
+                                HintSystem.g.activateHint(0, hint, false)
                             }
                         }
                     } else if (this.state == sc.INTERACT_ENTRY_STATE.NEAR) {
