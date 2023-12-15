@@ -93,9 +93,9 @@ export class HintSystem implements PauseListener {
         }
         this.activeHints[index] = { hint, handle }
 
-        MenuOptions.ttsMenuEnabled && TextGather.g.speak(hint.nameGui.title.text)
+        MenuOptions.ttsMenuEnabled && TextGather.g.speakI(hint.nameGui.title.text)
         SpecialAction.setListener('LSP', 'hintDescription', () => {
-            MenuOptions.ttsMenuEnabled && TextGather.g.speak(hint.nameGui.description.text)
+            MenuOptions.ttsMenuEnabled && TextGather.g.speakI(hint.nameGui.description.text)
         })
     }
 
@@ -176,7 +176,7 @@ export class HintSystem implements PauseListener {
             focusLost() {
                 this.parent()
                 this.nameGui.doStateTransition('HIDDEN')
-                !TextGather.g.ignoreInterrupt && self.deactivateHint(0)
+                self.deactivateHint(0)
             },
             alignGuiPosition() {
                 this.parent()
@@ -380,9 +380,9 @@ export class HintSystem implements PauseListener {
                     if (filterAdd) {
                         self.filterIndex += filterAdd
                         self.updateFilter()
-                        MenuOptions.ttsEnabled && TextGather.g.speak(`${self.filterList[self.filterIndex]}`)
+                        MenuOptions.ttsEnabled && TextGather.g.speakI(`${self.filterList[self.filterIndex]}`)
                     } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_UP)) {
-                        MenuOptions.ttsEnabled && TextGather.g.speak(`Hint filter: ${self.filterList[self.filterIndex]}`)
+                        MenuOptions.ttsEnabled && TextGather.g.speakI(`Hint filter: ${self.filterList[self.filterIndex]}`)
                     }
 
                     self.checkHintTogglePressed()

@@ -1,5 +1,5 @@
 import { WebSocket, WebSocketServer } from 'ws'
-import { TTS, TTSInterface, TTSTypes } from './tts'
+import { CharacterSpeakData, TTS, TTSInterface, TTSTypes } from './tts'
 import CrossedEyes from '../plugin'
 
 import AdmZip from 'adm-zip'
@@ -9,16 +9,15 @@ const fs: typeof import('fs') = (0, eval)('require("fs")')
 
 export class TTSNvda implements TTSInterface {
     onReady!: () => void
-    queue!: TTS['speakQueue']
-    increaseQueueId!: () => number
+
+    queue: string[] = []
+    speechEndEvents: (() => void)[] = []
 
     server!: WebSocketServer
     sockets: WebSocket[] = []
 
-    async init(queue: TTS['speakQueue'], increaseQueueId: () => number, onReady: () => void) {
+    async init(onReady: () => void) {
         this.onReady = onReady
-        this.queue = queue
-        this.increaseQueueId = increaseQueueId
 
         window.addEventListener('beforeunload', () => {
             this.server.close()
@@ -39,10 +38,21 @@ export class TTSNvda implements TTSInterface {
             socket.on('close', () => {
                 this.sockets.splice(this.sockets.indexOf(socket))
             })
+            socket.on('message', (buff: Buffer) => {
+                const msg = buff.toString()
+                this.handleCommand(msg)
+            })
             this.sockets.forEach(s => s.close())
             this.sockets = []
             this.sockets.push(socket)
         })
+    }
+
+    handleCommand(cmd: string) {
+        if (cmd == 'speechEnd') {
+            this.speechEndEvents.forEach(f => f())
+            this.queue.shift()
+        }
     }
 
     sendCommand(command: string) {
@@ -58,9 +68,12 @@ export class TTSNvda implements TTSInterface {
     speak(text: string): void {
         this.sendCommand(`speak ${text}`)
     }
+    characterSpeak(text: string, _: CharacterSpeakData): void {
+        this.speak(text)
+    }
 
-    interrupt(): void {
-        this.sendCommand('interrupt')
+    clearQueue(): void {
+        this.sendCommand('clearQueue')
     }
 
 }

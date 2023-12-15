@@ -1,5 +1,5 @@
 import { MenuOptions } from '../options'
-import { TTS, TTSInterface } from './tts'
+import { CharacterSpeakData, TTSInterface } from './tts'
 
 export class TTSSpeechSynthesisAPI implements TTSInterface {
     onReady!: () => void
@@ -8,8 +8,8 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
     voices!: SpeechSynthesisVoice[]
     voice!: SpeechSynthesisVoice
 
-    queue!: TTS['speakQueue']
-    increaseQueueId!: () => number
+    queue: string[] = []
+    speechEndEvents: (() => void)[] = []
 
     getLangVoices(lang: string): SpeechSynthesisVoice[] {
         return this.voices.filter(v => v.lang.startsWith(lang))
@@ -34,10 +34,8 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
         }
     }
 
-    async init(queue: TTS['speakQueue'], increaseQueueId: () => number, onReady: () => void) {
+    async init(onReady: () => void) {
         this.onReady = onReady
-        this.queue = queue
-        this.increaseQueueId = increaseQueueId
 
         this.voices = await this.getVoices()
         if (this.voices.length == 0) {
@@ -56,9 +54,10 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
                 resolve(voices)
                 return
             }
-            setInterval(() => {
+            const id = setInterval(() => {
                 voices = speechSynthesis.getVoices()
                 if (voices.length > 0) {
+                    clearInterval(id)
                     resolve(voices)
                 }
             }, 100)
@@ -69,28 +68,35 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
         return !!this.voice
     }
 
-    speak(text: string) {
+    speak(text: string, ignoreLen = false) {
         if (!this.isReady()) { return }
         text = text.trim()
-        if (! text) { return }
+        if (!text) { return }
 
-        const utter = new SpeechSynthesisUtterance(text)
-        utter.pitch = MenuOptions.ttsPitch
-        utter.rate = MenuOptions.ttsSpeed
-        utter.volume = MenuOptions.ttsVolume
-        utter.voice = this.voice
-
-        speechSynthesis.speak(utter)
-        const id = this.increaseQueueId()
-        this.queue[id] = utter
-        utter.addEventListener('end', () => {
-            if (this.queue[id]) {
-                delete this.queue[id]
-            }
-        })
+        ignoreLen || this.queue.push(text)
+        if (ignoreLen || this.queue.length == 1) {
+            const utter = new SpeechSynthesisUtterance(text)
+            utter.pitch = MenuOptions.ttsPitch
+            utter.rate = MenuOptions.ttsSpeed
+            utter.volume = MenuOptions.ttsVolume
+            utter.voice = this.voice
+            speechSynthesis.speak(utter)
+            utter.addEventListener('end', () => {
+                this.speechEndEvents.forEach(f => f())
+                this.queue.shift()
+                if (this.queue.length > 0) {
+                    this.speak(this.queue[0], true)
+                }
+            })
+        }
     }
 
-    interrupt(): void {
+    characterSpeak(text: string, _: CharacterSpeakData): void {
+        this.speak(text)
+    }
+
+    clearQueue(): void {
         speechSynthesis.cancel()
+        this.queue = []
     }
 }

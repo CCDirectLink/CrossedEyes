@@ -34,7 +34,7 @@ export class AimAnalyzer implements PauseListener {
                 this.parent()
                 if (sc.quickmodel.isQuickCheck() && MenuOptions.puzzleEnabled && ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
                     self.aimAnnounceOn = !self.aimAnnounceOn
-                    MenuOptions.ttsEnabled && TextGather.g.speak(`Aim analysis ${self.aimAnnounceOn ? 'on' : 'off'}`)
+                    MenuOptions.ttsEnabled && TextGather.g.speakI(`Aim analysis ${self.aimAnnounceOn ? 'on' : 'off'}`)
                 }
             },
         })

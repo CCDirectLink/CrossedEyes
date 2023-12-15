@@ -16,18 +16,21 @@ class CrossCodeWebSocketClient:
         self.running = False
 
     def on_data(self, ws: websocket.WebSocketApp, msg: str, dataType, continueFlag):
-        if msg == 'interrupt':
+        if msg == 'clearQueue':
             self.appModule.script_interruptSpeech()
         elif msg.startswith('speak '):
             msg = msg[len('speak '):]
             self.appModule.script_speak(msg)
     
     
-    def on_close(self, ws: websocket.WebSocketApp, close_status_code, close_msg):
+    def on_close(self, ws: websocket.WebSocket, close_status_code, close_msg):
         self.running = False
         if self.doReconnect:
             time.sleep(5)
             self.connect()
+
+    def on_speech_end(self):
+        self.ws.send('speechEnd')
 
     def connect(self):
         if self.running:
@@ -47,10 +50,16 @@ class CrossCodeWebSocketClient:
         self.ws.close()
 
 
+
 class AppModule(appModuleHandler.AppModule):
     def __init__(self, *args, **kwargs):
         super(AppModule, self).__init__(*args, **kwargs)
         self.client = CrossCodeWebSocketClient(self)
+        copy = speech._manager._handleDoneSpeaking
+        speech._manager._handleDoneSpeaking = lambda *args: (
+            self.client.on_speech_end(),
+            copy(*args)
+        )
     
     def terminate(self):
         self.client.terminate()

@@ -66,7 +66,7 @@ export class NPCHintMenu {
             },
             focusLost() {
                 this.nameGui.doStateTransition('HIDDEN')
-                !TextGather.g.ignoreInterrupt && HintSystem.g.deactivateHint(0)
+                HintSystem.g.deactivateHint(0)
             },
             alignGuiPosition() {
                 this.parent()
