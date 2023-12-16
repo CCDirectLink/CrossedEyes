@@ -17,7 +17,6 @@ import { MovementSoundTweaker } from './environment/movementSounds'
 
 export interface PauseListener {
     pause?(): void
-    resume?(): void
 }
 
 export interface InitPoststart {
@@ -32,6 +31,7 @@ export default class CrossedEyes {
 
     static pauseables: PauseListener[] = []
     static initPoststarters: InitPoststart[] = []
+    static isPaused: boolean = false
 
     constructor(mod: Mod1) {
         CrossedEyes.dir = mod.baseDirectory
@@ -41,10 +41,11 @@ export default class CrossedEyes {
     }
 
     private pauseAll() {
+        CrossedEyes.isPaused = true
         CrossedEyes.pauseables.forEach(p => p.pause && p.pause())
     }
     private resumeAll() {
-        CrossedEyes.pauseables.forEach(p => p.resume && p.resume())
+        CrossedEyes.isPaused = false
     }
 
     async prestart() {
@@ -75,10 +76,28 @@ export default class CrossedEyes {
                 this.parent(paused)
                 if (paused) {
                     self.pauseAll()
-                } else {
+                } else if (!ig.game.events.blockingEventCall) {
                     self.resumeAll()
                 }
             },
+        })
+        ig.EventManager.inject({
+            clear() {
+                this.parent()
+                self.resumeAll()
+            },
+            _startEventCall(event) {
+                this.parent(event)
+                if (event.runType == ig.EventRunType.BLOCKING) { self.pauseAll() }
+            },
+            _endEventCall(event) {
+                const initial = this.blockingEventCall
+                this.parent(event)
+                if (this.blockingEventCall === null && this.blockingEventCall != initial) {
+                    self.resumeAll()
+                }
+            },
+
         })
 
         this.addTestMapTitleScreenButton()

@@ -1,4 +1,5 @@
 import { MenuOptions } from '../options'
+import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager } from '../sound-manager'
 
 function getSoundName(e: ig.Entity): string | undefined {
@@ -26,8 +27,10 @@ function playAt(e: ig.Entity) {
     }
 }
 
-export class EntityBeeper {
+export class EntityBeeper implements PauseListener {
     constructor() { /* in prestart */
+        CrossedEyes.pauseables.push(this)
+
         ig.Entity.inject({
             playAtSoundHandle: null,
             show(...args) {
@@ -46,7 +49,7 @@ export class EntityBeeper {
             },
             update(...args) {
                 this.parent(...args)
-                if (this.playAtSoundHandle) {
+                if (this.playAtSoundHandle && !CrossedEyes.isPaused) {
                     if (this.playAtSoundHandle._nodeSource) {
                         const pFaceAngle: number = Vec2.clockangle(ig.game.playerEntity.face) * 180 / Math.PI
                         const diffPos: Vec2 = Vec2.create(ig.game.playerEntity.coll.pos)
@@ -66,12 +69,14 @@ export class EntityBeeper {
                             this.playAtSoundHandle.stop()
                         }
                     } else {
-                        if ((this instanceof ig.ENTITY.Door) && (this.active)) {
-                            playAt(this)
-                        }
+                        if (this instanceof ig.ENTITY.Door && this.active) { return }
+                        playAt(this)
                     }
                 }
             },
         })
+    }
+    pause(): void {
+        ig.game.entities.forEach(e => e.playAtSoundHandle?.stop())
     }
 }

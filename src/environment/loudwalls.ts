@@ -29,16 +29,11 @@ export class LoudWalls implements PauseListener {
     }
 
     pause(): void {
-        if (this.handles) {
-            Object.values(this.handles).forEach(h => h?.handle.setFixPosition(Vec3.createC(-1000, -1000, 0), 0))
-        }
+        Object.values(this.handles ?? {}).forEach(h => h?.handle.setFixPosition(Vec3.createC(-1000, -1000, 0), 0))
     }
 
     private handleWallSound() {
-        if (ig.game.events.blockingEventCall) {
-            this.pause()
-            return
-        }
+        if (CrossedEyes.isPaused) { return }
         const dirs: [string, Vec2][] = [
             ['wallDown', { x: 0, y: 1 }],
             ['wallRight', { x: 1, y: 0 }],

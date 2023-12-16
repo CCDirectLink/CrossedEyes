@@ -203,7 +203,6 @@ export class LoudJump {
     predictor!: sc.CrossedEyesPositionPredictor
     lastTrack: number = 0
     trackInterval: number = 0.1e3
-    paused: boolean = false
 
     trackConfigs: {
         vel: number
@@ -282,13 +281,13 @@ export class LoudJump {
         })
     }
 
-    pause() { this.paused = true }
-    resume() { this.paused = false }
+    pause() {
+        this.dirHandles.forEach(o => o?.handle.stop())
+    }
 
     handle() {
         const p: ig.ENTITY.Player = ig.game.playerEntity
-        if (!MenuOptions.loudWallsEnabled || this.paused || ig.game.events.blockingEventCall || !this.predictor || !p || !p.coll?.pos) {
-            this.dirHandles.forEach(o => o && o.handle.stop())
+        if (!MenuOptions.loudWallsEnabled || CrossedEyes.isPaused || !this.predictor || !p || !p.coll?.pos) {
             return
         }
 
