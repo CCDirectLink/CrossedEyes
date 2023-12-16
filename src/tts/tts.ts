@@ -44,7 +44,7 @@ export class TTS {
         this.textGather = new TextGather(
             (text: string) => this.ttsInstance && this.ttsInstance.speak(text),
             (text: string, data: CharacterSpeakData) => this.ttsInstance && this.ttsInstance.characterSpeak(text, data),
-            () => { this.ttsInstance.clearQueue() }
+            () => { this.ttsInstance && this.ttsInstance.clearQueue() }
         )
         const self = this
         sc.OptionModel.inject({
