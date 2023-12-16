@@ -57,7 +57,7 @@ export class AimAnalyzer implements PauseListener {
                         if (e) {
                             if (e.uuid == this.lastSelected) { return }
                             const hint: sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Hints | undefined =
-                                HintSystem.g.quickMenuAnalysisInstance.createHint(e) as any
+                                HintSystem.g.quickMenuAnalysisInstance.createHint(e, false) as any
                             if (hint) {
                                 HintSystem.g.activateHint(0, hint)
                                 this.lastSelected = e.uuid

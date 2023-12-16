@@ -1,4 +1,4 @@
-import { HintTypes } from './hint-system/hint-system'
+import { HintSubTypes } from './hint-system/hint-system'
 import { PlayerTraceResult } from './loudjump'
 import { PuzzleElementsAnalysis } from './puzzle-analyze'
 import { PuzzleExtensionData } from './puzzle-analyze/puzzle-analyze'

@@ -13,7 +13,8 @@ import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
 import { NPCHintMenu } from './npc-override'
 
-export const HintTypes = ['Puzzle', 'Plants'] as const
+export const HintTypes = ['All', 'NPC', 'Enemey', 'Interactable', 'Selected'] as const /* "Analyzable" category integrated into "Interactable" */
+export const HintSubTypes = ['Puzzle', 'Plants'] as const
 
 export interface HintData {
     name: string
@@ -45,10 +46,12 @@ export class HintSystem implements PauseListener {
         HWalls,
         HDestructible,
     ]
-    filterType: keyof typeof sc.QUICK_MENU_TYPES | 'All' = 'All'
-    filterHintType: typeof HintTypes[number] | undefined
+    filterType: typeof HintTypes[number] | 'Hints' = 'All'
+    filterHintType: typeof HintSubTypes[number] | undefined
     filterList: string[]
     filterIndex: number = 0
+    currentSelectIndex: number = 0
+    prevEntry: sc.QuickMenuTypesBase | undefined
 
     quickMenuAnalysisInstance!: sc.QuickMenuAnalysis
 
@@ -68,6 +71,7 @@ export class HintSystem implements PauseListener {
                 SpecialAction.setListener('LSP', 'hintDescription', () => { })
             } else {
                 this.activeHints.splice(index, 1)
+                this.activeHints[0] && (this.activeHints[0]!.muted = false)
             }
         }
     }
@@ -93,7 +97,8 @@ export class HintSystem implements PauseListener {
         }
         this.activeHints[index] = { hint, handle }
 
-        MenuOptions.ttsMenuEnabled && TextGather.g.speakI(hint.nameGui.title.text)
+        const isToggled = this.activeHints.slice(1).findIndex(e => e?.hint.entity.uuid == hint.entity.uuid) >= 0
+        MenuOptions.ttsMenuEnabled && TextGather.g.speakI(`${isToggled ? 'selected, ' : ''}${hint.nameGui.title.text}`)
         SpecialAction.setListener('LSP', 'hintDescription', () => {
             MenuOptions.ttsMenuEnabled && TextGather.g.speakI(hint.nameGui.description.text)
         })
@@ -123,9 +128,82 @@ export class HintSystem implements PauseListener {
         }
     }
 
-    setupGui() {
-        const self = this
+    selectNextHint(add: number) {
+        const pPos: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
+        const sorted: sc.QuickMenuTypesBase[] =
+            this.quickMenuAnalysisInstance.entities.filter(e => e)
+                .sort((a, b) => Vec3.distance(a.entity.coll.pos, pPos) - Vec3.distance(b.entity.coll.pos, pPos))
+        this.currentSelectIndex += add
+        if (this.currentSelectIndex == sorted.length) { this.currentSelectIndex = 0 }
+        else if (this.currentSelectIndex == -1) { this.currentSelectIndex = sorted.length - 1 }
+        const entry: sc.QuickMenuTypesBase = sorted[this.currentSelectIndex]
 
+        if (entry) {
+            sc.quickmodel.cursorMoved = true
+            sc.quickmodel.cursor = Vec2.createC(
+                entry.hook.pos.x + entry.hook.size.x / 2,
+                entry.hook.pos.y + entry.hook.size.y / 2,
+            )
+            this.quickMenuAnalysisInstance.cursor.moveTo(sc.quickmodel.cursor.x, sc.quickmodel.cursor.y, true)
+
+            this.prevEntry && this.prevEntry.focusLost()
+            this.prevEntry = entry
+        }
+
+    }
+
+    updateFilter() {
+        if (this.filterIndex < 0) {
+            this.filterIndex = this.filterList.length - 1
+        } else if (this.filterIndex >= this.filterList.length) {
+            this.filterIndex = 0
+        }
+        const e = this.filterList[this.filterIndex]
+        if (e == 'All' || HintTypes.includes(e as any)) {
+            this.filterType = e as this['filterType']
+            this.filterHintType = undefined
+        } else {
+            this.filterType = 'Hints'
+            this.filterHintType = e as this['filterHintType']
+        }
+        this.currentSelectIndex = 0
+        if (this.quickMenuAnalysisInstance) {
+            this.quickMenuAnalysisInstance.show()
+            this.quickMenuAnalysisInstance.enter()
+        }
+
+    }
+
+    private checkHintTogglePressed() {
+        if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE2 /* x */)) {
+            const ahint = this.activeHints[0]
+            if (ahint) {
+                const foundIndex: number = this.activeHints.slice(1).findIndex((e) => e?.hint.entity.uuid == ahint.hint.entity.uuid)
+                if (foundIndex == -1) {
+                    this.activateHint(-1, ahint.hint, true, true)
+                    ahint.muted = true
+                } else {
+                    this.deactivateHint(foundIndex + 1)
+                    MenuOptions.ttsEnabled && TextGather.g.speakI('unselected')
+                }
+            }
+        }
+    }
+
+    constructor() { /* runs in prestart */
+        CrossedEyes.pauseables.push(this)
+        HintSystem.g = this
+        this.filterList = [...HintTypes, ...HintSubTypes]
+        this.filterList.slice(this.filterList.indexOf('Hints'))
+        this.updateFilter()
+
+        this.registeredTypes = {}
+        for (const type of this.puzzleTypes) {
+            const inst: Hint = new type()
+            this.registeredTypes[inst.entryName] = inst
+        }
+
+        const self = this
         let lastFocusedHintPos: Vec2 = Vec2.create()
         sc.QuickMenuTypesBase.inject({ /* fix issue where two hints can be focued at the same time */
             isMouseOver() {
@@ -239,56 +317,7 @@ export class HintSystem implements PauseListener {
                 })
             },
         })
-    }
 
-    updateFilter() {
-        if (this.filterIndex < 0) {
-            this.filterIndex = this.filterList.length - 1
-        } else if (this.filterIndex >= this.filterList.length) {
-            this.filterIndex = 0
-        }
-        const e = this.filterList[this.filterIndex]
-        if (e == 'All' || Object.keys(sc.QUICK_MENU_TYPES).indexOf(e) >= 0) {
-            this.filterType = e as this['filterType']
-            this.filterHintType = undefined
-        } else {
-            this.filterType = 'Hints'
-            this.filterHintType = e as this['filterHintType']
-        }
-        this.quickMenuAnalysisInstance?.populateHintList()
-    }
-
-    private checkHintTogglePressed() {
-        if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE2 /* x */)) {
-            const ahint = this.activeHints[0]
-            if (ahint) {
-                const foundIndex: number = this.activeHints.slice(1, 10000).findIndex((e) => e?.hint.entity.uuid == ahint.hint.entity.uuid)
-                if (foundIndex == -1) {
-                    this.activateHint(-1, ahint.hint, true, true)
-                    ahint.muted = true
-                } else {
-                    this.deactivateHint(foundIndex + 1)
-                }
-            }
-        }
-    }
-
-    constructor() { /* runs in prestart */
-        CrossedEyes.pauseables.push(this)
-        HintSystem.g = this
-        this.filterList = ['All', ...Object.keys(sc.QUICK_MENU_TYPES), ...HintTypes]
-        this.filterList.slice(this.filterList.indexOf('Hints'))
-        this.updateFilter()
-
-        this.registeredTypes = {}
-        for (const type of this.puzzleTypes) {
-            const inst: Hint = new type()
-            this.registeredTypes[inst.entryName] = inst
-        }
-
-        this.setupGui()
-
-        const self = this
 
         let justEnteredQuickMenu = false
         sc.GameModel.inject({
@@ -333,6 +362,12 @@ export class HintSystem implements PauseListener {
                 this.parent()
                 self.quickMenuAnalysisInstance = this
             },
+            update() {
+                this.parent()
+                if (sc.quickmodel.cursorMoved) {
+                    lastFocusedHintPos = Vec2.create()
+                }
+            },
         })
 
         ig.ENTITY.Player.inject({
@@ -341,38 +376,13 @@ export class HintSystem implements PauseListener {
                 if (AimAnalyzer.g.aimAnnounceOn && isAiming()) { self.checkHintTogglePressed() }
             }
         })
-        let currentSelectIndex: number = -1
-        let prevEntry: sc.QuickMenuTypesBase
         sc.QuickMenuAnalysis.inject({
             update(...args) {
                 if (sc.quickmodel.isQuickCheck() && MenuOptions.puzzleEnabled) {
                     let add = ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_SHOULDER) ? -1 :
                         ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_SHOULDER) ? 1 : 0
                     if (add != 0) {
-                        const pPos: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
-                        const sorted: sc.QuickMenuTypesBase[] =
-                            self.quickMenuAnalysisInstance.entities.filter(e => e)
-                                .sort((a, b) => Vec3.distance(a.entity.coll.pos, pPos) - Vec3.distance(b.entity.coll.pos, pPos))
-                        if (currentSelectIndex == -1) {
-                            currentSelectIndex = 0
-                        } else {
-                            currentSelectIndex += add
-                            if (currentSelectIndex == sorted.length) { currentSelectIndex = 0 }
-                            else if (currentSelectIndex == -1) { currentSelectIndex = 0 }
-                        }
-                        const entry: sc.QuickMenuTypesBase = sorted[currentSelectIndex]
-
-                        if (entry) {
-                            sc.quickmodel.cursorMoved = true
-                            sc.quickmodel.cursor = Vec2.createC(
-                                entry.hook.pos.x + entry.hook.size.x / 2,
-                                entry.hook.pos.y + entry.hook.size.y / 2,
-                            )
-                            this.cursor.moveTo(sc.quickmodel.cursor.x, sc.quickmodel.cursor.y, true)
-
-                            prevEntry && prevEntry.focusLost()
-                            prevEntry = entry
-                        }
+                        self.selectNextHint(add)
                     }
 
                     let filterAdd = ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_LEFT) ? -1 :
@@ -390,9 +400,17 @@ export class HintSystem implements PauseListener {
                 return this.parent(...args)
             },
             createHint(entity, filter = true) {
-                if (entity && entity.getQuickMenuSettings && ((entity.isQuickMenuVisible && entity.isQuickMenuVisible()) || ig.EntityTools.isInScreen(entity, 0))) {
+                // ((entity.isQuickMenuVisible && entity.isQuickMenuVisible()) || ig.EntityTools.isInScreen(entity, 0))
+                if (entity && entity.getQuickMenuSettings) {
+                    if (filter && self.filterType == 'Selected' && self.activeHints.findIndex(e => e?.hint.entity.uuid == entity.uuid) == -1) { return }
+                    if (filter && self.filterType == 'Interactable' && !('interactEntry' in entity)) { return }
+
                     const sett = entity.getQuickMenuSettings() as sc.QuickMenuTypesBaseSettings
-                    if (!sett.disabled && sc.QUICK_MENU_TYPES[sett.type] && (!filter || self.filterType == 'All' || sett.type == self.filterType)) {
+                    if (!sett.disabled && sc.QUICK_MENU_TYPES[sett.type] &&
+                        (!filter ||
+                            self.filterType == 'All' || self.filterType == 'Selected' || self.filterType == 'Interactable' ||
+                            sett.type == self.filterType)) {
+
                         sett.entity = entity
                         const ins = new sc.QUICK_MENU_TYPES[sett.type](sett.type, sett, this.focusContainer)
 
@@ -425,13 +443,14 @@ export class HintSystem implements PauseListener {
                 }
                 this.focusContainer.reset()
                 this.doStateTransition('DEFAULT')
-                currentSelectIndex = -1
+                self.currentSelectIndex = -1
+                lastFocusedHintPos = Vec2.create()
             },
         })
 
         ig.EVENT_STEP.SET_PLAYER_CORE.inject({
             start() {
-                /* enable the quick menu at the start of the game */
+                /* disallow disabling quick menu */
                 if (MenuOptions.puzzleEnabled && this.core == sc.PLAYER_CORE.QUICK_MENU && this.value == false) {
                     return
                 }
