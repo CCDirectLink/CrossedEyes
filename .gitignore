@@ -3,3 +3,5 @@ plugin.js
 *.png~
 *.kra~
 node_modules
+pack
+bundle.zip
