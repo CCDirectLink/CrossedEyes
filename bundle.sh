@@ -17,8 +17,6 @@ cp -r pack/*CCLoader*/* 'pack/'
 rm -rf pack/*CCLoader*
 rm -rf pack/ccloader.tar.gz
 
-patch -p1 pack/ccloader/js/ccloader.js < .github/workflows/addLogging.patch
-
 cd pack
 rm -rf ../bundle.zip
 zip -r ../bundle.zip *
