@@ -81,14 +81,16 @@ export class TTSNvda implements TTSInterface {
 export class AddonInstaller {
     static async checkInstall() {
         if (process.platform == 'win32' && await AddonInstaller.isNvdaRunning()) {
+            console.log('nvda running')
             if (this.isAddonInstalled()) {
+                console.log('addon installed')
                 const inst = AddonInstaller.getInstalledAddonVersion()
                 const pkg = await AddonInstaller.getPackageAddonVersion()
-                console.log(inst, pkg)
                 if (pkg != inst) {
                     this.installAddon()
                 }
             } else {
+                console.log('addon not installed')
                 this.installAddon()
             }
         }
@@ -144,25 +146,24 @@ export class AddonInstaller {
 
         MenuOptions.ttsType = TTSTypes.NVDA
         MenuOptions.save()
+        console.log('install succesfull')
         require('child_process').exec('"C:\\Program Files (x86)\\NVDA\\nvda.exe"') /* restart NVDA */
+        console.log('restarted NVDA')
     }
 
-    private static downloadFile(url: string, outPath: string): Promise<void> {
-        const https: typeof import('https') = (0, eval)('require("https")')
-
-        const file = fs.createWriteStream(outPath)
-
-        return new Promise((resolve) => {
-            https.get(url, function(response) {
-                response.pipe(file)
-                file.on('finish', function() {
-                    file.close(() => {
-                        resolve()
-                    })
-                })
-            }).on('error', function(err) {
-                fs.unlink(outPath, () => { })
-                console.error(`Error downloading file: ${err.message}`)
+    static downloadFile(url: string, outPath: string): Promise<void> {
+        console.log('downloading', url)
+        return new Promise((resolve, reject) => {
+            fetch(url, {
+                mode: 'cors'
+            }).then((transfer) => {
+                return transfer.blob()
+            }).then(async (bytes) => {
+                fs.writeFileSync(outPath, Buffer.from(await bytes.arrayBuffer()))
+                resolve()
+            }).catch((error) => {
+                console.log(error)
+                reject()
             })
         })
     }

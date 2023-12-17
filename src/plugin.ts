@@ -15,6 +15,7 @@ import { LoudJump } from './environment/loudjump'
 import { InteratableHandler } from './environment/interactables'
 import { MovementSoundTweaker } from './environment/movementSounds'
 import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
+import { AutoUpdater } from './autoupdate'
 
 export interface PauseListener {
     pause?(): void
@@ -26,7 +27,7 @@ export interface InitPoststart {
 
 export default class CrossedEyes {
     static dir: string
-    mod: Mod1
+    static mod: Mod1
 
     puzzleBeeper!: PuzzleBeeper
 
@@ -36,9 +37,9 @@ export default class CrossedEyes {
 
     constructor(mod: Mod1) {
         CrossedEyes.dir = mod.baseDirectory
-        this.mod = mod
-        this.mod.isCCL3 = mod.findAllAssets ? true : false
-        this.mod.isCCModPacked = mod.baseDirectory.endsWith('.ccmod/')
+        CrossedEyes.mod = mod
+        CrossedEyes.mod.isCCL3 = mod.findAllAssets ? true : false
+        CrossedEyes.mod.isCCModPacked = mod.baseDirectory.endsWith('.ccmod/')
     }
 
     private pauseAll() {
@@ -51,6 +52,7 @@ export default class CrossedEyes {
 
     async prestart() {
         this.addVimAliases()
+        new AutoUpdater().checkAndInstall()
         new MenuOptions()
         new SoundManager()
         new SpacialAudio()
