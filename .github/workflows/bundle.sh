@@ -9,6 +9,7 @@ ccloader_url="$(curl -s 'https://api.github.com/repos/CCDirectLink/CCLoader/rele
 mkdir -p pack/assets/mods
 [ ! -f pack/assets/mods/cc-blitzkrieg* ] && wget "${blitzkrieg_url}" -O "pack/assets/mods/cc-blitzkrieg-${blitzkrieg_version}.ccmod"
 [ ! -f pack/assets/mods/input-api* ] && wget "${inputapi_url}" -O 'pack/assets/mods/input-api.ccmod'
+cp crossedeyes*.ccmod pack/assets/mods/
 
 [ ! -f pack/ccloader.tar.gz ] && wget "${ccloader_url}" -O pack/ccloader.tar.gz
 tar -xf pack/ccloader.tar.gz --directory=pack
