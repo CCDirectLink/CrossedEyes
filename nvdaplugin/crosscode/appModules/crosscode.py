@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import appModuleHandler
 import speech
+from logHandler import log
 import time
 import threading
 
@@ -12,41 +13,48 @@ import websocket
 class CrossCodeWebSocketClient:
     def __init__(self, appModule: appModuleHandler.AppModule):
         self.appModule: AppModule = appModule
-        self.doReconnect = False
         self.running = False
+        self.doReconnect = False
+        self.loopRunning = False
 
     def on_data(self, ws: websocket.WebSocketApp, msg: str, dataType, continueFlag):
+        if msg == None: 
+            return
         if msg == 'clearQueue':
             self.appModule.script_interruptSpeech()
         elif msg.startswith('speak '):
             msg = msg[len('speak '):]
             self.appModule.script_speak(msg)
+
+    def on_open(self, ws: websocket.WebSocketApp):
+        self.running = True
     
-    
-    def on_close(self, ws: websocket.WebSocket, close_status_code, close_msg):
+    def on_close(self, ws: websocket.WebSocketApp):
         self.running = False
-        if self.doReconnect:
-            time.sleep(5)
-            self.connect()
-
+    
     def on_speech_end(self):
-        self.ws.send('speechEnd')
+        if self.running == True:
+            self.ws.send('speechEnd')
 
-    def connect(self):
-        if self.running:
+    def run_forever(self):
+        self.loopRunning = True
+        while True:
+            self.ws: websocket.WebSocketApp = websocket.WebSocketApp('ws://localhost:16390', on_open=self.on_open, on_close=self.on_close, on_data=self.on_data)
+            self.ws.run_forever()
+            time.sleep(5)
+            if self.doReconnect == False:
+                self.loopRunning = False
+                break
+
+    def run(self):
+        if self.running or self.loopRunning:
             return
         self.doReconnect = True
-    
-        self.ws: websocket.WebSocketApp = websocket.WebSocketApp('ws://localhost:16390', on_close=self.on_close, on_data=self.on_data)
-
-        def run_forever():
-            self.running = True
-            self.ws.run_forever()
-    
-        threading.Thread(target=run_forever).start()
+        threading.Thread(target=self.run_forever).start()
 
     def terminate(self):
         self.doReconnect = False
+        self.running = False
         self.ws.close()
 
 
@@ -65,7 +73,7 @@ class AppModule(appModuleHandler.AppModule):
         self.client.terminate()
 
     def event_NVDAObject_init(self, _):
-        self.client.connect()
+        self.client.run()
 
     def script_speak(self, text):
         speech.speakMessage(text)

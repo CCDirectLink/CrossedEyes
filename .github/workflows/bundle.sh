@@ -18,5 +18,6 @@ rm -rf pack/*CCLoader*
 rm -rf pack/ccloader.tar.gz
 
 cd pack
+rm -rf ../bundle.zip
 zip -r ../bundle.zip *
 cd ..
