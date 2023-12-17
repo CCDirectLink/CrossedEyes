@@ -1,5 +1,5 @@
 import { WebSocket, WebSocketServer } from 'ws'
-import { CharacterSpeakData, SpeechEndListener, TTS, TTSInterface, TTSTypes } from './tts'
+import { CharacterSpeakData, SpeechEndListener, TTSInterface, TTSTypes } from './tts'
 import CrossedEyes from '../plugin'
 
 import AdmZip from 'adm-zip'
@@ -79,17 +79,17 @@ export class TTSNvda implements TTSInterface {
 }
 
 export class AddonInstaller {
-    static async askForAddonInstall() {
-        if (process.platform == 'win32' && !this.isAddonInstalled() && await AddonInstaller.isNvdaRunning()) {
-            const run = async () => {
-                const resopnse = await blitzkrieg.syncDialog('NVDA running detected. Do you want to install the neccesery addon?', ['yes', 'no'] as const)
-                if (resopnse == 'yes') { this.installAddon() }
-            }
-            if (MenuOptions.ttsType == TTSTypes['Built-in']) {
-                run()
+    static async checkInstall() {
+        if (process.platform == 'win32' && await AddonInstaller.isNvdaRunning()) {
+            if (this.isAddonInstalled()) {
+                const inst = AddonInstaller.getInstalledAddonVersion()
+                const pkg = await AddonInstaller.getPackageAddonVersion()
+                console.log(inst, pkg)
+                if (pkg != inst) {
+                    this.installAddon()
+                }
             } else {
-                MenuOptions.ttsType = TTSTypes['Built-in']
-                TTS.g.addReadyCallback(() => run())
+                this.installAddon()
             }
         }
     }
@@ -107,6 +107,15 @@ export class AddonInstaller {
 
     private static isAddonInstalled(): boolean {
         return blitzkrieg.FsUtil.doesFileExist(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/manifest.ini`)
+    }
+
+    private static getInstalledAddonVersion(): string {
+        return (fs.readFileSync(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/manifest.ini`).toString()
+            .match(/version = "(\d+\.\d+\.\d+)/) ?? ['', '00.00.00'])[1]
+    }
+    private static async getPackageAddonVersion(): Promise<string> {
+        return ((await blitzkrieg.FsUtil.readFile(`${CrossedEyes.dir}/nvdaplugin/crosscode/manifest.ini`))
+            .match(/version = "(\d+\.\d+\.\d+)/) ?? ['', '00.00.00'])[1]
     }
 
     private static async installAddon() {

@@ -67,12 +67,6 @@ export default class CrossedEyes {
         new CharacterSpeechSynchronizer()
 
         const self = this
-        sc.TitleScreenButtonGui.inject({
-            show() {
-                this.parent()
-                TTS.g.addReadyCallback(() => AddonInstaller.askForAddonInstall())
-            },
-        })
         ig.Game.inject({
             setPaused(paused: boolean) {
                 this.parent(paused)
@@ -99,7 +93,6 @@ export default class CrossedEyes {
                     self.resumeAll()
                 }
             },
-
         })
 
         this.addTestMapTitleScreenButton()
@@ -162,6 +155,7 @@ export default class CrossedEyes {
 
     async poststart() {
         CrossedEyes.initPoststarters.forEach(p => p.initPoststart())
+        AddonInstaller.checkInstall()
     }
 
     addVimAliases() {

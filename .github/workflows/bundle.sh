@@ -21,3 +21,4 @@ cd pack
 rm -rf ../bundle.zip
 zip -r ../bundle.zip *
 cd ..
+rm -rf pack
