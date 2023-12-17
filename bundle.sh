@@ -17,6 +17,8 @@ cp -r pack/*CCLoader*/* 'pack/'
 rm -rf pack/*CCLoader*
 rm -rf pack/ccloader.tar.gz
 
+patch -p1 pack/package.json < .github/workflows/package.patch
+
 cd pack
 rm -rf ../bundle.zip
 zip -r ../bundle.zip *
