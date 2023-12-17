@@ -57,7 +57,7 @@ jobs:
               run: ./pack.sh
               
             - name: Run bundle.sh
-              run: ./.github/workflows/bundle.sh
+              run: ./bundle.sh
 
             - name: Create release
               id: create_release
