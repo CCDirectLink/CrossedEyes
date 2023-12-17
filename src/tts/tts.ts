@@ -13,12 +13,17 @@ export interface TTSInterface {
     speak(text: string): void
     characterSpeak(text: string, data: CharacterSpeakData): void
     clearQueue(): void
-    speechEndEvents: (() => void)[]
+    speechEndEvents: SpeechEndListener[]
 }
 
 export enum TTSTypes {
     'Built-in' = 0,
     'NVDA' = 1,
+}
+
+
+export interface SpeechEndListener {
+    onSpeechEnd(): void
 }
 
 export class TTS {

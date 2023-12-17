@@ -14,6 +14,7 @@ import { HintSystem } from './hint-system/hint-system'
 import { LoudJump } from './environment/loudjump'
 import { InteratableHandler } from './environment/interactables'
 import { MovementSoundTweaker } from './environment/movementSounds'
+import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
 
 export interface PauseListener {
     pause?(): void
@@ -63,6 +64,7 @@ export default class CrossedEyes {
         new TTS()
         this.puzzleBeeper = new PuzzleBeeper()
         new EntityBeeper()
+        new CharacterSpeechSynchronizer()
 
         const self = this
         sc.TitleScreenButtonGui.inject({

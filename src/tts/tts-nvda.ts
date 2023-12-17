@@ -1,5 +1,5 @@
 import { WebSocket, WebSocketServer } from 'ws'
-import { CharacterSpeakData, TTS, TTSInterface, TTSTypes } from './tts'
+import { CharacterSpeakData, SpeechEndListener, TTS, TTSInterface, TTSTypes } from './tts'
 import CrossedEyes from '../plugin'
 
 import AdmZip from 'adm-zip'
@@ -11,7 +11,7 @@ export class TTSNvda implements TTSInterface {
     onReady!: () => void
 
     queue: string[] = []
-    speechEndEvents: (() => void)[] = []
+    speechEndEvents: SpeechEndListener[] = []
 
     server!: WebSocketServer
     sockets: WebSocket[] = []
@@ -50,7 +50,7 @@ export class TTSNvda implements TTSInterface {
 
     handleCommand(cmd: string) {
         if (cmd == 'speechEnd') {
-            this.speechEndEvents.forEach(f => f())
+            this.speechEndEvents.forEach(i => i.onSpeechEnd())
             this.queue.shift()
         }
     }
