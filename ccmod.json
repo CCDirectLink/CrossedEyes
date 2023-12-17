@@ -9,7 +9,7 @@
 	},
 	"dependencies": {
 		"input-api": ">=1.0.0",
-		"cc-blitzkrieg": ">=0.4.4",
+		"cc-blitzkrieg": ">=0.4.5",
 		"crosscode": ">=1.4.0"
 	}
   }
