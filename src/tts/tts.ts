@@ -8,7 +8,7 @@ export interface CharacterSpeakData { }
 
 export interface TTSInterface {
     queue: string[]
-    init(onReady: () => void): Promise<void>
+    init(): Promise<void>
     isReady(): boolean
     speak(text: string): void
     characterSpeak(text: string, data: CharacterSpeakData): void
@@ -32,16 +32,6 @@ export class TTS {
     ttsInstance!: TTSInterface
     lastOption: number = -1
     textGather: TextGather
-
-    private readyCallbacks: (() => void)[] = []
-
-    addReadyCallback(cb: () => void) {
-        if (this.ttsInstance && this.ttsInstance.isReady()) {
-            cb()
-        } else {
-            this.readyCallbacks.push(cb)
-        }
-    }
 
     constructor() { /* in prestart */
         TTS.g = this
@@ -72,7 +62,7 @@ export class TTS {
                     break
                 default: throw new Error()
             }
-            this.ttsInstance.init(() => { this.readyCallbacks.forEach(cb => cb()); this.readyCallbacks = [] })
+            this.ttsInstance.init()
         }
     }
 

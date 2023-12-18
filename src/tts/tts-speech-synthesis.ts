@@ -2,8 +2,6 @@ import { MenuOptions } from '../options'
 import { CharacterSpeakData, SpeechEndListener, TTSInterface } from './tts'
 
 export class TTSSpeechSynthesisAPI implements TTSInterface {
-    onReady!: () => void
-
     voiceName: string = 'English (Received Pronunciation)+Annie espeak-ng'
     voices!: SpeechSynthesisVoice[]
     voice!: SpeechSynthesisVoice
@@ -34,9 +32,7 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
         }
     }
 
-    async init(onReady: () => void) {
-        this.onReady = onReady
-
+    async init() {
         this.voices = await this.getVoices()
         if (this.voices.length == 0) {
             console.log('tts initialization failed')
@@ -44,7 +40,6 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
         }
         this.voice = this.getVoice()
         console.log(this.voice)
-        this.onReady()
     }
 
     getVoices(): Promise<SpeechSynthesisVoice[]> {

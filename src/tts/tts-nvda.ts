@@ -8,17 +8,13 @@ import { MenuOptions } from '../options'
 const fs: typeof import('fs') = (0, eval)('require("fs")')
 
 export class TTSNvda implements TTSInterface {
-    onReady!: () => void
-
     queue: string[] = []
     speechEndEvents: SpeechEndListener[] = []
 
     server!: WebSocketServer
     sockets: WebSocket[] = []
 
-    async init(onReady: () => void) {
-        this.onReady = onReady
-
+    async init() {
         window.addEventListener('beforeunload', () => {
             this.server.close()
         })
@@ -33,7 +29,6 @@ export class TTSNvda implements TTSInterface {
         this.sockets = []
 
         this.server.on('connection', (socket: WebSocket) => {
-            this.onReady()
             this.speak('NVDA connected')
             socket.on('close', () => {
                 this.sockets.splice(this.sockets.indexOf(socket))
