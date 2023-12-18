@@ -119,6 +119,10 @@ declare global {
 
             customUpdate(this: this): void
         }
+
+        interface SideMessageBoxGui {
+            beepSound: ig.Sound | null
+        }
     }
 }
 

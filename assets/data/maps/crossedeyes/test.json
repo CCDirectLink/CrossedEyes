@@ -35,6 +35,27 @@
 		{ "type": "FloorSwitch", "x": 372, "y": 205, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 39, "name": "fs1", "switchType": "WHILE_ON_TOP", "variable": "tmp.die" } },
 		{ "type": "Marker", "x": 372, "y": 239, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 40, "name": "entrance", "dir": "NORTH", "spawnCondition": "true" } },
 		{
+			"type": "Elevator",
+			"x": 1261,
+			"y": 650,
+			"level": 2,
+			"settings": {
+				"name": "elevator1",
+				"elevatorType": "cargoShip",
+				"condition": null,
+				"destinations": [
+					{ "label": { "de_DE": "", "en_US": "CrossedEyes test map", "langUid": 0, "fr_FR": "", "zh_CN": "", "ja_JP": "", "ko_KR": "", "zh_TW": "" }, "zMoveOffset": -48, "teleportMarker": "elevator1", "teleportMap": "crossedeyes/test", "activeCondition": "true" },
+					{ "label": { "de_DE": "", "en_US": "Door", "langUid": 0, "fr_FR": "", "zh_CN": "", "ja_JP": "", "ko_KR": "", "zh_TW": "" }, "zMoveOffset": -48, "teleportMarker": "door1", "teleportMap": "crossedeyes/test", "activeCondition": "null" }
+				],
+				"blockEventCondition": "map.destroyBoxes",
+				"marker": "",
+				"moveHeight": 32,
+				"mapId": 42,
+				"map": null,
+				"faceDir": "SOUTH"
+			}
+		},
+		{
 			"type": "NPC",
 			"x": 707,
 			"y": 207,
@@ -144,25 +165,63 @@
 		{ "type": "Enemy", "x": 546, "y": 206, "level": 2, "settings": { "name": "bot1", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 18 } },
 		{ "type": "Enemy", "x": 572, "y": 206, "level": 2, "settings": { "name": "bot2", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 19 } },
 		{ "type": "Enemy", "x": 598, "y": 206, "level": 2, "settings": { "name": "bot3", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_NOT_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 20 } },
+		{ "type": "FloorSwitch", "x": 763, "y": 201, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 43, "name": "fse0", "variable": "tmp.sideMsg0", "switchType": "WHILE_ON_TOP" } },
 		{
-			"type": "Elevator",
-			"x": 1261,
-			"y": 650,
+			"type": "EventTrigger",
+			"x": 764,
+			"y": 132,
 			"level": 2,
 			"settings": {
-				"name": "elevator1",
-				"elevatorType": "cargoShip",
-				"condition": null,
-				"destinations": [
-					{ "label": { "de_DE": "", "en_US": "CrossedEyes test map", "langUid": 0, "fr_FR": "", "zh_CN": "", "ja_JP": "", "ko_KR": "", "zh_TW": "" }, "zMoveOffset": -48, "teleportMarker": "elevator1", "teleportMap": "crossedeyes/test", "activeCondition": "true" },
-					{ "label": { "de_DE": "", "en_US": "Door", "langUid": 0, "fr_FR": "", "zh_CN": "", "ja_JP": "", "ko_KR": "", "zh_TW": "" }, "zMoveOffset": -48, "teleportMarker": "door1", "teleportMap": "crossedeyes/test", "activeCondition": "null" }
+				"size": { "x": 16, "y": 16 },
+				"mapId": 44,
+				"event": [
+					{
+						"type": "IF",
+						"withElse": false,
+						"condition": "tmp.sideMsg0Cond",
+						"thenStep": [
+							{ "person": { "person": "main.sergey", "expression": "JOKING" }, "message": { "en_US": "UuUuUuUuUu ballllllls UuUuUuUuUu", "langUid": 0 }, "type": "SHOW_SIDE_MSG" },
+							{ "person": { "person": "main.lea", "expression": "COMPLEX" }, "message": { "en_US": "no" }, "type": "SHOW_SIDE_MSG" },
+							{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg0Cond", "changeType": "set", "value": false }
+						]
+					}
 				],
-				"blockEventCondition": "map.destroyBoxes",
-				"marker": "",
-				"moveHeight": 32,
-				"mapId": 42,
-				"map": null,
-				"faceDir": "SOUTH"
+				"eventType": "INTERRUPTABLE",
+				"startCondition": "tmp.sideMsg0",
+				"triggerType": "ALWAYS",
+				"name": "sideMsgEvent0",
+				"loadCondition": true,
+				"endCondition": "false"
+			}
+		},
+		{ "type": "EventTrigger", "x": 765, "y": 150, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 45, "event": [{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg0Cond", "changeType": "set", "value": true }], "name": "sideMsgCondEvent0", "eventType": "INTERRUPTABLE", "startCondition": "!tmp.sideMsg0", "endCondition": "false", "triggerType": "ALWAYS", "loadCondition": true } },
+		{ "type": "FloorSwitch", "x": 800, "y": 202, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 46, "name": "fse1", "variable": "tmp.sideMsg1", "switchType": "WHILE_ON_TOP" } },
+		{ "type": "EventTrigger", "x": 801, "y": 103, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 47, "event": [{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg1Cond", "changeType": "set", "value": true }], "name": "sideMsgCondEvent1", "eventType": "INTERRUPTABLE", "startCondition": "!tmp.sideMsg1", "endCondition": "false", "triggerType": "ALWAYS", "loadCondition": true } },
+		{
+			"type": "EventTrigger",
+			"x": 801,
+			"y": 82,
+			"level": 2,
+			"settings": {
+				"size": { "x": 16, "y": 16 },
+				"mapId": 48,
+				"event": [
+					{
+						"type": "IF",
+						"withElse": false,
+						"condition": "tmp.sideMsg1Cond",
+						"thenStep": [
+							{ "person": { "person": "main.sergey", "expression": "INTENSE1" }, "message": { "en_US": "*intensive writing of ccmodmanager5*", "langUid": 0 }, "type": "SHOW_SIDE_MSG" },
+							{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg1Cond", "changeType": "set", "value": false }
+						]
+					}
+				],
+				"eventType": "INTERRUPTABLE",
+				"startCondition": "tmp.sideMsg1",
+				"triggerType": "ALWAYS",
+				"name": "sideMsgEvent1",
+				"loadCondition": true,
+				"endCondition": "false"
 			}
 		}
 	],

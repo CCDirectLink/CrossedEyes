@@ -157,13 +157,6 @@ export class TextGather {
                 this.parent()
             }
         })
-        sc.getMessageTime = function(textLike: sc.TextLike) {
-            if (MenuOptions.ttsMenuEnabled) {
-                return textLike!.toString().length / 20 * 1.8 * MenuOptions.ttsSpeed + 1
-            } else {
-                return Math.max(2, (textLike!.toString().length / 20) * 1 + 1) /* original formula */
-            }
-        }
 
         sc.CenterMsgBoxGui.inject({
             init(...args) {
