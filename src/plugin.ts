@@ -105,6 +105,8 @@ export default class CrossedEyes {
             for (const k of Object.keys(sc.model.player.core) as unknown as sc.PLAYER_CORE[]) { sc.model.player.core[k] = true }
 
             sc.model.player.setSpLevel(4)
+            sc.newgame.setActive(true)
+            sc.newgame.toggle('infinite-sp')
             sc.model.player.setLevel(99)
             sc.model.player.equip = { head: 657, leftArm: 577, rightArm: 607, torso: 583, feet: 596 }
             for (let i = 0; i < sc.model.player.skillPoints.length; i++) { sc.model.player.skillPoints[i] = 200 }
