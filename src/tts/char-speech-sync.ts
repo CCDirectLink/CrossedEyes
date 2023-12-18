@@ -1,11 +1,9 @@
 import { MenuOptions } from '../options'
-import CrossedEyes, { InitPoststart } from '../plugin'
 import { SpeechEndListener, TTS } from './tts'
 
-export class CharacterSpeechSynchronizer implements InitPoststart, SpeechEndListener {
-    messageOverlayGuiIns!: ig.MessageOverlayGui
+export class CharacterSpeechSynchronizer implements SpeechEndListener {
     constructor() { /* in prestart */
-        CrossedEyes.initPoststarters.push(this)
+        TTS.g.onSpeechEndListeners.push(this)
         const self = this
         ig.MessageOverlayGui.inject({
             init() {
@@ -22,9 +20,6 @@ export class CharacterSpeechSynchronizer implements InitPoststart, SpeechEndList
                 this.parent(maxWidth, pointerType, text, speed, personEntry, beepSound)
             },
         })
-    }
-    initPoststart(): void {
-        TTS.g.ttsInstance.speechEndEvents.push(this)
     }
     onSpeechEnd(): void {
         if (MenuOptions.ttsEnabled && sc.message.blocking) {

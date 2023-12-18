@@ -1,5 +1,5 @@
 import { MenuOptions } from '../options'
-import { CharacterSpeakData, SpeechEndListener, TTSInterface } from './tts'
+import { CharacterSpeakData, TTS, TTSInterface } from './tts'
 
 export class TTSSpeechSynthesisAPI implements TTSInterface {
     voiceName: string = 'English (Received Pronunciation)+Annie espeak-ng'
@@ -7,7 +7,6 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
     voice!: SpeechSynthesisVoice
 
     queue: string[] = []
-    speechEndEvents: SpeechEndListener[] = []
 
     getLangVoices(lang: string): SpeechSynthesisVoice[] {
         return this.voices.filter(v => v.lang.startsWith(lang))
@@ -77,7 +76,7 @@ export class TTSSpeechSynthesisAPI implements TTSInterface {
             utter.voice = this.voice
             speechSynthesis.speak(utter)
             utter.addEventListener('end', () => {
-                this.speechEndEvents.forEach(i => i.onSpeechEnd())
+                TTS.g.onSpeechEndListeners.forEach(i => i.onSpeechEnd())
                 this.queue.shift()
                 if (this.queue.length > 0) {
                     this.speak(this.queue[0], true)

@@ -13,7 +13,6 @@ export interface TTSInterface {
     speak(text: string): void
     characterSpeak(text: string, data: CharacterSpeakData): void
     clearQueue(): void
-    speechEndEvents: SpeechEndListener[]
 }
 
 export enum TTSTypes {
@@ -32,6 +31,8 @@ export class TTS {
     ttsInstance!: TTSInterface
     lastOption: number = -1
     textGather: TextGather
+
+    onSpeechEndListeners: SpeechEndListener[] = []
 
     constructor() { /* in prestart */
         TTS.g = this
