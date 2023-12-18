@@ -1,4 +1,4 @@
-export const fontImgToNameMap: Record<string, string> = {
+const fontImgToNameMap: Record<string, string> = {
     ...(() => {
         const obj: Record<string, string> = {}
         for (let i = 0; i < 256; i++) { obj[`keyCode-${i}`] = `Key ${String.fromCharCode(i)}` }
@@ -48,3 +48,13 @@ export const fontImgToNameMap: Record<string, string> = {
 }
 
 
+export function fontImgToName(name: string): string {
+    if (sc.fontsystem.gamepadIconStyle == sc.GAMEPAD_ICON_STYLE.PS3) {
+        if (name == 'gamepad-x') { return 'Gamepad: square' }
+        if (name == 'gamepad-y') { return 'Gamepad: triangle' }
+        if (name == 'gamepad-b') { return 'Gamepad: circle' }
+        if (name == 'gamepad-a') { return 'Gamepad: X' }
+    }
+    const rep = fontImgToNameMap[name]
+    return rep
+}

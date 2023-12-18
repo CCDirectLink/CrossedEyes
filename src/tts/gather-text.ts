@@ -1,7 +1,7 @@
 import { MenuOptions } from '../options'
 import { SpecialAction } from '../special-action'
 import { expressionMap } from './expressionMap'
-import { fontImgToNameMap } from './fontImgToTextMap'
+import { fontImgToName } from './fontImgToTextMap'
 import { CharacterSpeakData } from './tts'
 
 function getReadableText(orig: string): string {
@@ -10,7 +10,7 @@ function getReadableText(orig: string): string {
 
     const imgMatches: string[] | null = text.match(/\\i\[[^\]]*\]/g)
     for (let img of imgMatches ?? []) {
-        const replacement: string = fontImgToNameMap[img.substring(3, img.length - 1)]
+        const replacement: string = fontImgToName(img.substring(3, img.length - 1))
         if (replacement === undefined) { console.warn(`IMAGE: '${img}' is unmapped`) }
         text = text.replace(img, replacement ?? '')
     }
