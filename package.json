@@ -1,6 +1,6 @@
 {
     "name": "crossedeyes",
-    "version": "0.4.4",
+    "version": "0.4.5",
     "scripts": {
         "start": "esbuild --target=es2018 --format=esm --platform=node --bundle --sourcemap=inline --outfile=plugin.js src/plugin.ts",
         "watch": "esbuild --target=es2018 --format=esm --platform=node --bundle --sourcemap=inline --watch --outfile=plugin.js src/plugin.ts",
