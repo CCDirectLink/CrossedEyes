@@ -16,6 +16,7 @@ import { InteratableHandler } from './environment/interactables'
 import { MovementSoundTweaker } from './environment/movementSounds'
 import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
 import { AutoUpdater } from './autoupdate'
+import { TextGather } from './tts/gather-text'
 
 export interface PauseListener {
     pause?(): void
@@ -157,9 +158,30 @@ export default class CrossedEyes {
 
     }
 
+    addLogCopyKeybinding() {
+        ig.input.bind(ig.KEY.F4, 'copylog')
+        ig.game.addons.preUpdate.push(new class {
+            async onPreUpdate() {
+                if (ig.input.pressed('copylog')) {
+                    const fs: typeof import('fs') = require('fs')
+                    const data = fs.readFileSync('biglog.txt').toString()
+                    const form = new FormData()
+                    form.append('file', new File([data], 'crosscode.log'));
+
+                    const res = await fetch('http://0.vern.cc', { method: 'POST', body: form })
+                    const link = (await res.text()).trim()
+                    console.log(link)
+                    navigator.clipboard.writeText(link)
+                    MenuOptions.ttsEnabled && TextGather.g.speakI('Log link copied to clipboard')
+                }
+            }
+        })
+    }
+
     async poststart() {
         CrossedEyes.initPoststarters.forEach(p => p.initPoststart())
         AddonInstaller.checkInstall()
+        this.addLogCopyKeybinding()
     }
 
     addVimAliases() {
