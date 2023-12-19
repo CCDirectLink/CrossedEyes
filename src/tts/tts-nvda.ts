@@ -145,21 +145,21 @@ export class AddonInstaller {
         console.log('restarted NVDA')
     }
 
-    static downloadFile(url: string, outPath: string): Promise<void> {
-        console.log('downloading', url)
+    private static async blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
+        if ('arrayBuffer' in blob) { return await blob.arrayBuffer() }
+
         return new Promise((resolve, reject) => {
-            fetch(url, {
-                mode: 'cors'
-            }).then((transfer) => {
-                return transfer.blob()
-            }).then(async (bytes) => {
-                fs.writeFileSync(outPath, Buffer.from(await bytes.arrayBuffer()))
-                resolve()
-            }).catch((error) => {
-                console.log(error)
-                reject()
-            })
+            const reader = new FileReader()
+            reader.onload = () => resolve(reader.result as ArrayBuffer)
+            reader.onerror = () => reject()
+            reader.readAsArrayBuffer(blob)
         })
+    }
+    
+    static async downloadFile(url: string, outPath: string): Promise<void> {
+        const blob = await (await fetch(url, { mode: 'cors' })).blob()
+        const arrayBuffer = await AddonInstaller.blobToArrayBuffer(blob)
+        return fs.promises.writeFile(outPath, Buffer.from(arrayBuffer))
     }
 
     private static unzipFile(path: string, outPath: string) {

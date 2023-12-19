@@ -1,6 +1,8 @@
 # Change Log
  
-## Unreleased
+## [0.4.6]
+### Fixes
+- Fixed NVDA addon installing and mod auto-updating
 
 ## [0.4.5]
 ### Added
