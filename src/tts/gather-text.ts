@@ -380,6 +380,43 @@ export class TextGather {
                 this.parent()
             },
         })
+        sc.SaveSlotButton.inject({
+            focusGained() {
+                this.parent()
+                if (MenuOptions.ttsEnabled) {
+                    const slot = this.slotOver
+                    const sg = slot.slotGui
+                    const name: string = sg instanceof sc.NumberGui ?
+                        sg.targetNumber.toString() :
+                        sg instanceof sc.TextGui ? sg.text!.toString()
+                            : '';
+
+                    const chapter: number = this.chapter.chapterGui.targetNumber
+                    const location: string = this.location.location.text!.toString()
+                    const speak = `Slot ${name}, chapter ${chapter}, ${location}`
+                    TextGather.g.speakI(speak)
+
+                    const level: number = this.level.targetNumber
+                    const hours = this.time.hour.targetNumber
+                    const playtime: string = `${hours > 0 ? `${hours} hours`: ''}${this.time.minute.targetNumber} minutes`
+                    SpecialAction.setListener('LSP', 'saveMenu', () => {
+                        TextGather.g.speakI(`level ${level}, playtime ${playtime}`)
+                    })
+                }
+            },
+            focusLost() {
+                this.parent()
+                SpecialAction.setListener('LSP', 'saveMenu', () => { })
+                TextGather.g.interrupt()
+            },
+        })
+
+        sc.SaveSlotNewButton.inject({
+            focusGained() {
+                this.parent()
+                MenuOptions.ttsEnabled && TextGather.g.speakI('Create new save file')
+            }
+        })
     }
 }
 
