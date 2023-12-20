@@ -1,4 +1,8 @@
 # Change Log
+
+## [0.4.7]
+## Added
+- Added a note in README about os support and the controller requiremenet
  
 ## [0.4.6]
 ### Added
