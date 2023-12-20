@@ -3,6 +3,7 @@
 ## [0.4.7]
 ## Added
 - Added a note in README about os support and the controller requiremenet
+- Say `uploading` immediately after pressing the F4 keybinding
  
 ## [0.4.6]
 ### Added

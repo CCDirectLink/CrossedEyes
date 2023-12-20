@@ -163,6 +163,7 @@ export default class CrossedEyes {
         ig.game.addons.preUpdate.push(new class {
             async onPreUpdate() {
                 if (ig.input.pressed('copylog')) {
+                    MenuOptions.ttsEnabled && TextGather.g.speakI('uploading')
                     const fs: typeof import('fs') = require('fs')
                     const data = fs.readFileSync('biglog.txt').toString()
                     const form = new FormData()
