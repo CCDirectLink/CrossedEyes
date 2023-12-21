@@ -8,7 +8,6 @@ import { SoundManager } from './sound-manager'
 import { TTS } from './tts/tts'
 import { SpecialAction } from './special-action'
 import { EntityBeeper } from './environment/entity-beeper'
-import { AddonInstaller } from './tts/tts-nvda'
 import { AimAnalyzer } from './hint-system/aim-analyze'
 import { HintSystem } from './hint-system/hint-system'
 import { LoudJump } from './environment/loudjump'
@@ -181,7 +180,6 @@ export default class CrossedEyes {
 
     async poststart() {
         CrossedEyes.initPoststarters.forEach(p => p.initPoststart())
-        AddonInstaller.checkInstall()
         this.addLogCopyKeybinding()
     }
 

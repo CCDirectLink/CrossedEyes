@@ -1,12 +1,13 @@
 import { MenuOptions, ttsTypeId } from '../options'
 import CrossedEyes from '../plugin'
 import { TextGather } from './gather-text'
-import { TTSNvda } from './tts-nvda'
-import { TTSSpeechSynthesisAPI } from './tts-speech-synthesis'
+import { AddonInstaller, TTSNvda } from './tts-nvda'
+import { TTSWebSpeech } from './tts-web-speech'
 
 export interface CharacterSpeakData { }
 
 export interface TTSInterface {
+    supportedPlatforms: Set<('win32' | 'linux' | 'darwin')>
     queue: string[]
     init(): Promise<void>
     isReady(): boolean
@@ -16,10 +17,14 @@ export interface TTSInterface {
 }
 
 export enum TTSTypes {
-    'Built-in' = 0,
+    'Web Speech' = 0,
     'NVDA' = 1,
 }
 
+const implementations: (new () => TTSInterface)[] = [
+    TTSWebSpeech,
+    TTSNvda,
+]
 
 export interface SpeechEndListener {
     onSpeechEnd(): void
@@ -54,24 +59,16 @@ export class TTS {
     setup() {
         if (this.lastOption != MenuOptions.ttsType) {
             this.lastOption = MenuOptions.ttsType
-            switch (MenuOptions.ttsType) {
-                case TTSTypes['Built-in']:
-                    this.ttsInstance = new TTSSpeechSynthesisAPI()
-                    break
-                case TTSTypes.NVDA:
-                    this.ttsInstance = new TTSNvda()
-                    break
-                default: throw new Error()
+            const imp = new (implementations[MenuOptions.ttsType])()
+            if (imp.supportedPlatforms.has(process.platform as any)) {
+                this.ttsInstance = imp
+                imp.init()
             }
-            this.ttsInstance.init()
         }
     }
 
     async initPoststart() {
-        if (MenuOptions.ttsType == 2 as any) { /* remove me later */
-            MenuOptions.ttsType = TTSTypes.NVDA
-            MenuOptions.save()
-        }
+        AddonInstaller.checkInstall()
         this.setup()
     }
 }

@@ -96,7 +96,7 @@ export class MenuOptions implements InitPoststart {
 
         sc.OPTIONS_DEFINITION[ttsTypeId] = {
             type: 'BUTTON_GROUP',
-            init: TTSTypes['Built-in'],
+            init: TTSTypes['Web Speech'],
             data: Object.entries(TTSTypes).splice(Object.keys(TTSTypes).length / 2).reduce((acc, [k, _], i) => {
                 if (typeof k === 'string') { acc[k] = i }
                 return acc

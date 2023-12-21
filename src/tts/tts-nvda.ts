@@ -8,6 +8,7 @@ import { MenuOptions } from '../options'
 const fs: typeof import('fs') = (0, eval)('require("fs")')
 
 export class TTSNvda implements TTSInterface {
+    supportedPlatforms = new Set<('win32' | 'linux' | 'darwin')>(['win32'])
     queue: string[] = []
 
     server!: WebSocketServer
