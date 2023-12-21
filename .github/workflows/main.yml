@@ -29,7 +29,6 @@ jobs:
                   echo "Commit name doesnt match"
                   exit 1
                 fi
-                
 
             - name: Install dependencies
               run: sudo apt update; sudo apt install npm
@@ -38,6 +37,11 @@ jobs:
               run: | 
                 sed -i "s/\"version\": \".*\"/\"version\": \"${VERSION_NUMERIC}\"/" package.json ccmod.json
                 git add package.json ccmod.json
+
+            - name: Update CHANGELOG.md
+              run: |
+                sed -i "/\[Unreleased\]/a ## [$VERSION_NUMERIC] newDateHere" ./CHANGELOG.md
+                sed -i "s/newDateHere/$(date '+%Y-%m-%d')/g" ./CHANGELOG.md
 
             - name: Commit changes
               run: |
