@@ -7,6 +7,9 @@
 - Add save/load menu tts
 - Added text beeing toggle
 - Announce map name when switching maps
+
+### Fixes
+- NVDA addon should correctly install now for all users (hopefully)
  
 ## [0.4.6]
 ### Added

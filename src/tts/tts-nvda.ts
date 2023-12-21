@@ -94,8 +94,9 @@ export class AddonInstaller {
     private static async isNvdaRunning(): Promise<boolean> {
         function isProcessRunning(name: string): Promise<boolean> {
             return new Promise((resolve) => {
-                require('child_process').exec(`qprocess "${name}"`, (_: string, __: string, stderr: string) => {
-                    resolve(!stderr.trim())
+                require('child_process').exec(`tasklist /FI "IMAGENAME eq ${name}"`, (_: string, stdout: string, __: string) => {
+                    stdout = stdout.trim()
+                    resolve(stdout.length > 140) /* if the output string is long enough, it means that the process is running */
                 })
             })
         }
