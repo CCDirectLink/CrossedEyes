@@ -32,7 +32,18 @@ export class AutoUpdater {
                 fs.unlink(delPath, (err) => { err && console.log(err) })
                 anyUpdated = true
             }
-            if (anyUpdated) { window.location.reload() }
+            if (anyUpdated) {
+                if (MenuOptions.ttsEnabled) {
+                    setTimeout(() => {
+                        TextGather.g.speakI('Mod updated. Restarting...')
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 3000)
+                    }, 3000)
+                } else {
+                    window.location.reload()
+                }
+            }
         }
     }
 
