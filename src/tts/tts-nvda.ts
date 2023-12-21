@@ -28,6 +28,7 @@ export class TTSNvda implements TTSInterface {
         this.server = new WebSocketServer({ host, port })
         this.sockets = []
 
+        console.log('starting nvda server')
         this.server.on('connection', (socket: WebSocket) => {
             this.speak('NVDA connected')
             socket.on('close', () => {
@@ -40,6 +41,7 @@ export class TTSNvda implements TTSInterface {
             this.sockets.forEach(s => s.close())
             this.sockets = []
             this.sockets.push(socket)
+            console.log(this.sockets)
         })
     }
 
@@ -47,6 +49,7 @@ export class TTSNvda implements TTSInterface {
         if (cmd == 'speechEnd') {
             TTS.g.onSpeechEndListeners.forEach(i => i.onSpeechEnd())
             this.queue.shift()
+            console.log('reviced: speechEnd')
         }
     }
 
@@ -54,6 +57,7 @@ export class TTSNvda implements TTSInterface {
         for (const socket of this.sockets) {
             socket.send(command)
         }
+        console.log('sending:', command)
     }
 
     isReady(): boolean {
@@ -75,12 +79,15 @@ export class TTSNvda implements TTSInterface {
 
 export class AddonInstaller {
     static async checkInstall() {
+        console.log('nvda addon install attempt!')
+        console.log(process.platform)
         if (process.platform == 'win32' && await AddonInstaller.isNvdaRunning()) {
             console.log('nvda running')
             if (this.isAddonInstalled()) {
                 console.log('addon installed')
                 const inst = AddonInstaller.getInstalledAddonVersion()
                 const pkg = await AddonInstaller.getPackageAddonVersion()
+                console.log('version diffs: inst:', inst, 'pkg:', pkg)
                 if (pkg != inst) {
                     this.installAddon()
                 }
@@ -104,6 +111,11 @@ export class AddonInstaller {
     }
 
     private static isAddonInstalled(): boolean {
+        console.log('isAddonInstalled check start')
+        try { console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/`)) } catch (e) { console.log(e) }
+        try { console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/`)) } catch (e) { console.log(e) }
+        try { console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/appModules`)) } catch (e) { console.log(e) }
+        console.log('isAddonInstalled check end')
         return blitzkrieg.FsUtil.doesFileExist(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/manifest.ini`)
     }
 
@@ -117,6 +129,7 @@ export class AddonInstaller {
     }
 
     private static async installAddon() {
+        console.log('installing addon')
         const path: typeof import('path') = (0, eval)('require("path")')
 
         const version = '1.6.4'
@@ -145,6 +158,12 @@ export class AddonInstaller {
         console.log('install succesfull')
         require('child_process').exec('"C:\\Program Files (x86)\\NVDA\\nvda.exe"') /* restart NVDA */
         console.log('restarted NVDA')
+
+        console.log('mainfest:')
+        console.log(fs.readFileSync(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/manifest.ini`))
+        console.log('crosscode.py:')
+        console.log(fs.readFileSync(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/appModules/crosscode.py`))
+        console.log('---------installation end-------------')
     }
 
     private static async blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
@@ -157,10 +176,12 @@ export class AddonInstaller {
             reader.readAsArrayBuffer(blob)
         })
     }
-    
+
     static async downloadFile(url: string, outPath: string): Promise<void> {
         const blob = await (await fetch(url, { mode: 'cors' })).blob()
+        console.log('blob:', blob)
         const arrayBuffer = await AddonInstaller.blobToArrayBuffer(blob)
+        console.log('arrayBuffer:', arrayBuffer)
         return fs.promises.writeFile(outPath, Buffer.from(arrayBuffer))
     }
 
@@ -169,6 +190,7 @@ export class AddonInstaller {
 
         try {
             zip.extractAllTo(outPath, true)
+            console.log('unzipped', outPath)
         } catch (error) {
             console.error('Error extracting zip file:', error)
         }

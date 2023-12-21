@@ -1,9 +1,13 @@
+import { MenuOptions } from './options'
 import CrossedEyes from './plugin'
+import { TextGather } from './tts/gather-text'
 import { AddonInstaller } from './tts/tts-nvda'
 
 export class AutoUpdater {
     async checkAndInstall() {
+        console.log('checking autoupdate')
         if (CrossedEyes.mod.isCCModPacked) {
+            console.log('is ccmod packed')
             let anyUpdated = false
             const fs: typeof import('fs') = (0, eval)("require('fs')")
             const mainDir = (0, eval)("require('path')").dirname(process.execPath)
@@ -11,6 +15,7 @@ export class AutoUpdater {
             const cvLatest = await this.getLatestVersion('CCDirectLink/CrossedEyes')
             const cvPkg = CrossedEyes.mod.version?.toString()
             if (cvLatest != cvPkg) {
+                console.log('crossedeyes outdated')
                 const fn = `crossedeyes-${cvLatest}.ccmod`
                 const url = `https://github.com/CCDirectLink/CrossedEyes/releases/download/v${cvLatest}/${fn}`
                 await AddonInstaller.downloadFile(url, `assets/mods/${fn}`)
@@ -25,6 +30,7 @@ export class AutoUpdater {
             // @ts-expect-error
             const bvHas: string = window.activeMods.find(e => e.name == 'cc-blitzkrieg').version
             if (bvReq != bvHas) {
+                console.log('cc-blitzkrieg outdated')
                 const fn = `cc-blitzkrieg-${bvReq}.ccmod`
                 const url = `https://github.com/krypciak/cc-blitzkrieg/releases/download/v${bvReq}/${fn}`
                 await AddonInstaller.downloadFile(url, `assets/mods/${fn}`)

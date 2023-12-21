@@ -43,9 +43,9 @@ export class TTS {
         TTS.g = this
         CrossedEyes.initPoststarters.push(this)
         this.textGather = new TextGather(
-            (text: string) => this.ttsInstance && this.ttsInstance.speak(text),
-            (text: string, data: CharacterSpeakData) => this.ttsInstance && this.ttsInstance.characterSpeak(text, data),
-            () => { this.ttsInstance && this.ttsInstance.clearQueue() }
+            (text: string) => { console.log(text); this.ttsInstance && this.ttsInstance.speak(text) },
+            (text: string, data: CharacterSpeakData) => { console.log(text); this.ttsInstance && this.ttsInstance.characterSpeak(text, data) },
+            () => { console.log('interrupt'); this.ttsInstance && this.ttsInstance.clearQueue() }
         )
         const self = this
         sc.OptionModel.inject({
