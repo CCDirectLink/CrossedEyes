@@ -1,4 +1,5 @@
 import { MenuOptions } from '../options'
+import CrossedEyes from '../plugin'
 import { SpecialAction } from '../special-action'
 import { expressionMap } from './expressionMap'
 import { fontImgToName } from './fontImgToTextMap'
@@ -77,6 +78,7 @@ export class TextGather {
         public interrupt: () => void) { /* in prestart */
 
         TextGather.g = this
+        CrossedEyes.initPoststarters.push(this)
         SpecialAction.setListener('RSP', 'repeatLast', () => {
             MenuOptions.ttsEnabled && this.speakI(this.lastMessage)
         })
@@ -100,6 +102,34 @@ export class TextGather {
             }
         }
         this.initGather()
+    }
+
+    initPoststart() {
+        const self = this
+        let lastArea: string | undefined
+        sc.Model.addObserver<sc.MapModel>(sc.map, new class {
+            modelChanged(model: sc.Model, msg: sc.MAP_EVENT) {
+                if (MenuOptions.ttsEnabled && model == sc.map && !sc.model.isCutscene() && msg == sc.MAP_EVENT.MAP_ENTERED) {
+                    const area: string = sc.map.getCurrentAreaName().value
+                    const map: string = sc.map.getCurrentMapName().value
+
+                    let toSpeak: string = ''
+                    if (area != lastArea) {
+                        toSpeak += `${area} - `
+                        lastArea = area
+                    } 
+                    toSpeak += map
+                    self.speakI(toSpeak)
+                    self.ignoreInteract = 1
+                }
+            }
+        })
+        sc.GameModel.inject({
+            enterTitle() {
+                this.parent()
+                lastArea = undefined
+            },
+        })
     }
 
     private initGather() {
@@ -409,7 +439,7 @@ export class TextGather {
 
                     const level: number = this.level.targetNumber
                     const hours = this.time.hour.targetNumber
-                    const playtime: string = `${hours > 0 ? `${hours} hours`: ''}${this.time.minute.targetNumber} minutes`
+                    const playtime: string = `${hours > 0 ? `${hours} hours` : ''}${this.time.minute.targetNumber} minutes`
                     SpecialAction.setListener('LSP', 'saveMenu', () => {
                         TextGather.g.speakI(`level ${level}, playtime ${playtime}`)
                     })

@@ -6,6 +6,7 @@
 - Say `uploading` immediately after pressing the F4 keybinding
 - Add save/load menu tts
 - Added text beeing toggle
+- Announce map name when switching maps
  
 ## [0.4.6]
 ### Added
