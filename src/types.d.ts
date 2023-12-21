@@ -40,6 +40,10 @@ declare global {
             uuid: string
             playAtSoundHandle?: ig.SoundHandleWebAudio
         }
+        interface MessageAreaGui {
+            skip(this: this, nextMsg?: boolean): void
+
+        }
     }
     namespace sc {
         interface RowButtonGroup {

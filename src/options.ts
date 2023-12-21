@@ -7,6 +7,7 @@ const loudWallsToggleId: string = `${header}-loudwalls`
 const loudEntitiesToogleId: string = `${header}-loudentities`
 const puzzleToggleId: string = `${header}-puzzle`
 const footstepVolumeId: string = `${header}-footstepvol`
+const textBeepingId: string = `${header}-textbeeping`
 
 const ttsHeader = 'crossedeyes-tts'
 const ttsToogleId: string = `${ttsHeader}`
@@ -30,6 +31,7 @@ export class MenuOptions implements InitPoststart {
     static get loudEntitiesEnabled(): boolean { return opt(loudEntitiesToogleId) && MenuOptions.spacialAudioEnabled }
     static get puzzleEnabled(): boolean { return opt(puzzleToggleId) && MenuOptions.spacialAudioEnabled }
     static get footstepVolume(): number { return opt(footstepVolumeId) }
+    static get textBeeping(): number { return opt(textBeepingId) }
 
     static get ttsEnabled(): boolean { return opt(ttsToogleId) }
     static get ttsCharEnabled(): boolean { return opt(ttsCharToogleId) && MenuOptions.ttsEnabled }
@@ -80,10 +82,16 @@ export class MenuOptions implements InitPoststart {
                 cat: sc.OPTION_CATEGORY.ASSISTS,
                 header: ttsHeader,
                 data,
-                init: 1,
+                init: 1.5,
                 fill: true,
                 showPercentage: true,
             }
+        }
+        sc.OPTIONS_DEFINITION[textBeepingId] = {
+            type: 'CHECKBOX',
+            init: true,
+            cat: sc.OPTION_CATEGORY.ASSISTS,
+            header,
         }
 
         sc.OPTIONS_DEFINITION[ttsToogleId] = {
@@ -168,6 +176,7 @@ export class MenuOptions implements InitPoststart {
         ig.lang.labels.sc.gui.options[loudEntitiesToogleId] = { name: 'Entity noises', description: 'Makes entities emit noise while nearby' }
         ig.lang.labels.sc.gui.options[puzzleToggleId] = { name: 'Puzzle assist', description: 'Solve puzzles blindfolded!' }
         ig.lang.labels.sc.gui.options[footstepVolumeId] = { name: 'Footstep volume', description: 'Footstep volume multiplier' }
+        ig.lang.labels.sc.gui.options[textBeepingId] = { name: 'Text beeping', description: 'Enable text beeping when characters talk' }
 
         ig.lang.labels.sc.gui.options.headers[ttsHeader] = 'TTS'
         ig.lang.labels.sc.gui.options[ttsToogleId] = { name: 'Enable TTS', description: 'Enable TTS' }

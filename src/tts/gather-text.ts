@@ -35,6 +35,8 @@ export class TextGather {
 
     private connect: { count: number, template: string, args: sc.TextLike[] } | undefined
     private lastMessage: sc.TextLike = ''
+    public ignoreInteract: number = 0
+    public ignoreInteractTo: number = 0
 
     public charSpeak(textLike: sc.TextLike, data: CharacterSpeakData): void {
         this.interrupt()
@@ -87,6 +89,15 @@ export class TextGather {
         this.characterSpeakCall = (text: string, data) => {
             characterSpeakCallCopy(text, data)
             this.lastMessage = text
+        }
+
+        const interruptCopy = interrupt
+        this.interrupt = () => {
+            if (this.ignoreInteract > 0) {
+                this.ignoreInteract--
+            } else if (Date.now() > this.ignoreInteractTo) {
+                interruptCopy()
+            }
         }
         this.initGather()
     }

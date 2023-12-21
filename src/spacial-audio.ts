@@ -136,7 +136,7 @@ export class SpacialAudio {
         ig.SoundManager.inject({
             _solveGroupRequests(group) {
                 if (!MenuOptions.spacialAudioEnabled) { return this.parent(group) }
-                if (group.playing.length > 0 && group.playing[group.playing.length - 1].getPlayTime() < 2 / 60) {
+                if (group.playing.length > 0 && group.playing.last().getPlayTime() < 2 / 60) {
                     return false
                 }
 

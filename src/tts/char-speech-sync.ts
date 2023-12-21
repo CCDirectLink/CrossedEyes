@@ -4,14 +4,43 @@ import { SpeechEndListener, TTS } from './tts'
 
 export class CharacterSpeechSynchronizer implements SpeechEndListener {
     sideMessageHudGuiIns!: sc.SideMessageHudGui
+    messageOverlayGuiIns!: ig.MessageOverlayGui
     constructor() { /* in prestart */
         TTS.g.onSpeechEndListeners.push(this)
         const self = this
+        ig.MessageOverlayGui.inject({
+            init() {
+                this.parent()
+                self.messageOverlayGuiIns = this
+            },
+
+        })
+        ig.MessageAreaGui.inject({
+            init() {
+                this.parent()
+            },
+            skip(nextMsg: boolean = true) {
+                console.log('ig.MessageAreaGui#skip')
+                if (nextMsg && MenuOptions.ttsEnabled) {
+                    const msg = this.messages.last()
+                    if (!msg.isFinished()) {
+                        console.log('clearing blocking')
+                        sc.model.message.clearBlocking()
+                    }
+                }
+                this.parent()
+            },
+        })
         sc.MsgBoxGui.inject({
             init(maxWidth, pointerType, text, speed, personEntry, beepSound) {
                 if (MenuOptions.ttsEnabled) {
-                    speed = ig.TextBlock.SPEED.IMMEDIATE
-                    beepSound = null
+                    if (MenuOptions.textBeeping) {
+                        if (!ig.system.skipMode) {
+                            speed = ig.TextBlock.SPEED.SLOWEST / MenuOptions.ttsSpeed
+                        }
+                    } else {
+                        beepSound = null
+                    }
                 }
                 this.parent(maxWidth, pointerType, text, speed, personEntry, beepSound)
             },
@@ -24,13 +53,21 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
             },
             showNextSideMessage() {
                 this.parent()
-                if (MenuOptions.ttsEnabled) { this.timer = 10000000 }
+                if (MenuOptions.ttsEnabled) { 
+                    this.timer = 10000000
+                    TextGather.g.ignoreInteractTo = Date.now() + 100
+                }
             },
             onSkipInteract(type) {
                 TextGather.g.interrupt()
                 this.parent(type)
+                if (MenuOptions.ttsEnabled && type == sc.SKIP_INTERACT_MSG.SKIPPED) {
+                    if (this.visibleBoxes.length > 0) {
+                        this.doMessageStep()
+                    }
+                }
                 if (this.visibleBoxes.length == 0) {
-                    MenuOptions.ttsEnabled && TextGather.g.speakI('Side end')
+                    TextGather.g.speakI('Side end')
                 }
             },
         })
@@ -38,8 +75,11 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
             init() {
                 this.parent()
                 if (MenuOptions.ttsEnabled) {
-                    this.text.setTextSpeed(ig.TextBlock.SPEED.IMMEDIATE)
-                    this.beepSound = null
+                    if (MenuOptions.textBeeping) {
+                        this.text.setTextSpeed(ig.TextBlock.SPEED.SLOWEST / MenuOptions.ttsSpeed)
+                    } else {
+                        this.beepSound = null
+                    }
                 }
             }
         })
@@ -54,10 +94,13 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
     }
     onSpeechEnd(): void {
         if (MenuOptions.ttsEnabled) {
-            if (this.sideMessageHudGuiIns.timer > 1000000) {
-                this.sideMessageHudGuiIns.timer = 0.3
+            if (this.sideMessageHudGuiIns.timer > 10000) {
+                this.sideMessageHudGuiIns.timer = 1
+                this.sideMessageHudGuiIns.visibleBoxes.last().text.finish()
             }
-            // this.messageOverlayGuiIns.messageArea.skip()
+            if (sc.message.blocking && !sc.message.hasChoice()) {
+                this.messageOverlayGuiIns.messageArea.skip(false)
+            }
         }
     }
 }
