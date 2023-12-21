@@ -1,6 +1,7 @@
 # Change Log
 
 ## [Unreleased]
+## [0.4.7] 2023-12-21
 ### Added
 - Added a note in README about os support and the controller requiremenet
 - Say `uploading` immediately after pressing the F4 keybinding
