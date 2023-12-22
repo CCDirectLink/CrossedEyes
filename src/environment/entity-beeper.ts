@@ -20,6 +20,7 @@ function getSoundName(e: ig.Entity): string | undefined {
 
 function playAt(e: ig.Entity) {
     const soundName = getSoundName(e)
+    e.playAtSoundHandle?.stop()
     if (soundName) {
         e.playAtSoundHandle = ig.SoundHelper.playAtEntity(new ig.Sound(soundName, 0.8), e, true, {
             fadeDuration: 0
@@ -67,9 +68,12 @@ export class EntityBeeper implements PauseListener {
                             ((this instanceof ig.ENTITY.Door) && (!this.active)) ||
                             ((this instanceof ig.ENTITY.TeleportField) && (!this.interactEntry))) {
                             this.playAtSoundHandle.stop()
+                            this.playAtPleaseDontResume = true
                         }
-                    } else {
-                        if (this instanceof ig.ENTITY.Door && this.active) { return }
+                    } else if (!this.playAtPleaseDontResume) {
+                        if (this instanceof ig.ENTITY.Door && !this.active) {
+                            return
+                        }
                         playAt(this)
                     }
                 }

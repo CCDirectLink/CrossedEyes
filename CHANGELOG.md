@@ -1,6 +1,9 @@
 # Change Log
 
 ## [Unreleased]
+### Fixes
+- Fixed game slowdowns, freezes and crashed caused by infinite sound handle stacking
+
 ## [0.4.7] 2023-12-21
 ### Added
 - Added a note in README about os support and the controller requiremenet

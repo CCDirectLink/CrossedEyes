@@ -307,7 +307,7 @@ export class LoudJump {
         // console.log(TrackType[type])
         let { handle, sound } = this.dirHandles[i] ?? { handle: undefined, sound: undefined }
         if (type == TrackType.None) {
-            if (handle && handle._playing) { handle.stop() }
+            handle?.stop()
             return
         }
         let soundName: string = ''
@@ -323,7 +323,7 @@ export class LoudJump {
 
         if (soundName) {
             if (soundName && (!handle || !handle._playing || sound != soundName)) {
-                if (handle && handle._playing) { handle.stop() }
+                handle?.stop()
                 this.dirHandles[i] = {
                     handle: new ig.Sound(soundName, volume).play(true, {
                         speed: 1,

@@ -68,11 +68,26 @@ export class SoundManager {
                 this.parent(mapName)
             }
         })
+        let i = 0
+        ig.SoundManager.inject({
+            update() {
+                this.parent()
+                if ((i += ig.system.ingameTick) > 10) {
+                    i = 0
+                    SoundManager.cleanupDeadSounds()
+                }
+            },
+        })
         this.preloadSounds()
     }
     private preloadSounds() {
         Object.values(SoundManager.sounds).forEach(str => new ig.Sound(str))
     }
+
+    static cleanupDeadSounds() {
+        ig.soundManager.soundStack = ig.soundManager.soundStack.map(e => e.filter(h => h._playing || h._buffer))
+    }
+
     static playSoundPath(path: string, speed: number, volume: number = 1, pos?: Vec3): ig.SoundHandleWebAudio {
         const sound = new ig.Sound(path, volume)
         const handle: ig.SoundHandleWebAudio = sound.play(false, {

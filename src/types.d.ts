@@ -39,6 +39,7 @@ declare global {
         interface Entity {
             uuid: string
             playAtSoundHandle?: ig.SoundHandleWebAudio
+            playAtPleaseDontResume?: boolean
         }
         interface MessageAreaGui {
             skip(this: this, nextMsg?: boolean): void
