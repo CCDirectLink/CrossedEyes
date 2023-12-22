@@ -2,11 +2,13 @@ import { LoudWalls } from '../environment/loudwalls'
 import { MenuOptions } from '../options'
 import { TextGather } from '../tts/gather-text'
 import CrossedEyes, { PauseListener } from '../plugin'
-import { isAiming } from '../environment/puzzle'
 import { HintSystem } from './hint-system'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
+export function isAiming(): boolean {
+    return ig.input.state('aim') || ig.gamepad.isRightStickDown()
+}
 export class AimAnalyzer implements PauseListener {
     static g: AimAnalyzer
 

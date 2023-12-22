@@ -1,8 +1,8 @@
 import { Mod1 } from 'cc-blitzkrieg/src/types'
 import { SpacialAudio } from './spacial-audio'
 import type * as _ from 'cc-vim'
+import type * as __ from 'cc-blitzkrieg'
 import { MenuOptions } from './options'
-import { PuzzleBeeper } from './environment/puzzle'
 import { LoudWalls } from './environment/loudwalls'
 import { SoundManager } from './sound-manager'
 import { TTS } from './tts/tts'
@@ -28,8 +28,6 @@ export interface InitPoststart {
 export default class CrossedEyes {
     static dir: string
     static mod: Mod1
-
-    puzzleBeeper!: PuzzleBeeper
 
     static pauseables: PauseListener[] = []
     static initPoststarters: InitPoststart[] = []
@@ -64,7 +62,6 @@ export default class CrossedEyes {
         new InteratableHandler()
         new SpecialAction()
         new TTS()
-        this.puzzleBeeper = new PuzzleBeeper()
         new EntityBeeper()
         new CharacterSpeechSynchronizer()
 
@@ -185,9 +182,6 @@ export default class CrossedEyes {
 
     addVimAliases() {
         if (window.vim) { /* optional dependency https://github.com/krypciak/cc-vim */
-            vim.addAlias('crossedeyes', 'reset-puzzle', 'Reset puzzle step index', (ingame: boolean) => ingame && blitzkrieg.currSel.name == 'puzzle', () => {
-                this.puzzleBeeper.stepI = 0
-            })
         }
     }
 }

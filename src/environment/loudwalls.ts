@@ -1,8 +1,7 @@
-import { AimAnalyzer } from '../hint-system/aim-analyze'
+import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
 import { MenuOptions } from '../options'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager, isHandleMuted, muteHandle } from '../sound-manager'
-import { isAiming } from './puzzle'
 
 const c_res = {}
 const c_tmpPos: Vec3 = { x: 0, y: 0, z: 0 }

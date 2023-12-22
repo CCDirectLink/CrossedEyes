@@ -1,5 +1,3 @@
-import { isAiming } from './environment/puzzle'
-
 export function muteHandle(handle: ig.SoundHandleWebAudio, range: number) {
     handle.setFixPosition(Vec3.createC(-1000, -1000, 0), range)
 }
@@ -35,20 +33,6 @@ export class SoundManager {
     static continiousSounds: Record<string, ig.SoundHandleWebAudio> = {}
 
     static sounds = {
-        countdown1: 'media/sound/misc/countdown-1.ogg',
-        countdown2: 'media/sound/misc/countdown-2.ogg',
-        computerBeep: 'media/sound/misc/computer-beep-success.ogg',
-        trainCudeHide: 'media/sound/environment/train-cube-hide.ogg',
-        botSuccess: 'media/sound/puzzle/bot-success.ogg',
-        counter: 'media/sound/puzzle/counter.ogg',
-        // botFailure: 'media/sound/puzzle/bot-failure.ogg',
-        neutralMode: 'media/sound/move/neutral-mode.ogg',
-        coldMode: 'media/sound/move/cold-mode.ogg',
-        heatMode: 'media/sound/move/heat-mode.ogg',
-        waveMode: 'media/sound/move/wave-mode.ogg',
-        shockMode: 'media/sound/move/shock-mode.ogg',
-        hitCounterEcho: 'media/sound/battle/hit-counter-echo.ogg',
-
         wall: 'media/sound/crossedeyes/wall.ogg',
         water: 'media/sound/background/waterfall.ogg',
         hole: 'media/sound/crossedeyes/hole.ogg',
@@ -163,82 +147,5 @@ export class SoundManager {
 
     static isContiniousSoundPlaying(id: string): boolean {
         return !!this.continiousSounds[id]
-    }
-}
-
-export class PuzzleSounds {
-    static puzzleSolved() {
-        SoundManager.clearQueue()
-        SoundManager.appendQueue([
-            { name: 'botSuccess' },
-            { wait: 20, name: 'counter' },
-            { wait: 150, name: 'botSuccess' },
-        ])
-    }
-
-    static moveGuide(speed: number, pos: Vec3) {
-        SoundManager.playSound('trainCudeHide', speed, 1, pos)
-    }
-
-    static moveLockin(pos: Vec3, action: () => void) {
-        SoundManager.appendQueue([
-            { name: 'countdown1', pos, speed: 1.2, },
-            { wait: 150, name: 'countdown2', pos, speed: 1.2, action },
-        ])
-    }
-    static moveLockout(pos: Vec3, action: () => void) {
-        SoundManager.appendQueue([
-            { name: 'countdown2', pos, speed: 1.2, },
-            { wait: 150, name: 'countdown1', pos, speed: 1.2, action },
-        ])
-    }
-
-    static moveWaitFinished() {
-        SoundManager.clearQueue()
-        SoundManager.appendQueue([
-            { name: 'botSuccess' },
-        ])
-    }
-
-
-    static aimLockin(pos: Vec2, element: sc.ELEMENT, action: () => void) {
-        SoundManager.appendQueue([
-            { name: 'countdown1', relativePos: true, pos },
-            { wait: 200, name: 'countdown2', relativePos: true, pos },
-            {
-                wait: 100, name: SoundManager.getElementName(element), speed: 1.2, action,
-                condition: () => isAiming() && element !== sc.model.player.currentElementMode,
-            }
-        ])
-    }
-
-    static aimLockout(pos: Vec2, action: () => void) {
-        SoundManager.clearQueue()
-        SoundManager.appendQueue([
-            { name: 'countdown2', relativePos: true, pos },
-            { wait: 200, name: 'countdown1', relativePos: true, pos, action },
-        ])
-    }
-
-    static aimGuide(speed: number, pos: Vec2) {
-        SoundManager.playSoundAtRelative('computerBeep', speed, 1, pos)
-    }
-
-    static shootNow(wait: number, lockinCheck: () => boolean, shotCount?: number): number {
-        const entry: SoundQueueEntry = { wait, name: 'hitCounterEcho', speed: 1.1, condition: lockinCheck }
-        const queue: SoundQueueEntry[] = [entry]
-        const waitBetweenSounds: number = 100
-        let ret: number = 0
-        if (shotCount) {
-            ret = shotCount + 1
-            for (let i = 0; i < shotCount; i++) {
-                const ne = { ...entry }
-                ne.wait = waitBetweenSounds
-                queue.push(ne)
-            }
-        }
-
-        SoundManager.appendQueue(queue)
-        return ret
     }
 }

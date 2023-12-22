@@ -1,6 +1,5 @@
-import { AimAnalyzer } from '../hint-system/aim-analyze'
+import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
 import { MenuOptions } from '../options'
-import { isAiming } from './puzzle'
 import { SoundManager } from '../sound-manager'
 import CrossedEyes from '../plugin'
 
