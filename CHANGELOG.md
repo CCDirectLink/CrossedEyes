@@ -1,6 +1,9 @@
 # Change Log
 
 ## [Unreleased]
+### Added
+- Announce mod version on startup
+
 ### Fixes
 - Fixed game slowdowns, freezes and crashed caused by infinite sound handle stacking
 

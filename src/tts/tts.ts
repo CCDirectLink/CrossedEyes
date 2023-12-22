@@ -38,14 +38,15 @@ export class TTS {
     textGather: TextGather
 
     onSpeechEndListeners: SpeechEndListener[] = []
+    onReadyListeners: (() => void)[] = []
 
     constructor() { /* in prestart */
         TTS.g = this
         CrossedEyes.initPoststarters.push(this)
         this.textGather = new TextGather(
-            (text: string) => { console.log(text); this.ttsInstance && this.ttsInstance.speak(text) },
-            (text: string, data: CharacterSpeakData) => { console.log(text); this.ttsInstance && this.ttsInstance.characterSpeak(text, data) },
-            () => { console.log('interrupt'); this.ttsInstance && this.ttsInstance.clearQueue() }
+            (text: string) => { this.ttsInstance && this.ttsInstance.speak(text) },
+            (text: string, data: CharacterSpeakData) => { this.ttsInstance && this.ttsInstance.characterSpeak(text, data) },
+            () => { this.ttsInstance && this.ttsInstance.clearQueue() }
         )
         const self = this
         sc.OptionModel.inject({
@@ -70,5 +71,12 @@ export class TTS {
     async initPoststart() {
         AddonInstaller.checkInstall()
         this.setup()
+        const interval = setInterval(() => {
+            if (this.ttsInstance.isReady()) {
+                this.onReadyListeners.forEach(f => f())
+                this.onReadyListeners = []
+                clearInterval(interval)
+            }
+        }, 100)
     }
 }

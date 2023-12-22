@@ -49,7 +49,6 @@ export class TTSNvda implements TTSInterface {
         if (cmd == 'speechEnd') {
             TTS.g.onSpeechEndListeners.forEach(i => i.onSpeechEnd())
             this.queue.shift()
-            console.log('reviced: speechEnd')
         }
     }
 
@@ -57,7 +56,6 @@ export class TTSNvda implements TTSInterface {
         for (const socket of this.sockets) {
             socket.send(command)
         }
-        console.log('sending:', command)
     }
 
     isReady(): boolean {

@@ -1,6 +1,7 @@
 import { MenuOptions } from './options'
 import CrossedEyes from './plugin'
 import { TextGather } from './tts/gather-text'
+import { TTS } from './tts/tts'
 import { AddonInstaller } from './tts/tts-nvda'
 
 export class AutoUpdater {
@@ -49,6 +50,11 @@ export class AutoUpdater {
                 } else {
                     window.location.reload()
                 }
+            } else {
+                TTS.g.onReadyListeners.push(() => {
+                    console.log(CrossedEyes.mod.version)
+                    MenuOptions.ttsEnabled && TextGather.g.speakI(`CrossedEyes version: ${CrossedEyes.mod.version!.toString().replace(/\./g, ': ')}: up to date`)
+                })
             }
         }
     }
