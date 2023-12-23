@@ -16,6 +16,7 @@ import { MovementSoundTweaker } from './environment/movementSounds'
 import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
 import { AutoUpdater } from './autoupdate'
 import { TextGather } from './tts/gather-text'
+import { godmode } from './godmode'
 
 export interface PauseListener {
     pause?(): void
@@ -98,20 +99,6 @@ export default class CrossedEyes {
     }
 
     addTestMapTitleScreenButton() {
-        function godlikeStats() {
-            for (const k of Object.keys(sc.model.player.core) as unknown as sc.PLAYER_CORE[]) { sc.model.player.core[k] = true }
-
-            sc.model.player.setSpLevel(4)
-            sc.newgame.setActive(true)
-            sc.newgame.toggle('infinite-sp')
-            sc.model.player.setLevel(99)
-            sc.model.player.equip = { head: 657, leftArm: 577, rightArm: 607, torso: 583, feet: 596 }
-            for (let i = 0; i < sc.model.player.skillPoints.length; i++) { sc.model.player.skillPoints[i] = 200 }
-            for (let i = 0; i < 400; i++) { sc.model.player.learnSkill(i) }
-            for (let i = 0; i < sc.model.player.skillPoints.length; i++) { sc.model.player.skillPoints[i] = 0 }
-            sc.model.player.updateStats()
-        }
-
         let startWithTestMap: boolean = false
         function startTestMap(titleGuiInstance?: sc.TitleScreenButtonGui) {
             startWithTestMap = true
@@ -123,7 +110,7 @@ export default class CrossedEyes {
             }
             ig.game.start(sc.START_MODE.STORY, 0)
             ig.game.setPaused(false)
-            godlikeStats()
+            godmode()
         }
         sc.TitleScreenButtonGui.inject({
             init() {
