@@ -45,6 +45,10 @@ const fontImgToNameMap: Record<string, string> = {
     '<': '',
     '>': '',
     'tech': '',
+    'item-helm-scale': '',
+    'item-sword-scale': '',
+    'item-belt-scale': '',
+    'item-shoe-scale': '',
 }
 
 

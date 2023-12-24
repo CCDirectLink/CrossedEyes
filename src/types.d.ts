@@ -62,19 +62,24 @@ declare global {
             interface NPC {
                 nameGui: sc.NPCHintMenu
             }
+            interface Enemy {
+                entity: ig.ENTITY.Enemy
+                nameGui: sc.EnemyHintMenu
+            }
         }
         interface BasicHintMenu extends ig.BoxGui {
-            getText: () => [string, string]
+            getText: () => [string, string, string | null]
             ninepatch: ig.NinePatch
             title: sc.TextGui
             description: sc.TextGui
+            description2: string | null
 
             setPosition(this: this, hook: ig.GuiHook, e: ig.Entity): void
             getCenter(this: this, a: ig.GuiHook): number
             updateData(this: this): number
         }
         interface BasicHintMenuConstructor extends ImpactClass<BasicHintMenu> {
-            new(getText: () => [string, string]): BasicHintMenu
+            new(getText: () => ReturnType<BasicHintMenu['getText']>): BasicHintMenu
         }
         var BasicHintMenu: BasicHintMenuConstructor
 
@@ -90,6 +95,13 @@ declare global {
         }
         var NPCHintMenu: NPCHintMenuConstructor
 
+        interface EnemyHintMenu extends sc.BasicHintMenu { }
+        interface EnemyHintMenuConstructor extends ImpactClass<EnemyHintMenu> {
+            new(enemy: ig.ENTITY.Enemy): EnemyHintMenu
+        }
+        var EnemyHintMenu: EnemyHintMenuConstructor
+
+        var NPCHintMenu: NPCHintMenuConstructor
         interface QuickMenuTypesBaseSettings {
             hintName?: string
             hintType?: HintTypes

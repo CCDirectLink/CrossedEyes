@@ -26,7 +26,7 @@ export class NPCHintMenu {
                     description = 'Unnamed NPC'
                 }
                 this.parent(() => {
-                    return [text, description]
+                    return [text, description, null]
                 })
             },
         })

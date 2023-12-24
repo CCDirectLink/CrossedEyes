@@ -20,11 +20,9 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
                 this.parent()
             },
             skip(nextMsg: boolean = true) {
-                console.log('ig.MessageAreaGui#skip')
                 if (nextMsg && MenuOptions.ttsEnabled) {
                     const msg = this.messages.last()
                     if (!msg.isFinished()) {
-                        console.log('clearing blocking')
                         sc.model.message.clearBlocking()
                     }
                 }

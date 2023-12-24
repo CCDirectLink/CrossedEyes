@@ -55,6 +55,65 @@
 				"faceDir": "SOUTH"
 			}
 		},
+		{ "type": "FloorSwitch", "x": 763, "y": 201, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 43, "name": "fse0", "variable": "tmp.sideMsg0", "switchType": "WHILE_ON_TOP" } },
+		{
+			"type": "EventTrigger",
+			"x": 764,
+			"y": 132,
+			"level": 2,
+			"settings": {
+				"size": { "x": 16, "y": 16 },
+				"mapId": 44,
+				"event": [
+					{
+						"type": "IF",
+						"withElse": false,
+						"condition": "tmp.sideMsg0Cond",
+						"thenStep": [
+							{ "person": { "person": "main.sergey", "expression": "JOKING" }, "message": { "en_US": "UuUuUuUuUu ballllllls UuUuUuUuUu", "langUid": 0 }, "type": "SHOW_SIDE_MSG" },
+							{ "person": { "person": "main.lea", "expression": "COMPLEX" }, "message": { "en_US": "no" }, "type": "SHOW_SIDE_MSG" },
+							{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg0Cond", "changeType": "set", "value": false }
+						]
+					}
+				],
+				"eventType": "INTERRUPTABLE",
+				"startCondition": "tmp.sideMsg0",
+				"triggerType": "ALWAYS",
+				"name": "sideMsgEvent0",
+				"loadCondition": true,
+				"endCondition": "false"
+			}
+		},
+		{ "type": "EventTrigger", "x": 765, "y": 150, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 45, "event": [{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg0Cond", "changeType": "set", "value": true }], "name": "sideMsgCondEvent0", "eventType": "INTERRUPTABLE", "startCondition": "!tmp.sideMsg0", "endCondition": "false", "triggerType": "ALWAYS", "loadCondition": true } },
+		{ "type": "FloorSwitch", "x": 800, "y": 202, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 46, "name": "fse1", "variable": "tmp.sideMsg1", "switchType": "WHILE_ON_TOP" } },
+		{ "type": "EventTrigger", "x": 801, "y": 103, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 47, "event": [{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg1Cond", "changeType": "set", "value": true }], "name": "sideMsgCondEvent1", "eventType": "INTERRUPTABLE", "startCondition": "!tmp.sideMsg1", "endCondition": "false", "triggerType": "ALWAYS", "loadCondition": true } },
+		{
+			"type": "EventTrigger",
+			"x": 801,
+			"y": 82,
+			"level": 2,
+			"settings": {
+				"size": { "x": 16, "y": 16 },
+				"mapId": 48,
+				"event": [
+					{
+						"type": "IF",
+						"withElse": false,
+						"condition": "tmp.sideMsg1Cond",
+						"thenStep": [
+							{ "person": { "person": "main.sergey", "expression": "INTENSE1" }, "message": { "en_US": "*intensive writing of ccmodmanager5*", "langUid": 0 }, "type": "SHOW_SIDE_MSG" },
+							{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg1Cond", "changeType": "set", "value": false }
+						]
+					}
+				],
+				"eventType": "INTERRUPTABLE",
+				"startCondition": "tmp.sideMsg1",
+				"triggerType": "ALWAYS",
+				"name": "sideMsgEvent1",
+				"loadCondition": true,
+				"endCondition": "false"
+			}
+		},
 		{
 			"type": "NPC",
 			"x": 707,
@@ -165,65 +224,10 @@
 		{ "type": "Enemy", "x": 546, "y": 206, "level": 2, "settings": { "name": "bot1", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 18 } },
 		{ "type": "Enemy", "x": 572, "y": 206, "level": 2, "settings": { "name": "bot2", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 19 } },
 		{ "type": "Enemy", "x": 598, "y": 206, "level": 2, "settings": { "name": "bot3", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_NOT_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 20 } },
-		{ "type": "FloorSwitch", "x": 763, "y": 201, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 43, "name": "fse0", "variable": "tmp.sideMsg0", "switchType": "WHILE_ON_TOP" } },
-		{
-			"type": "EventTrigger",
-			"x": 764,
-			"y": 132,
-			"level": 2,
-			"settings": {
-				"size": { "x": 16, "y": 16 },
-				"mapId": 44,
-				"event": [
-					{
-						"type": "IF",
-						"withElse": false,
-						"condition": "tmp.sideMsg0Cond",
-						"thenStep": [
-							{ "person": { "person": "main.sergey", "expression": "JOKING" }, "message": { "en_US": "UuUuUuUuUu ballllllls UuUuUuUuUu", "langUid": 0 }, "type": "SHOW_SIDE_MSG" },
-							{ "person": { "person": "main.lea", "expression": "COMPLEX" }, "message": { "en_US": "no" }, "type": "SHOW_SIDE_MSG" },
-							{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg0Cond", "changeType": "set", "value": false }
-						]
-					}
-				],
-				"eventType": "INTERRUPTABLE",
-				"startCondition": "tmp.sideMsg0",
-				"triggerType": "ALWAYS",
-				"name": "sideMsgEvent0",
-				"loadCondition": true,
-				"endCondition": "false"
-			}
-		},
-		{ "type": "EventTrigger", "x": 765, "y": 150, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 45, "event": [{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg0Cond", "changeType": "set", "value": true }], "name": "sideMsgCondEvent0", "eventType": "INTERRUPTABLE", "startCondition": "!tmp.sideMsg0", "endCondition": "false", "triggerType": "ALWAYS", "loadCondition": true } },
-		{ "type": "FloorSwitch", "x": 800, "y": 202, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 46, "name": "fse1", "variable": "tmp.sideMsg1", "switchType": "WHILE_ON_TOP" } },
-		{ "type": "EventTrigger", "x": 801, "y": 103, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 47, "event": [{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg1Cond", "changeType": "set", "value": true }], "name": "sideMsgCondEvent1", "eventType": "INTERRUPTABLE", "startCondition": "!tmp.sideMsg1", "endCondition": "false", "triggerType": "ALWAYS", "loadCondition": true } },
-		{
-			"type": "EventTrigger",
-			"x": 801,
-			"y": 82,
-			"level": 2,
-			"settings": {
-				"size": { "x": 16, "y": 16 },
-				"mapId": 48,
-				"event": [
-					{
-						"type": "IF",
-						"withElse": false,
-						"condition": "tmp.sideMsg1Cond",
-						"thenStep": [
-							{ "person": { "person": "main.sergey", "expression": "INTENSE1" }, "message": { "en_US": "*intensive writing of ccmodmanager5*", "langUid": 0 }, "type": "SHOW_SIDE_MSG" },
-							{ "type": "CHANGE_VAR_BOOL", "varName": "tmp.sideMsg1Cond", "changeType": "set", "value": false }
-						]
-					}
-				],
-				"eventType": "INTERRUPTABLE",
-				"startCondition": "tmp.sideMsg1",
-				"triggerType": "ALWAYS",
-				"name": "sideMsgEvent1",
-				"loadCondition": true,
-				"endCondition": "false"
-			}
-		}
+		{ "type": "Enemy", "x": 874, "y": 202, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 49, "enemyInfo": { "party": "PLAYER", "level": 1, "face": "SOUTH", "state": "IDLE", "type": "frobbit" } } },
+		{ "type": "Enemy", "x": 917, "y": 203, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 51, "enemyInfo": { "party": "PLAYER", "level": 1, "face": "SOUTH", "state": "IDLE", "type": "meerkat-alt" } } },
+		{ "type": "Enemy", "x": 1016, "y": 211, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 52, "enemyInfo": { "party": "PLAYER", "level": 1, "face": "SOUTH", "state": "", "type": "heat.special.brew-machine" } } },
+		{ "type": "Enemy", "x": 962, "y": 203, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 53, "enemyInfo": { "party": "PLAYER", "level": 1, "face": "SOUTH", "state": "IDLE", "type": "jungle.blob" } } }
 	],
 	"layer": [
 		{

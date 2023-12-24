@@ -1,17 +1,18 @@
 import CrossedEyes from './plugin'
 
 export class SpecialAction {
-    private static instance: SpecialAction
+    private static g: SpecialAction
 
-    private actions: Record<SpecialAction.Actions, { check: () => boolean, lastActivated: number, callbacks: Record<string, () => void> }> = {
+    private actions: Record<SpecialAction.Actions, { check: () => boolean, callbacks: Record<string, () => void> }> = {
         // 'L1R1': { check: () => ig.gamepad.isButtonDown(ig.BUTTONS.RIGHT_TRIGGER) && ig.gamepad.isButtonDown(ig.BUTTONS.LEFT_TRIGGER), lastActivated: 0, callbacks: {} },
         // 'L2R2': { check: () => ig.gamepad.isButtonDown(ig.BUTTONS.RIGHT_TRIGGER) && ig.gamepad.isButtonDown(ig.BUTTONS.LEFT_TRIGGER), lastActivated: 0, callbacks: {} },
-        'LSP': { check: () => ig.gamepad.isButtonDown(ig.BUTTONS.LEFT_STICK), lastActivated: 0, callbacks: {} },
-        'RSP': { check: () => ig.gamepad.isButtonDown(ig.BUTTONS.RIGHT_STICK), lastActivated: 0, callbacks: {} },
+        'LSP': { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_STICK), callbacks: {} },
+        'RSP': { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_STICK), callbacks: {} },
+        'R2': { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_TRIGGER), callbacks: {} },
     }
 
     constructor() { /* in prestart */
-        SpecialAction.instance = this
+        SpecialAction.g = this
         CrossedEyes.initPoststarters.push(this)
     }
     initPoststart() {
@@ -21,21 +22,17 @@ export class SpecialAction {
     onPreUpdate() { /* run by ig.game.addons.preUpdate */
         for (const actionName of Object.keys(this.actions) as (SpecialAction.Actions)[]) {
             const action = this.actions[actionName]
-            const active: boolean = action.check()
-            if (active) {
-                if (Date.now() - action.lastActivated > 30) {
-                    Object.values(action.callbacks).forEach(c => c())
-                }
-                action.lastActivated = Date.now()
+            if (action.check()) {
+                Object.values(action.callbacks).forEach(c => c())
             }
         }
     }
 
     static setListener(type: SpecialAction.Actions, name: string, callback: () => void) {
-        SpecialAction.instance.actions[type].callbacks[name] = callback
+        SpecialAction.g.actions[type].callbacks[name] = callback
     }
 }
 
 export namespace SpecialAction {
-    export type Actions = 'LSP' | 'RSP' //'L1R1' | 'L2R2'
+    export type Actions = 'LSP' | 'RSP' | 'R2'
 }

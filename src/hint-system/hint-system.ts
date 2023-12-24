@@ -4,6 +4,7 @@ import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { TextGather } from '../tts/gather-text'
 import { AimAnalyzer, isAiming } from './aim-analyze'
+import { EnemyHintMenu } from './enemy-override'
 import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
 import { HDestructible } from './hints/destructible'
 import { HEnemy } from './hints/enemy'
@@ -25,7 +26,7 @@ export interface Hint {
     getDataFromEntity<T extends ig.Entity>(entity: T): HintData
 }
 
-export type ReqHintEntry = { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui } }
+export type ReqHintEntry = { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui, description2: string | null } }
 
 export class HintSystem implements PauseListener {
     static g: HintSystem
@@ -41,9 +42,9 @@ export class HintSystem implements PauseListener {
         HTeleportField,
         HTeleportGround,
         HElevator,
-        HEnemy,
         HWalls,
         HDestructible,
+        HEnemy,
     ]
     filterType: typeof HintTypes[number] | 'Hints' = 'All'
     filterHintType: typeof HintSubTypes[number] | undefined
@@ -68,6 +69,7 @@ export class HintSystem implements PauseListener {
                 }
                 this.activeHints[0] = undefined
                 SpecialAction.setListener('LSP', 'hintDescription', () => { })
+                SpecialAction.setListener('R2', 'hintDescription', () => { })
             } else {
                 this.activeHints.splice(index, 1)
                 this.activeHints[0] && (this.activeHints[0]!.muted = false)
@@ -97,10 +99,15 @@ export class HintSystem implements PauseListener {
         this.activeHints[index] = { hint, handle }
 
         const isToggled = this.activeHints.slice(1).findIndex(e => e?.hint.entity.uuid == hint.entity.uuid) >= 0
-        MenuOptions.ttsMenuEnabled && TextGather.g.speakI(`${isToggled ? 'selected, ' : ''}${hint.nameGui.title.text}`)
+        MenuOptions.ttsEnabled && TextGather.g.speakI(`${isToggled ? 'selected, ' : ''}${hint.nameGui.title.text}`)
         SpecialAction.setListener('LSP', 'hintDescription', () => {
-            MenuOptions.ttsMenuEnabled && TextGather.g.speakI(hint.nameGui.description.text)
+            MenuOptions.ttsEnabled && TextGather.g.speakI(hint.nameGui.description.text)
         })
+        if (hint.nameGui.description2) {
+            SpecialAction.setListener('R2', 'hintDescription', () => {
+                MenuOptions.ttsEnabled && sc.quickmodel.isQuickCheck() && TextGather.g.speakI(hint.nameGui.description2)
+            })
+        }
     }
 
     updateHintSound(hint: ReqHintEntry, handle: ig.SoundHandle) {
@@ -264,7 +271,7 @@ export class HintSystem implements PauseListener {
         sc.BasicHintMenu = ig.BoxGui.extend({
             ninepatch: new ig.NinePatch('media/gui/menu.png', { width: 8, height: 8, left: 8, top: 8, right: 8, bottom: 8, offsets: { default: { x: 432, y: 304 }, flipped: { x: 456, y: 304 } } }),
             transitions: { HIDDEN: { state: { alpha: 0 }, time: 0.2, timeFunction: KEY_SPLINES.LINEAR }, DEFAULT: { state: {}, time: 0.2, timeFunction: KEY_SPLINES.EASE } },
-            init(getText: () => [string, string]) {
+            init(getText: () => [string, string, string | null]) {
                 this.getText = getText
                 const width = this.updateData()
                 this.parent(width, 17 + this.description.textBlock.size.y)
@@ -273,13 +280,15 @@ export class HintSystem implements PauseListener {
                 this.doStateTransition('HIDDEN', true)
             },
             updateData(): number {
-                const [title, desc] = this.getText()
+                const [title, desc1, desc2] = this.getText()
                 this.title = new sc.TextGui(title, { font: sc.fontsystem.smallFont })
                 this.title.setAlign(ig.GUI_ALIGN.X_CENTER, ig.GUI_ALIGN.Y_TOP)
                 this.title.setPos(0, 2)
                 const width = Math.max(127, 20 + this.title.textBlock.size.x)
-                this.description = new sc.TextGui(desc, { font: sc.fontsystem.tinyFont, maxWidth: width - 7 })
+                this.description = new sc.TextGui(desc1, { font: sc.fontsystem.tinyFont, maxWidth: width - 7 })
                 this.description.setPos(5, 15)
+
+                this.description2 = desc2
                 return width
             },
             setPosition(hook: ig.GuiHook, e: ig.Entity) {
@@ -312,7 +321,7 @@ export class HintSystem implements PauseListener {
             init(settings: sc.QuickMenuTypesBaseSettings) {
                 this.parent(() => {
                     const data: HintData = self.registeredTypes[settings.hintName!].getDataFromEntity(settings.entity)
-                    return [data.name, data.description]
+                    return [data.name, data.description, null]
                 })
             },
         })
@@ -458,5 +467,6 @@ export class HintSystem implements PauseListener {
         })
 
         new NPCHintMenu()
+        new EnemyHintMenu()
     }
 }
