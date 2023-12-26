@@ -4,6 +4,7 @@
 ### Added
 - Announce mod version on startup
 - Flag Doors, Teleport Grounds and Teleport Fields as visited after going through them
+- Say 'new' when entering a previously undiscovered map
 
 ### Fixes
 - Fixed game slowdowns, freezes and crashed caused by infinite sound handle stacking

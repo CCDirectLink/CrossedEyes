@@ -107,6 +107,7 @@ export class TextGather {
     initPoststart() {
         const self = this
         let lastArea: string | undefined
+        let lastMapKeys: string[] | undefined
         sc.Model.addObserver<sc.MapModel>(sc.map, new class {
             modelChanged(model: sc.Model, msg: sc.MAP_EVENT) {
                 if (MenuOptions.ttsEnabled && model == sc.map && !sc.model.isCutscene() && msg == sc.MAP_EVENT.MAP_ENTERED) {
@@ -114,11 +115,21 @@ export class TextGather {
                     const map: string = sc.map.getCurrentMapName().value
 
                     let toSpeak: string = ''
+
                     if (area != lastArea) {
                         toSpeak += `${area} - `
                         lastArea = area
-                    } 
-                    toSpeak += map
+                    }
+                    let currMapKeys = Object.keys(ig.vars.storage.maps)
+                    if (lastMapKeys) {
+                        const mapPath = ig.game.mapName.toCamel().toPath('', '')
+                        if (!lastMapKeys.includes(mapPath) && currMapKeys.includes(mapPath)) {
+                            toSpeak += 'new'
+                        }
+                    }
+                    lastMapKeys = currMapKeys
+
+                    toSpeak += `map: ${map}`
                     self.speakI(toSpeak)
                     self.ignoreInteract = 1
                 }
@@ -128,6 +139,7 @@ export class TextGather {
             enterTitle() {
                 this.parent()
                 lastArea = undefined
+                lastMapKeys = undefined
             },
         })
     }
