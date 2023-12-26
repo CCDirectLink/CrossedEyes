@@ -22,7 +22,7 @@ export class AimAnalyzer implements PauseListener {
         ig.Entity.inject({
             init(x, y, z, settings) {
                 this.parent(x, y, z, settings)
-                this.uuid = crypto.randomBytes(20).toString('hex')
+                this.uuid = crypto.createHash('sha256').update(`${settings.name}-${x},${y},${z}`).digest('hex')
             },
         })
         ig.ENTITY.Player.inject({

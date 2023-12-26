@@ -14,7 +14,6 @@ export class HDestructible implements Hint {
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
                 return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled) }
             },
-            isQuickMenuVisible() { return false },
         })
     }
     getDataFromEntity(e: ig.Entity): HintData {

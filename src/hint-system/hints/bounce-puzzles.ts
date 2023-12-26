@@ -10,13 +10,11 @@ export class HBounceBlock implements Hint {
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
                 return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && this.blockState != 2) }
             },
-            isQuickMenuVisible() { return false },
         })
         ig.ENTITY.Blocker.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
                 return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && this.active) }
             },
-            isQuickMenuVisible() { return false },
         })
     }
     getDataFromEntity(e: ig.Entity): HintData {
@@ -46,7 +44,6 @@ export class HBounceSwitch implements Hint {
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
                 return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && !this.isOn) }
             },
-            isQuickMenuVisible() { return false },
         })
     }
     getDataFromEntity(e: ig.Entity): HintData {
