@@ -147,7 +147,11 @@ export default class CrossedEyes {
                     if (ig.input.pressed('copylog')) {
                         MenuOptions.ttsEnabled && TextGather.g.speakI('uploading')
                         const fs: typeof import('fs') = require('fs')
-                        const data = fs.readFileSync('biglog.txt').toString()
+                        let data = fs.readFileSync('biglog.txt').toString()
+                        const nvdaLogPath: string = `${process.env.TMP ?? ''}/nvda.log`
+                        if (blitzkrieg.FsUtil.doesFileExist(nvdaLogPath)) {
+                            data += `\n\n----------------NVDA LOG----------------\n${await fs.promises.readFile(nvdaLogPath)}`
+                        }
                         const form = new FormData()
                         form.append('file', new File([data], 'crosscode.log'))
 

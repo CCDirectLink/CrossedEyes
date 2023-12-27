@@ -9,6 +9,7 @@
 - Announce mod version on startup
 - Flag Doors, Teleport Grounds and Teleport Fields as visited after going through them
 - Say 'new' when entering a previously undiscovered map
+- Also upload NVDA log on F4
 
 ### Fixes
 
