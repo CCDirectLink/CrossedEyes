@@ -3,15 +3,16 @@ import CrossedEyes from './plugin'
 export class SpecialAction {
     private static g: SpecialAction
 
-    private actions: Record<SpecialAction.Actions, { check: () => boolean, callbacks: Record<string, () => void> }> = {
+    private actions: Record<SpecialAction.Actions, { check: () => boolean; callbacks: Record<string, () => void> }> = {
         // 'L1R1': { check: () => ig.gamepad.isButtonDown(ig.BUTTONS.RIGHT_TRIGGER) && ig.gamepad.isButtonDown(ig.BUTTONS.LEFT_TRIGGER), lastActivated: 0, callbacks: {} },
         // 'L2R2': { check: () => ig.gamepad.isButtonDown(ig.BUTTONS.RIGHT_TRIGGER) && ig.gamepad.isButtonDown(ig.BUTTONS.LEFT_TRIGGER), lastActivated: 0, callbacks: {} },
-        'LSP': { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_STICK), callbacks: {} },
-        'RSP': { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_STICK), callbacks: {} },
-        'R2': { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_TRIGGER), callbacks: {} },
+        LSP: { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_STICK), callbacks: {} },
+        RSP: { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_STICK), callbacks: {} },
+        R2: { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_TRIGGER), callbacks: {} },
     }
 
-    constructor() { /* in prestart */
+    constructor() {
+        /* in prestart */
         SpecialAction.g = this
         CrossedEyes.initPoststarters.push(this)
     }
@@ -19,8 +20,9 @@ export class SpecialAction {
         ig.game.addons.preUpdate.push(this)
     }
 
-    onPreUpdate() { /* run by ig.game.addons.preUpdate */
-        for (const actionName of Object.keys(this.actions) as (SpecialAction.Actions)[]) {
+    onPreUpdate() {
+        /* run by ig.game.addons.preUpdate */
+        for (const actionName of Object.keys(this.actions) as SpecialAction.Actions[]) {
             const action = this.actions[actionName]
             if (action.check()) {
                 Object.values(action.callbacks).forEach(c => c())

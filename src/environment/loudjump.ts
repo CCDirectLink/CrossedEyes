@@ -17,7 +17,7 @@ function saveTickData(): TickData {
         timerLast: ig.Timer._last,
         rawTick: ig.system.rawTick,
         tick: ig.system.tick,
-        systemClock: ig.system.clock.last
+        systemClock: ig.system.clock.last,
     }
 }
 
@@ -39,7 +39,6 @@ function advanceTime(start: number, add: number) {
 
 export function isFallingOrJumping(e: ig.ActorEntity) {
     return e.jumping || isFallTerrainOrHole(getTerrainButDefIsHole(e.coll, true))
-
 }
 
 export interface PlayerTraceResult {
@@ -107,17 +106,22 @@ function initCrossedEyesPositionPredictor() {
                     this.rfcr.jumped = true
                 } else if (this.rfcr.jumped && !isFallingOrJumping(this)) {
                     this.rfcr.jumpLanded = true
-                    this.stopRunning(); return
+                    this.stopRunning()
+                    return
                 }
                 if (!this.jumping && !isFallingOrJumping(this)) {
                     if (ig.CollTools.hasWallCollide(this.coll, 1)) {
                         this.rfcr.collided = true
                     }
                     if (ig.Timer.time - this.rfc.startTime > this.rfc.timer) {
-                        this.stopRunning(); return
+                        this.stopRunning()
+                        return
                     }
                 }
-                if (ig.Timer.time - this.rfc.startTime > 5) { this.stopRunning(); return }
+                if (ig.Timer.time - this.rfc.startTime > 5) {
+                    this.stopRunning()
+                    return
+                }
             }
         },
         checkQuickRespawn() {
@@ -125,7 +129,8 @@ function initCrossedEyesPositionPredictor() {
                 const e = ig.EntityTools.getGroundEntity(this)
                 if (!e || !(e instanceof ig.ENTITY.Elevator)) {
                     this.rfcr.fallType = ig.TERRAIN.HOLE
-                    this.stopRunning(); return
+                    this.stopRunning()
+                    return
                 }
             }
             if (!(this.coll.pos.z > this.coll.baseZPos || this.jumping || this.coll.zGravityFactor == 0)) {
@@ -141,7 +146,7 @@ function initCrossedEyesPositionPredictor() {
             this.rfc = {
                 on: true,
                 startTime: ig.Timer.time,
-                timer: seconds
+                timer: seconds,
             }
             this.rfcr = { pos: Vec3.create() }
 
@@ -197,7 +202,6 @@ enum TrackType {
     None,
 }
 
-
 export class LoudJump {
     predictor!: sc.CrossedEyesPositionPredictor
     lastTrack: number = 0
@@ -207,14 +211,14 @@ export class LoudJump {
         vel: number
         time: number
     }[] = [
-            /* travel the same distance but with different speed */
-            { vel: 0.7, time: 0.4285714285714286 },
-            { vel: 0.8, time: 0.375 },
-            { vel: 1, time: 0.3 },
-        ]
+        /* travel the same distance but with different speed */
+        { vel: 0.7, time: 0.4285714285714286 },
+        { vel: 0.8, time: 0.375 },
+        { vel: 1, time: 0.3 },
+    ]
 
-    checkDegrees: number[] = [ /* relative to player facing */
-        // 0,
+    checkDegrees: number[] = [
+        /* relative to player facing */ // 0,
         // 22.5, -22.5,
         // 67.5, -67.5,
         // 90, -90,
@@ -222,16 +226,13 @@ export class LoudJump {
         // 135, -135,
         // 157.5, -157.5,
         // 180,
-        0,
-        45, -45,
-        90, -90,
-        135, -135,
-        180
+        0, 45, -45, 90, -90, 135, -135, 180,
     ]
 
-    dirHandles: { handle: ig.SoundHandleWebAudio, sound: string }[] = []
+    dirHandles: { handle: ig.SoundHandleWebAudio; sound: string }[] = []
 
-    constructor() { /* in prestart */
+    constructor() {
+        /* in prestart */
         CrossedEyes.pauseables.push(this)
         const self = this
         initCrossedEyesPositionPredictor()
@@ -250,7 +251,7 @@ export class LoudJump {
                         }
                     }
                 }
-            }
+            },
         })
 
         ig.ENTITY.Player.inject({
@@ -260,7 +261,8 @@ export class LoudJump {
             },
         })
 
-        ig.ENTITY.JumpPanelFar.inject({ /* fix launch pad going crazy by removing the animations */
+        ig.ENTITY.JumpPanelFar.inject({
+            /* fix launch pad going crazy by removing the animations */
             onTopEntityJumpFar(entity: ig.ENTITY.Combatant) {
                 if (self.predictor && self.predictor.rfc.on) {
                     if (!this.condition.evaluate() && entity.party == sc.COMBATANT_PARTY.PLAYER) return false
@@ -314,11 +316,21 @@ export class LoudJump {
         let volume: number = 1
         let range: number = 16 * 16
         switch (type) {
-            case TrackType.Water: soundName = SoundManager.sounds.water; break
-            case TrackType.Hole: soundName = SoundManager.sounds.hole; break
-            case TrackType.LowerLevel: soundName = SoundManager.sounds.lower; break
-            case TrackType.HigherLevel: soundName = SoundManager.sounds.higher; break
-            case TrackType.Land: soundName = SoundManager.sounds.land; break
+            case TrackType.Water:
+                soundName = SoundManager.sounds.water
+                break
+            case TrackType.Hole:
+                soundName = SoundManager.sounds.hole
+                break
+            case TrackType.LowerLevel:
+                soundName = SoundManager.sounds.lower
+                break
+            case TrackType.HigherLevel:
+                soundName = SoundManager.sounds.higher
+                break
+            case TrackType.Land:
+                soundName = SoundManager.sounds.land
+                break
         }
 
         if (soundName) {
@@ -337,13 +349,13 @@ export class LoudJump {
                 handle.setFixPosition(pos, range)
             }
             if (handle._nodeSource) {
-                handle._nodeSource.gainNode.gain.value = (AimAnalyzer.g.aimAnnounceOn && isAiming()) ? 0.3 : 1
+                handle._nodeSource.gainNode.gain.value = AimAnalyzer.g.aimAnnounceOn && isAiming() ? 0.3 : 1
             }
         }
     }
 
-    getTypeByTracking(face: Vec2): { res: PlayerTraceResult, type: TrackType } {
-        const results: { res: PlayerTraceResult, type: TrackType }[] = []
+    getTypeByTracking(face: Vec2): { res: PlayerTraceResult; type: TrackType } {
+        const results: { res: PlayerTraceResult; type: TrackType }[] = []
 
         for (const config of this.trackConfigs) {
             this.predictor.face = Vec2.create(face)
@@ -351,23 +363,40 @@ export class LoudJump {
             const type: TrackType = this.getTypeFromRes(res)
             const obj = { res, type }
             // console.log(res.pos.x, res.pos.y, res.pos.z, 'coll', !!res.collided, 'edge:', !!res.touchedEdge, 'j:', !!res.jumped, 'l:', !!res.jumpLanded, 'fallType:', res.fallType)
-            if (type == TrackType.Land) { return obj }
+            if (type == TrackType.Land) {
+                return obj
+            }
             results.push(obj)
         }
-        for (const res of results) { if (res.type == TrackType.HigherLevel) { return res } }
-        for (const res of results) { if (res.type == TrackType.LowerLevel) { return res } }
+        for (const res of results) {
+            if (res.type == TrackType.HigherLevel) {
+                return res
+            }
+        }
+        for (const res of results) {
+            if (res.type == TrackType.LowerLevel) {
+                return res
+            }
+        }
         return results[0]
     }
 
     getTypeFromRes(res: PlayerTraceResult): TrackType {
         if (res.jumped) {
             if (res.fallType !== undefined) {
-                if (res.fallType == ig.TERRAIN.HOLE || res.fallType == ig.TERRAIN.HIGHWAY) { return TrackType.Hole }
-                if (res.fallType == ig.TERRAIN.WATER) { return TrackType.Water }
+                if (res.fallType == ig.TERRAIN.HOLE || res.fallType == ig.TERRAIN.HIGHWAY) {
+                    return TrackType.Hole
+                }
+                if (res.fallType == ig.TERRAIN.WATER) {
+                    return TrackType.Water
+                }
             } else if (res.jumpLanded) {
                 const diff = ig.game.playerEntity.coll.pos.z - res.pos.z
-                if (diff > 8) { return TrackType.LowerLevel }
-                else if (diff < -8) { return TrackType.HigherLevel }
+                if (diff > 8) {
+                    return TrackType.LowerLevel
+                } else if (diff < -8) {
+                    return TrackType.HigherLevel
+                }
                 return TrackType.Land
             }
         }

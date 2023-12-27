@@ -4,7 +4,8 @@ import { Hint, HintData } from '../hint-system'
 export class HDestructible implements Hint {
     entryName = 'Destructible'
 
-    constructor() { /* run in prestart */
+    constructor() {
+        /* run in prestart */
         const self = this
         ig.ENTITY.Destructible.inject({
             init(x, y, z, settings) {
@@ -12,12 +13,14 @@ export class HDestructible implements Hint {
                 this.desType = settings.desType
             },
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !MenuOptions.puzzleEnabled }
             },
         })
     }
     getDataFromEntity(e: ig.Entity): HintData {
-        if (!(e instanceof ig.ENTITY.Destructible)) { throw new Error() }
+        if (!(e instanceof ig.ENTITY.Destructible)) {
+            throw new Error()
+        }
 
         let name: string = 'Destructible'
         let description: string = ''

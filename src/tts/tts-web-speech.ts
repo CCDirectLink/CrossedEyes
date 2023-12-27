@@ -2,7 +2,7 @@ import { MenuOptions } from '../options'
 import { CharacterSpeakData, TTS, TTSInterface } from './tts'
 
 export class TTSWebSpeech implements TTSInterface {
-    supportedPlatforms = new Set<('win32' | 'linux' | 'darwin')>(['win32', 'darwin', 'linux'])
+    supportedPlatforms = new Set<'win32' | 'linux' | 'darwin'>(['win32', 'darwin', 'linux'])
     voiceName: string = 'English (Received Pronunciation)+Annie espeak-ng'
     voices!: SpeechSynthesisVoice[]
     voice!: SpeechSynthesisVoice
@@ -64,9 +64,13 @@ export class TTSWebSpeech implements TTSInterface {
     }
 
     speak(text: string, ignoreLen = false) {
-        if (!this.isReady()) { return }
+        if (!this.isReady()) {
+            return
+        }
         text = text.trim()
-        if (!text) { return }
+        if (!text) {
+            return
+        }
 
         ignoreLen || this.queue.push(text)
         if (ignoreLen || this.queue.length == 1) {
@@ -91,7 +95,9 @@ export class TTSWebSpeech implements TTSInterface {
     }
 
     clearQueue(): void {
-        if (process.platform == 'win32' && this.queue.length < 5) { return }
+        if (process.platform == 'win32' && this.queue.length < 5) {
+            return
+        }
         speechSynthesis.cancel()
         this.queue = []
     }

@@ -9,7 +9,6 @@ export function mulSoundVol(s: ig.Sound, mul: number): ig.Sound {
     return new ig.Sound(s.webAudioBuffer.path, s.volume * mul, s.variance, s.group)
 }
 
-
 export type SoundQueueEntry = {
     name: keyof typeof SoundManager.sounds
     wait?: number
@@ -17,16 +16,20 @@ export type SoundQueueEntry = {
     volume?: number
     condition?: () => boolean
     action?: (played: boolean) => void
-} & ({
-    relativePos: true
-    pos: Vec2
-} | {
-    relativePos: false
-    pos: Vec3
-} | {
-    relativePos?: undefined
-    pos?: Vec3
-})
+} & (
+    | {
+          relativePos: true
+          pos: Vec2
+      }
+    | {
+          relativePos: false
+          pos: Vec3
+      }
+    | {
+          relativePos?: undefined
+          pos?: Vec3
+      }
+)
 
 export class SoundManager {
     private static soundQueue: SoundQueueEntry[] = []
@@ -49,24 +52,29 @@ export class SoundManager {
         hitOrganic2: 'media/sound/battle/airon/hit-organic-2.ogg',
         hitOrganic3: 'media/sound/battle/airon/hit-organic-3.ogg',
         hitOrganic4: 'media/sound/battle/airon/hit-organic-4.ogg',
-
     }
     static getElementName(element: sc.ELEMENT): 'neutralMode' | 'coldMode' | 'heatMode' | 'waveMode' | 'shockMode' {
         switch (element) {
-            case sc.ELEMENT.NEUTRAL: return 'neutralMode'
-            case sc.ELEMENT.HEAT: return 'heatMode'
-            case sc.ELEMENT.COLD: return 'coldMode'
-            case sc.ELEMENT.SHOCK: return 'shockMode'
-            case sc.ELEMENT.WAVE: return 'waveMode'
+            case sc.ELEMENT.NEUTRAL:
+                return 'neutralMode'
+            case sc.ELEMENT.HEAT:
+                return 'heatMode'
+            case sc.ELEMENT.COLD:
+                return 'coldMode'
+            case sc.ELEMENT.SHOCK:
+                return 'shockMode'
+            case sc.ELEMENT.WAVE:
+                return 'waveMode'
         }
     }
 
-    constructor() { /* in prestart */
+    constructor() {
+        /* in prestart */
         ig.Game.inject({
             preloadLevel(mapName) {
                 ig.soundManager.reset() /* vanilla bug fix?? fixes issues with hint sounds persisting after death */
                 this.parent(mapName)
-            }
+            },
         })
         let i = 0
         ig.SoundManager.inject({
@@ -91,7 +99,7 @@ export class SoundManager {
     static playSoundPath(path: string, speed: number, volume: number = 1, pos?: Vec3): ig.SoundHandleWebAudio {
         const sound = new ig.Sound(path, volume)
         const handle: ig.SoundHandleWebAudio = sound.play(false, {
-            speed
+            speed,
         })
         pos && handle.setFixPosition(pos, 100 * 16)
         return handle
@@ -117,10 +125,14 @@ export class SoundManager {
         }
     }
 
-    static clearQueue() { SoundManager.soundQueue = [] }
+    static clearQueue() {
+        SoundManager.soundQueue = []
+    }
 
     static playQueueEntry(e: SoundQueueEntry, queue: SoundQueueEntry[]) {
-        if (!e || queue.length === 0) { return }
+        if (!e || queue.length === 0) {
+            return
+        }
 
         const action = () => {
             const play: boolean = e.condition ? e.condition() : true
@@ -133,7 +145,9 @@ export class SoundManager {
             }
             e.action && e.action(play)
             queue.shift()
-            if (queue.length === 0) { return }
+            if (queue.length === 0) {
+                return
+            }
             SoundManager.playQueueEntry(queue[0], queue)
         }
 
@@ -148,9 +162,7 @@ export class SoundManager {
         if (this.continiousSounds[id]) {
             this.continiousSounds[id].stop()
         }
-        return this.continiousSounds[id] = pos ?
-            SoundManager.playSound(soundName, speed, volume, pos) :
-            SoundManager.playSound(soundName, speed, volume)
+        return (this.continiousSounds[id] = pos ? SoundManager.playSound(soundName, speed, volume, pos) : SoundManager.playSound(soundName, speed, volume))
     }
 
     static stopContiniousSound(id: string) {

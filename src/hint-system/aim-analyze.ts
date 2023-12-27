@@ -15,7 +15,8 @@ export class AimAnalyzer implements PauseListener {
     lastSelected: string | undefined
     aimAnnounceOn: boolean = false
 
-    constructor() { /* in prestart */
+    constructor() {
+        /* in prestart */
         AimAnalyzer.g = this
         CrossedEyes.pauseables.push(this)
         const self = this
@@ -57,9 +58,13 @@ export class AimAnalyzer implements PauseListener {
                         const collE = check.hitE[i]
                         const e: ig.Entity = collE.entity
                         if (e) {
-                            if (e.uuid == this.lastSelected) { return }
-                            const hint: sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Hints | undefined =
-                                HintSystem.g.quickMenuAnalysisInstance.createHint(e, false) as any
+                            if (e.uuid == this.lastSelected) {
+                                return
+                            }
+                            const hint: sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Hints | undefined = HintSystem.g.quickMenuAnalysisInstance.createHint(
+                                e,
+                                false
+                            ) as any
                             if (hint) {
                                 HintSystem.g.activateHint(0, hint)
                                 this.lastSelected = e.uuid
@@ -67,7 +72,9 @@ export class AimAnalyzer implements PauseListener {
                             }
                         }
                     }
-                    if (check.hitE.length == 2 && check.hitE[1].entity.isBall) { return }
+                    if (check.hitE.length == 2 && check.hitE[1].entity.isBall) {
+                        return
+                    }
                     this.lastSelected = undefined
                     HintSystem.g.deactivateHint(0)
                 } else {

@@ -26,7 +26,7 @@ export interface Hint {
     getDataFromEntity<T extends ig.Entity>(entity: T): HintData
 }
 
-export type ReqHintEntry = { entity: ig.Entity, nameGui: { description: sc.TextGui, title: sc.TextGui, description2: string | null } }
+export type ReqHintEntry = { entity: ig.Entity; nameGui: { description: sc.TextGui; title: sc.TextGui; description2: string | null } }
 
 export class HintSystem implements PauseListener {
     static g: HintSystem
@@ -46,8 +46,8 @@ export class HintSystem implements PauseListener {
         HDestructible,
         HEnemy,
     ]
-    filterType: typeof HintTypes[number] | 'Hints' = 'All'
-    filterHintType: typeof HintSubTypes[number] | undefined
+    filterType: (typeof HintTypes)[number] | 'Hints' = 'All'
+    filterHintType: (typeof HintSubTypes)[number] | undefined
     filterList: string[]
     filterIndex: number = 0
     currentSelectIndex: number = 0
@@ -55,7 +55,7 @@ export class HintSystem implements PauseListener {
 
     quickMenuAnalysisInstance!: sc.QuickMenuAnalysis
 
-    activeHints: ({ hint: ReqHintEntry, handle?: ig.SoundHandle, muted?: boolean } | undefined)[] = [undefined]
+    activeHints: ({ hint: ReqHintEntry; handle?: ig.SoundHandle; muted?: boolean } | undefined)[] = [undefined]
 
     deactivateHint(index: number) {
         const e = this.activeHints[index]
@@ -68,8 +68,8 @@ export class HintSystem implements PauseListener {
                     this.activeHints[mutedIndex]!.muted = false
                 }
                 this.activeHints[0] = undefined
-                SpecialAction.setListener('LSP', 'hintDescription', () => { })
-                SpecialAction.setListener('R2', 'hintDescription', () => { })
+                SpecialAction.setListener('LSP', 'hintDescription', () => {})
+                SpecialAction.setListener('R2', 'hintDescription', () => {})
             } else {
                 this.activeHints.splice(index, 1)
                 this.activeHints[0] && (this.activeHints[0]!.muted = false)
@@ -79,11 +79,13 @@ export class HintSystem implements PauseListener {
 
     activateHint(index: number, hint: ReqHintEntry, playSound: boolean = true, dontPauseInQuickAnalysis: boolean = false) {
         this.deactivateHint(index)
-        if (index == -1) { index = this.activateHint.length }
+        if (index == -1) {
+            index = this.activateHint.length
+        }
 
         let handle: ig.SoundHandle | undefined
         if (index == 0) {
-            const foundIndex: number = this.activeHints.findIndex((e) => e?.hint.entity.uuid == hint.entity.uuid)
+            const foundIndex: number = this.activeHints.findIndex(e => e?.hint.entity.uuid == hint.entity.uuid)
             if (foundIndex != -1) {
                 const sameHint = this.activeHints[foundIndex]!
                 handle = sameHint.handle
@@ -123,7 +125,7 @@ export class HintSystem implements PauseListener {
         handle._setPosition()
 
         const yDiff = ig.game.playerEntity.coll.pos.z - hint.entity.coll.pos.z
-        const playbackSpeed = Math.min(1.5, Math.max(0.5, 1 - (yDiff / 160)))
+        const playbackSpeed = Math.min(1.5, Math.max(0.5, 1 - yDiff / 160))
         handle._speed = playbackSpeed
         handle._nodeSource && (handle._nodeSource.bufferNode.playbackRate.value = playbackSpeed)
     }
@@ -136,26 +138,25 @@ export class HintSystem implements PauseListener {
 
     selectNextHint(add: number) {
         const pPos: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
-        const sorted: sc.QuickMenuTypesBase[] =
-            this.quickMenuAnalysisInstance.entities.filter(e => e)
-                .sort((a, b) => Vec3.distance(a.entity.coll.pos, pPos) - Vec3.distance(b.entity.coll.pos, pPos))
+        const sorted: sc.QuickMenuTypesBase[] = this.quickMenuAnalysisInstance.entities
+            .filter(e => e)
+            .sort((a, b) => Vec3.distance(a.entity.coll.pos, pPos) - Vec3.distance(b.entity.coll.pos, pPos))
         this.currentSelectIndex += add
-        if (this.currentSelectIndex == sorted.length) { this.currentSelectIndex = 0 }
-        else if (this.currentSelectIndex == -1) { this.currentSelectIndex = sorted.length - 1 }
+        if (this.currentSelectIndex == sorted.length) {
+            this.currentSelectIndex = 0
+        } else if (this.currentSelectIndex == -1) {
+            this.currentSelectIndex = sorted.length - 1
+        }
         const entry: sc.QuickMenuTypesBase = sorted[this.currentSelectIndex]
 
         if (entry) {
             sc.quickmodel.cursorMoved = true
-            sc.quickmodel.cursor = Vec2.createC(
-                entry.hook.pos.x + entry.hook.size.x / 2,
-                entry.hook.pos.y + entry.hook.size.y / 2,
-            )
+            sc.quickmodel.cursor = Vec2.createC(entry.hook.pos.x + entry.hook.size.x / 2, entry.hook.pos.y + entry.hook.size.y / 2)
             this.quickMenuAnalysisInstance.cursor.moveTo(sc.quickmodel.cursor.x, sc.quickmodel.cursor.y, true)
 
             this.prevEntry && this.prevEntry.focusLost()
             this.prevEntry = entry
         }
-
     }
 
     updateFilter() {
@@ -177,14 +178,13 @@ export class HintSystem implements PauseListener {
             this.quickMenuAnalysisInstance.show()
             this.quickMenuAnalysisInstance.enter()
         }
-
     }
 
     private checkHintTogglePressed() {
         if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE2 /* x */)) {
             const ahint = this.activeHints[0]
             if (ahint) {
-                const foundIndex: number = this.activeHints.slice(1).findIndex((e) => e?.hint.entity.uuid == ahint.hint.entity.uuid)
+                const foundIndex: number = this.activeHints.slice(1).findIndex(e => e?.hint.entity.uuid == ahint.hint.entity.uuid)
                 if (foundIndex == -1) {
                     this.activateHint(-1, ahint.hint, true, true)
                     ahint.muted = true
@@ -196,7 +196,8 @@ export class HintSystem implements PauseListener {
         }
     }
 
-    constructor() { /* runs in prestart */
+    constructor() {
+        /* runs in prestart */
         CrossedEyes.pauseables.push(this)
         HintSystem.g = this
         this.filterList = [...HintTypes, ...HintSubTypes]
@@ -211,11 +212,18 @@ export class HintSystem implements PauseListener {
 
         const self = this
         let lastFocusedHintPos: Vec2 = Vec2.create()
-        sc.QuickMenuTypesBase.inject({ /* fix issue where two hints can be focued at the same time */
+        sc.QuickMenuTypesBase.inject({
+            /* fix issue where two hints can be focued at the same time */
             isMouseOver() {
-                if (MenuOptions.puzzleEnabled && sc.quickmodel.isQuickCheck() && !ig.interact.isBlocked() && this.focusable &&
-                    sc.quickmodel.isDeviceSynced() && ig.input.currentDevice == ig.INPUT_DEVICES.GAMEPAD && !sc.quickmodel.cursorMoved) {
-
+                if (
+                    MenuOptions.puzzleEnabled &&
+                    sc.quickmodel.isQuickCheck() &&
+                    !ig.interact.isBlocked() &&
+                    this.focusable &&
+                    sc.quickmodel.isDeviceSynced() &&
+                    ig.input.currentDevice == ig.INPUT_DEVICES.GAMEPAD &&
+                    !sc.quickmodel.cursorMoved
+                ) {
                     var a: ig.GuiHook = this.hook!
                     const pos: Vec2 = Vec2.createC(a.pos.x + Math.floor(a.size.x / 2), a.pos.y + Math.floor(a.size.y / 2))
                     if (Math.floor(Vec2.distance(sc.quickmodel.cursor, pos)) <= 10) {
@@ -226,7 +234,7 @@ export class HintSystem implements PauseListener {
                     }
                 }
                 return this.parent()
-            }
+            },
         })
 
         sc.QUICK_MENU_TYPES.Hints = sc.QuickMenuTypesBase.extend({
@@ -269,8 +277,19 @@ export class HintSystem implements PauseListener {
         })
 
         sc.BasicHintMenu = ig.BoxGui.extend({
-            ninepatch: new ig.NinePatch('media/gui/menu.png', { width: 8, height: 8, left: 8, top: 8, right: 8, bottom: 8, offsets: { default: { x: 432, y: 304 }, flipped: { x: 456, y: 304 } } }),
-            transitions: { HIDDEN: { state: { alpha: 0 }, time: 0.2, timeFunction: KEY_SPLINES.LINEAR }, DEFAULT: { state: {}, time: 0.2, timeFunction: KEY_SPLINES.EASE } },
+            ninepatch: new ig.NinePatch('media/gui/menu.png', {
+                width: 8,
+                height: 8,
+                left: 8,
+                top: 8,
+                right: 8,
+                bottom: 8,
+                offsets: { default: { x: 432, y: 304 }, flipped: { x: 456, y: 304 } },
+            }),
+            transitions: {
+                HIDDEN: { state: { alpha: 0 }, time: 0.2, timeFunction: KEY_SPLINES.LINEAR },
+                DEFAULT: { state: {}, time: 0.2, timeFunction: KEY_SPLINES.EASE },
+            },
             init(getText: () => [string, string, string | null]) {
                 this.getText = getText
                 const width = this.updateData()
@@ -326,7 +345,6 @@ export class HintSystem implements PauseListener {
             },
         })
 
-
         let justEnteredQuickMenu = false
         sc.GameModel.inject({
             enterQuickMenu() {
@@ -363,7 +381,7 @@ export class HintSystem implements PauseListener {
             preloadLevel(mapName) {
                 this.parent(mapName)
                 self.activeHints = [undefined]
-            }
+            },
         })
         sc.QuickMenuAnalysis.inject({
             init() {
@@ -381,20 +399,20 @@ export class HintSystem implements PauseListener {
         ig.ENTITY.Player.inject({
             update() {
                 this.parent()
-                if (AimAnalyzer.g.aimAnnounceOn && isAiming()) { self.checkHintTogglePressed() }
-            }
+                if (AimAnalyzer.g.aimAnnounceOn && isAiming()) {
+                    self.checkHintTogglePressed()
+                }
+            },
         })
         sc.QuickMenuAnalysis.inject({
             update(...args) {
                 if (sc.quickmodel.isQuickCheck() && MenuOptions.puzzleEnabled) {
-                    let add = ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_SHOULDER) ? -1 :
-                        ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_SHOULDER) ? 1 : 0
+                    let add = ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_SHOULDER) ? -1 : ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_SHOULDER) ? 1 : 0
                     if (add != 0) {
                         self.selectNextHint(add)
                     }
 
-                    let filterAdd = ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_LEFT) ? -1 :
-                        ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_RIGHT) ? 1 : 0
+                    let filterAdd = ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_LEFT) ? -1 : ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_RIGHT) ? 1 : 0
                     if (filterAdd) {
                         self.filterIndex += filterAdd
                         self.updateFilter()
@@ -410,20 +428,25 @@ export class HintSystem implements PauseListener {
             createHint(entity, filter = true) {
                 // ((entity.isQuickMenuVisible && entity.isQuickMenuVisible()) || ig.EntityTools.isInScreen(entity, 0))
                 if (entity && entity.getQuickMenuSettings) {
-                    if (filter && self.filterType == 'Selected' && self.activeHints.findIndex(e => e?.hint.entity.uuid == entity.uuid) == -1) { return }
-                    if (filter && self.filterType == 'Interactable' && !('interactEntry' in entity)) { return }
+                    if (filter && self.filterType == 'Selected' && self.activeHints.findIndex(e => e?.hint.entity.uuid == entity.uuid) == -1) {
+                        return
+                    }
+                    if (filter && self.filterType == 'Interactable' && !('interactEntry' in entity)) {
+                        return
+                    }
 
                     const sett = entity.getQuickMenuSettings() as sc.QuickMenuTypesBaseSettings
-                    if (!sett.disabled && sc.QUICK_MENU_TYPES[sett.type] &&
-                        (!filter ||
-                            self.filterType == 'All' || self.filterType == 'Selected' || self.filterType == 'Interactable' ||
-                            sett.type == self.filterType)) {
-
+                    if (
+                        !sett.disabled &&
+                        sc.QUICK_MENU_TYPES[sett.type] &&
+                        (!filter || self.filterType == 'All' || self.filterType == 'Selected' || self.filterType == 'Interactable' || sett.type == self.filterType)
+                    ) {
                         sett.entity = entity
                         const ins = new sc.QUICK_MENU_TYPES[sett.type](sett.type, sett, this.focusContainer)
 
-                        if (filter && sett.type == 'Hints' && ins instanceof sc.QUICK_MENU_TYPES.Hints &&
-                            self.filterHintType && sett.hintType != self.filterHintType) { return }
+                        if (filter && sett.type == 'Hints' && ins instanceof sc.QUICK_MENU_TYPES.Hints && self.filterHintType && sett.hintType != self.filterHintType) {
+                            return
+                        }
                         return ins
                     }
                 }
@@ -463,7 +486,7 @@ export class HintSystem implements PauseListener {
                     return
                 }
                 this.parent()
-            }
+            },
         })
 
         new NPCHintMenu()

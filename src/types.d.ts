@@ -3,17 +3,17 @@ import { PlayerTraceResult } from './loudjump'
 import { PuzzleElementsAnalysis } from './puzzle-analyze'
 import { PuzzleExtensionData } from './puzzle-analyze/puzzle-analyze'
 
-export { }
+export {}
 
 declare global {
     namespace ig {
         interface SoundHandleBase {
             pos: null | {
                 point: Vec2
-                point3d: Vec3, /* only thing modified */
-                entity: ig.Entity | null,
-                align: ig.ENTITY_ALIGN | null,
-                offset: null,
+                point3d: Vec3 /* only thing modified */
+                entity: ig.Entity | null
+                align: ig.ENTITY_ALIGN | null
+                offset: null
                 range: number
                 rangeType: ig.SOUND_RANGE_TYPE
             }
@@ -43,7 +43,6 @@ declare global {
         }
         interface MessageAreaGui {
             skip(this: this, nextMsg?: boolean): void
-
         }
     }
     namespace sc {
@@ -55,7 +54,7 @@ declare global {
                 nameGui: sc.HintsMenu
             }
             interface HintsConstructor extends ImpactClass<Hints> {
-                new(type: string, settings: sc.QuickMenuTypesBaseSettings, screen: sc.QuickFocusScreen): Hints
+                new (type: string, settings: sc.QuickMenuTypesBaseSettings, screen: sc.QuickFocusScreen): Hints
             }
             var Hints: HintsConstructor
 
@@ -79,25 +78,25 @@ declare global {
             updateData(this: this): number
         }
         interface BasicHintMenuConstructor extends ImpactClass<BasicHintMenu> {
-            new(getText: () => ReturnType<BasicHintMenu['getText']>): BasicHintMenu
+            new (getText: () => ReturnType<BasicHintMenu['getText']>): BasicHintMenu
         }
         var BasicHintMenu: BasicHintMenuConstructor
 
-        interface HintsMenu extends sc.BasicHintMenu { }
+        interface HintsMenu extends sc.BasicHintMenu {}
         interface HintsMenuConstructor extends ImpactClass<HintsMenu> {
-            new(settings: sc.QuickMenuTypesBaseSettings): HintsMenu
+            new (settings: sc.QuickMenuTypesBaseSettings): HintsMenu
         }
         var HintsMenu: HintsMenuConstructor
 
-        interface NPCHintMenu extends sc.BasicHintMenu { }
+        interface NPCHintMenu extends sc.BasicHintMenu {}
         interface NPCHintMenuConstructor extends ImpactClass<NPCHintMenu> {
-            new(text: string, settings: sc.QuickMenuTypesBaseSettings): NPCHintMenu
+            new (text: string, settings: sc.QuickMenuTypesBaseSettings): NPCHintMenu
         }
         var NPCHintMenu: NPCHintMenuConstructor
 
-        interface EnemyHintMenu extends sc.BasicHintMenu { }
+        interface EnemyHintMenu extends sc.BasicHintMenu {}
         interface EnemyHintMenuConstructor extends ImpactClass<EnemyHintMenu> {
-            new(enemy: ig.ENTITY.Enemy): EnemyHintMenu
+            new (enemy: ig.ENTITY.Enemy): EnemyHintMenu
         }
         var EnemyHintMenu: EnemyHintMenuConstructor
 
@@ -125,7 +124,7 @@ declare global {
             checkQuickRespawn(this: this): void
         }
         interface CrossedEyesPositionPredictorConstructor extends ImpactClass<CrossedEyesPositionPredictor> {
-            new(x: number, y: number, z: number, settings: ig.Entity.Settings): CrossedEyesPositionPredictor
+            new (x: number, y: number, z: number, settings: ig.Entity.Settings): CrossedEyesPositionPredictor
         }
         var CrossedEyesPositionPredictor: CrossedEyesPositionPredictorConstructor
 
@@ -142,4 +141,3 @@ declare global {
         }
     }
 }
-

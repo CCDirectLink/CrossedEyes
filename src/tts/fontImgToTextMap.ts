@@ -1,7 +1,9 @@
 const fontImgToNameMap: Record<string, string> = {
     ...(() => {
         const obj: Record<string, string> = {}
-        for (let i = 0; i < 256; i++) { obj[`keyCode-${i}`] = `Key ${String.fromCharCode(i)}` }
+        for (let i = 0; i < 256; i++) {
+            obj[`keyCode-${i}`] = `Key ${String.fromCharCode(i)}`
+        }
         return obj
     })(),
     'left-stick': 'Gamepad: left stick,',
@@ -26,15 +28,15 @@ const fontImgToNameMap: Record<string, string> = {
     'right-stick-press': 'Gamepad: right stick: press,',
     'gamepad-l1-off': 'Gamepad: L1 off,',
     'gamepad-r1-off': 'Gamepad: R1 off,',
-    
-    'dash': 'Gamepad: L1,',
-    'guard': 'Gamepad: A,',
-    'throw': 'Gamepad: R1,',
-    'special': 'Gamepad: R2,',
 
-    'twitter': 'twitter',
-    'menu': '',
-    'help2': '',
+    dash: 'Gamepad: L1,',
+    guard: 'Gamepad: A,',
+    throw: 'Gamepad: R1,',
+    special: 'Gamepad: R2,',
+
+    twitter: 'twitter',
+    menu: '',
+    help2: '',
     'language-0': '',
     'language-1': '',
     'language-2': '',
@@ -44,20 +46,27 @@ const fontImgToNameMap: Record<string, string> = {
     'diff-2': '',
     '<': '',
     '>': '',
-    'tech': '',
+    tech: '',
     'item-helm-scale': '',
     'item-sword-scale': '',
     'item-belt-scale': '',
     'item-shoe-scale': '',
 }
 
-
 export function fontImgToName(name: string): string {
     if (sc.fontsystem.gamepadIconStyle == sc.GAMEPAD_ICON_STYLE.PS3) {
-        if (name == 'gamepad-x') { return 'Gamepad: square' }
-        if (name == 'gamepad-y') { return 'Gamepad: triangle' }
-        if (name == 'gamepad-b') { return 'Gamepad: circle' }
-        if (name == 'gamepad-a') { return 'Gamepad: X' }
+        if (name == 'gamepad-x') {
+            return 'Gamepad: square'
+        }
+        if (name == 'gamepad-y') {
+            return 'Gamepad: triangle'
+        }
+        if (name == 'gamepad-b') {
+            return 'Gamepad: circle'
+        }
+        if (name == 'gamepad-a') {
+            return 'Gamepad: X'
+        }
     }
     const rep = fontImgToNameMap[name]
     return rep

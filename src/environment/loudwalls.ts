@@ -9,13 +9,14 @@ const c_tmpPoint: Vec3 = { x: 0, y: 0, z: 0 }
 
 const range: number = 5 * 16
 
-type CheckDirectionReturn = { type: 'none' | 'blocked' | 'collided', pos: Vec3, distance: number, hitE?: ig.Physics.CollEntry[] }
+type CheckDirectionReturn = { type: 'none' | 'blocked' | 'collided'; pos: Vec3; distance: number; hitE?: ig.Physics.CollEntry[] }
 
 export class LoudWalls implements PauseListener {
     static g: LoudWalls
 
-    private handles: Record<string, { handle: ig.SoundHandleWebAudio, sound: string }> = {}
-    constructor() { /* in prestart */
+    private handles: Record<string, { handle: ig.SoundHandleWebAudio; sound: string }> = {}
+    constructor() {
+        /* in prestart */
         LoudWalls.g = this
         CrossedEyes.pauseables.push(this)
         const self = this
@@ -23,7 +24,7 @@ export class LoudWalls implements PauseListener {
             update() {
                 this.parent()
                 MenuOptions.loudWallsEnabled && self.handleWallSound()
-            }
+            },
         })
     }
 
@@ -32,17 +33,20 @@ export class LoudWalls implements PauseListener {
     }
 
     private handleWallSound() {
-        if (CrossedEyes.isPaused) { return }
+        if (CrossedEyes.isPaused) {
+            return
+        }
         const dirs: [string, Vec2][] = [
             ['wallDown', { x: 0, y: 1 }],
             ['wallRight', { x: 1, y: 0 }],
             ['wallUp', { x: 0, y: -1 }],
             ['wallLeft', { x: -1, y: 0 }],
         ]
-        const playerFaceAngle: number = Vec2.clockangle(ig.game.playerEntity.face) * 180 / Math.PI
+        const playerFaceAngle: number = (Vec2.clockangle(ig.game.playerEntity.face) * 180) / Math.PI
         for (const [dirId, dir] of dirs) {
-            if (this.handleSoundAt(dirId, dir, playerFaceAngle, SoundManager.sounds.wall,
-                LoudWalls.checkDirection(Vec2.create(dir), range, ig.COLLTYPE.PROJECTILE))) { continue }
+            if (this.handleSoundAt(dirId, dir, playerFaceAngle, SoundManager.sounds.wall, LoudWalls.checkDirection(Vec2.create(dir), range, ig.COLLTYPE.PROJECTILE))) {
+                continue
+            }
 
             const { handle } = this.handles[dirId] ?? { handle: undefined }
             if (handle && (!handle.pos || !isHandleMuted(handle))) {
@@ -77,13 +81,10 @@ export class LoudWalls implements PauseListener {
             }
 
             if (handle._nodeSource) {
-                const dirFaceAngle: number = Vec2.clockangle(dir) * 180 / Math.PI
-                const angleDist: number = Math.min(
-                    Math.abs(playerFaceAngle - dirFaceAngle),
-                    360 - Math.abs(playerFaceAngle - dirFaceAngle)
-                )
+                const dirFaceAngle: number = (Vec2.clockangle(dir) * 180) / Math.PI
+                const angleDist: number = Math.min(Math.abs(playerFaceAngle - dirFaceAngle), 360 - Math.abs(playerFaceAngle - dirFaceAngle))
                 handle._nodeSource.bufferNode.playbackRate.value = angleDist >= 140 ? 0.7 : 1
-                handle._nodeSource.gainNode.gain.value = (AimAnalyzer.g.aimAnnounceOn && isAiming()) ? 0.4 : 1
+                handle._nodeSource.gainNode.gain.value = AimAnalyzer.g.aimAnnounceOn && isAiming() ? 0.4 : 1
             }
             return true
         }
@@ -111,9 +112,19 @@ export class LoudWalls implements PauseListener {
         const hitEntityList: ig.Physics.CollEntry[] = []
         trackEntityTouch && (ig.game.physics._trackEntityTouch = true)
         const collided: boolean = ig.game.trace(
-            result, pos.x, pos.y, zPos, dir.x, dir.y,
-            Constants.BALL_SIZE, Constants.BALL_SIZE, Constants.BALL_Z_HEIGHT,
-            collType, null, hitEntityList)
+            result,
+            pos.x,
+            pos.y,
+            zPos,
+            dir.x,
+            dir.y,
+            Constants.BALL_SIZE,
+            Constants.BALL_SIZE,
+            Constants.BALL_Z_HEIGHT,
+            collType,
+            null,
+            hitEntityList
+        )
         trackEntityTouch && (ig.game.physics._trackEntityTouch = false)
 
         if (!collided) {

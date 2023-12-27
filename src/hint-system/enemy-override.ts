@@ -3,13 +3,15 @@ import { HintSystem } from './hint-system'
 import { HEnemy } from './hints/enemy'
 
 export class EnemyHintMenu {
-    constructor() { /* in prestart */
+    constructor() {
+        /* in prestart */
         ig.ENTITY.Enemy.inject({
             getQuickMenuSettings() {
-                if (!MenuOptions.puzzleEnabled) { return this.parent!() }
+                if (!MenuOptions.puzzleEnabled) {
+                    return this.parent!()
+                }
                 const isProperEnemy: boolean = this.params && this.visibility.analyzable && sc.combat.isEnemyAnalyzable(this.enemyName)
-                return isProperEnemy ? { type: 'Enemy', disabled: false } :
-                    { type: 'Hints', hintName: 'Enemy', hintType: 'Puzzle', disabled: !HEnemy.check(this) }
+                return isProperEnemy ? { type: 'Enemy', disabled: false } : { type: 'Hints', hintName: 'Enemy', hintType: 'Puzzle', disabled: !HEnemy.check(this) }
             },
         })
 
@@ -31,7 +33,9 @@ export class EnemyHintMenu {
                 for (let i = sc.ELEMENT.HEAT; i <= sc.ELEMENT.WAVE; i++) {
                     const res: number = resArr[i - 1]
                     if (res != 0) {
-                        resStr += `${Object.entries(sc.ELEMENT).find(e => e[1] == i)![0].toLowerCase()} resistance: ${res}, `
+                        resStr += `${Object.entries(sc.ELEMENT)
+                            .find(e => e[1] == i)![0]
+                            .toLowerCase()} resistance: ${res}, `
                     }
                 }
                 const desc1 = `${resStr.length == 0 ? 'no elemental resistances' : resStr}`
@@ -40,8 +44,7 @@ export class EnemyHintMenu {
                 const def = enemyInfoBoxIns.baseDefense.number.targetNumber
                 const foc = enemyInfoBoxIns.baseFocus.number.targetNumber
                 const atk = enemyInfoBoxIns.baseAttack.number.targetNumber
-                const desc2 = `${enemyInfoBoxIns.baseHp.number.scramble ? 'unknown stats' :
-                    `max hp: ${hp}, defense: ${def}, attack: ${atk}, focus: ${foc}`}`
+                const desc2 = `${enemyInfoBoxIns.baseHp.number.scramble ? 'unknown stats' : `max hp: ${hp}, defense: ${def}, attack: ${atk}, focus: ${foc}`}`
                 this.parent(() => {
                     return [text, desc1, desc2]
                 })

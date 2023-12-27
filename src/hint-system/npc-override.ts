@@ -2,7 +2,8 @@ import { TextGather } from '../tts/gather-text'
 import { HintSystem } from './hint-system'
 
 export class NPCHintMenu {
-    constructor() { /* in prestart */
+    constructor() {
+        /* in prestart */
         sc.NPCHintMenu = sc.BasicHintMenu.extend({
             init(origText: string, settings: sc.QuickMenuTypesBaseSettings) {
                 const npc: ig.ENTITY.NPC = settings.entity as unknown as ig.ENTITY.NPC

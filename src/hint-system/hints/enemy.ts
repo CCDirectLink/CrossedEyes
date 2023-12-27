@@ -3,13 +3,16 @@ import { Hint, HintData } from '../hint-system'
 export class HEnemy implements Hint {
     entryName = 'Enemy'
     static check(e: ig.ENTITY.Enemy) {
-        return (e.enemyName == 'target-bot' && (e.currentState == 'DO_HIT' || e.currentState == 'DO_NOT_HIT')) ||
-            e.enemyName == 'baggy-kun'
+        return (e.enemyName == 'target-bot' && (e.currentState == 'DO_HIT' || e.currentState == 'DO_NOT_HIT')) || e.enemyName == 'baggy-kun'
     }
 
-    constructor() { /* run in prestart */ }
+    constructor() {
+        /* run in prestart */
+    }
     getDataFromEntity(e: ig.Entity): HintData {
-        if (!(e instanceof ig.ENTITY.Enemy)) { throw new Error() }
+        if (!(e instanceof ig.ENTITY.Enemy)) {
+            throw new Error()
+        }
 
         let name: string = ``
         let description: string = ''
@@ -23,9 +26,8 @@ export class HEnemy implements Hint {
             }
         } else if (e.enemyName == 'baggy-kun') {
             name = 'Training bag'
-            description = 'Hit as you will! Cannot be moved and won\'t fight you back.'
+            description = "Hit as you will! Cannot be moved and won't fight you back."
         }
         return { name, description }
     }
-
 }

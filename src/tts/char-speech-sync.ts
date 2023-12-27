@@ -5,7 +5,8 @@ import { SpeechEndListener, TTS } from './tts'
 export class CharacterSpeechSynchronizer implements SpeechEndListener {
     sideMessageHudGuiIns!: sc.SideMessageHudGui
     messageOverlayGuiIns!: ig.MessageOverlayGui
-    constructor() { /* in prestart */
+    constructor() {
+        /* in prestart */
         TTS.g.onSpeechEndListeners.push(this)
         const self = this
         ig.MessageOverlayGui.inject({
@@ -13,7 +14,6 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
                 this.parent()
                 self.messageOverlayGuiIns = this
             },
-
         })
         ig.MessageAreaGui.inject({
             init() {
@@ -51,7 +51,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
             },
             showNextSideMessage() {
                 this.parent()
-                if (MenuOptions.ttsEnabled) { 
+                if (MenuOptions.ttsEnabled) {
                     this.timer = 10000000
                     TextGather.g.ignoreInteractTo = Date.now() + 100
                 }
@@ -79,7 +79,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
                         this.beepSound = null
                     }
                 }
-            }
+            },
         })
 
         // sc.getMessageTime = function(textLike: sc.TextLike) {

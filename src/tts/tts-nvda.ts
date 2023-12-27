@@ -8,7 +8,7 @@ import { MenuOptions } from '../options'
 const fs: typeof import('fs') = (0, eval)('require("fs")')
 
 export class TTSNvda implements TTSInterface {
-    supportedPlatforms = new Set<('win32' | 'linux' | 'darwin')>(['win32'])
+    supportedPlatforms = new Set<'win32' | 'linux' | 'darwin'>(['win32'])
     queue: string[] = []
 
     server!: WebSocketServer
@@ -72,14 +72,13 @@ export class TTSNvda implements TTSInterface {
     clearQueue(): void {
         this.sendCommand('clearQueue')
     }
-
 }
 
 export class AddonInstaller {
     static async checkInstall() {
         console.log('nvda addon install attempt!')
         console.log(process.platform)
-        if (process.platform == 'win32' && await AddonInstaller.isNvdaRunning()) {
+        if (process.platform == 'win32' && (await AddonInstaller.isNvdaRunning())) {
             console.log('nvda running')
             if (this.isAddonInstalled()) {
                 console.log('addon installed')
@@ -98,7 +97,7 @@ export class AddonInstaller {
 
     private static async isNvdaRunning(): Promise<boolean> {
         function isProcessRunning(name: string): Promise<boolean> {
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 require('child_process').exec(`tasklist /FI "IMAGENAME eq ${name}"`, (_: string, stdout: string, __: string) => {
                     stdout = stdout.trim()
                     resolve(stdout.length > 140) /* if the output string is long enough, it means that the process is running */
@@ -110,20 +109,33 @@ export class AddonInstaller {
 
     private static isAddonInstalled(): boolean {
         console.log('isAddonInstalled check start')
-        try { console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/`)) } catch (e) { console.log(e) }
-        try { console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/`)) } catch (e) { console.log(e) }
-        try { console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/appModules`)) } catch (e) { console.log(e) }
+        try {
+            console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/`))
+        } catch (e) {
+            console.log(e)
+        }
+        try {
+            console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/`))
+        } catch (e) {
+            console.log(e)
+        }
+        try {
+            console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/appModules`))
+        } catch (e) {
+            console.log(e)
+        }
         console.log('isAddonInstalled check end')
         return blitzkrieg.FsUtil.doesFileExist(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/manifest.ini`)
     }
 
     private static getInstalledAddonVersion(): string {
-        return (fs.readFileSync(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/manifest.ini`).toString()
+        return (fs
+            .readFileSync(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/manifest.ini`)
+            .toString()
             .match(/version = "(\d+\.\d+\.\d+)/) ?? ['', '00.00.00'])[1]
     }
     private static async getPackageAddonVersion(): Promise<string> {
-        return ((await blitzkrieg.FsUtil.readFile(`${CrossedEyes.dir}/nvdaplugin/crosscode/manifest.ini`))
-            .match(/version = "(\d+\.\d+\.\d+)/) ?? ['', '00.00.00'])[1]
+        return ((await blitzkrieg.FsUtil.readFile(`${CrossedEyes.dir}/nvdaplugin/crosscode/manifest.ini`)).match(/version = "(\d+\.\d+\.\d+)/) ?? ['', '00.00.00'])[1]
     }
 
     private static async installAddon() {
@@ -134,7 +146,9 @@ export class AddonInstaller {
         const addonsDir = `${process.env.APPDATA ?? ''}/nvda/addons`
         const zipFilePath = `${process.env.TEMP}/websocket-client.zip`
         const downloadPromise: Promise<void> = AddonInstaller.downloadFile(
-            `https://codeload.github.com/websocket-client/websocket-client/zip/refs/tags/v${version}`, zipFilePath)
+            `https://codeload.github.com/websocket-client/websocket-client/zip/refs/tags/v${version}`,
+            zipFilePath
+        )
 
         function cp(name: string) {
             const from = `${CrossedEyes.dir}/nvdaplugin/${name}`
@@ -165,7 +179,9 @@ export class AddonInstaller {
     }
 
     private static async blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
-        if ('arrayBuffer' in blob) { return await blob.arrayBuffer() }
+        if ('arrayBuffer' in blob) {
+            return await blob.arrayBuffer()
+        }
 
         return new Promise((resolve, reject) => {
             const reader = new FileReader()

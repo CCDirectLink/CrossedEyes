@@ -21,13 +21,15 @@ export class AutoUpdater {
                 const url = `https://github.com/CCDirectLink/CrossedEyes/releases/download/v${cvLatest}/${fn}`
                 await AddonInstaller.downloadFile(url, `assets/mods/${fn}`)
                 const delPath = `${mainDir}/assets/mods/crossedeyes-${cvPkg}.ccmod`
-                fs.unlink(delPath, (err) => { err && console.log(err) })
+                fs.unlink(delPath, err => {
+                    err && console.log(err)
+                })
                 anyUpdated = true
             }
 
-
-            const bvReq = (await this.getUrlJson('https://raw.githubusercontent.com/CCDirectLink/CrossedEyes/master/ccmod.json'))
-                .match(/"cc-blitzkrieg": ">=(\d+\.\d+\.\d+)"/)![1]
+            const bvReq = (await this.getUrlJson('https://raw.githubusercontent.com/CCDirectLink/CrossedEyes/master/ccmod.json')).match(
+                /"cc-blitzkrieg": ">=(\d+\.\d+\.\d+)"/
+            )![1]
             // @ts-expect-error
             const bvHas: string = window.activeMods.find(e => e.name == 'cc-blitzkrieg').version
             if (bvReq != bvHas) {
@@ -36,7 +38,9 @@ export class AutoUpdater {
                 const url = `https://github.com/krypciak/cc-blitzkrieg/releases/download/v${bvReq}/${fn}`
                 await AddonInstaller.downloadFile(url, `assets/mods/${fn}`)
                 const delPath = `${mainDir}/assets/mods/cc-blitzkrieg-${bvHas}.ccmod`
-                fs.unlink(delPath, (err) => { err && console.log(err) })
+                fs.unlink(delPath, err => {
+                    err && console.log(err)
+                })
                 anyUpdated = true
             }
             if (anyUpdated) {
@@ -64,10 +68,10 @@ export class AutoUpdater {
     }
 
     private getUrlJson(url: string): Promise<any> {
-        return new Promise<any>((resolve) => {
+        return new Promise<any>(resolve => {
             $.ajax({
                 url,
-                success: (data) => {
+                success: data => {
                     resolve(data)
                 },
             })

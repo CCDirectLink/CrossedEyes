@@ -84,7 +84,9 @@ export default class CrossedEyes {
             },
             _startEventCall(event) {
                 this.parent(event)
-                if (event.runType == ig.EventRunType.BLOCKING) { self.pauseAll() }
+                if (event.runType == ig.EventRunType.BLOCKING) {
+                    self.pauseAll()
+                }
             },
             _endEventCall(event) {
                 const initial = this.blockingEventCall
@@ -106,7 +108,7 @@ export default class CrossedEyes {
             if (titleGuiInstance) {
                 ig.interact.removeEntry(titleGuiInstance.buttonInteract)
             } else {
-                ig.interact.entries.forEach((e) => ig.interact.removeEntry(e))
+                ig.interact.entries.forEach(e => ig.interact.removeEntry(e))
             }
             ig.game.start(sc.START_MODE.STORY, 0)
             ig.game.setPaused(false)
@@ -117,12 +119,9 @@ export default class CrossedEyes {
                 this.parent()
                 ig.lang.labels.sc.gui['title-screen']['CrossedEyesTestMap'] = 'CrossedEyes test map'
                 const self1 = this
-                this._createButton(
-                    'CrossedEyesTestMap',
-                    this.buttons.last().hook.pos.y + 39,
-                    100 - this.buttons.length,
-                    () => { startTestMap(self1) },
-                )
+                this._createButton('CrossedEyesTestMap', this.buttons.last().hook.pos.y + 39, 100 - this.buttons.length, () => {
+                    startTestMap(self1)
+                })
             },
         })
         sc.CrossCode.inject({
@@ -136,30 +135,34 @@ export default class CrossedEyes {
                 } else {
                     this.parent()
                 }
-            }
+            },
         })
-
     }
 
     addLogCopyKeybinding() {
         ig.input.bind(ig.KEY.F4, 'copylog')
-        ig.game.addons.preUpdate.push(new class {
-            async onPreUpdate() {
-                if (ig.input.pressed('copylog')) {
-                    MenuOptions.ttsEnabled && TextGather.g.speakI('uploading')
-                    const fs: typeof import('fs') = require('fs')
-                    const data = fs.readFileSync('biglog.txt').toString()
-                    const form = new FormData()
-                    form.append('file', new File([data], 'crosscode.log'));
+        ig.game.addons.preUpdate.push(
+            new (class {
+                async onPreUpdate() {
+                    if (ig.input.pressed('copylog')) {
+                        MenuOptions.ttsEnabled && TextGather.g.speakI('uploading')
+                        const fs: typeof import('fs') = require('fs')
+                        const data = fs.readFileSync('biglog.txt').toString()
+                        const form = new FormData()
+                        form.append('file', new File([data], 'crosscode.log'))
 
-                    const res = await fetch('http://0.vern.cc', { method: 'POST', body: form })
-                    const link = (await res.text()).trim()
-                    console.log(link)
-                    navigator.clipboard.writeText(link)
-                    MenuOptions.ttsEnabled && TextGather.g.speakI('Log link copied to clipboard')
+                        const res = await fetch('http://0.vern.cc', {
+                            method: 'POST',
+                            body: form,
+                        })
+                        const link = (await res.text()).trim()
+                        console.log(link)
+                        navigator.clipboard.writeText(link)
+                        MenuOptions.ttsEnabled && TextGather.g.speakI('Log link copied to clipboard')
+                    }
                 }
-            }
-        })
+            })()
+        )
     }
 
     async poststart() {
@@ -168,7 +171,8 @@ export default class CrossedEyes {
     }
 
     addVimAliases() {
-        if (window.vim) { /* optional dependency https://github.com/krypciak/cc-vim */
+        if (window.vim) {
+            /* optional dependency https://github.com/krypciak/cc-vim */
         }
     }
 }

@@ -5,7 +5,8 @@ import { HintSystem } from '../hint-system/hint-system'
 import { TextGather } from '../tts/gather-text'
 
 export class InteratableHandler implements PauseListener {
-    constructor() { /* in prestart */
+    constructor() {
+        /* in prestart */
         CrossedEyes.pauseables.push(this)
         const interactableSound = new ig.Sound(SoundManager.sounds.interactable)
         const interactSound = new ig.Sound(SoundManager.sounds.interact)
@@ -45,7 +46,7 @@ export class InteratableHandler implements PauseListener {
                     }
                     this.stateUpdate = false
                 }
-            }
+            },
         })
         ig.ENTITY.Player.inject({
             update() {

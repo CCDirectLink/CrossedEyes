@@ -1,41 +1,56 @@
 import { MenuOptions } from './options'
 
 export class SpacialAudio {
-    constructor() { /* in prestart */
+    constructor() {
+        /* in prestart */
         window.IG_FORCE_HTML5_AUDIO = true
         // @ts-expect-error
         ig.SOUND_RANGE_TYPE.CIRCULAR = 1 /* damn rfg how can a typo like this exist */
 
         ig.SoundHandleWebAudio.inject({
             setFixPosition(point: Vec3, range?: number | undefined, type?: ig.SOUND_RANGE_TYPE | undefined): void {
-                if (!MenuOptions.spacialAudioEnabled) { return this.parent(point, range, type) }
+                if (!MenuOptions.spacialAudioEnabled) {
+                    return this.parent(point, range, type)
+                }
                 this.pos = {
-                    get point(): Vec3 { throw new Error('cannot get audio pos directly') },
-                    set point(_) { throw new Error('cannot set audio pos directly') },
+                    get point(): Vec3 {
+                        throw new Error('cannot get audio pos directly')
+                    },
+                    set point(_) {
+                        throw new Error('cannot set audio pos directly')
+                    },
                     point3d: Vec3.create(point),
                     entity: null,
                     align: null,
                     offset: null,
                     range: range || 1600,
-                    rangeType: type || ig.SOUND_RANGE_TYPE.CIRULAR
+                    rangeType: type || ig.SOUND_RANGE_TYPE.CIRULAR,
                 }
             },
             setEntityPosition(entity: ig.Entity, align: ig.ENTITY_ALIGN, offset: null, range?: number | undefined, type?: ig.SOUND_RANGE_TYPE | undefined): void {
-                if (!MenuOptions.spacialAudioEnabled) { return this.parent(entity, align, offset, range, type) }
+                if (!MenuOptions.spacialAudioEnabled) {
+                    return this.parent(entity, align, offset, range, type)
+                }
                 this.pos = {
-                    get point(): Vec3 { throw new Error('cannot get audio pos directly') },
-                    set point(_) { throw new Error('cannot set audio pos directly') },
+                    get point(): Vec3 {
+                        throw new Error('cannot get audio pos directly')
+                    },
+                    set point(_) {
+                        throw new Error('cannot set audio pos directly')
+                    },
                     point3d: Vec3.createC(0, 0, 0),
                     entity,
                     align,
                     offset,
                     range: range || 1600,
-                    rangeType: type || ig.SOUND_RANGE_TYPE.CIRULAR
+                    rangeType: type || ig.SOUND_RANGE_TYPE.CIRULAR,
                 }
                 this._updateEntityPos(true)
             },
             _updateEntityPos(force?: boolean): void {
-                if (!MenuOptions.spacialAudioEnabled) { return this.parent(force) }
+                if (!MenuOptions.spacialAudioEnabled) {
+                    return this.parent(force)
+                }
                 if (this.pos && this.pos.entity) {
                     if (force || !this.pos.entity._killed) {
                         const pos = this.pos.entity.getAlignedPos(this.pos.align!, Vec3.create())
@@ -45,7 +60,7 @@ export class SpacialAudio {
                         this.pos.entity = null
                     }
                 }
-            }
+            },
         })
 
         const soundPosCache = Vec3.create()
@@ -53,7 +68,9 @@ export class SpacialAudio {
 
         ig.SoundHandleWebAudio.inject({
             play() {
-                if (!MenuOptions.spacialAudioEnabled) { return this.parent() }
+                if (!MenuOptions.spacialAudioEnabled) {
+                    return this.parent()
+                }
                 if (!this._playing && this._buffer) {
                     const audioContext: ig.WebAudio = ig.soundManager.context
                     if (this.pos && !this._nodePosition) {
@@ -73,7 +90,7 @@ export class SpacialAudio {
                             this._contextTimeOnStart = audioContext.getCurrentTime()
                             this._fadeIn = false
                         } else {
-                            pauseOffset = (this._contextTimeOnPause - this._contextTimeOnStart) * this._speed % this._duration
+                            pauseOffset = ((this._contextTimeOnPause - this._contextTimeOnStart) * this._speed) % this._duration
                             const currentTime: number = audioContext.getCurrentTime()
                             this._contextTimeOnStart = this._contextTimeOnStart + (currentTime - this._contextTimeOnPause)
                             this._contextTimeOnPause = -1
@@ -94,7 +111,9 @@ export class SpacialAudio {
                 }
             },
             _setPosition() {
-                if (!MenuOptions.spacialAudioEnabled) { return this.parent() }
+                if (!MenuOptions.spacialAudioEnabled) {
+                    return this.parent()
+                }
                 if (this.pos) {
                     this._updateEntityPos()
                     if (this._nodePosition) {
@@ -107,9 +126,9 @@ export class SpacialAudio {
                             Vec3.sub(soundPosCache, playerPosCache)
                         }
 
-                        if (ig.SOUND_RANGE_TYPE[this.pos.rangeType] as unknown as number == ig.SOUND_RANGE_TYPE.HORIZONTAL) {
+                        if ((ig.SOUND_RANGE_TYPE[this.pos.rangeType] as unknown as number) == ig.SOUND_RANGE_TYPE.HORIZONTAL) {
                             soundPosCache.x = 0
-                        } else if (ig.SOUND_RANGE_TYPE[this.pos.rangeType] as unknown as number == ig.SOUND_RANGE_TYPE.VERTICAL) {
+                        } else if ((ig.SOUND_RANGE_TYPE[this.pos.rangeType] as unknown as number) == ig.SOUND_RANGE_TYPE.VERTICAL) {
                             soundPosCache.y = 0
                         }
 
@@ -135,13 +154,15 @@ export class SpacialAudio {
         const groupPosCache = Vec3.create()
         ig.SoundManager.inject({
             _solveGroupRequests(group) {
-                if (!MenuOptions.spacialAudioEnabled) { return this.parent(group) }
+                if (!MenuOptions.spacialAudioEnabled) {
+                    return this.parent(group)
+                }
                 if (group.playing.length > 0 && group.playing.last().getPlayTime() < 2 / 60) {
                     return false
                 }
 
                 const requests: ig.SoundHandleBase[] = group.requests
-                for (let i = requests.length; i--;) {
+                for (let i = requests.length; i--; ) {
                     if (requests[i].isLooping()) {
                         this.playSoundHandle(requests[i], group)
                         requests.splice(i, 1)
@@ -150,7 +171,7 @@ export class SpacialAudio {
 
                 let foundRequest: ig.SoundHandleBase | undefined
                 let leastDistance: number = -1
-                for (let i = requests.length; i--;) {
+                for (let i = requests.length; i--; ) {
                     const request = requests[i]
                     let distance: number = 0
                     if (request.pos) {
@@ -166,7 +187,7 @@ export class SpacialAudio {
                         foundRequest = requests[i]
                     }
                 }
-                for (let i = group.playing.length; i--;) {
+                for (let i = group.playing.length; i--; ) {
                     if (!group.playing[i].isLooping()) {
                         group.playing[i].stop()
                     }
