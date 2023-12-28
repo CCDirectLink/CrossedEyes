@@ -18,6 +18,23 @@ import { AutoUpdater } from './autoupdate'
 import { TextGather } from './tts/gather-text'
 import { godmode } from './godmode'
 
+declare global {
+    interface Object {
+        fromEntries<T, K extends string | number | symbol>(entries: [K, T][]): Record<K, T>
+    }
+}
+if (!Object.fromEntries) {
+    Object.fromEntries = function <T, K extends string | number | symbol>(entries: [K, T][]): Record<K, T> {
+        return entries.reduce(
+            (acc: Record<K, T>, e: [K, T]) => {
+                acc[e[0]] = e[1]
+                return acc
+            },
+            {} as Record<K, T>
+        )
+    }
+}
+
 export interface PauseListener {
     pause?(): void
 }
@@ -148,6 +165,13 @@ export default class CrossedEyes {
                         MenuOptions.ttsEnabled && TextGather.g.speakI('uploading')
                         const fs: typeof import('fs') = require('fs')
                         let data = fs.readFileSync('biglog.txt').toString()
+
+                        const optionsStr = await blitzkrieg.prettifyJson(
+                            JSON.stringify(Object.fromEntries(Object.entries(sc.options.values).filter(e => !e[0].startsWith('modEnabled') && !e[0].startsWith('keys')))),
+                            500
+                        )
+                        data += `\n\n----------------OPTIONS-----------------\n${optionsStr}`
+
                         const nvdaLogPath: string = `${process.env.TMP ?? ''}/nvda.log`
                         if (blitzkrieg.FsUtil.doesFileExist(nvdaLogPath)) {
                             data += `\n\n----------------NVDA LOG----------------\n${await fs.promises.readFile(nvdaLogPath)}`

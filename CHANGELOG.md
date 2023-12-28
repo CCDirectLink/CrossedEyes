@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added in game settings to the F4 log
+
 ### Fixes
 
 - Hint selection in the analysis screen should no longer spam selections
