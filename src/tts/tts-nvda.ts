@@ -108,23 +108,6 @@ export class AddonInstaller {
     }
 
     private static isAddonInstalled(): boolean {
-        console.log('isAddonInstalled check start')
-        try {
-            console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/`))
-        } catch (e) {
-            console.log(e)
-        }
-        try {
-            console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/`))
-        } catch (e) {
-            console.log(e)
-        }
-        try {
-            console.log(blitzkrieg.FsUtil.listFiles(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/appModules`))
-        } catch (e) {
-            console.log(e)
-        }
-        console.log('isAddonInstalled check end')
         return blitzkrieg.FsUtil.doesFileExist(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/manifest.ini`)
     }
 
@@ -170,11 +153,6 @@ export class AddonInstaller {
         console.log('install succesfull')
         require('child_process').exec('"C:\\Program Files (x86)\\NVDA\\nvda.exe"') /* restart NVDA */
         console.log('restarted NVDA')
-
-        console.log('mainfest:')
-        console.log(fs.readFileSync(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/manifest.ini`))
-        console.log('crosscode.py:')
-        console.log(fs.readFileSync(`${process.env.APPDATA ?? ''}/nvda/addons/crosscode/appModules/crosscode.py`))
         console.log('---------installation end-------------')
     }
 
@@ -193,9 +171,7 @@ export class AddonInstaller {
 
     static async downloadFile(url: string, outPath: string): Promise<void> {
         const blob = await (await fetch(url, { mode: 'cors' })).blob()
-        console.log('blob:', blob)
         const arrayBuffer = await AddonInstaller.blobToArrayBuffer(blob)
-        console.log('arrayBuffer:', arrayBuffer)
         return fs.promises.writeFile(outPath, Buffer.from(arrayBuffer))
     }
 
@@ -204,7 +180,6 @@ export class AddonInstaller {
 
         try {
             zip.extractAllTo(outPath, true)
-            console.log('unzipped', outPath)
         } catch (error) {
             console.error('Error extracting zip file:', error)
         }
