@@ -1,4 +1,4 @@
-import { MenuOptions } from '../../options'
+import { MenuOptions } from '../../optionsManager'
 import { Hint, HintData } from '../hint-system'
 
 export class HWalls implements Hint {
@@ -17,7 +17,7 @@ export class HWalls implements Hint {
         })
         ig.ENTITY.WallBlocker.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && this.parentWall.active) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzle && this.parentWall.active) }
             },
         })
     }

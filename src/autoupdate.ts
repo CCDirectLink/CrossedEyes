@@ -1,4 +1,4 @@
-import { MenuOptions } from './options'
+import { MenuOptions } from './optionsManager'
 import CrossedEyes from './plugin'
 import { TextGather } from './tts/gather-text'
 import { TTS } from './tts/tts'

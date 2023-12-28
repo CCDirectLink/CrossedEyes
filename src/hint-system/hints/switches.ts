@@ -1,4 +1,4 @@
-import { MenuOptions } from '../../options'
+import { MenuOptions } from '../../optionsManager'
 import { Hint, HintData } from '../hint-system'
 
 export class HSwitch implements Hint {
@@ -9,7 +9,7 @@ export class HSwitch implements Hint {
         const self = this
         ig.ENTITY.Switch.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !MenuOptions.puzzleEnabled }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !MenuOptions.puzzle }
             },
         })
     }
@@ -32,7 +32,7 @@ export class HOneTimeSwitch implements Hint {
         const self = this
         ig.ENTITY.OneTimeSwitch.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && !this.isOn) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzle && !this.isOn) }
             },
         })
     }
@@ -55,7 +55,7 @@ export class HMultiHitSwitch implements Hint {
         const self = this
         ig.ENTITY.MultiHitSwitch.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && !this.isOn) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzle && !this.isOn) }
             },
         })
     }

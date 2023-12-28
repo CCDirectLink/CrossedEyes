@@ -1,4 +1,4 @@
-import { MenuOptions } from '../../options'
+import { MenuOptions } from '../../optionsManager'
 import { Hint, HintData } from '../hint-system'
 
 export class HBounceBlock implements Hint {
@@ -9,12 +9,12 @@ export class HBounceBlock implements Hint {
         const self = this
         ig.ENTITY.BounceBlock.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && this.blockState != 2) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzle && this.blockState != 2) }
             },
         })
         ig.ENTITY.Blocker.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && this.active) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzle && this.active) }
             },
         })
     }
@@ -57,7 +57,7 @@ export class HBounceSwitch implements Hint {
         const self = this
         ig.ENTITY.BounceSwitch.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzleEnabled && !this.isOn) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzle && !this.isOn) }
             },
         })
     }

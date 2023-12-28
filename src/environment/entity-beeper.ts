@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options'
+import { MenuOptions } from '../optionsManager'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager } from '../sound-manager'
 
@@ -41,7 +41,7 @@ export class EntityBeeper implements PauseListener {
         ig.Entity.inject({
             playAtSoundHandle: null,
             show(...args) {
-                if (MenuOptions.loudEntitiesEnabled) {
+                if (MenuOptions.loudEntities) {
                     playAt(this)
                 }
                 return this.parent(...args)

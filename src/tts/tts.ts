@@ -1,4 +1,4 @@
-import { MenuOptions, ttsTypeId } from '../options'
+import { MenuOptions } from '../optionsManager'
 import CrossedEyes from '../plugin'
 import { TextGather } from './gather-text'
 import { AddonInstaller, TTSNvda } from './tts-nvda'
@@ -56,7 +56,7 @@ export class TTS {
         sc.OptionModel.inject({
             set(option: string, value: any) {
                 this.parent(option, value)
-                option == ttsTypeId && self.setup()
+                option == MenuOptions.flatOpts.ttsType.id && self.setup()
             },
         })
     }
@@ -64,7 +64,7 @@ export class TTS {
     setup() {
         if (this.lastOption != MenuOptions.ttsType) {
             this.lastOption = MenuOptions.ttsType
-            const imp = new implementations[MenuOptions.ttsType]()
+            const imp = new implementations[MenuOptions.ttsType as TTSTypes]()
             if (imp.supportedPlatforms.has(process.platform as any)) {
                 this.ttsInstance = imp
                 imp.init()

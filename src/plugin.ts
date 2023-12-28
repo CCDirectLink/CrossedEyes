@@ -2,7 +2,7 @@ import { Mod1 } from 'cc-blitzkrieg/src/types'
 import { SpacialAudio } from './spacial-audio'
 import type * as _ from 'cc-vim'
 import type * as __ from 'cc-blitzkrieg'
-import { MenuOptions } from './options'
+import { MenuOptions, MenuOptionsManager } from './optionsManager'
 import { LoudWalls } from './environment/loudwalls'
 import { SoundManager } from './sound-manager'
 import { TTS } from './tts/tts'
@@ -69,7 +69,7 @@ export default class CrossedEyes {
     async prestart() {
         this.addVimAliases()
         new AutoUpdater().checkAndInstall()
-        new MenuOptions()
+        new MenuOptionsManager()
         new SoundManager()
         new SpacialAudio()
         new MovementSoundTweaker()

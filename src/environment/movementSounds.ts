@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options'
+import { MenuOptions } from '../optionsManager'
 import { SoundManager, mulSoundVol } from '../sound-manager'
 
 export class MovementSoundTweaker {
@@ -62,12 +62,12 @@ export class MovementSoundTweaker {
                         } else {
                             if (frame == this.stepFx.frames[0]) {
                                 spawnFx = true
-                                ig.SoundHelper.playAtEntity(mulSoundVol(sound.step1!, MenuOptions.footstepVolume), this, null, null, 700)
+                                ig.SoundHelper.playAtEntity(mulSoundVol(sound.step1!, MenuOptions.footstepVolume as number), this, null, null, 700)
                                 this.onMoveEffect && this.onMoveEffect('step')
                             }
                             if (frame == this.stepFx.frames[1]) {
                                 spawnFx = true
-                                ig.SoundHelper.playAtEntity(mulSoundVol(sound.step2!, MenuOptions.footstepVolume), this, null, null, 700)
+                                ig.SoundHelper.playAtEntity(mulSoundVol(sound.step2!, MenuOptions.footstepVolume as number), this, null, null, 700)
                                 this.onMoveEffect && this.onMoveEffect('step')
                             }
                         }

@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options'
+import { MenuOptions } from '../optionsManager'
 import { HintSystem } from './hint-system'
 import { HEnemy } from './hints/enemy'
 
@@ -7,7 +7,7 @@ export class EnemyHintMenu {
         /* in prestart */
         ig.ENTITY.Enemy.inject({
             getQuickMenuSettings() {
-                if (!MenuOptions.puzzleEnabled) {
+                if (!MenuOptions.puzzle) {
                     return this.parent!()
                 }
                 const isProperEnemy: boolean = this.params && this.visibility.analyzable && sc.combat.isEnemyAnalyzable(this.enemyName)

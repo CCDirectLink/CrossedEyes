@@ -1,5 +1,5 @@
 import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
-import { MenuOptions } from '../options'
+import { MenuOptions } from '../optionsManager'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager, isHandleMuted, muteHandle } from '../sound-manager'
 
@@ -23,7 +23,7 @@ export class LoudWalls implements PauseListener {
         ig.ENTITY.Player.inject({
             update() {
                 this.parent()
-                MenuOptions.loudWallsEnabled && self.handleWallSound()
+                MenuOptions.loudWalls && self.handleWallSound()
             },
         })
     }

@@ -1,5 +1,5 @@
 import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
-import { MenuOptions } from '../options'
+import { MenuOptions } from '../optionsManager'
 import { SoundManager } from '../sound-manager'
 import CrossedEyes from '../plugin'
 
@@ -288,7 +288,7 @@ export class LoudJump {
 
     handle() {
         const p: ig.ENTITY.Player = ig.game.playerEntity
-        if (!MenuOptions.loudWallsEnabled || CrossedEyes.isPaused || !this.predictor || !p || !p.coll?.pos) {
+        if (!MenuOptions.loudWalls || CrossedEyes.isPaused || !this.predictor || !p || !p.coll?.pos) {
             return
         }
 

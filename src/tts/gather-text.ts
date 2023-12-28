@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options'
+import { MenuOptions } from '../optionsManager'
 import CrossedEyes from '../plugin'
 import { SpecialAction } from '../special-action'
 import { expressionMap } from './expressionMap'
@@ -174,7 +174,7 @@ export class TextGather {
                 this.load()
             },
             play(exp: sc.CharacterExpression, label: ig.LangLabel) {
-                const isOn = MenuOptions.ttsCharEnabled
+                const isOn = MenuOptions.ttsChar
                 if (isOn) {
                     if (leaSounds && exp.character.name == 'main.lea') {
                         this.active = true
@@ -229,24 +229,24 @@ export class TextGather {
         sc.CenterMsgBoxGui.inject({
             init(...args) {
                 this.parent(...args)
-                MenuOptions.ttsMenuEnabled && self.speakI(this.textGui.text)
+                MenuOptions.ttsEnabled && self.speakI(this.textGui.text)
             },
             _close() {
-                MenuOptions.ttsMenuEnabled && self.interrupt()
+                MenuOptions.ttsEnabled && self.interrupt()
                 return this.parent()
             },
         })
 
         ig.EVENT_STEP.SHOW_AR_MSG.inject({
             start(...args) {
-                MenuOptions.ttsMenuEnabled && self.speakI(this.text)
+                MenuOptions.ttsEnabled && self.speakI(this.text)
                 return this.parent(...args)
             },
         })
 
         sc.InputForcer.inject({
             setEntry(action, title, textKeyboard, textGamepad) {
-                if (MenuOptions.ttsMenuEnabled) {
+                if (MenuOptions.ttsEnabled) {
                     textGamepad = ig.LangLabel.getText(textGamepad as ig.LangLabel.Data)
                     if (textGamepad == 'Press \\i[throw] + \\i[throw] + \\i[throw] + \\i[throw]') {
                         textGamepad = 'Press \\i[throw] or \\i[gamepad-x] 4 times'
@@ -258,7 +258,7 @@ export class TextGather {
                 }
             },
             _endBlock() {
-                MenuOptions.ttsMenuEnabled && self.interrupt()
+                MenuOptions.ttsEnabled && self.interrupt()
                 this.parent()
             },
         })
@@ -284,7 +284,7 @@ export class TextGather {
         sc.QuickMenuModel.inject({
             enterQuickMenu() {
                 this.parent()
-                MenuOptions.ttsMenuEnabled && self.speakI('Quick Menu')
+                MenuOptions.ttsEnabled && self.speakI('Quick Menu')
             },
             exitQuickMenu() {
                 this.parent()
@@ -298,7 +298,7 @@ export class TextGather {
         sc.RingMenuButton.inject({
             focusGained() {
                 this.parent()
-                if (MenuOptions.ttsMenuEnabled) {
+                if (MenuOptions.ttsEnabled) {
                     let text: string | undefined
                     switch (this.state) {
                         case sc.QUICK_MENU_STATE.NONE:
@@ -319,7 +319,7 @@ export class TextGather {
                     if (text) {
                         self.speakI(text)
                         SpecialAction.setListener('LSP', 'quickMenuDescription', () => {
-                            MenuOptions.ttsMenuEnabled && this.focus && self.speakI(this.data)
+                            MenuOptions.ttsEnabled && this.focus && self.speakI(this.data)
                         })
                     }
                 }
@@ -331,7 +331,7 @@ export class TextGather {
 
         sc.ButtonGui.inject({
             focusGained() {
-                if (MenuOptions.ttsMenuEnabled) {
+                if (MenuOptions.ttsEnabled) {
                     const diff = Date.now() - ignoreButtonFrom
                     if (diff > 50) {
                         if (buttonSayChoice && sc.message.blocking && !ig.game.paused && !ig.loading && !sc.model.isTitle()) {
@@ -349,12 +349,12 @@ export class TextGather {
         sc.OptionsMenu.inject({
             exitMenu() {
                 this.parent()
-                MenuOptions.ttsMenuEnabled && self.interrupt()
+                MenuOptions.ttsEnabled && self.interrupt()
             },
         })
         sc.OptionsTabBox.inject({
             showMenu() {
-                if (MenuOptions.ttsMenuEnabled) {
+                if (MenuOptions.ttsEnabled) {
                     self.speakArgs('Options menu, Category General: ${0}')
                     ignoreButtonFrom = Date.now()
                 }
@@ -364,7 +364,7 @@ export class TextGather {
 
         sc.ItemTabbedBox.TabButton.inject({
             onPressedChange(pressed: boolean) {
-                if (pressed && MenuOptions.ttsMenuEnabled) {
+                if (pressed && MenuOptions.ttsEnabled) {
                     self.speakArgs('Category ${0}: ${1}', this.text)
                     ignoreButtonFrom = Date.now()
                 }
@@ -410,7 +410,7 @@ export class TextGather {
             init() {
                 this.parent()
                 this.addSelectionCallback((button?: ig.FocusGui) => {
-                    if (MenuOptions.ttsMenuEnabled) {
+                    if (MenuOptions.ttsEnabled) {
                         const or: sc.OptionRow = (button as sc.RowButtonGroup['elements'][0][0])?.optionRow
                         if (!or) {
                             return
@@ -444,30 +444,30 @@ export class TextGather {
         sc.OPTION_GUIS[sc.OPTION_TYPES.CHECKBOX].inject({
             onPressed(checkbox: sc.CheckboxGui) {
                 this.parent(checkbox)
-                checkbox == this.button && MenuOptions.ttsMenuEnabled && self.speakI(checkbox.pressed)
+                checkbox == this.button && MenuOptions.ttsEnabled && self.speakI(checkbox.pressed)
             },
         })
         sc.OPTION_GUIS[sc.OPTION_TYPES.ARRAY_SLIDER].inject({
             onLeftRight(direction: boolean) {
                 this.parent(direction)
-                MenuOptions.ttsMenuEnabled && self.speakI(`${((this._lastVal / this.scale) * 100).floor()}%`)
+                MenuOptions.ttsEnabled && self.speakI(`${((this._lastVal / this.scale) * 100).floor()}%`)
             },
         })
         sc.OPTION_GUIS[sc.OPTION_TYPES.OBJECT_SLIDER].inject({
             onLeftRight(direction: boolean) {
                 this.parent(direction)
-                MenuOptions.ttsMenuEnabled &&
+                MenuOptions.ttsEnabled &&
                     self.speakI(`${this.currentNumber instanceof sc.TextGui ? this.currentNumber.text : (this.currentNumber as sc.NumberGui).targetNumber}`)
             },
         })
 
         sc.ModalButtonInteract.inject({
             show() {
-                MenuOptions.ttsMenuEnabled && self.speakArgs(`Dialog: \${0}, \${1}`, this.textGui.text)
+                MenuOptions.ttsEnabled && self.speakArgs(`Dialog: \${0}, \${1}`, this.textGui.text)
                 this.parent()
             },
             hide() {
-                MenuOptions.ttsMenuEnabled && self.interrupt()
+                MenuOptions.ttsEnabled && self.interrupt()
                 this.parent()
             },
         })

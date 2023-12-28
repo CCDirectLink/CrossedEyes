@@ -1,5 +1,5 @@
 import { LoudWalls } from '../environment/loudwalls'
-import { MenuOptions } from '../options'
+import { MenuOptions } from '../optionsManager'
 import { TextGather } from '../tts/gather-text'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { HintSystem } from './hint-system'
@@ -35,7 +35,7 @@ export class AimAnalyzer implements PauseListener {
         sc.QuickMenuAnalysis.inject({
             update() {
                 this.parent()
-                if (sc.quickmodel.isQuickCheck() && MenuOptions.puzzleEnabled && ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
+                if (sc.quickmodel.isQuickCheck() && MenuOptions.puzzle && ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
                     self.aimAnnounceOn = !self.aimAnnounceOn
                     MenuOptions.ttsEnabled && TextGather.g.speakI(`Aim analysis ${self.aimAnnounceOn ? 'on' : 'off'}`)
                 }

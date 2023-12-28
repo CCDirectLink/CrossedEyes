@@ -1,4 +1,4 @@
-import { MenuOptions } from './options'
+import { MenuOptions } from './optionsManager'
 
 export class SpacialAudio {
     constructor() {
@@ -9,7 +9,7 @@ export class SpacialAudio {
 
         ig.SoundHandleWebAudio.inject({
             setFixPosition(point: Vec3, range?: number | undefined, type?: ig.SOUND_RANGE_TYPE | undefined): void {
-                if (!MenuOptions.spacialAudioEnabled) {
+                if (!MenuOptions.spacialAudio) {
                     return this.parent(point, range, type)
                 }
                 this.pos = {
@@ -28,7 +28,7 @@ export class SpacialAudio {
                 }
             },
             setEntityPosition(entity: ig.Entity, align: ig.ENTITY_ALIGN, offset: null, range?: number | undefined, type?: ig.SOUND_RANGE_TYPE | undefined): void {
-                if (!MenuOptions.spacialAudioEnabled) {
+                if (!MenuOptions.spacialAudio) {
                     return this.parent(entity, align, offset, range, type)
                 }
                 this.pos = {
@@ -48,7 +48,7 @@ export class SpacialAudio {
                 this._updateEntityPos(true)
             },
             _updateEntityPos(force?: boolean): void {
-                if (!MenuOptions.spacialAudioEnabled) {
+                if (!MenuOptions.spacialAudio) {
                     return this.parent(force)
                 }
                 if (this.pos && this.pos.entity) {
@@ -68,7 +68,7 @@ export class SpacialAudio {
 
         ig.SoundHandleWebAudio.inject({
             play() {
-                if (!MenuOptions.spacialAudioEnabled) {
+                if (!MenuOptions.spacialAudio) {
                     return this.parent()
                 }
                 if (!this._playing && this._buffer) {
@@ -111,7 +111,7 @@ export class SpacialAudio {
                 }
             },
             _setPosition() {
-                if (!MenuOptions.spacialAudioEnabled) {
+                if (!MenuOptions.spacialAudio) {
                     return this.parent()
                 }
                 if (this.pos) {
@@ -154,7 +154,7 @@ export class SpacialAudio {
         const groupPosCache = Vec3.create()
         ig.SoundManager.inject({
             _solveGroupRequests(group) {
-                if (!MenuOptions.spacialAudioEnabled) {
+                if (!MenuOptions.spacialAudio) {
                     return this.parent(group)
                 }
                 if (group.playing.length > 0 && group.playing.last().getPlayTime() < 2 / 60) {

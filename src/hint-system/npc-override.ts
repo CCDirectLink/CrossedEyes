@@ -1,4 +1,3 @@
-import { TextGather } from '../tts/gather-text'
 import { HintSystem } from './hint-system'
 
 export class NPCHintMenu {

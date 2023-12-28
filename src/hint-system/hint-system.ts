@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options'
+import { MenuOptions } from '../optionsManager'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
@@ -218,7 +218,7 @@ export class HintSystem implements PauseListener {
         sc.QuickMenuTypesBase.inject({
             isMouseOver() {
                 if (
-                    MenuOptions.puzzleEnabled &&
+                    MenuOptions.puzzle &&
                     sc.quickmodel.isQuickCheck() &&
                     !ig.interact.isBlocked() &&
                     this.focusable &&
@@ -403,7 +403,7 @@ export class HintSystem implements PauseListener {
         })
         sc.QuickMenuAnalysis.inject({
             update(...args) {
-                if (sc.quickmodel.isQuickCheck() && MenuOptions.puzzleEnabled) {
+                if (sc.quickmodel.isQuickCheck() && MenuOptions.puzzle) {
                     let add = ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_SHOULDER) ? -1 : ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_SHOULDER) ? 1 : 0
                     if (add != 0) {
                         self.selectNextHint(add)
@@ -478,7 +478,7 @@ export class HintSystem implements PauseListener {
         ig.EVENT_STEP.SET_PLAYER_CORE.inject({
             start() {
                 /* disallow disabling quick menu */
-                if (MenuOptions.puzzleEnabled && this.core == sc.PLAYER_CORE.QUICK_MENU && this.value == false) {
+                if (MenuOptions.puzzle && this.core == sc.PLAYER_CORE.QUICK_MENU && this.value == false) {
                     return
                 }
                 this.parent()

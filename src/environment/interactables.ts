@@ -1,6 +1,6 @@
 import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager } from '../sound-manager'
-import { MenuOptions } from '../options'
+import { MenuOptions } from '../optionsManager'
 import { HintSystem } from '../hint-system/hint-system'
 import { TextGather } from '../tts/gather-text'
 
@@ -16,7 +16,7 @@ export class InteratableHandler implements PauseListener {
                 this.stateUpdate = true
             },
             customUpdate() {
-                if (this.stateUpdate && MenuOptions.loudEntitiesEnabled) {
+                if (this.stateUpdate && MenuOptions.loudEntities) {
                     if (this.state == sc.INTERACT_ENTRY_STATE.FOCUS) {
                         if (this.interactSoundType != SoundManager.sounds.interact) {
                             this.interactSoundType = SoundManager.sounds.interact

@@ -1,9 +1,9 @@
 import { WebSocket, WebSocketServer } from 'ws'
 import { CharacterSpeakData, TTS, TTSInterface, TTSTypes } from './tts'
 import CrossedEyes from '../plugin'
+import { MenuOptions } from '../optionsManager'
 
 import AdmZip from 'adm-zip'
-import { MenuOptions } from '../options'
 
 const fs: typeof import('fs') = (0, eval)('require("fs")')
 
@@ -149,7 +149,7 @@ export class AddonInstaller {
         AddonInstaller.unzipFile(zipFilePath, websocketClientParentPath)
 
         MenuOptions.ttsType = TTSTypes.NVDA
-        MenuOptions.save()
+        sc.options.persistOptions()
         console.log('install succesfull')
         require('child_process').exec('"C:\\Program Files (x86)\\NVDA\\nvda.exe"') /* restart NVDA */
         console.log('restarted NVDA')
