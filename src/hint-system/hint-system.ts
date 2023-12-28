@@ -96,7 +96,7 @@ export class HintSystem implements PauseListener {
             }
         }
         if (playSound) {
-            handle = new ig.Sound(SoundManager.sounds.hint).play(true)
+            handle = new ig.Sound(SoundManager.sounds.hint, MenuOptions.hintsVolume).play(true)
             this.updateHintSound(hint, handle)
             handle.play()
             handle.dontPauseInQuickAnalysis = dontPauseInQuickAnalysis

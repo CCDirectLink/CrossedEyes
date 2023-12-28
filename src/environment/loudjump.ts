@@ -313,7 +313,10 @@ export class LoudJump {
             return
         }
         let soundName: string = ''
-        let volume: number = 1
+        let volume: number = MenuOptions.jumpHintsVolume
+        if (volume == 0) {
+            return
+        }
         let range: number = 16 * 16
         switch (type) {
             case TrackType.Water:
@@ -349,7 +352,7 @@ export class LoudJump {
                 handle.setFixPosition(pos, range)
             }
             if (handle._nodeSource) {
-                handle._nodeSource.gainNode.gain.value = AimAnalyzer.g.aimAnnounceOn && isAiming() ? 0.3 : 1
+                handle._nodeSource.gainNode.gain.value = volume * (AimAnalyzer.g.aimAnnounceOn && isAiming() ? 0.4 : 1)
             }
         }
     }

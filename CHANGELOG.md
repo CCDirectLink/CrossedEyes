@@ -7,6 +7,7 @@
 ### Added
 
 - Added in game settings to the F4 log
+- Add volume sliders for walls, jump hints and hints
 
 ### Fixes
 

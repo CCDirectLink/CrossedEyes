@@ -56,11 +56,13 @@ export class LoudWalls implements PauseListener {
     }
 
     private handleSoundAt(dirId: string, dir: Vec2, playerFaceAngle: number, soundName: string, check: CheckDirectionReturn): boolean {
+        const volume = MenuOptions.wallVolume
+        if (volume == 0) { return false }
         let { handle, sound } = this.handles[dirId] ?? { handle: undefined, sound: undefined }
         if (check.type === 'collided') {
             if (!handle || !handle._playing || sound != soundName) {
                 this.handles[dirId] = {
-                    handle: new ig.Sound(soundName).play(true, {
+                    handle: new ig.Sound(soundName, volume).play(true, {
                         speed: 1,
                     }),
                     sound: soundName,
@@ -84,7 +86,7 @@ export class LoudWalls implements PauseListener {
                 const dirFaceAngle: number = (Vec2.clockangle(dir) * 180) / Math.PI
                 const angleDist: number = Math.min(Math.abs(playerFaceAngle - dirFaceAngle), 360 - Math.abs(playerFaceAngle - dirFaceAngle))
                 handle._nodeSource.bufferNode.playbackRate.value = angleDist >= 140 ? 0.7 : 1
-                handle._nodeSource.gainNode.gain.value = AimAnalyzer.g.aimAnnounceOn && isAiming() ? 0.4 : 1
+                handle._nodeSource.gainNode.gain.value = volume * (AimAnalyzer.g.aimAnnounceOn && isAiming() ? 0.4 : 1)
             }
             return true
         }
