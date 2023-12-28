@@ -3,6 +3,11 @@
 # Change Log
 
 ## [Unreleased]
+
+### Fixes
+
+- Hint selection in the analysis screen should no longer spam selections
+
 ## [0.4.8] 2023-12-27
 
 ### Added

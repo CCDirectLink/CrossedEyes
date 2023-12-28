@@ -57,6 +57,9 @@ export class HintSystem implements PauseListener {
 
     activeHints: ({ hint: ReqHintEntry; handle?: ig.SoundHandle; muted?: boolean } | undefined)[] = [undefined]
 
+    focusMode: boolean = false /* false for position based (default behaviour), true for index based */
+    sorted!: sc.QuickMenuTypesBase[]
+
     deactivateHint(index: number) {
         const e = this.activeHints[index]
         if (e) {
@@ -138,9 +141,9 @@ export class HintSystem implements PauseListener {
 
     selectNextHint(add: number) {
         const pPos: Vec3 = Vec3.create(ig.game.playerEntity.coll.pos)
-        const sorted: sc.QuickMenuTypesBase[] = this.quickMenuAnalysisInstance.entities
+        const sorted: sc.QuickMenuTypesBase[] = (this.sorted = this.quickMenuAnalysisInstance.entities
             .filter(e => e)
-            .sort((a, b) => Vec3.distance(a.entity.coll.pos, pPos) - Vec3.distance(b.entity.coll.pos, pPos))
+            .sort((a, b) => Vec2.distance(a.entity.getCenter(), pPos) - Vec2.distance(b.entity.getCenter(), pPos)))
         this.currentSelectIndex += add
         if (this.currentSelectIndex == sorted.length) {
             this.currentSelectIndex = 0
@@ -150,6 +153,7 @@ export class HintSystem implements PauseListener {
         const entry: sc.QuickMenuTypesBase = sorted[this.currentSelectIndex]
 
         if (entry) {
+            this.focusMode = true
             sc.quickmodel.cursorMoved = true
             sc.quickmodel.cursor = Vec2.createC(entry.hook.pos.x + entry.hook.size.x / 2, entry.hook.pos.y + entry.hook.size.y / 2)
             this.quickMenuAnalysisInstance.cursor.moveTo(sc.quickmodel.cursor.x, sc.quickmodel.cursor.y, true)
@@ -211,9 +215,7 @@ export class HintSystem implements PauseListener {
         }
 
         const self = this
-        let lastFocusedHintPos: Vec2 = Vec2.create()
         sc.QuickMenuTypesBase.inject({
-            /* fix issue where two hints can be focued at the same time */
             isMouseOver() {
                 if (
                     MenuOptions.puzzleEnabled &&
@@ -222,16 +224,11 @@ export class HintSystem implements PauseListener {
                     this.focusable &&
                     sc.quickmodel.isDeviceSynced() &&
                     ig.input.currentDevice == ig.INPUT_DEVICES.GAMEPAD &&
-                    !sc.quickmodel.cursorMoved
+                    !sc.quickmodel.cursorMoved &&
+                    self.focusMode &&
+                    self.sorted.indexOf(this) != self.currentSelectIndex
                 ) {
-                    var a: ig.GuiHook = this.hook!
-                    const pos: Vec2 = Vec2.createC(a.pos.x + Math.floor(a.size.x / 2), a.pos.y + Math.floor(a.size.y / 2))
-                    if (Math.floor(Vec2.distance(sc.quickmodel.cursor, pos)) <= 10) {
-                        if (Vec2.equal(lastFocusedHintPos, pos)) {
-                            return false
-                        }
-                        lastFocusedHintPos = pos
-                    }
+                    return false
                 }
                 return this.parent()
             },
@@ -391,7 +388,7 @@ export class HintSystem implements PauseListener {
             update() {
                 this.parent()
                 if (sc.quickmodel.cursorMoved) {
-                    lastFocusedHintPos = Vec2.create()
+                    self.focusMode = false
                 }
             },
         })
@@ -475,7 +472,6 @@ export class HintSystem implements PauseListener {
                 this.focusContainer.reset()
                 this.doStateTransition('DEFAULT')
                 self.currentSelectIndex = -1
-                lastFocusedHintPos = Vec2.create()
             },
         })
 
