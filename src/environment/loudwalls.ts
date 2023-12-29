@@ -57,7 +57,9 @@ export class LoudWalls implements PauseListener {
 
     private handleSoundAt(dirId: string, dir: Vec2, playerFaceAngle: number, soundName: string, check: CheckDirectionReturn): boolean {
         const volume = MenuOptions.wallVolume
-        if (volume == 0) { return false }
+        if (volume == 0) {
+            return false
+        }
         let { handle, sound } = this.handles[dirId] ?? { handle: undefined, sound: undefined }
         if (check.type === 'collided') {
             if (!handle || !handle._playing || sound != soundName) {

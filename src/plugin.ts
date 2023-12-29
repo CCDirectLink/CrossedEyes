@@ -17,6 +17,7 @@ import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
 import { AutoUpdater } from './autoupdate'
 import { TextGather } from './tts/gather-text'
 import { godmode } from './godmode'
+import { LangPopupFix } from './tts/lang-popup-fix'
 
 declare global {
     interface Object {
@@ -82,6 +83,7 @@ export default class CrossedEyes {
         new TTS()
         new EntityBeeper()
         new CharacterSpeechSynchronizer()
+        new LangPopupFix()
 
         const self = this
         ig.Game.inject({

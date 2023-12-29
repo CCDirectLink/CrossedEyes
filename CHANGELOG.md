@@ -8,6 +8,7 @@
 
 - Added in game settings to the F4 log
 - Add volume sliders for walls, jump hints and hints
+- Make the language selection a list instead of a 2x3 grid
 
 ### Fixes
 
