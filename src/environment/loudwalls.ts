@@ -23,7 +23,7 @@ export class LoudWalls implements PauseListener {
         ig.ENTITY.Player.inject({
             update() {
                 this.parent()
-                MenuOptions.loudWalls && self.handleWallSound()
+                MenuOptions.spacialAudio && MenuOptions.loudWalls && self.handleWallSound()
             },
         })
     }

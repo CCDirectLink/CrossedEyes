@@ -22,10 +22,10 @@ export class HDoor implements Hint {
         const self = this
         ig.ENTITY.Door.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzle && this.condition.code != 'false') }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.hints && this.condition.code != 'false') }
             },
             open(entity, data) {
-                if (MenuOptions.puzzle) {
+                if (MenuOptions.hints) {
                     ig.vars.set(getVarName(this), true)
                     justEnteredTpr = true
                 }
@@ -46,7 +46,7 @@ export class HDoor implements Hint {
                     }
                     for (const e of entities) {
                         const path = genVarName('maps.', ig.game.mapName, e.name!, e.map, e.marker)
-                        MenuOptions.puzzle && ig.vars.set(path, true)
+                        MenuOptions.hints && ig.vars.set(path, true)
                     }
                     justEnteredTpr = true
                 }
@@ -77,7 +77,7 @@ export class HTeleportField implements Hint {
                     type: 'Hints',
                     hintName: self.entryName,
                     hintType: 'Puzzle',
-                    disabled: !(MenuOptions.puzzle && this.interactEntry),
+                    disabled: !(MenuOptions.hints && this.interactEntry),
                 }
             },
             onInteraction() {
@@ -106,7 +106,7 @@ export class HTeleportGround implements Hint {
         const self = this
         ig.ENTITY.TeleportGround.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !MenuOptions.puzzle }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !MenuOptions.hints }
             },
             collideWith(entity, dir) {
                 this.parent(entity, dir)
@@ -141,7 +141,7 @@ export class HElevator implements Hint {
                     type: 'Hints',
                     hintName: self.entryName,
                     hintType: 'Puzzle',
-                    disabled: !(MenuOptions.puzzle && this.groundEntity.condition.code != 'false'),
+                    disabled: !(MenuOptions.hints && this.groundEntity.condition.code != 'false'),
                 }
             },
         })

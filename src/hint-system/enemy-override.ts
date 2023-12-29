@@ -7,7 +7,7 @@ export class EnemyHintMenu {
         /* in prestart */
         ig.ENTITY.Enemy.inject({
             getQuickMenuSettings() {
-                if (!MenuOptions.puzzle) {
+                if (!MenuOptions.hints) {
                     return this.parent!()
                 }
                 const isProperEnemy: boolean = this.params && this.visibility.analyzable && sc.combat.isEnemyAnalyzable(this.enemyName)

@@ -23,11 +23,11 @@ export function getOptions() {
                     name: 'Entity noises',
                     description: 'Makes entities emit noise while nearby',
                 },
-                puzzle: {
+                hints: {
                     type: 'CHECKBOX',
                     init: true,
-                    name: 'Puzzle assist',
-                    description: 'Solve puzzles blindfolded!',
+                    name: 'Hint system',
+                    description: 'The hint sytstem allows you to see what objects are around you',
                 },
                 textBeeping: {
                     type: 'CHECKBOX',

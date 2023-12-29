@@ -83,6 +83,9 @@ export class HintSystem implements PauseListener {
 
     activateHint(index: number, hint: ReqHintEntry, playSound: boolean = true, dontPauseInQuickAnalysis: boolean = false) {
         this.deactivateHint(index)
+        if (!MenuOptions.hints) {
+            return
+        }
         if (index == -1) {
             index = this.activateHint.length
         }
@@ -219,7 +222,7 @@ export class HintSystem implements PauseListener {
         sc.QuickMenuTypesBase.inject({
             isMouseOver() {
                 if (
-                    MenuOptions.puzzle &&
+                    MenuOptions.hints &&
                     sc.quickmodel.isQuickCheck() &&
                     !ig.interact.isBlocked() &&
                     this.focusable &&
@@ -404,7 +407,7 @@ export class HintSystem implements PauseListener {
         })
         sc.QuickMenuAnalysis.inject({
             update(...args) {
-                if (sc.quickmodel.isQuickCheck() && MenuOptions.puzzle) {
+                if (sc.quickmodel.isQuickCheck() && MenuOptions.hints) {
                     let add = ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_SHOULDER) ? -1 : ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_SHOULDER) ? 1 : 0
                     if (add != 0) {
                         self.selectNextHint(add)
@@ -479,7 +482,7 @@ export class HintSystem implements PauseListener {
         ig.EVENT_STEP.SET_PLAYER_CORE.inject({
             start() {
                 /* disallow disabling quick menu */
-                if (MenuOptions.puzzle && this.core == sc.PLAYER_CORE.QUICK_MENU && this.value == false) {
+                if (MenuOptions.hints && this.core == sc.PLAYER_CORE.QUICK_MENU && this.value == false) {
                     return
                 }
                 this.parent()

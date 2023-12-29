@@ -41,7 +41,7 @@ export class HEnemyCounter implements Hint {
         const self = this
         ig.ENTITY.EnemyCounter.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzle && this.postCount > 0) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.hints && this.postCount > 0) }
             },
         })
     }

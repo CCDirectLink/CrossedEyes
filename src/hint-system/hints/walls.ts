@@ -17,7 +17,7 @@ export class HWalls implements Hint {
         })
         ig.ENTITY.WallBlocker.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzle && this.parentWall.active) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.hints && this.parentWall.active) }
             },
         })
     }
