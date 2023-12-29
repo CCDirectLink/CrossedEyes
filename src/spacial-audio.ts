@@ -199,5 +199,22 @@ export class SpacialAudio {
                 return true
             },
         })
+
+        /* attack audio fix */
+        sc.Combat.inject({
+            showHitEffect(entity, hitPos, hitDegree, hitElement, shielded, critical, ignoreSounds, spriteFilter) {
+                const assignC_copy = Vec2.assignC
+                Vec2.assignC = function (vec: Vec2, x?: Optional<number>, y?: Optional<number>) {
+                    if (MenuOptions.spacialAudio && x == hitPos.x && y == hitPos.y - hitPos.z) {
+                        return Vec3.assign(vec as Vec3, hitPos)
+                    } else {
+                        return assignC_copy(vec, x, y)
+                    }
+                }
+                const ret = this.parent(entity, hitPos, hitDegree, hitElement, shielded, critical, ignoreSounds, spriteFilter)
+                Vec2.assignC = assignC_copy
+                return ret
+            },
+        })
     }
 }

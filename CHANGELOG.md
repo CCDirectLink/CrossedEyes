@@ -13,6 +13,7 @@
 ### Fixes
 
 - Hint selection in the analysis screen should no longer spam selections
+- Sound of hitting enemies is now always consistent
 
 ## [0.4.8] 2023-12-27
 
