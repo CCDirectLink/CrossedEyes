@@ -7,7 +7,7 @@ import { AimAnalyzer, isAiming } from './aim-analyze'
 import { EnemyHintMenu } from './enemy-override'
 import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
 import { HDestructible } from './hints/destructible'
-import { HEnemy } from './hints/enemy'
+import { HEnemy, HEnemyCounter } from './hints/enemy'
 import { HMultiHitSwitch, HOneTimeSwitch, HSwitch } from './hints/switches'
 import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
@@ -45,6 +45,7 @@ export class HintSystem implements PauseListener {
         HWalls,
         HDestructible,
         HEnemy,
+        HEnemyCounter,
     ]
     filterType: (typeof HintTypes)[number] | 'Hints' = 'All'
     filterHintType: (typeof HintSubTypes)[number] | undefined

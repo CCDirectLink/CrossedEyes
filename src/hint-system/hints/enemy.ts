@@ -1,3 +1,4 @@
+import { MenuOptions } from '../../optionsManager'
 import { Hint, HintData } from '../hint-system'
 
 export class HEnemy implements Hint {
@@ -28,6 +29,29 @@ export class HEnemy implements Hint {
             name = 'Training bag'
             description = "Hit as you will! Cannot be moved and won't fight you back."
         }
+        return { name, description }
+    }
+}
+
+export class HEnemyCounter implements Hint {
+    entryName = 'EnemyCounter'
+
+    constructor() {
+        /* run in prestart */
+        const self = this
+        ig.ENTITY.EnemyCounter.inject({
+            getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.puzzle && this.postCount > 0) }
+            },
+        })
+    }
+    getDataFromEntity(e: ig.Entity): HintData {
+        if (!(e instanceof ig.ENTITY.EnemyCounter)) {
+            throw new Error()
+        }
+
+        let name: string = `Enemy Counter, enemies left: ${e.postCount}`
+        let description: string = 'Counts enemies left. Triggers something after reaching zero.'
         return { name, description }
     }
 }
