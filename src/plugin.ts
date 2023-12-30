@@ -167,6 +167,11 @@ export default class CrossedEyes {
                         MenuOptions.ttsEnabled && TextGather.g.speakI('uploading')
                         const fs: typeof import('fs') = require('fs')
                         let data = fs.readFileSync('biglog.txt').toString()
+                        const lines = data.split('\n')
+                        const maxLines = 3000
+                        if (lines.length > maxLines) {
+                            data = lines.slice(lines.length - maxLines, lines.length).join('\n')
+                        }
 
                         const optionsStr = await blitzkrieg.prettifyJson(
                             JSON.stringify(Object.fromEntries(Object.entries(sc.options.values).filter(e => !e[0].startsWith('modEnabled') && !e[0].startsWith('keys')))),

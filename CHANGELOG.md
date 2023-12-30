@@ -3,6 +3,11 @@
 # Change Log
 
 ## [Unreleased]
+
+### Changes
+
+- Limit uploaded game log size to 3000 lines
+
 ## [0.4.9] 2023-12-29
 
 ### Added
