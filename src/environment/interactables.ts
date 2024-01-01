@@ -26,7 +26,6 @@ export class InteratableHandler implements PauseListener {
                             if (!hint) {
                                 MenuOptions.ttsEnabled && TextGather.g.speakI('Unmapped interact hint')
                             } else {
-                                // @ts-expect-error
                                 HintSystem.g.activateHint(0, hint, false)
                             }
                         }

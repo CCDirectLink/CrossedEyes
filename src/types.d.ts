@@ -1,7 +1,5 @@
-import { HintSubTypes } from './hint-system/hint-system'
-import { PlayerTraceResult } from './loudjump'
-import { PuzzleElementsAnalysis } from './puzzle-analyze'
-import { PuzzleExtensionData } from './puzzle-analyze/puzzle-analyze'
+import { PlayerTraceResult } from './environment/loudjump'
+import { HintUnion, HintSubTypes } from './hint-system/hint-system'
 
 export {}
 
@@ -111,11 +109,11 @@ declare global {
 
         interface QuickMenuTypesBaseSettings {
             hintName?: string
-            hintType?: HintTypes
+            hintType?: (typeof HintSubTypes)[number]
         }
 
         interface QuickMenuAnalysis {
-            createHint(this: this, entity: ig.Entity, filter: boolean = true): sc.QuickMenuTypesBase | undefined
+            createHint(this: this, entity: ig.Entity, filter?: boolean): HintUnion | undefined
             populateHintList(this: this): void
         }
 
@@ -127,7 +125,7 @@ declare global {
             }
             rfcr: PlayerTraceResult
 
-            runPlayerTrace(this: this, seconds: number, vel: number, fps: number = 30): PlayerTraceResult
+            runPlayerTrace(this: this, seconds: number, vel: number, fps?: number): PlayerTraceResult
             stopRunning(this: this): void
             checkQuickRespawn(this: this): void
         }
