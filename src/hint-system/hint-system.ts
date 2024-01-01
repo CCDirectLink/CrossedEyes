@@ -492,6 +492,14 @@ export class HintSystem implements PauseListener {
             },
         })
 
+        /* enable the quick menu on preset load (doing this manually for ms solar preset was very annyoing */
+        sc.SavePreset.inject({
+            load(...args) {
+                this.parent(...args)
+                setTimeout(() => sc.model.player.setCore(sc.PLAYER_CORE.QUICK_MENU, true), 2000)
+            },
+        })
+
         new NPCHintMenu()
         new EnemyHintMenu()
         new AnalyzableHintMenu()
