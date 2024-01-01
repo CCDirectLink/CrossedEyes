@@ -52,7 +52,11 @@ export class SoundManager {
         hitOrganic2: 'media/sound/battle/airon/hit-organic-2.ogg',
         hitOrganic3: 'media/sound/battle/airon/hit-organic-3.ogg',
         hitOrganic4: 'media/sound/battle/airon/hit-organic-4.ogg',
-    }
+        bounce1: 'media/sound/battle/ball-bounce-1.ogg',
+        bounce2: 'media/sound/battle/ball-bounce-2.ogg',
+        bounce3: 'media/sound/battle/ball-bounce-3.ogg',
+    } as const
+
     static getElementName(element: sc.ELEMENT): 'neutralMode' | 'coldMode' | 'heatMode' | 'waveMode' | 'shockMode' {
         switch (element) {
             case sc.ELEMENT.NEUTRAL:

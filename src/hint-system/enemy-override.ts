@@ -13,6 +13,9 @@ export class EnemyHintMenu {
                 const isProperEnemy: boolean = this.params && this.visibility.analyzable && sc.combat.isEnemyAnalyzable(this.enemyName)
                 return isProperEnemy ? { type: 'Enemy', disabled: false } : { type: 'Hints', hintName: 'Enemy', hintType: 'Puzzle', disabled: !HEnemy.check(this) }
             },
+            isBallDestroyer(_collPos, _collRes) {
+                return this.enemyName == 'target-bot'
+            },
         })
 
         let enemyInfoBoxIns!: sc.QUICK_INFO_BOXES.Enemy

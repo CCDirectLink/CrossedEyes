@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added a ball bounce predition system
+
 ### Changes
 
 - Limit uploaded game log size to 3000 lines
