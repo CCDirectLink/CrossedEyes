@@ -4,6 +4,7 @@ import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { TextGather } from '../tts/gather-text'
 import { AimAnalyzer, isAiming } from './aim-analyze'
+import { AnalyzableHintMenu } from './analyzable-override'
 import { EnemyHintMenu } from './enemy-override'
 import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
 import { HDestructible } from './hints/destructible'
@@ -491,5 +492,6 @@ export class HintSystem implements PauseListener {
 
         new NPCHintMenu()
         new EnemyHintMenu()
+        new AnalyzableHintMenu()
     }
 }

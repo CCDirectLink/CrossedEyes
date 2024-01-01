@@ -65,6 +65,9 @@ declare global {
                 entity: ig.ENTITY.Enemy
                 nameGui: sc.EnemyHintMenu
             }
+            interface Analyzable {
+                nameGui: sc.AnalyzableHintMenu
+            }
         }
         interface BasicHintMenu extends ig.BoxGui {
             getText: () => [string, string, string | null]
@@ -100,7 +103,12 @@ declare global {
         }
         var EnemyHintMenu: EnemyHintMenuConstructor
 
-        var NPCHintMenu: NPCHintMenuConstructor
+        interface AnalyzableHintMenu extends sc.BasicHintMenu {}
+        interface AnalyzableHintMenuConstructor extends ImpactClass<AnalyzableHintMenu> {
+            new (text: string, settings: sc.QuickMenuTypesBaseSettings): AnalyzableHintMenu
+        }
+        var AnalyzableHintMenu: AnalyzableHintMenuConstructor
+
         interface QuickMenuTypesBaseSettings {
             hintName?: string
             hintType?: HintTypes
