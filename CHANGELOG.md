@@ -10,6 +10,7 @@
 
 ### Changes
 
+- Up/down sounds now don't require a jump to trigger
 - Limit uploaded game log size to 3000 lines
 
 ## [0.4.9] 2023-12-29

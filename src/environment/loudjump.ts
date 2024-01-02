@@ -385,22 +385,25 @@ export class LoudJump {
     }
 
     getTypeFromRes(res: PlayerTraceResult): TrackType {
+        if (res.jumped && res.fallType !== undefined) {
+            if (res.fallType == ig.TERRAIN.HOLE || res.fallType == ig.TERRAIN.HIGHWAY) {
+                return TrackType.Hole
+            }
+            if (res.fallType == ig.TERRAIN.WATER) {
+                return TrackType.Water
+            }
+        }
+        const diff = ig.game.playerEntity.coll.pos.z - res.pos.z
+        if (diff > 6) {
+            return TrackType.LowerLevel
+        } else if (diff < -6) {
+            return TrackType.HigherLevel
+        }
         if (res.jumped) {
-            if (res.fallType !== undefined) {
-                if (res.fallType == ig.TERRAIN.HOLE || res.fallType == ig.TERRAIN.HIGHWAY) {
-                    return TrackType.Hole
+            if (res.fallType === undefined) {
+                if (res.jumpLanded) {
+                    return TrackType.Land
                 }
-                if (res.fallType == ig.TERRAIN.WATER) {
-                    return TrackType.Water
-                }
-            } else if (res.jumpLanded) {
-                const diff = ig.game.playerEntity.coll.pos.z - res.pos.z
-                if (diff > 8) {
-                    return TrackType.LowerLevel
-                } else if (diff < -8) {
-                    return TrackType.HigherLevel
-                }
-                return TrackType.Land
             }
         }
         return TrackType.None
