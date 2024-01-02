@@ -51,6 +51,9 @@ const fontImgToNameMap: Record<string, string> = {
     'item-sword-scale': '',
     'item-belt-scale': '',
     'item-shoe-scale': '',
+    help: '',
+    back: '',
+    help3: '',
 }
 
 export function fontImgToName(name: string): string {
