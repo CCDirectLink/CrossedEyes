@@ -288,7 +288,7 @@ export class LoudJump {
 
     handle() {
         const p: ig.ENTITY.Player = ig.game.playerEntity
-        if (!MenuOptions.spacialAudio || !MenuOptions.loudWalls || CrossedEyes.isPaused || !this.predictor || !p || !p.coll?.pos) {
+        if (!MenuOptions.spacialAudio || !MenuOptions.loudWalls || CrossedEyes.isPaused || ig.game.playerEntity?.floating || !this.predictor || !p || !p.coll?.pos) {
             return
         }
 

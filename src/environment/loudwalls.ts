@@ -15,6 +15,7 @@ export class LoudWalls implements PauseListener {
     static g: LoudWalls
 
     private handles: Record<string, { handle: ig.SoundHandleWebAudio; sound: string }> = {}
+
     constructor() {
         /* in prestart */
         LoudWalls.g = this
@@ -33,7 +34,7 @@ export class LoudWalls implements PauseListener {
     }
 
     private handleWallSound() {
-        if (CrossedEyes.isPaused) {
+        if (CrossedEyes.isPaused || ig.game.playerEntity?.floating) {
             return
         }
         const dirs: [string, Vec2][] = [

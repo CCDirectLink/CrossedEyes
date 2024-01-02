@@ -13,6 +13,10 @@
 - Up/down sounds now don't require a jump to trigger
 - Limit uploaded game log size to 3000 lines
 
+### Fixes
+
+- Wall and jump hint sounds are not on anymore when the player is floating
+
 ## [0.4.9] 2023-12-29
 
 ### Added
