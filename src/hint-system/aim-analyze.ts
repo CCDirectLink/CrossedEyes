@@ -15,6 +15,7 @@ export class AimAnalyzer implements PauseListener {
 
     lastUuids: string | undefined
     aimAnnounceOn: boolean = false
+    aimBounceOn: boolean = false
 
     aimSpeakQueue: ({ hit: true; bouncePos: Vec3 } | { hit: false; hint: HintUnion })[] = []
 
@@ -29,38 +30,51 @@ export class AimAnalyzer implements PauseListener {
         ig.Entity.inject({
             init(x, y, z, settings) {
                 this.parent(x, y, z, settings)
-                this.uuid = crypto.createHash('sha256').update(`${settings.name}-${x},${y},${z}`).digest('hex')
+                this.uuid = crypto.createHash('sha256').update(`${settings.name}-${x},${y}`).digest('hex')
             },
         })
         ig.ENTITY.Player.inject({
             update() {
                 this.parent()
-                self.handle(true, true, false)
-            },
-        })
-        sc.QuickMenuAnalysis.inject({
-            update() {
-                this.parent()
-                if (MenuOptions.hints) {
-                    if (sc.quickmodel.isQuickCheck() && ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
-                        self.aimAnnounceOn = !self.aimAnnounceOn
-                        MenuOptions.ttsEnabled && TextGather.g.speakI(`Aim analysis ${self.aimAnnounceOn ? 'on' : 'off'}`)
-                    }
-                    if (self.aimAnnounceOn && sc.quickmodel.isQuickNone() && ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_TRIGGER)) {
-                        self.handle(false, false, true)
+                if (self.aimAnnounceOn) {
+                    if (self.aimBounceOn) {
+                        self.handle(false, false, false)
+                    } else {
+                        self.handle(true, true, false)
                     }
                 }
             },
         })
 
-        /* keep the aim in the quick menu and after closing it */
         let quickMenuExitedTime: number = 0
+        let justEnteredQuickMenu: boolean = false
         sc.QuickMenuModel.inject({
             exitQuickMenu() {
                 this.parent()
                 quickMenuExitedTime = ig.Timer.time
             },
+            enterQuickMenu() {
+                this.parent()
+                justEnteredQuickMenu = true
+            },
         })
+        sc.QuickMenuAnalysis.inject({
+            update() {
+                this.parent()
+                if (MenuOptions.hints && sc.quickmodel.isQuickCheck()) {
+                    if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
+                        self.aimAnnounceOn = !self.aimAnnounceOn
+                        MenuOptions.ttsEnabled && TextGather.g.speakI(`Aim analysis: ${self.aimAnnounceOn ? 'on' : 'off'}`)
+                    } else if (/* fix this trigerring when entering the menu */ !justEnteredQuickMenu && ig.gamepad.isButtonPressed(ig.BUTTONS.FACE0 /* a */)) {
+                        self.aimBounceOn = !self.aimBounceOn
+                        MenuOptions.ttsEnabled && TextGather.g.speakI(`Aim bounce: ${self.aimBounceOn ? 'on' : 'off'}`)
+                    }
+                    justEnteredQuickMenu = false
+                }
+            },
+        })
+
+        /* keep the aim in the quick menu and after closing it */
         ig.ENTITY.Player.inject({
             handleStateStart(playerState, inputState) {
                 if (MenuOptions.hints && playerState.startState == 0 && sc.control.aiming() && ig.Timer.time <= quickMenuExitedTime + 0.02) {
@@ -94,40 +108,38 @@ export class AimAnalyzer implements PauseListener {
     }
 
     handle(tillBounce: boolean, onlyOne: boolean, uuidIgnore: boolean) {
-        if (this.aimAnnounceOn) {
-            const deactivate = () => {
-                this.lastUuids = undefined
-                HintSystem.g.deactivateHint(0)
-            }
-            if (isAiming() && ig.game.playerEntity.gui.crosshair?.active) {
-                const allHints = this.predictBounceHints()
-
-                if (tillBounce || !sc.model.player.getCore(sc.PLAYER_CORE.CHARGE)) {
-                    const bounceIndex = allHints.findIndex(h => h.hit)
-                    if (bounceIndex != -1) {
-                        allHints.splice(bounceIndex)
-                    }
-                }
-                if (onlyOne) allHints.splice(1)
-                if (!uuidIgnore) {
-                    let uuids: string = allHints
-                        .map(hint => (hint.hit ? 'b' : hint.hint.entity.uuid))
-                        .join('|')
-                        .trim()
-                    if (!uuids) {
-                        deactivate()
-                        return
-                    }
-                    if (uuids == this.lastUuids) return
-                    this.lastUuids = uuids
-                } else {
-                    this.lastUuids = undefined
-                }
-                this.bounceSoundIndex = 0
-                this.aimSpeakQueue = allHints
-                this.moveQueue()
-            } else deactivate()
+        const deactivate = () => {
+            this.lastUuids = undefined
+            HintSystem.g.deactivateHint(0)
         }
+        if (isAiming() && ig.game.playerEntity.gui.crosshair?.active) {
+            const allHints = this.predictBounceHints()
+
+            if (tillBounce || !sc.model.player.getCore(sc.PLAYER_CORE.CHARGE)) {
+                const bounceIndex = allHints.findIndex(h => h.hit)
+                if (bounceIndex != -1) {
+                    allHints.splice(bounceIndex)
+                }
+            }
+            if (onlyOne) allHints.splice(1)
+            if (!uuidIgnore) {
+                let uuids: string = allHints
+                    .map(hint => (hint.hit ? 'b' : hint.hint.entity.uuid))
+                    .join('|')
+                    .trim()
+                if (!uuids) {
+                    deactivate()
+                    return
+                }
+                if (uuids == this.lastUuids) return
+                this.lastUuids = uuids
+            } else {
+                this.lastUuids = undefined
+            }
+            this.bounceSoundIndex = 0
+            this.aimSpeakQueue = allHints
+            this.moveQueue()
+        } else deactivate()
     }
 
     private tracePath(
