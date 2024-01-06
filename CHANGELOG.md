@@ -19,6 +19,7 @@
 
 - Wall and jump hint sounds are not on anymore when the player is floating
 - Fixed enemies emmiting sounds after death
+- Deactive toggled hints when the entity is killed
 
 ## [0.4.9] 2023-12-29
 

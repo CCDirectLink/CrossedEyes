@@ -1,3 +1,4 @@
+import { HintSystem } from '../hint-system/hint-system'
 import { MenuOptions } from '../optionsManager'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager } from '../sound-manager'
@@ -51,11 +52,13 @@ export class EntityBeeper implements PauseListener {
                 this.parent(...args)
                 this.playAtPleaseDontResume = true
                 this.playAtSoundHandle?.stop()
+                HintSystem.g.deactivateHintAll(this)
             },
             onKill(...args) {
                 this.parent(...args)
                 this.playAtPleaseDontResume = true
                 this.playAtSoundHandle?.stop()
+                HintSystem.g.deactivateHintAll(this)
             },
             update(...args) {
                 this.parent(...args)
@@ -76,6 +79,7 @@ export class EntityBeeper implements PauseListener {
                             (this instanceof ig.ENTITY.TeleportField && !this.interactEntry)
                         ) {
                             this.playAtSoundHandle.stop()
+                            HintSystem.g.deactivateHintAll(this)
                             this.playAtPleaseDontResume = true
                         }
                     } else if (!this.playAtPleaseDontResume) {

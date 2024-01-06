@@ -84,6 +84,13 @@ export class HintSystem implements PauseListener {
         }
     }
 
+    deactivateHintAll(e: ig.Entity) {
+        this.activeHints
+            .filter(o => o?.hint.entity == e)
+            .map(o => this.activeHints.indexOf(o))
+            .forEach(i => this.deactivateHint(i))
+    }
+
     activateHint(index: number, hint: ReqHintEntry, playSound: boolean = true, dontPauseInQuickAnalysis: boolean = false) {
         this.deactivateHint(index)
         if (!MenuOptions.hints) {
