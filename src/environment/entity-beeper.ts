@@ -39,6 +39,13 @@ export class EntityBeeper implements PauseListener {
         /* in prestart */
         CrossedEyes.pauseables.push(this)
 
+        const self = this
+        ig.Game.inject({
+            preloadLevel(mapName) {
+                this.parent(mapName)
+                self.pause() /* stop all handles */
+            },
+        })
         ig.Entity.inject({
             playAtSoundHandle: null,
             show(...args) {
@@ -56,6 +63,12 @@ export class EntityBeeper implements PauseListener {
             },
             onKill(...args) {
                 this.parent(...args)
+                this.playAtPleaseDontResume = true
+                this.playAtSoundHandle?.stop()
+                HintSystem.g.deactivateHintAll(this)
+            },
+            erase() {
+                this.parent()
                 this.playAtPleaseDontResume = true
                 this.playAtSoundHandle?.stop()
                 HintSystem.g.deactivateHintAll(this)

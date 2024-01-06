@@ -96,8 +96,12 @@ export class SoundManager {
         Object.values(SoundManager.sounds).forEach(str => new ig.Sound(str))
     }
 
+    private static isHandleAlive(h: ig.SoundHandle): boolean {
+        return h._playing || !!h._buffer
+    }
     static cleanupDeadSounds() {
-        ig.soundManager.soundStack = ig.soundManager.soundStack.map(e => e.filter(h => h._playing || h._buffer))
+        ig.soundManager.soundStack = ig.soundManager.soundStack.map(e => e.filter(h => SoundManager.isHandleAlive(h)))
+        ig.soundManager.soundHandles = ig.soundManager.soundHandles.filter(h => SoundManager.isHandleAlive(h))
     }
 
     static playSoundPath(path: string, speed: number, volume: number = 1, pos?: Vec3): ig.SoundHandleWebAudio {

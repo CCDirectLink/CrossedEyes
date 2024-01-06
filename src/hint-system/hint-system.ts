@@ -391,6 +391,7 @@ export class HintSystem implements PauseListener {
             },
             preloadLevel(mapName) {
                 this.parent(mapName)
+                self.activeHints.forEach(h => h?.handle?.stop())
                 self.activeHints = [undefined]
             },
         })
