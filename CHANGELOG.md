@@ -3,6 +3,11 @@
 # Change Log
 
 ## [Unreleased]
+
+### Fixes
+
+- Fix options menu getting interrupted for after entering while in-game
+
 ## [0.5.0] 2024-01-06
 
 ### Added

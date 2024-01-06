@@ -105,6 +105,7 @@ export class TextGather {
             if (this.ignoreInteract > 0) {
                 this.ignoreInteract--
             } else if (Date.now() > this.ignoreInteractTo) {
+                console.trace()
                 interruptCopy()
             }
         }
@@ -288,8 +289,7 @@ export class TextGather {
             },
             exitQuickMenu() {
                 this.parent()
-                /* how is this called in the title screen???? dont know */
-                if (sc.model.currentState == sc.GAME_MODEL_STATE.GAME) {
+                if (/* how is this called in the title screen???? dont know */ sc.model.currentState == sc.GAME_MODEL_STATE.GAME && /* why */ !ig.game.paused) {
                     self.interrupt()
                 }
             },
