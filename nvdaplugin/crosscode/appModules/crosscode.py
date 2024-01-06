@@ -19,11 +19,11 @@ import websocket
 class CrossCodeWebSocketClient:
     def __init__(self, appModule: appModuleHandler.AppModule):
         self.appModule: AppModule = appModule
-        self.running = False
+        self.socketConnected = False
         self.doReconnect = False
-        self.loopRunning = False
+        self.thread = None
 
-    def on_data(self, ws: websocket.WebSocketApp, msg: str, dataType, continueFlag):
+    def on_data(self, ws: websocket.WebSocketApp, msg: str, dataType, continueFlag): # type: ignore
         if msg == None:
             return
         if msg == "clearQueue":
@@ -33,49 +33,40 @@ class CrossCodeWebSocketClient:
             self.appModule.script_speak(msg)
 
     def on_open(self, ws: websocket.WebSocket):
-        self.running = True
+        self.socketConnected = True
         log.info("CrossCode server connected")
 
     def on_close(self, ws: websocket.WebSocket, _, __):
-        self.running = False
+        self.socketConnected = False
         log.info("CrossCode server disconnected")
 
     def on_speech_end(self):
-        if self.running == True:
+        if self.socketConnected == True:
             self.ws.send("speechEnd")
 
     def run_forever(self):
-        self.loopRunning = True
-        self.ws: websocket.WebSocketApp = websocket.WebSocketApp(
-            "ws://localhost:16390",
-            on_open=self.on_open,
-            on_close=self.on_close,
-            on_data=self.on_data,
-        )
-        self.ws.run_forever()
-
-        if self.doReconnect:
+        while self.doReconnect: 
+            self.ws = websocket.WebSocketApp( # type: ignore
+                "ws://localhost:16390",
+                on_open=self.on_open,
+                on_close=self.on_close,
+                on_data=self.on_data,
+            )
+            self.ws.run_forever()
             time.sleep(5)
-            self.tryReconnect()
-        else:
-            self.loopRunning = False
-
-    def tryReconnect(self):
-        if self.doReconnect:
-            self.run_forever()
-        else:
-            self.loopRunning = False
 
     def run(self):
-        if self.running or self.loopRunning:
+        if self.socketConnected or (self.thread != None and self.thread.is_alive()):
             return
-        self.doReconnect = True
+
         log.info("starting websocket CrossCode server...")
-        threading.Thread(target=self.run_forever).start()
+        self.doReconnect = True
+        self.thread = threading.Thread(target=self.run_forever)
+        self.thread.start()
 
     def terminate(self):
         self.doReconnect = False
-        self.running = False
+        self.socketConnected = False
         self.ws.close()
 
 

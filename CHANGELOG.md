@@ -21,6 +21,7 @@
 - Fixed enemies emmiting sounds after death
 - Deactive toggled hints when the entity is killed
 - Fix gradual game slowdown
+- Fixed NVDA plugn?? (maybe)
 
 ## [0.4.9] 2023-12-29
 

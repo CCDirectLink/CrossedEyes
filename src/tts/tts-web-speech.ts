@@ -95,9 +95,6 @@ export class TTSWebSpeech implements TTSInterface {
     }
 
     clearQueue(): void {
-        if (process.platform == 'win32' && this.queue.length < 5) {
-            return
-        }
         speechSynthesis.cancel()
         this.queue = []
     }
