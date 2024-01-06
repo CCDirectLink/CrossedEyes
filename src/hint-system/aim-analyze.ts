@@ -38,10 +38,27 @@ export class AimAnalyzer implements PauseListener {
                 this.parent()
                 if (self.aimAnnounceOn) {
                     if (self.aimBounceOn) {
-                        self.handle(false, false, false)
+                        self.handle(false)
                     } else {
-                        self.handle(true, true, false)
+                        self.handle(true)
                     }
+                }
+            },
+            /* keep the aim in the quick menu and after closing it */
+            handleStateStart(playerState, inputState) {
+                if (MenuOptions.hints && playerState.startState == 0 && sc.control.aiming() && ig.Timer.time <= quickMenuExitedTime + 0.02) {
+                    /* do nothing (instead of canceling aiming), just call cancelJump() because it is always called (and im not calling parent) */
+                    this.cancelJump()
+                } else {
+                    this.parent(playerState, inputState)
+                }
+            },
+            /* disable player float up/down movement */
+            varsChanged() {
+                this.parent!()
+                if (MenuOptions.hints && this.floating && ig.vars.get('playerVar.staticFloat')) {
+                    this.configs.normal.clearOverwrite()
+                    this.configs.aiming.clearOverwrite()
                 }
             },
         })
@@ -73,22 +90,11 @@ export class AimAnalyzer implements PauseListener {
                 }
             },
         })
-
-        /* keep the aim in the quick menu and after closing it */
-        ig.ENTITY.Player.inject({
-            handleStateStart(playerState, inputState) {
-                if (MenuOptions.hints && playerState.startState == 0 && sc.control.aiming() && ig.Timer.time <= quickMenuExitedTime + 0.02) {
-                    /* do nothing (instead of canceling aiming), just call jump because it is always called */
-                    this.cancelJump()
-                } else {
-                    this.parent(playerState, inputState)
-                }
-            },
-        })
     }
 
     pause(): void {
         this.lastUuids = undefined
+        this.aimSpeakQueue = []
     }
 
     onSpeechEnd() {
@@ -102,12 +108,12 @@ export class AimAnalyzer implements PauseListener {
                 SoundManager.playSound((['bounce1', 'bounce2', 'bounce3'] as const)[(this.bounceSoundIndex = (this.bounceSoundIndex + 1) % 3)], 1, 1, entry.bouncePos)
                 setTimeout(() => this.moveQueue(), 500)
             } else {
-                HintSystem.g.activateHint(0, entry.hint)
+                setTimeout(() => HintSystem.g.activateHint(0, entry.hint), 100)
             }
         }
     }
 
-    handle(tillBounce: boolean, onlyOne: boolean, uuidIgnore: boolean) {
+    handle(tillBounce: boolean) {
         const deactivate = () => {
             this.lastUuids = undefined
             HintSystem.g.deactivateHint(0)
@@ -121,21 +127,16 @@ export class AimAnalyzer implements PauseListener {
                     allHints.splice(bounceIndex)
                 }
             }
-            if (onlyOne) allHints.splice(1)
-            if (!uuidIgnore) {
-                let uuids: string = allHints
-                    .map(hint => (hint.hit ? 'b' : hint.hint.entity.uuid))
-                    .join('|')
-                    .trim()
-                if (!uuids) {
-                    deactivate()
-                    return
-                }
-                if (uuids == this.lastUuids) return
-                this.lastUuids = uuids
-            } else {
-                this.lastUuids = undefined
+            let uuids: string = allHints
+                .map(hint => (hint.hit ? 'b' : hint.hint.entity.uuid))
+                .join('|')
+                .trim()
+            if (!uuids) {
+                deactivate()
+                return
             }
+            if (uuids == this.lastUuids) return
+            this.lastUuids = uuids
             this.bounceSoundIndex = 0
             this.aimSpeakQueue = allHints
             this.moveQueue()
