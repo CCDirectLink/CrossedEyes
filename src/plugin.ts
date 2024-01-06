@@ -160,10 +160,14 @@ export default class CrossedEyes {
 
     addLogCopyKeybinding() {
         ig.input.bind(ig.KEY.F4, 'copylog')
+        let lastLogSent: number = 0
         ig.game.addons.preUpdate.push(
             new (class {
                 async onPreUpdate() {
                     if (ig.input.pressed('copylog')) {
+                        if (lastLogSent + 2000 > Date.now()) return
+                        lastLogSent = Date.now()
+
                         MenuOptions.ttsEnabled && TextGather.g.speakI('uploading')
                         const fs: typeof import('fs') = require('fs')
                         let data = fs.readFileSync('biglog.txt').toString()
