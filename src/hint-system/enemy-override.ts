@@ -29,7 +29,7 @@ export class EnemyHintMenu {
             init(enemy: ig.ENTITY.Enemy) {
                 enemyInfoBoxIns.setData(enemy.enemyName, enemy)
                 const name = enemyInfoBoxIns.title.text!.toString()
-                const text = `${name}, level ${enemy.getLevel()}`
+                const text = `${name}`
 
                 const resArr = enemyInfoBoxIns.resistance.res.map(pn => pn.number.targetNumber) as [number, number, number, number]
                 let resStr: string = ''
@@ -47,7 +47,9 @@ export class EnemyHintMenu {
                 const def = enemyInfoBoxIns.baseDefense.number.targetNumber
                 const foc = enemyInfoBoxIns.baseFocus.number.targetNumber
                 const atk = enemyInfoBoxIns.baseAttack.number.targetNumber
-                const desc2 = `${enemyInfoBoxIns.baseHp.number.scramble ? 'unknown stats' : `max hp: ${hp}, defense: ${def}, attack: ${atk}, focus: ${foc}`}`
+                const desc2 = `${
+                    enemyInfoBoxIns.baseHp.number.scramble ? 'unknown stats' : `level ${enemy.getLevel()}, max hp: ${hp}, defense: ${def}, attack: ${atk}, focus: ${foc}`
+                }`
                 this.parent(() => {
                     return [text, desc1, desc2]
                 })

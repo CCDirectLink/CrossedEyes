@@ -12,6 +12,7 @@
 
 - Up/down sounds now don't require a jump to trigger
 - Limit uploaded game log size to 3000 lines
+- Enemy level has been moved to the R2 description
 
 ### Fixes
 
