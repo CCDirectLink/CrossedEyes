@@ -28,6 +28,7 @@ export class HEnemy implements Hint {
         } else if (e.enemyName == 'baggy-kun') {
             name = 'Training bag'
             description = "Hit as you will! Cannot be moved and won't fight you back."
+            e.ballDestroyer = true
         }
         return { name, description }
     }
