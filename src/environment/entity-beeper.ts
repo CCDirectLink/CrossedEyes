@@ -42,17 +42,20 @@ export class EntityBeeper implements PauseListener {
             playAtSoundHandle: null,
             show(...args) {
                 if (MenuOptions.loudEntities) {
+                    this.playAtPleaseDontResume = false
                     playAt(this)
                 }
                 return this.parent(...args)
             },
             hide(...args) {
                 this.parent(...args)
+                this.playAtPleaseDontResume = true
                 this.playAtSoundHandle?.stop()
             },
             onKill(...args) {
-                this.parent()
-                this.playAtSoundHandle?.stop(...args)
+                this.parent(...args)
+                this.playAtPleaseDontResume = true
+                this.playAtSoundHandle?.stop()
             },
             update(...args) {
                 this.parent(...args)
@@ -85,6 +88,7 @@ export class EntityBeeper implements PauseListener {
             },
         })
     }
+
     pause(): void {
         ig.game.entities.forEach(e => e.playAtSoundHandle?.stop())
     }

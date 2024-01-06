@@ -17,6 +17,7 @@
 ### Fixes
 
 - Wall and jump hint sounds are not on anymore when the player is floating
+- Fixed enemies emmiting sounds after death
 
 ## [0.4.9] 2023-12-29
 
