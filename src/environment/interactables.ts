@@ -1,5 +1,5 @@
 import CrossedEyes, { PauseListener } from '../plugin'
-import { SoundManager } from '../sound-manager'
+import { SoundManager, stopHandle } from '../sound-manager'
 import { MenuOptions } from '../optionsManager'
 import { HintSystem } from '../hint-system/hint-system'
 import { TextGather } from '../tts/gather-text'
@@ -20,7 +20,7 @@ export class InteratableHandler implements PauseListener {
                     if (this.state == sc.INTERACT_ENTRY_STATE.FOCUS) {
                         if (this.interactSoundType != SoundManager.sounds.interact) {
                             this.interactSoundType = SoundManager.sounds.interact
-                            this.interactSoundHandle?.stop()
+                            stopHandle(this.interactSoundHandle)
                             this.interactSoundHandle = ig.SoundHelper.playAtEntity(interactSound, this.entity, true, {}, 6 * 16)
                             const hint = HintSystem.g.quickMenuAnalysisInstance.createHint(this.entity, false)
                             if (!hint) {
@@ -32,13 +32,13 @@ export class InteratableHandler implements PauseListener {
                     } else if (this.state == sc.INTERACT_ENTRY_STATE.NEAR) {
                         if (this.interactSoundType != SoundManager.sounds.interactable) {
                             this.interactSoundType = SoundManager.sounds.interactable
-                            this.interactSoundHandle?.stop()
+                            stopHandle(this.interactSoundHandle)
                             this.interactSoundHandle = ig.SoundHelper.playAtEntity(interactableSound, this.entity, true, {}, 6 * 16)
                             TextGather.g.interrupt()
                         }
                     } else {
                         if (this.interactSoundHandle) {
-                            this.interactSoundHandle.stop()
+                            stopHandle(this.interactSoundHandle)
                             this.interactSoundHandle = undefined
                             this.interactSoundType = undefined
                         }
@@ -57,7 +57,7 @@ export class InteratableHandler implements PauseListener {
     pause(): void {
         sc.mapInteract.entries.forEach(e => {
             e.interactSoundType = undefined
-            e.interactSoundHandle?.stop()
+            stopHandle(e.interactSoundHandle)
         })
     }
 }

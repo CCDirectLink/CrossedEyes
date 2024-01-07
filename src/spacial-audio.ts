@@ -53,7 +53,7 @@ export class SpacialAudio {
                 }
                 if (this.pos && this.pos.entity) {
                     if (force || !this.pos.entity._killed) {
-                        const pos = this.pos.entity.getAlignedPos(this.pos.align!, Vec3.create())
+                        const pos = this.pos.entity.getAlignedPos(this.pos.align!)
                         this.offset && Vec2.add(pos, this.offset)
                         Vec3.assign(this.pos.point3d, pos)
                     } else {

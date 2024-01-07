@@ -1,6 +1,6 @@
 import { MenuOptions } from '../optionsManager'
 import CrossedEyes, { PauseListener } from '../plugin'
-import { SoundManager } from '../sound-manager'
+import { SoundManager, stopHandle } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { TextGather } from '../tts/gather-text'
 import { AimAnalyzer, isAiming } from './aim-analyze'
@@ -67,7 +67,7 @@ export class HintSystem implements PauseListener {
     deactivateHint(index: number) {
         const e = this.activeHints[index]
         if (e) {
-            e.handle?.stop()
+            stopHandle(e.handle)
             TextGather.g.interrupt()
             if (index == 0) {
                 const mutedIndex = this.activeHints.findIndex(e => e?.muted)
@@ -391,7 +391,7 @@ export class HintSystem implements PauseListener {
             },
             preloadLevel(mapName) {
                 this.parent(mapName)
-                self.activeHints.forEach(h => h?.handle?.stop())
+                self.activeHints.forEach(h => stopHandle(h?.handle))
                 self.activeHints = [undefined]
             },
         })

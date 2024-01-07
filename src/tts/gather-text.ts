@@ -105,7 +105,6 @@ export class TextGather {
             if (this.ignoreInteract > 0) {
                 this.ignoreInteract--
             } else if (Date.now() > this.ignoreInteractTo) {
-                console.trace()
                 interruptCopy()
             }
         }

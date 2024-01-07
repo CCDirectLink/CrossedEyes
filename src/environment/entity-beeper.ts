@@ -1,7 +1,7 @@
 import { HintSystem } from '../hint-system/hint-system'
 import { MenuOptions } from '../optionsManager'
 import CrossedEyes, { PauseListener } from '../plugin'
-import { SoundManager } from '../sound-manager'
+import { SoundManager, stopHandle } from '../sound-manager'
 
 function getSoundName(e: ig.Entity): string | undefined {
     if (
@@ -20,7 +20,7 @@ function getSoundName(e: ig.Entity): string | undefined {
 
 function playAt(e: ig.Entity) {
     const soundName = getSoundName(e)
-    e.playAtSoundHandle?.stop()
+    stopHandle(e.playAtSoundHandle)
     if (soundName) {
         e.playAtSoundHandle = ig.SoundHelper.playAtEntity(
             new ig.Sound(soundName, 0.8),
@@ -58,19 +58,19 @@ export class EntityBeeper implements PauseListener {
             hide(...args) {
                 this.parent(...args)
                 this.playAtPleaseDontResume = true
-                this.playAtSoundHandle?.stop()
+                stopHandle(this.playAtSoundHandle)
                 HintSystem.g.deactivateHintAll(this)
             },
             onKill(...args) {
                 this.parent(...args)
                 this.playAtPleaseDontResume = true
-                this.playAtSoundHandle?.stop()
+                stopHandle(this.playAtSoundHandle)
                 HintSystem.g.deactivateHintAll(this)
             },
             erase() {
                 this.parent()
                 this.playAtPleaseDontResume = true
-                this.playAtSoundHandle?.stop()
+                stopHandle(this.playAtSoundHandle)
                 HintSystem.g.deactivateHintAll(this)
             },
             update(...args) {
@@ -91,7 +91,7 @@ export class EntityBeeper implements PauseListener {
                             (this instanceof ig.ENTITY.Door && !this.active) ||
                             (this instanceof ig.ENTITY.TeleportField && !this.interactEntry)
                         ) {
-                            this.playAtSoundHandle.stop()
+                            stopHandle(this.playAtSoundHandle)
                             HintSystem.g.deactivateHintAll(this)
                             this.playAtPleaseDontResume = true
                         }
@@ -107,6 +107,6 @@ export class EntityBeeper implements PauseListener {
     }
 
     pause(): void {
-        ig.game.entities.forEach(e => e.playAtSoundHandle?.stop())
+        ig.game.entities.forEach(e => stopHandle(e.playAtSoundHandle))
     }
 }

@@ -30,7 +30,7 @@ export class LoudWalls implements PauseListener {
     }
 
     pause(): void {
-        Object.values(this.handles ?? {}).forEach(h => h?.handle.setFixPosition(Vec3.createC(-1000, -1000, 0), 0))
+        Object.values(this.handles ?? {}).forEach(h => h && muteHandle(h.handle, range))
     }
 
     private handleWallSound() {

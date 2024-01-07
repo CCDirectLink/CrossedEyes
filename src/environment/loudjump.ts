@@ -1,6 +1,6 @@
 import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
 import { MenuOptions } from '../optionsManager'
-import { SoundManager } from '../sound-manager'
+import { SoundManager, stopHandle } from '../sound-manager'
 import CrossedEyes from '../plugin'
 
 interface TickData {
@@ -283,7 +283,7 @@ export class LoudJump {
     }
 
     pause() {
-        this.dirHandles.forEach(o => o?.handle.stop())
+        this.dirHandles.forEach(o => stopHandle(o?.handle))
     }
 
     handle() {
@@ -309,7 +309,7 @@ export class LoudJump {
         // console.log(TrackType[type])
         let { handle, sound } = this.dirHandles[i] ?? { handle: undefined, sound: undefined }
         if (type == TrackType.None) {
-            handle?.stop()
+            stopHandle(handle)
             return
         }
         let soundName: string = ''
@@ -338,7 +338,7 @@ export class LoudJump {
 
         if (soundName) {
             if (soundName && (!handle || !handle._playing || sound != soundName)) {
-                handle?.stop()
+                stopHandle(handle)
                 this.dirHandles[i] = {
                     handle: new ig.Sound(soundName, volume).play(true, {
                         speed: 1,

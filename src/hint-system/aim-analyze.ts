@@ -10,6 +10,7 @@ const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 export function isAiming(): boolean {
     return ig.input.state('aim') || ig.gamepad.isRightStickDown()
 }
+
 export class AimAnalyzer implements PauseListener {
     static g: AimAnalyzer
 

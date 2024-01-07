@@ -9,6 +9,15 @@ export function mulSoundVol(s: ig.Sound, mul: number): ig.Sound {
     return new ig.Sound(s.webAudioBuffer.path, s.volume * mul, s.variance, s.group)
 }
 
+export function stopHandle(h?: ig.SoundHandleWebAudio) {
+    if (h) {
+        h._fadeIn = false
+        h._loop = false
+        h.stop()
+        h._disconnect()
+    }
+}
+
 export type SoundQueueEntry = {
     name: keyof typeof SoundManager.sounds
     wait?: number
