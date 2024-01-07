@@ -48,6 +48,17 @@ export function getOptions() {
                     name: 'Footstep volume',
                     description: 'Footstep volume multiplier',
                 },
+                jumpVolume: {
+                    type: 'OBJECT_SLIDER',
+                    init: 1.5,
+                    min: 1,
+                    max: 3,
+                    step: 0.1,
+                    fill: true,
+                    showPercentage: true,
+                    name: 'Jump volume',
+                    description: 'Jump volume multiplier',
+                },
                 wallVolume: {
                     type: 'OBJECT_SLIDER',
                     init: 1,

@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added jump volume slider
+
 ### Fixes
 
 - Fix options menu getting interrupted for after entering while in-game

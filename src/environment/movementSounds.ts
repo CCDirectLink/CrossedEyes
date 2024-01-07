@@ -84,6 +84,14 @@ export class MovementSoundTweaker {
                     this.stepFx.lastFrame = -1
                 }
             },
+            onJump(addedHeight, ignoreSounds) {
+                this.parent(addedHeight, true)
+                if (!ignoreSounds) {
+                    const soundObj1 = sc.ACTOR_SOUND[this.soundType] || sc.ACTOR_SOUND.none
+                    const soundObj2 = (soundObj1 as any)[ig.terrain.getTerrain(this.coll, true, true)] || soundObj1[ig.TERRAIN_DEFAULT]
+                    ig.SoundHelper.playAtEntity(mulSoundVol(soundObj2.jump, MenuOptions.jumpVolume), this, null, null, 700)
+                }
+            },
         })
     }
 }
