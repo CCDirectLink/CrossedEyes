@@ -3,7 +3,7 @@ import { HintUnion, HintSubTypes } from './hint-system/hint-system'
 
 export {}
 
-export type ClimbableMenuSettings = sc.QuickMenuTypesBase & {
+export type ClimbableMenuSettings = sc.QuickMenuTypesBaseSettings & {
     pos?: Vec3
     size?: Vec3
 }
