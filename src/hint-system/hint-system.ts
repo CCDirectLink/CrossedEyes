@@ -5,6 +5,7 @@ import { SpecialAction } from '../special-action'
 import { TextGather } from '../tts/gather-text'
 import { AimAnalyzer, isAiming } from './aim-analyze'
 import { AnalyzableHintMenu } from './analyzable-override'
+import { ClimbableTerrainHints } from './climbable-terrain'
 import { EnemyHintMenu } from './enemy-override'
 import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
 import { HDestructible } from './hints/destructible'
@@ -14,7 +15,7 @@ import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
 import { NPCHintMenu } from './npc-override'
 
-export const HintTypes = ['All', 'NPC', 'Enemy', 'Interactable', 'Selected'] as const /* "Analyzable" category integrated into "Interactable" */
+export const HintTypes = ['All', 'NPC', 'Enemy', 'Interactable', 'Climbable', 'Selected'] as const /* "Analyzable" category integrated into "Interactable" */
 export const HintSubTypes = ['Puzzle', 'Plants'] as const
 
 export interface HintData {
@@ -29,7 +30,7 @@ export interface Hint {
 
 export type ReqHintEntry = { entity: ig.Entity; nameGui: { description: sc.TextGui; title: sc.TextGui; description2: string | null } }
 
-export type HintUnion = sc.QUICK_MENU_TYPES.Hints | sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Enemy | sc.QUICK_MENU_TYPES.Analyzable
+export type HintUnion = sc.QUICK_MENU_TYPES.Hints | sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Enemy | sc.QUICK_MENU_TYPES.Analyzable | sc.QUICK_MENU_TYPES.Climbable
 
 export class HintSystem implements PauseListener {
     static g: HintSystem
@@ -511,5 +512,6 @@ export class HintSystem implements PauseListener {
         new NPCHintMenu()
         new EnemyHintMenu()
         new AnalyzableHintMenu()
+        new ClimbableTerrainHints()
     }
 }

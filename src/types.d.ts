@@ -3,6 +3,11 @@ import { HintUnion, HintSubTypes } from './hint-system/hint-system'
 
 export {}
 
+export type ClimbableMenuSettings = sc.QuickMenuTypesBase & {
+    pos?: Vec3
+    size?: Vec3
+}
+
 declare global {
     namespace ig {
         interface SoundHandleBase {
@@ -66,6 +71,14 @@ declare global {
             interface Analyzable {
                 nameGui: sc.AnalyzableHintMenu
             }
+
+            interface Climbable extends sc.QuickMenuTypesBase {
+                nameGui: sc.ClimbableMenu
+            }
+            interface ClimbableConstructor extends ImpactClass<Climbable> {
+                new (type: string, settings: ClimbableMenuSettings, screen: sc.QuickFocusScreen): Climbable
+            }
+            var Climbable: ClimbableConstructor
         }
         interface BasicHintMenu extends ig.BoxGui {
             getText: () => [string, string, string | null]
@@ -106,6 +119,12 @@ declare global {
             new (text: string, settings: sc.QuickMenuTypesBaseSettings): AnalyzableHintMenu
         }
         var AnalyzableHintMenu: AnalyzableHintMenuConstructor
+
+        interface ClimbableMenu extends sc.BasicHintMenu {}
+        interface ClimbableMenuConstructor extends ImpactClass<ClimbableMenu> {
+            new (settings: ClimbableMenuSettings): ClimbableMenu
+        }
+        var ClimbableMenu: ClimbableMenuConstructor
 
         interface QuickMenuTypesBaseSettings {
             hintName?: string
