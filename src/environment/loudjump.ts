@@ -261,7 +261,7 @@ export class LoudJump {
             },
         })
 
-        ig.ENTITY.JumpPanelFar.inject({
+        ig.ENTITY.JumpPanelFar?.inject({
             /* fix launch pad going crazy by removing the animations */
             onTopEntityJumpFar(entity: ig.ENTITY.Combatant) {
                 if (self.predictor && self.predictor.rfc.on) {
