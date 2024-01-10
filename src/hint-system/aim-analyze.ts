@@ -15,12 +15,15 @@ export class AimAnalyzer implements PauseListener {
     static g: AimAnalyzer
 
     lastUuids: string | undefined
-    aimAnnounceOn: boolean = false
+    aimAnalyzeOn: boolean = false
     aimBounceOn: boolean = false
+    wallScanOn: boolean = false
 
     aimSpeakQueue: ({ hit: true; bouncePos: Vec3 } | { hit: false; hint: HintUnion })[] = []
 
     bounceSoundIndex: number = 0
+
+    wallScanHandle?: ig.SoundHandle
 
     constructor() {
         /* in prestart */
@@ -37,13 +40,10 @@ export class AimAnalyzer implements PauseListener {
         ig.ENTITY.Player.inject({
             update() {
                 this.parent()
-                if (self.aimAnnounceOn) {
-                    if (self.aimBounceOn) {
-                        self.handle(false)
-                    } else {
-                        self.handle(true)
-                    }
+                if (self.aimAnalyzeOn) {
+                    self.handle(!self.aimBounceOn)
                 }
+                self.handleWallScan()
             },
             /* keep the aim in the quick menu and after closing it */
             handleStateStart(playerState, inputState) {
@@ -84,13 +84,24 @@ export class AimAnalyzer implements PauseListener {
         sc.QuickMenuAnalysis.inject({
             update() {
                 this.parent()
-                if (MenuOptions.hints && sc.quickmodel.isQuickCheck()) {
-                    if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
-                        self.aimAnnounceOn = !self.aimAnnounceOn
-                        MenuOptions.ttsEnabled && TextGather.g.speakI(`Aim analysis: ${self.aimAnnounceOn ? 'on' : 'off'}`)
-                    } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE0 /* a */)) {
-                        self.aimBounceOn = !self.aimBounceOn
-                        MenuOptions.ttsEnabled && TextGather.g.speakI(`Aim bounce: ${self.aimBounceOn ? 'on' : 'off'}`)
+                if (MenuOptions.hints && sc.quickmodel.activeState) {
+                    if (sc.quickmodel.isQuickCheck()) {
+                        if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
+                            self.aimAnalyzeOn = !self.aimAnalyzeOn
+                            if (MenuOptions.ttsEnabled) {
+                                TextGather.g.speakI(`Aim analysis: ${self.aimAnalyzeOn ? 'on' : 'off'}`)
+                            }
+                        } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE0 /* a */)) {
+                            self.aimBounceOn = !self.aimBounceOn
+                            MenuOptions.ttsEnabled && TextGather.g.speakI(`Aim bounce: ${self.aimBounceOn ? 'on' : 'off'}`)
+                        }
+                    } else if (sc.quickmodel.isQuickNone()) {
+                        if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
+                            self.wallScanOn = !self.wallScanOn
+                            if (MenuOptions.ttsEnabled) {
+                                TextGather.g.speakI(`Wall scan: ${self.wallScanOn ? 'on' : 'off'}`)
+                            }
+                        }
                     }
                 }
             },
@@ -151,7 +162,6 @@ export class AimAnalyzer implements PauseListener {
     private tracePath(
         pos: Vec2,
         dir: Vec2,
-        alpha: number,
         bouncePoints: number,
         maxPoint: number,
         maxBounce: number,
@@ -236,24 +246,24 @@ export class AimAnalyzer implements PauseListener {
 
             const cnt = Math.min(maxPoint, bouncePoints)
 
-            return this.tracePath(pos, dir, Math.max(0.25, alpha * 0.75), cnt, cnt, maxBounce - 1, outArr)
+            return this.tracePath(pos, dir, cnt, cnt, maxBounce - 1, outArr)
         }
         return outArr
     }
 
-    predictBounceHints(): ({ hit: true; bouncePos: Vec3 } | { hit: false; hint: HintUnion })[] {
+    private fullTracePath(maxBounce: number = 3, bouncePoints: number = 10, maxPoint: number = 12) {
         const player = ig.game.playerEntity
         let c_pos: Vec2 = Vec2.create()
         const pos = Vec2.assign(c_pos, player.coll.pos)
         pos.x += player.coll.size.x / 2 - Constants.BALL_SIZE / 2
         pos.y += player.coll.size.y / 2 - Constants.BALL_SIZE / 2
-        const alpha = 1
-        const bouncePoints = 10
-        const maxPoint = 12
-        const maxBounce = 3
 
         const dir = Vec2.create(player.face)
-        const entries = this.tracePath(pos, dir, alpha, bouncePoints, maxPoint, maxBounce)
+        return this.tracePath(pos, dir, bouncePoints, maxPoint, maxBounce)
+    }
+
+    predictBounceHints(): ({ hit: true; bouncePos: Vec3 } | { hit: false; hint: HintUnion })[] {
+        const entries = this.fullTracePath()
 
         const hints: ({ hit: true; bouncePos: Vec3 } | { hit: false; hint: HintUnion })[] = []
         let lastHintUuid: string | undefined
@@ -278,5 +288,38 @@ export class AimAnalyzer implements PauseListener {
             hints.splice(hints.length - 1)
         }
         return hints
+    }
+
+    handleWallScan() {
+        const deactivate = () => {
+            this.wallScanHandle?.stop()
+            this.wallScanHandle = undefined
+        }
+        if (!(this.wallScanOn && isAiming() && ig.game.playerEntity.gui.crosshair?.active)) {
+            deactivate()
+            return
+        }
+        const entries = this.fullTracePath(0, 100, 100)
+        const last = entries.last()
+        if (last?.bouncePos === undefined) {
+            deactivate()
+            return
+        }
+        if (!this.wallScanHandle) {
+            this.wallScanHandle = new ig.Sound(SoundManager.sounds.wall, 2 * MenuOptions.wallScanVolume).play(true)
+        }
+        const handle = this.wallScanHandle
+
+        const dist = Vec3.distance(ig.game.playerEntity.coll.pos, last.bouncePos)
+
+        const maxRange = 30 * 16
+        const diff = maxRange - dist
+        const range = diff > maxRange * 0.4 ? maxRange : dist
+        handle.setFixPosition(last.bouncePos, range)
+        if (handle._nodePosition) {
+            handle._nodePosition.refDistance = 0.1 * handle.pos!.range
+            handle._nodePosition.maxDistance = handle.pos!.range
+        }
+        handle._setPosition()
     }
 }

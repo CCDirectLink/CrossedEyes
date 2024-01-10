@@ -412,7 +412,7 @@ export class HintSystem implements PauseListener {
         ig.ENTITY.Player.inject({
             update() {
                 this.parent()
-                if (AimAnalyzer.g.aimAnnounceOn && isAiming()) {
+                if (AimAnalyzer.g.aimAnalyzeOn && isAiming()) {
                     self.checkHintTogglePressed()
                 }
             },

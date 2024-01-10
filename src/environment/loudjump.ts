@@ -291,7 +291,10 @@ export class LoudJump {
         if (!MenuOptions.spacialAudio || !MenuOptions.loudWalls || CrossedEyes.isPaused || ig.game.playerEntity?.floating || !this.predictor || !p || !p.coll?.pos) {
             return
         }
-
+        if (isAiming() && AimAnalyzer.g.wallScanOn) {
+            this.pause()
+            return
+        }
         if (ig.game.now - this.lastTrack > this.trackInterval) {
             this.lastTrack = ig.game.now
 
@@ -352,7 +355,7 @@ export class LoudJump {
                 handle.setFixPosition(pos, range)
             }
             if (handle._nodeSource) {
-                handle._nodeSource.gainNode.gain.value = volume * (AimAnalyzer.g.aimAnnounceOn && isAiming() ? 0.4 : 1)
+                handle._nodeSource.gainNode.gain.value = volume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1)
             }
         }
     }

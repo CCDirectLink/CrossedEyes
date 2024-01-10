@@ -37,6 +37,10 @@ export class LoudWalls implements PauseListener {
         if (CrossedEyes.isPaused || ig.game.playerEntity?.floating) {
             return
         }
+        if (isAiming() && AimAnalyzer.g.wallScanOn) {
+            this.pause()
+            return
+        }
         const dirs: [string, Vec2][] = [
             ['wallDown', { x: 0, y: 1 }],
             ['wallRight', { x: 1, y: 0 }],
@@ -89,7 +93,7 @@ export class LoudWalls implements PauseListener {
                 const dirFaceAngle: number = (Vec2.clockangle(dir) * 180) / Math.PI
                 const angleDist: number = Math.min(Math.abs(playerFaceAngle - dirFaceAngle), 360 - Math.abs(playerFaceAngle - dirFaceAngle))
                 handle._nodeSource.bufferNode.playbackRate.value = angleDist >= 140 ? 0.7 : 1
-                handle._nodeSource.gainNode.gain.value = volume * (AimAnalyzer.g.aimAnnounceOn && isAiming() ? 0.4 : 1)
+                handle._nodeSource.gainNode.gain.value = volume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1)
             }
             return true
         }

@@ -81,6 +81,17 @@ export function getOptions() {
                     name: 'Jump hints volume',
                     description: 'Jump hints volume multiplier',
                 },
+                wallScanVolume: {
+                    type: 'OBJECT_SLIDER',
+                    init: 1,
+                    min: 0,
+                    max: 1.5,
+                    step: 0.1,
+                    fill: true,
+                    showPercentage: true,
+                    name: 'Wall scan volume',
+                    description: 'Wall scan volume multiplier',
+                },
                 hintsVolume: {
                     type: 'OBJECT_SLIDER',
                     init: 1,

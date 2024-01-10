@@ -8,6 +8,7 @@
 
 - Added jump volume slider
 - Added hints for props that lead to higher palces
+- Add wall scan aim mode
 
 ### Fixes
 
