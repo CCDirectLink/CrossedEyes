@@ -1,4 +1,4 @@
-import { MenuOptions } from '../optionsManager'
+import { MenuOptions } from '../options-manager'
 import { CharacterSpeakData, TTS, TTSInterface } from './tts'
 
 export class TTSWebSpeech implements TTSInterface {

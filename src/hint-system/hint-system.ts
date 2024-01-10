@@ -1,4 +1,4 @@
-import { MenuOptions } from '../optionsManager'
+import { MenuOptions } from '../options-manager'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager, stopHandle } from '../sound-manager'
 import { SpecialAction } from '../special-action'

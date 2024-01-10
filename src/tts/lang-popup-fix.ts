@@ -1,4 +1,4 @@
-import { MenuOptions } from '../optionsManager'
+import { MenuOptions } from '../options-manager'
 
 export class LangPopupFix {
     constructor() {

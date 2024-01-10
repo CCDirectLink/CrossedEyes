@@ -1,4 +1,4 @@
-import { MenuOptions } from '../optionsManager'
+import { MenuOptions } from '../options-manager'
 import { HintSystem } from './hint-system'
 import { ClimbableMenuSettings } from '../types'
 

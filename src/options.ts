@@ -1,4 +1,4 @@
-import { Options } from './optionsManager'
+import { Options } from './options-manager'
 import { TTSTypes } from './tts/tts'
 
 export function getOptions() {

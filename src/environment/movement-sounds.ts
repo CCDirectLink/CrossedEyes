@@ -1,4 +1,4 @@
-import { MenuOptions } from '../optionsManager'
+import { MenuOptions } from '../options-manager'
 import { SoundManager, mulSoundVol } from '../sound-manager'
 
 export class MovementSoundTweaker {

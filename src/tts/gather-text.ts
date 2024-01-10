@@ -1,8 +1,8 @@
-import { MenuOptions } from '../optionsManager'
+import { MenuOptions } from '../options-manager'
 import CrossedEyes from '../plugin'
 import { SpecialAction } from '../special-action'
-import { expressionMap } from './expressionMap'
-import { fontImgToName } from './fontImgToTextMap'
+import { expressionMap } from './expression-map'
+import { fontImgToName } from './font-img-to-text-map'
 import { CharacterSpeakData } from './tts'
 
 function getReadableText(orig: string): string {

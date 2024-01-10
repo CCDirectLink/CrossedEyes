@@ -1,4 +1,4 @@
-import { MenuOptions } from '../optionsManager'
+import { MenuOptions } from '../options-manager'
 import { TextGather } from '../tts/gather-text'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { HintSystem, HintUnion } from './hint-system'

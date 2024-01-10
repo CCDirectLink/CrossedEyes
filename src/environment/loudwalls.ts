@@ -1,5 +1,5 @@
 import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
-import { MenuOptions } from '../optionsManager'
+import { MenuOptions } from '../options-manager'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager, isHandleMuted, muteHandle } from '../sound-manager'
 

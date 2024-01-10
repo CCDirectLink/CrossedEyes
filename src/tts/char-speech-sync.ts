@@ -1,4 +1,4 @@
-import { MenuOptions } from '../optionsManager'
+import { MenuOptions } from '../options-manager'
 import { TextGather } from './gather-text'
 import { SpeechEndListener, TTS } from './tts'
 

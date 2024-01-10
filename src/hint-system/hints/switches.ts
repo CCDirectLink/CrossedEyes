@@ -1,4 +1,4 @@
-import { MenuOptions } from '../../optionsManager'
+import { MenuOptions } from '../../options-manager'
 import { Hint, HintData } from '../hint-system'
 
 export class HSwitch implements Hint {

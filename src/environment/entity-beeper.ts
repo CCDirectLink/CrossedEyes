@@ -1,5 +1,5 @@
 import { HintSystem } from '../hint-system/hint-system'
-import { MenuOptions } from '../optionsManager'
+import { MenuOptions } from '../options-manager'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { SoundManager, stopHandle } from '../sound-manager'
 
