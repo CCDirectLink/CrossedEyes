@@ -7,6 +7,7 @@
 ### Added
 
 - Added jump volume slider
+- Added hints for props that lead to higher palces
 
 ### Fixes
 
