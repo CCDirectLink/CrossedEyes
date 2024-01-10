@@ -65,15 +65,20 @@ export class AimAnalyzer implements PauseListener {
         })
 
         let quickMenuExitedTime: number = 0
-        let justEnteredQuickMenu: boolean = false
         sc.QuickMenuModel.inject({
             exitQuickMenu() {
                 this.parent()
                 quickMenuExitedTime = ig.Timer.time
             },
-            enterQuickMenu() {
+        })
+
+        sc.RingMenuButton.inject({
+            invokeButtonPress() {
                 this.parent()
-                justEnteredQuickMenu = true
+                /* deactivate the X button after entering a quick menu mode to fix aim bounce toggling on enter */
+                for (const states of ig.gamepad.activeGamepads) {
+                    states.pressedStates[ig.BUTTONS.FACE0] = false
+                }
             },
         })
         sc.QuickMenuAnalysis.inject({
@@ -83,11 +88,10 @@ export class AimAnalyzer implements PauseListener {
                     if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
                         self.aimAnnounceOn = !self.aimAnnounceOn
                         MenuOptions.ttsEnabled && TextGather.g.speakI(`Aim analysis: ${self.aimAnnounceOn ? 'on' : 'off'}`)
-                    } else if (/* fix this trigerring when entering the menu */ !justEnteredQuickMenu && ig.gamepad.isButtonPressed(ig.BUTTONS.FACE0 /* a */)) {
+                    } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE0 /* a */)) {
                         self.aimBounceOn = !self.aimBounceOn
                         MenuOptions.ttsEnabled && TextGather.g.speakI(`Aim bounce: ${self.aimBounceOn ? 'on' : 'off'}`)
                     }
-                    justEnteredQuickMenu = false
                 }
             },
         })

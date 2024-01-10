@@ -13,6 +13,7 @@
 
 - Fix options menu getting interrupted for after entering while in-game
 - Fix some mod sounds persisting indefinitely
+- Fix aim bounce toggling when entering the quick menu (for some people)
 
 ## [0.5.0] 2024-01-06
 
