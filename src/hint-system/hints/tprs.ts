@@ -12,6 +12,30 @@ function genVarName(prefix: string, currMap: string, name: string, map: string, 
     )}`
 }
 
+function getDestMapName(e: TprsFlagSupported): string {
+    const visited: boolean = ig.vars.get(getVarName(e))
+    const destMapName = visited ? sc.map.getMapName(e.map).toString() : 'unknown'
+    if (/* this is true when the map isnt in the current area */ destMapName == ig.game.mapName) {
+        const area = e.map.substring(0, e.map.indexOf('.'))
+        let areaName = sc.map.getAreaName(area)
+        if (!areaName) {
+            /* ughhhhhhh */
+            /* this is a egde case where the area has different names in fs and sc.map.areas; for example: autumn in fs and autumn-area in sc.map.areas */
+            areaName = sc.map.getAreaName(
+                (
+                    JSON.parse(
+                        (0, eval)("require('fs')")
+                            .readFileSync(`assets/data/maps/${e.map.replace('.', '/')}.json`)
+                            .toString()
+                    ) as sc.MapModel.Map
+                ).attributes.area
+            )
+        }
+        return `area: ${areaName}`
+    }
+    return destMapName
+}
+
 let justEnteredTpr: boolean = false
 
 export class HDoor implements Hint {
@@ -46,9 +70,9 @@ export class HDoor implements Hint {
                     }
                     for (const e of entities) {
                         const path = genVarName('maps.', ig.game.mapName, e.name!, e.map, e.marker)
-                        MenuOptions.hints && ig.vars.set(path, true)
+                        ig.vars.set(path, true)
                     }
-                    justEnteredTpr = true
+                    justEnteredTpr = false
                 }
             },
         })
@@ -59,7 +83,7 @@ export class HDoor implements Hint {
             throw new Error()
         }
 
-        const name: string = `Door, ${e.active ? 'active' : 'inactive'}${ig.vars.get(getVarName(e)) ? ', visited ' : ''}`
+        const name: string = `Door to ${getDestMapName(e)}, ${e.active ? 'active' : 'inactive'}`
         const description: string = `Transports you to a different map`
         return { name, description }
     }
@@ -82,7 +106,10 @@ export class HTeleportField implements Hint {
             },
             onInteraction() {
                 this.parent()
-                justEnteredTpr = true
+                if (MenuOptions.hints) {
+                    ig.vars.set(getVarName(this), true)
+                    justEnteredTpr = true
+                }
             },
         })
     }
@@ -110,10 +137,9 @@ export class HTeleportGround implements Hint {
             },
             collideWith(entity, dir) {
                 this.parent(entity, dir)
-                if (this.coll.ignoreCollision) {
-                    /* this means the player just entered the tpr */
+                if (/* this means the player just entered the tpr */ this.coll.ignoreCollision && MenuOptions.hints) {
                     ig.vars.set(getVarName(this), true)
-                    justEnteredTpr = false
+                    justEnteredTpr = true
                 }
             },
         })
@@ -123,7 +149,7 @@ export class HTeleportGround implements Hint {
             throw new Error()
         }
 
-        const name: string = `Teleport Ground${ig.vars.get(getVarName(e)) ? ', visited ' : ''}`
+        const name: string = `Path to ${getDestMapName(e)}`
         const description: string = `Transports you to a different map`
         return { name, description }
     }

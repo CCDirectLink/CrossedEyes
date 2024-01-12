@@ -11,10 +11,12 @@
 - Add wall scan aim mode
 - Automaticly determine NVDA text speed to adjust dialogue beeping sounds
 - Added wall bump volume slider
+- Added destination map on doors and paths
 
 ### Changes
 
 - Footstep volume now also plays if you only collide with walls only slightly
+- Changed hint name from "Teleport Ground" to "Path"
 
 ### Fixes
 
