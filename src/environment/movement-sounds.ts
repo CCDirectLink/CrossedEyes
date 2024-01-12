@@ -43,7 +43,7 @@ export class MovementSoundTweaker {
                             const vol: number = Vec3.distance(Vec3.create(), this.coll.vel).map(40, 180, 1, 0.4)
                             if (frame == 2) {
                                 ig.SoundHelper.playAtEntity(
-                                    new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic1 : SoundManager.sounds.hitOrganic2, 0.45 * MenuOptions.footstepVolume * vol),
+                                    new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic1 : SoundManager.sounds.hitOrganic2, MenuOptions.wallBumpVolume * vol),
                                     this,
                                     null,
                                     null,
@@ -51,7 +51,7 @@ export class MovementSoundTweaker {
                                 )
                             } else if (frame == 5) {
                                 ig.SoundHelper.playAtEntity(
-                                    new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic3 : SoundManager.sounds.hitOrganic4, 0.45 * MenuOptions.footstepVolume * vol),
+                                    new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic3 : SoundManager.sounds.hitOrganic4, MenuOptions.wallBumpVolume * vol),
                                     this,
                                     null,
                                     null,

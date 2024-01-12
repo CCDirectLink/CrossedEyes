@@ -76,7 +76,7 @@ export function getOptions() {
                     fill: true,
                     showPercentage: true,
                     name: 'TTS Volume',
-                    description: "TTS Volume (may not work)",
+                    description: 'TTS Volume (may not work)',
                 },
                 ttsPitch: {
                     type: 'OBJECT_SLIDER',
@@ -123,6 +123,17 @@ export function getOptions() {
                     showPercentage: true,
                     name: 'Wall volume',
                     description: 'Wall volume multiplier',
+                },
+                wallBumpVolume: {
+                    type: 'OBJECT_SLIDER',
+                    init: 1,
+                    min: 0,
+                    max: 2,
+                    step: 0.1,
+                    fill: true,
+                    showPercentage: true,
+                    name: 'Wall bumping volume',
+                    description: 'Wall bumping volume multiplier',
                 },
                 jumpHintsVolume: {
                     type: 'OBJECT_SLIDER',

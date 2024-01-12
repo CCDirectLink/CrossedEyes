@@ -10,6 +10,7 @@
 - Added hints for props that lead to higher palces
 - Add wall scan aim mode
 - Automaticly determine NVDA text speed to adjust dialogue beeping sounds
+- Added wall bump volume slider
 
 ### Fixes
 
