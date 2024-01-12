@@ -97,6 +97,8 @@ Navigate through and focus the hints from closest to furthest with L1 and R2.
 When a hint is focused, you can press L3 to read the hint description.  
 When a hint is focused, you can select it with X.  
 Selecting a hint makes the focus persist even outside of the analysis menu.  
+Hints have higher pitch if they are higher than the player, and lower pitch if they are lower.  
+You can filter hints by type using dpad left and dpad right.  
 
 ### Aim analysis
 
