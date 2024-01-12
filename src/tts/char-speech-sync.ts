@@ -2,9 +2,15 @@ import { MenuOptions } from '../options-manager'
 import { TextGather } from './gather-text'
 import { SpeechEndListener, TTS } from './tts'
 
+const startDate = Date.now()
+
 export class CharacterSpeechSynchronizer implements SpeechEndListener {
     sideMessageHudGuiIns!: sc.SideMessageHudGui
     messageOverlayGuiIns!: ig.MessageOverlayGui
+
+    private rateCalibCount: number = 5
+    private rateCalibData: [number, string][] = []
+
     constructor() {
         /* in prestart */
         TTS.g.onSpeechEndListeners.push(this)
@@ -20,10 +26,12 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
                 this.parent()
             },
             skip(nextMsg: boolean = true) {
-                if (nextMsg && MenuOptions.ttsEnabled) {
-                    const msg = this.messages.last()
-                    if (!msg.isFinished()) {
-                        sc.model.message.clearBlocking()
+                if (MenuOptions.ttsChar) {
+                    if (nextMsg) {
+                        const msg = this.messages.last()
+                        if (!msg.isFinished()) {
+                            sc.model.message.clearBlocking()
+                        }
                     }
                 }
                 this.parent()
@@ -31,7 +39,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
         })
         sc.MsgBoxGui.inject({
             init(maxWidth, pointerType, text, speed, personEntry, beepSound) {
-                if (MenuOptions.ttsEnabled) {
+                if (MenuOptions.ttsChar) {
                     if (MenuOptions.textBeeping) {
                         if (!ig.system.skipMode) {
                             speed = ig.TextBlock.SPEED.SLOWEST / MenuOptions.ttsSpeed
@@ -51,7 +59,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
             },
             showNextSideMessage() {
                 this.parent()
-                if (MenuOptions.ttsEnabled) {
+                if (MenuOptions.ttsChar) {
                     this.timer = 10000000
                     TextGather.g.ignoreInteractTo = Date.now() + 100
                 }
@@ -59,7 +67,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
             onSkipInteract(type) {
                 TextGather.g.interrupt()
                 this.parent(type)
-                if (MenuOptions.ttsEnabled && type == sc.SKIP_INTERACT_MSG.SKIPPED) {
+                if (MenuOptions.ttsChar && type == sc.SKIP_INTERACT_MSG.SKIPPED) {
                     if (this.visibleBoxes.length > 0) {
                         this.doMessageStep()
                     }
@@ -72,7 +80,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
         sc.SideMessageBoxGui.inject({
             init() {
                 this.parent()
-                if (MenuOptions.ttsEnabled) {
+                if (MenuOptions.ttsChar) {
                     if (MenuOptions.textBeeping) {
                         this.text.setTextSpeed(ig.TextBlock.SPEED.SLOWEST / MenuOptions.ttsSpeed)
                     } else {
@@ -82,6 +90,22 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
             },
         })
 
+        sc.VoiceActing.inject({
+            play(expression, label) {
+                this.parent(expression, label)
+                if (MenuOptions.ttsChar && TTS.g.ttsInstance.calibrateSpeed) {
+                    if (self.rateCalibData.length <= self.rateCalibCount) {
+                        self.rateCalibData.push([Date.now(), TextGather.g.lastMessage!.toString()])
+                    }
+                }
+            },
+        })
+
+        TextGather.g.interruptListeners.push(() => {
+            if (TTS.g.ttsInstance.calibrateSpeed) {
+                if ((self.rateCalibData.last() ?? [])[0] > startDate) self.rateCalibData.pop()
+            }
+        })
         // sc.getMessageTime = function(textLike: sc.TextLike) {
         //     if (MenuOptions.ttsMenuEnabled) {
         //         return textLike!.toString().length / 20 * 1.8 * MenuOptions.ttsSpeed + 1
@@ -91,13 +115,35 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
         // }
     }
     onSpeechEnd(): void {
-        if (MenuOptions.ttsEnabled) {
+        if (MenuOptions.ttsChar) {
             if (this.sideMessageHudGuiIns.timer > 10000) {
                 this.sideMessageHudGuiIns.timer = 1
                 this.sideMessageHudGuiIns.visibleBoxes.last().text.finish()
             }
             if (sc.message.blocking && !sc.message.hasChoice()) {
                 this.messageOverlayGuiIns.messageArea.skip(false)
+            }
+            if (TTS.g.ttsInstance.calibrateSpeed && this.rateCalibData.length <= this.rateCalibCount && (this.rateCalibData.last() ?? [])[0] > startDate) {
+                this.rateCalibData[this.rateCalibData.length - 1][0] = Date.now() - this.rateCalibData.last()[0]
+                // console.log(`text speed calibration ${this.rateCalibData.length}/${this.rateCalibCount}`)
+                if (this.rateCalibData.length == this.rateCalibCount) {
+                    this.rateCalibCount = 0
+                    this.rateCalibData = this.rateCalibData.filter(e => e[0] < 10e3)
+                    // console.log('calibration complete')
+                    const cps = this.rateCalibData.map(e => e[1].length / (e[0] / 1000))
+                    const avg = cps.reduce((acc, v) => acc + v, 0) / cps.length
+                    // console.log(cps, avg)
+                    const newSpeed = Math.max(1, Math.min(3, (Math.round(((avg / 15) * 100) / 5) * 5) / 100))
+                    // console.log('new speed:', newSpeed)
+
+                    const origSpeed = MenuOptions.ttsSpeed
+                    // console.log('diff', origSpeed, newSpeed, Math.abs(origSpeed - newSpeed))
+                    if (Math.abs(origSpeed - newSpeed) >= 0.2) {
+                        MenuOptions.ttsSpeed = newSpeed
+                        sc.options.persistOptions()
+                        // console.log('setting new')
+                    }
+                }
             }
         }
     }

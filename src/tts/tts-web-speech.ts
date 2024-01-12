@@ -2,6 +2,7 @@ import { MenuOptions } from '../options-manager'
 import { CharacterSpeakData, TTS, TTSInterface } from './tts'
 
 export class TTSWebSpeech implements TTSInterface {
+    calibrateSpeed = false
     supportedPlatforms = new Set<'win32' | 'linux' | 'darwin'>(['win32', 'darwin', 'linux'])
     voiceName: string = 'English (Received Pronunciation)+Annie espeak-ng'
     voices!: SpeechSynthesisVoice[]

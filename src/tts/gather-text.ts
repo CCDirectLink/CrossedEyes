@@ -40,9 +40,11 @@ export class TextGather {
     static g: TextGather
 
     private connect: { count: number; template: string; args: sc.TextLike[] } | undefined
-    private lastMessage: sc.TextLike = ''
+    public lastMessage: sc.TextLike = ''
     public ignoreInteract: number = 0
     public ignoreInteractTo: number = 0
+
+    public interruptListeners: (() => void)[] = []
 
     public charSpeak(textLike: sc.TextLike, data: CharacterSpeakData): void {
         this.interrupt()
@@ -105,6 +107,7 @@ export class TextGather {
             if (this.ignoreInteract > 0) {
                 this.ignoreInteract--
             } else if (Date.now() > this.ignoreInteractTo) {
+                this.interruptListeners.forEach(f => f())
                 interruptCopy()
             }
         }
@@ -174,8 +177,7 @@ export class TextGather {
                 this.load()
             },
             play(exp: sc.CharacterExpression, label: ig.LangLabel) {
-                const isOn = MenuOptions.ttsChar
-                if (isOn) {
+                if (MenuOptions.ttsChar) {
                     if (leaSounds && exp.character.name == 'main.lea') {
                         this.active = true
                         self.interrupt()
@@ -209,7 +211,7 @@ export class TextGather {
                     }
                 }
                 this.parent(exp, label)
-                if (isOn) {
+                if (MenuOptions.ttsChar) {
                     this.active = false
                 }
             },

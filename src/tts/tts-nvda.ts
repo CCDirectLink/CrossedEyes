@@ -8,6 +8,7 @@ import AdmZip from 'adm-zip'
 const fs: typeof import('fs') = (0, eval)('require("fs")')
 
 export class TTSNvda implements TTSInterface {
+    calibrateSpeed = true
     supportedPlatforms = new Set<'win32' | 'linux' | 'darwin'>(['win32'])
     queue: string[] = []
 

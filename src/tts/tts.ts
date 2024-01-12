@@ -7,6 +7,7 @@ import { TTSWebSpeech } from './tts-web-speech'
 export interface CharacterSpeakData {}
 
 export interface TTSInterface {
+    calibrateSpeed: boolean
     supportedPlatforms: Set<'win32' | 'linux' | 'darwin'>
     queue: string[]
     init(): Promise<void>
@@ -75,6 +76,7 @@ export class TTS {
     async initPoststart() {
         AddonInstaller.checkInstall()
         this.setup()
+
         const interval = setInterval(() => {
             if (this.ttsInstance.isReady()) {
                 this.onReadyListeners.forEach(f => f())
