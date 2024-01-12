@@ -26,6 +26,7 @@
 - Fix wall bumping not working on diagonal walls
 - Fix wall sounds glitching on corners
 - Fix wall sounds beaing slightly behind when the player is moving
+- Fix L1 not selecting a hint on analysis screen entry
 
 ## [0.5.0] 2024-01-06
 

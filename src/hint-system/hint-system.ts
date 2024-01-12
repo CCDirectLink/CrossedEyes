@@ -162,7 +162,7 @@ export class HintSystem implements PauseListener {
         this.currentSelectIndex += add
         if (this.currentSelectIndex == sorted.length) {
             this.currentSelectIndex = 0
-        } else if (this.currentSelectIndex == -1) {
+        } else if (this.currentSelectIndex < 0) {
             this.currentSelectIndex = sorted.length - 1
         }
         const entry: sc.QuickMenuTypesBase = sorted[this.currentSelectIndex]
