@@ -18,6 +18,8 @@
 - Fix some mod sounds persisting indefinitely
 - Fix aim bounce toggling when entering the quick menu (for some people)
 - Fix wall bumping not working on diagonal walls
+- Fix wall sounds glitching on corners
+- Fix wall sounds beaing slightly behind when the player is moving
 
 ## [0.5.0] 2024-01-06
 

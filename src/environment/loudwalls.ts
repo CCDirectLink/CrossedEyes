@@ -82,7 +82,8 @@ export class LoudWalls implements PauseListener {
                 check.pos.z = 0
                 Vec2.assign(check.pos, dir)
                 Vec3.length(check.pos, range * 0.021)
-                Vec3.add(check.pos, ig.game.playerEntity.getAlignedPos(ig.ENTITY_ALIGN.CENTER, c_tmpPos))
+                Vec2.add(check.pos, ig.game.playerEntity.getCenter(c_tmpPos))
+                check.pos.z = ig.game.playerEntity.coll.pos.z
             }
 
             if (!handle.pos || !Vec3.equal(handle.pos.point3d, check.pos)) {
@@ -102,7 +103,7 @@ export class LoudWalls implements PauseListener {
 
     static checkDirection(dir: Vec2, distance: number, collType: ig.COLLTYPE, trackEntityTouch: boolean = true): CheckDirectionReturn {
         if (!ig.game || !ig.game.playerEntity) {
-            return { type: 'none', pos: Vec3.createC(0, 0, 0), distance }
+            return { type: 'none', pos: Vec3.create(), distance }
         }
 
         const pos: Vec3 = c_tmpPos
