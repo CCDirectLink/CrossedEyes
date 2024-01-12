@@ -12,6 +12,10 @@
 - Automaticly determine NVDA text speed to adjust dialogue beeping sounds
 - Added wall bump volume slider
 
+### Changes
+
+- Footstep volume now also plays if you only collide with walls only slightly
+
 ### Fixes
 
 - Fix options menu getting interrupted for after entering while in-game

@@ -39,9 +39,10 @@ export class MovementSoundTweaker {
                     if (frame != this.stepFx.lastFrame) {
                         const sound = getSoundFromColl(this.coll, this.soundType)
                         let spawnFx = false
+                        let vol: number | undefined
                         if (this.coll._collData?.collided && this == (ig.game.playerEntity as sc.ActorEntity)) {
                             const dist = Vec3.distance(Vec3.create(), this.coll.vel)
-                            let vol: number = dist.map(40, 180, 1, 0.4)
+                            vol = dist.map(40, 180, 1, 0.4)
                             if (dist > 170) {
                                 const minDist = Math.min(
                                     Vec2.distance(Vec2.createC(0, 1), this.coll._collData.blockDir),
@@ -72,7 +73,8 @@ export class MovementSoundTweaker {
                                 )
                                 lastStep = !lastStep
                             }
-                        } else {
+                        }
+                        if (vol === undefined || vol < 0.6) {
                             if (frame == this.stepFx.frames[0]) {
                                 spawnFx = true
                                 ig.SoundHelper.playAtEntity(mulSoundVol(sound.step1!, MenuOptions.footstepVolume as number), this, null, null, 700)
