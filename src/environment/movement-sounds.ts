@@ -40,7 +40,20 @@ export class MovementSoundTweaker {
                         const sound = getSoundFromColl(this.coll, this.soundType)
                         let spawnFx = false
                         if (this.coll._collData?.collided && this == (ig.game.playerEntity as sc.ActorEntity)) {
-                            const vol: number = Vec3.distance(Vec3.create(), this.coll.vel).map(40, 180, 1, 0.4)
+                            const dist = Vec3.distance(Vec3.create(), this.coll.vel)
+                            let vol: number = dist.map(40, 180, 1, 0.4)
+                            if (dist > 170) {
+                                const minDist = Math.min(
+                                    Vec2.distance(Vec2.createC(0, 1), this.coll._collData.blockDir),
+                                    Vec2.distance(Vec2.createC(0, -1), this.coll._collData.blockDir),
+                                    Vec2.distance(Vec2.createC(1, 0), this.coll._collData.blockDir),
+                                    Vec2.distance(Vec2.createC(-1, 0), this.coll._collData.blockDir)
+                                )
+                                /* check if the player is going diagoally */
+                                if (minDist > 0.5) {
+                                    vol = 1
+                                }
+                            }
                             if (frame == 2) {
                                 ig.SoundHelper.playAtEntity(
                                     new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic1 : SoundManager.sounds.hitOrganic2, MenuOptions.wallBumpVolume * vol),
