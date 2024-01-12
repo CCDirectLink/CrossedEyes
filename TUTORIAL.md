@@ -66,7 +66,7 @@ Some entities are interactable. For example:
 - Elevators
 
 [Sound: Interactable is nearby](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/interactable.ogg)  
-[Sound: Press A to interact](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/interactable.ogg)  
+[Sound: Press A to interact](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/interact.ogg)  
 
 ## Aiming
 
