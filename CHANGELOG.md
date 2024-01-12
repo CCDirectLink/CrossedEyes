@@ -12,6 +12,7 @@
 - Automaticly determine NVDA text speed to adjust dialogue beeping sounds
 - Added wall bump volume slider
 - Added destination map on doors and paths
+- Added a simple text tutorial
 
 ### Changes
 
