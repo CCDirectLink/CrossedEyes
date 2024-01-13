@@ -3,6 +3,15 @@
 # Change Log
 
 ## [Unreleased]
+
+### Added
+
+- Added TUTORIAL.md to bundle.zip as CROSSEDEYES_MANUAL.md
+
+### Fixes
+
+- Fixed some tutorial spelling mistakes
+
 ## [0.5.1] 2024-01-12
 
 ### Added

@@ -6,6 +6,6 @@ echo not running in build mode
 npm install
 # npm run build
 npm run start
-zip -r "$NAME" ./ -x "*.ccmod" "*.zip" "node_modules/*" ".git*" "*.ts" "README.md" \
-    "tsconfig.json" "pack.sh" "package-lock.json" "pack/*" "bundle.zip" ".prettierrc.json" \
+zip -r "$NAME" ./ -x "*.ccmod" "*.zip" "node_modules/*" ".git*" "*.ts" "*.md" \
+    "tsconfig.json" "*.sh" "package-lock.json" "pack/*" "bundle.zip" ".prettierrc.json" \
     "*.kra" "*.kra~" "*.png~" "src/*"

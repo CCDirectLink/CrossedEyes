@@ -19,6 +19,8 @@ rm -rf pack/ccloader.tar.gz
 
 patch -p1 pack/package.json < .github/workflows/package.patch
 
+cp ./TUTORIAL.md pack/CROSSEDEYES_MANUAL.md
+
 cd pack
 rm -rf ../bundle.zip
 zip -r ../bundle.zip *
