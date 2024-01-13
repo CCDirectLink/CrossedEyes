@@ -377,7 +377,8 @@ export class HintSystem implements PauseListener {
         ig.Game.inject({
             update() {
                 this.parent()
-                for (const e of self.activeHints) {
+                for (let i = self.activeHints.length - 1; i >= 0; i--) {
+                    const e = self.activeHints[i]
                     if (e && e.handle) {
                         if (e.muted && e.handle._volume != 0) {
                             e.handle._volume = 0
@@ -387,6 +388,10 @@ export class HintSystem implements PauseListener {
                             e.handle._nodeSource && (e.handle._nodeSource!.gainNode.gain.value = 1)
                         }
                         self.updateHintSound(e.hint, e.handle)
+
+                        if (e.hint.entity.getQuickMenuSettings!().disabled) {
+                            self.deactivateHint(i)
+                        }
                     }
                 }
             },

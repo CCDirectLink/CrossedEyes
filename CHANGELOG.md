@@ -11,6 +11,7 @@
 ### Fixes
 
 - Fixed some tutorial spelling mistakes
+- Unfocus hints when they no longer can be focused
 
 ## [0.5.1] 2024-01-12
 

@@ -14,7 +14,10 @@ export class EnemyHintMenu {
                 return isProperEnemy ? { type: 'Enemy', disabled: false } : { type: 'Hints', hintName: 'Enemy', hintType: 'Puzzle', disabled: !HEnemy.check(this) }
             },
             isBallDestroyer(_collPos, _collRes) {
-                return this.enemyName == 'target-bot'
+                if (!MenuOptions.hints) {
+                    return this.parent ? this.parent(_collPos, _collRes) : false
+                }
+                return this.enemyName == 'target-bot' || this.enemyName == 'baggy-kun'
             },
         })
 
@@ -61,9 +64,11 @@ export class EnemyHintMenu {
                 this.nameGui = new sc.EnemyHintMenu(this.entity)
             },
             focusGained() {
+                this.parent()
                 HintSystem.g.activateHint(0, this)
             },
             focusLost() {
+                this.parent()
                 HintSystem.g.deactivateHint(0)
             },
         })

@@ -9,6 +9,7 @@ export class HEnemy implements Hint {
 
     constructor() {
         /* run in prestart */
+        /* injection is done in hint-system/enemy-override.ts */
     }
     getDataFromEntity(e: ig.Entity): HintData {
         if (!(e instanceof ig.ENTITY.Enemy)) {
