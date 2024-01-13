@@ -21,11 +21,11 @@ Xbox to playstation buttons:
 
 ## Navigating the world
 
-You move with left stick.
+You move with the left stick.
 
 ### Wall sounds
 
-Wall make continous noise with volume depending on how close you are.  
+Walls make continous noise with volume depending on how close they are to the player.  
 Only 4 directions are checked: north, south, east and west.  
 
 [Sound: Wall](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/wall.ogg)  
@@ -92,8 +92,8 @@ A lot of entities have hints attached on them, for example:
 [Sound: hint is focused](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/hint.ogg)
 
 To access the hints, you need to open the quick menu with L2.  
-To open the analysis menu from there you go right with left stick and press A.  
-Navigate through and focus the hints from closest to furthest with L1 and R2.  
+To open the analysis menu from there you go right with the left stick and press A.  
+Navigate through and focus the hints from closest to furthest with L1 and R1.  
 When a hint is focused, you can press L3 to read the hint description.  
 When a hint is focused, you can select it with X.  
 Selecting a hint makes the focus persist even outside of the analysis menu.  
@@ -105,7 +105,7 @@ You can filter hints by type using dpad left and dpad right.
 To activate aim analysis, be in the analysis menu and press Y.  
 Press it again to deactivate it.  
 When it's activated, hints that you directly aim at will be focued.  
-The hint will be unfocued when you aim away.  
+The hint will be unfocused when you aim away.  
 
 #### Aim bounce
 
@@ -113,11 +113,11 @@ To activate aim bounce, be in the analysis menu and press A.
 Press it again to deactivate it.  
 Aim bounce only does something when charge mode is enabled and aim analysis is active.  
 This mode simulates the ball bouncing off walls and puzzle elements.  
-It says what the ball bounced off, and it focues the last hint the ball hit.
+It says what the ball bounced off, and it focuses the last hint the ball hit.
 
 ## Wall scanning
 
 To activate wall scanning, be in the quick menu and press Y.  
 Press it again to deactivate it.  
-Aiming now will play sound at the wall you aimed at.  
-This will also mute wall sounds and jump hints sounds.  
+Aiming now will play a sound at the wall you aimed at.  
+This will also mute wall sounds and jump hint sounds.  
