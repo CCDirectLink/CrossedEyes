@@ -93,7 +93,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
         sc.VoiceActing.inject({
             play(expression, label) {
                 this.parent(expression, label)
-                if (MenuOptions.ttsChar && TTS.g.ttsInstance.calibrateSpeed) {
+                if (MenuOptions.ttsChar && TTS.g?.ttsInstance?.calibrateSpeed) {
                     if (self.rateCalibData.length <= self.rateCalibCount) {
                         self.rateCalibData.push([Date.now(), TextGather.g.lastMessage!.toString()])
                     }
@@ -102,7 +102,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
         })
 
         TextGather.g.interruptListeners.push(() => {
-            if (TTS.g.ttsInstance.calibrateSpeed) {
+            if (TTS.g?.ttsInstance?.calibrateSpeed) {
                 if ((self.rateCalibData.last() ?? [])[0] > startDate) self.rateCalibData.pop()
             }
         })
@@ -123,7 +123,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
             if (sc.message.blocking && !sc.message.hasChoice()) {
                 this.messageOverlayGuiIns.messageArea.skip(false)
             }
-            if (TTS.g.ttsInstance.calibrateSpeed && this.rateCalibData.length <= this.rateCalibCount && (this.rateCalibData.last() ?? [])[0] > startDate) {
+            if (TTS.g?.ttsInstance?.calibrateSpeed && this.rateCalibData.length <= this.rateCalibCount && (this.rateCalibData.last() ?? [])[0] > startDate) {
                 this.rateCalibData[this.rateCalibData.length - 1][0] = Date.now() - this.rateCalibData.last()[0]
                 // console.log(`text speed calibration ${this.rateCalibData.length}/${this.rateCalibCount}`)
                 if (this.rateCalibData.length == this.rateCalibCount) {
