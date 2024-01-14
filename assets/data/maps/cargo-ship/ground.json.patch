@@ -1,0 +1,19 @@
+[
+    {
+        "type": "ENTER",
+        "index": "entities"
+    },
+    {
+        "type": "ADD_ARRAY_ELEMENT",
+        "content": {
+            "type": "Prop",
+            "x": 80,
+            "y": 336,
+            "level": 1,
+            "settings": { "name": "myprop", "propType": { "sheet": "cargo-hold", "name": "cargo-box2" }, "mapId": 2137 }
+        }
+    },
+    {
+        "type": "EXIT"
+    }
+]

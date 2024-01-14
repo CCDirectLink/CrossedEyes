@@ -18,7 +18,7 @@ import { AutoUpdater } from './autoupdate'
 import { TextGather } from './tts/gather-text'
 import { godmode } from './godmode'
 import { LangPopupFix } from './tts/lang-popup-fix'
-import {EntityDecluterrer} from './environment/entity-declutter'
+import { EntityDecluterrer } from './environment/entity-declutter'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 

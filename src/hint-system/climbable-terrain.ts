@@ -30,8 +30,8 @@ export class ClimbableTerrainHints {
 
         const x1 = (p.x / 16 - 1).floor()
         const x2 = ((p.x + s.x) / 16 + 1).ceil()
-        const y1 = (p.y / 16 - 1).floor()
-        const y2 = ((p.y + s.y) / 16 + 1).ceil()
+        const y1 = ((p.y - p.z) / 16 - 1).floor()
+        const y2 = ((p.y + s.y - p.z) / 16 + 1).ceil()
 
         const lvl = this.getLevelFromZ(p.z)
         if (lvl == -1) {
@@ -58,7 +58,7 @@ export class ClimbableTerrainHints {
     private isTileJumpable(tilePos: Vec3): boolean {
         const levels = Object.values(ig.game.levels).filter(l => l.collision && l.height !== undefined)
         const origLvl = levels[tilePos.z]
-        const nextLvlI = levels.findIndex(o => o.height == tilePos.z + 32)
+        const nextLvlI = levels.findIndex(o => o.height == origLvl.height! + 32)
         let nextLvl = levels[nextLvlI]
         if (!nextLvl) {
             return false
@@ -77,7 +77,7 @@ export class ClimbableTerrainHints {
         if (nextnextLvl?.collision?.data) {
             t3 = nextnextLvl.collision.data[tilePos.y][tilePos.x]
         }
-        return t1 == 2 && t2 == 1 && (t3 == undefined || t3 == 1) && (t4 == undefined || !this.isTileBlocking(t4))
+        return t1 == 2 && (t2 == 1 || t2 == 3) && (t3 == undefined || t3 == 1) && (t4 == undefined || !this.isTileBlocking(t4))
     }
 
     private checkIsJumpable(e: ig.Entity): boolean {

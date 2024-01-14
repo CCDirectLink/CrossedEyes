@@ -5,7 +5,6 @@ import { HintSystem, HintUnion } from './hint-system'
 import { TTS } from '../tts/tts'
 import { SoundManager } from '../sound-manager'
 
-
 export function isAiming(): boolean {
     return ig.input.state('aim') || ig.gamepad.isRightStickDown()
 }

@@ -22,15 +22,7 @@ function playAt(e: ig.Entity) {
     const soundName = getSoundName(e)
     stopHandle(e.playAtSoundHandle)
     if (soundName) {
-        e.playAtSoundHandle = ig.SoundHelper.playAtEntity(
-            new ig.Sound(soundName, 0.8),
-            e,
-            true,
-            {
-                fadeDuration: 0,
-            },
-            16 * 16
-        )
+        e.playAtSoundHandle = ig.SoundHelper.playAtEntity(new ig.Sound(soundName, 0.8), e, true, { fadeDuration: 0 }, 16 * 16)
     }
 }
 
