@@ -14,6 +14,7 @@
 - Fixed some tutorial spelling mistakes
 - Unfocus hints when they no longer can be focused
 - Fix possible crash at game load
+- Fixed selected hints bugging out when more than one hint is selected
 
 ## [0.5.1] 2024-01-12
 

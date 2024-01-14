@@ -89,6 +89,7 @@ export class HintSystem implements PauseListener {
         this.activeHints
             .filter(o => o?.hint.entity == e)
             .map(o => this.activeHints.indexOf(o))
+            .reverse()
             .forEach(i => this.deactivateHint(i))
     }
 
@@ -98,7 +99,7 @@ export class HintSystem implements PauseListener {
             return
         }
         if (index == -1) {
-            index = this.activateHint.length
+            index = this.activeHints.length
         }
 
         let handle: ig.SoundHandle | undefined
@@ -149,9 +150,7 @@ export class HintSystem implements PauseListener {
     }
 
     pause() {
-        for (let i = 0; i < this.activateHint.length; i++) {
-            this.deactivateHint(i)
-        }
+        this.deactivateHint(0)
     }
 
     selectNextHint(add: number) {
