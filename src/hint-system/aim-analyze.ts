@@ -5,7 +5,6 @@ import { HintSystem, HintUnion } from './hint-system'
 import { TTS } from '../tts/tts'
 import { SoundManager } from '../sound-manager'
 
-const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
 export function isAiming(): boolean {
     return ig.input.state('aim') || ig.gamepad.isRightStickDown()
@@ -31,12 +30,6 @@ export class AimAnalyzer implements PauseListener {
         CrossedEyes.pauseables.push(this)
         TTS.g.onSpeechEndListeners.push(this)
         const self = this
-        ig.Entity.inject({
-            init(x, y, z, settings) {
-                this.parent(x, y, z, settings)
-                this.uuid = crypto.createHash('sha256').update(`${settings.name}-${x},${y}`).digest('hex')
-            },
-        })
         ig.ENTITY.Player.inject({
             update() {
                 this.parent()

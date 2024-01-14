@@ -7,6 +7,7 @@
 ### Added
 
 - Added TUTORIAL.md to bundle.zip as CROSSEDEYES_MANUAL.md
+- Removed useless clutter (cargo boxes) from early maps to make them easier and less annyoing
 
 ### Fixes
 

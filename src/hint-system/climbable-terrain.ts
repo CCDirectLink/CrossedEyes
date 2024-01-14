@@ -94,18 +94,6 @@ export class ClimbableTerrainHints {
         /* in prestart */
         const self = this
 
-        ig.Game.inject({
-            loadingComplete() {
-                this.parent()
-                // const levels = Object.values(ig.game.levels).filter(l => l.collision && l.height)
-                // console.log(levels)
-                /* remove distracting props */
-                if (MenuOptions.hints && ig.game.mapName == 'cargo-ship.teleporter') {
-                    ig.game.shownEntities.forEach(e => e instanceof ig.ENTITY.Prop && e.propName.startsWith('cargo-box') && e.kill())
-                }
-            },
-        })
-
         sc.ClimbableMenu = sc.BasicHintMenu.extend({
             init(settings: ClimbableMenuSettings) {
                 const prop: ig.ENTITY.Prop = settings.entity as ig.ENTITY.Prop

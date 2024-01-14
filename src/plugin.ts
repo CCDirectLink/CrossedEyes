@@ -18,6 +18,9 @@ import { AutoUpdater } from './autoupdate'
 import { TextGather } from './tts/gather-text'
 import { godmode } from './godmode'
 import { LangPopupFix } from './tts/lang-popup-fix'
+import {EntityDecluterrer} from './environment/entity-declutter'
+
+const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
 declare global {
     interface Object {
@@ -84,8 +87,16 @@ export default class CrossedEyes {
         new EntityBeeper()
         new CharacterSpeechSynchronizer()
         new LangPopupFix()
+        new EntityDecluterrer()
 
         const self = this
+        ig.Entity.inject({
+            init(x, y, z, settings) {
+                this.parent(x, y, z, settings)
+                this.uuid = crypto.createHash('sha256').update(`${settings.name}-${x},${y}`).digest('hex')
+            },
+        })
+
         ig.Game.inject({
             setPaused(paused: boolean) {
                 this.parent(paused)
