@@ -79,4 +79,10 @@ const declutterData: DeclutterData = {
     ],
     'cargo-ship.room4': ['Pcargo-box'],
     'cargo-ship.room-end': ['Pcargo-box'],
+    'cargo-ship.ground': [
+        'Ub95375eef963e1c55dd1173459ea63be41cb552e1337c6932ea792870d9f9f24' /* bottom left */,
+        'Ua79a6f6b20352e9af870ffeffdf224acf2b8b317271ca9d72cbf0265f7fede6b' /* bottom left */,
+        'U919cd31560a23b62876779b81264c313379bdd1d36361fd7c54571ce495b8f68' /* bottom left */,
+        'U7cbdc7b9f9b8b47626f53b6da9d16ff48d00b96f101e39c5fb3233394577d052' /* step up replaced by prop */,
+    ],
 }
