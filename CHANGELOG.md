@@ -15,6 +15,7 @@
 - Unfocus hints when they no longer can be focused
 - Fix possible crash at game load
 - Fixed selected hints bugging out when more than one hint is selected
+- Fix wall, jump hint and hint sound not respecting global sound volume
 
 ## [0.5.1] 2024-01-12
 

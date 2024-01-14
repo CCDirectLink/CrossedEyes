@@ -355,7 +355,7 @@ export class LoudJump {
                 handle.setFixPosition(pos, range)
             }
             if (handle._nodeSource) {
-                handle._nodeSource.gainNode.gain.value = volume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1)
+                handle._nodeSource.gainNode.gain.value = volume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1) * sc.options.get('volume-sound')
             }
         }
     }

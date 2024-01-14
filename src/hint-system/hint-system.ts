@@ -383,8 +383,8 @@ export class HintSystem implements PauseListener {
                             e.handle._volume = 0
                             e.handle._nodeSource && (e.handle._nodeSource!.gainNode.gain.value = 0)
                         } else if (!e.muted && e.handle._volume == 0) {
-                            e.handle._volume = 1
-                            e.handle._nodeSource && (e.handle._nodeSource!.gainNode.gain.value = 1)
+                            e.handle._volume = MenuOptions.hintsVolume
+                            e.handle._nodeSource && (e.handle._nodeSource!.gainNode.gain.value = MenuOptions.hintsVolume * sc.options.get('volume-sound'))
                         }
                         self.updateHintSound(e.hint, e.handle)
 
