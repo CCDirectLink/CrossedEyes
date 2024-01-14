@@ -13,7 +13,7 @@ function getSoundName(e: ig.Entity): string | undefined {
     ) {
         return SoundManager.sounds.entity
     }
-    if (e instanceof ig.ENTITY.Door || e instanceof ig.ENTITY.TeleportField || e instanceof ig.ENTITY.TeleportGround) {
+    if ((e instanceof ig.ENTITY.Door && e.name && e.map) || e instanceof ig.ENTITY.TeleportField || e instanceof ig.ENTITY.TeleportGround) {
         return SoundManager.sounds.tpr
     }
 }

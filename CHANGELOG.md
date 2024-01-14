@@ -16,6 +16,7 @@
 - Fix possible crash at game load
 - Fixed selected hints bugging out when more than one hint is selected
 - Fix wall, jump hint and hint sound not respecting global sound volume
+- Fix crash at Cargo Ship - Cabins 1
 
 ## [0.5.1] 2024-01-12
 

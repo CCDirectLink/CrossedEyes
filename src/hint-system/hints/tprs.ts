@@ -46,10 +46,15 @@ export class HDoor implements Hint {
         const self = this
         ig.ENTITY.Door.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(MenuOptions.hints && this.condition.code != 'false') }
+                return {
+                    type: 'Hints',
+                    hintName: self.entryName,
+                    hintType: 'Puzzle',
+                    disabled: !(MenuOptions.hints && this.name && this.map && this.condition.code != 'false'),
+                }
             },
             open(entity, data) {
-                if (MenuOptions.hints) {
+                if (MenuOptions.hints && this.name && this.map) {
                     ig.vars.set(getVarName(this), true)
                     justEnteredTpr = true
                 }
