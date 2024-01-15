@@ -47,6 +47,8 @@ declare global {
         interface MessageAreaGui {
             skip(this: this, nextMsg?: boolean): void
         }
+
+        var isdemo: boolean;
     }
     namespace sc {
         interface RowButtonGroup {

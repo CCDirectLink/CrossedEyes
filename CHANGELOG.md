@@ -93,6 +93,7 @@
 
 - Fixed game slowdowns, freezes and crashed caused by infinite sound handle stacking
 - Fixed NVDA plugin crash
+- Improve demo compatibility
 
 ## [0.4.7] 2023-12-21
 

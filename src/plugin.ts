@@ -131,6 +131,7 @@ export default class CrossedEyes {
     }
 
     addTestMapTitleScreenButton() {
+        if (ig.isdemo) return
         let startWithTestMap: boolean = false
         function startTestMap(titleGuiInstance?: sc.TitleScreenButtonGui) {
             startWithTestMap = true
