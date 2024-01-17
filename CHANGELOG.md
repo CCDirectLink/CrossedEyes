@@ -3,6 +3,11 @@
 # Change Log
 
 ## [Unreleased]
+
+### Fixed
+
+- Fix potential crash on jump
+
 ## [0.5.2] 2024-01-15
 
 ### Added

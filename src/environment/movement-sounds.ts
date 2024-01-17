@@ -104,7 +104,7 @@ export class MovementSoundTweaker {
                 if (!ignoreSounds) {
                     const soundObj1 = sc.ACTOR_SOUND[this.soundType] || sc.ACTOR_SOUND.none
                     const soundObj2 = (soundObj1 as any)[ig.terrain.getTerrain(this.coll, true, true)] || soundObj1[ig.TERRAIN_DEFAULT]
-                    ig.SoundHelper.playAtEntity(mulSoundVol(soundObj2.jump, MenuOptions.jumpVolume), this, null, null, 700)
+                    if (soundObj2?.jump) ig.SoundHelper.playAtEntity(mulSoundVol(soundObj2.jump, MenuOptions.jumpVolume), this, null, null, 700)
                 }
             },
         })
