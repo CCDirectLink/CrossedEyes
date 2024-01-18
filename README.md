@@ -21,6 +21,10 @@ There should be a file called `mods.json` and a file named `CrossCode.exe` in th
 
 [![Releases](https://github.com/CCDirectLink/organization/blob/master/assets/badges/releases%402x.png)](https://github.com/CCDirectLink/CrossedEyes/releases/latest/)
 
+## Demo version
+You can download the demo version with the mod included [here](https://github.com/krypciak/crosscode-demonizer/releases/latest).  
+Just pick your platform of choice and make sure the zip has `crossedeyes` at the end.  
+
 ## [Tutorial](/TUTORIAL.md)
 
 ## Updating
