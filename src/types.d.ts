@@ -21,6 +21,7 @@ declare global {
                 rangeType: ig.SOUND_RANGE_TYPE
             }
             dontPauseInQuickAnalysis?: boolean
+            path: string
         }
         interface SoundWebAudio {
             origVolume?: number
@@ -41,14 +42,12 @@ declare global {
         }
         interface Entity {
             uuid: string
-            playAtSoundHandle?: ig.SoundHandleWebAudio
-            playAtPleaseDontResume?: boolean
         }
         interface MessageAreaGui {
             skip(this: this, nextMsg?: boolean): void
         }
 
-        var isdemo: boolean;
+        var isdemo: boolean
     }
     namespace sc {
         interface RowButtonGroup {
@@ -82,6 +81,7 @@ declare global {
             }
             var Climbable: ClimbableConstructor
         }
+
         interface BasicHintMenu extends ig.BoxGui {
             getText: () => [string, string, string | null]
             ninepatch: ig.NinePatch
@@ -156,8 +156,6 @@ declare global {
         var CrossedEyesPositionPredictor: CrossedEyesPositionPredictorConstructor
 
         interface MapInteractEntry {
-            interactSoundType?: string
-            interactSoundHandle?: ig.SoundHandle
             stateUpdate?: boolean
 
             customUpdate(this: this): void

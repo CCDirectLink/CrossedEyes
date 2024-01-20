@@ -62,11 +62,11 @@ export class NPCHintMenu {
             },
             focusGained() {
                 this.nameGui.doStateTransition('DEFAULT')
-                HintSystem.g.activateHint(0, this)
+                HintSystem.g.activateHint(this.entity)
             },
             focusLost() {
                 this.nameGui.doStateTransition('HIDDEN')
-                HintSystem.g.deactivateHint(0)
+                HintSystem.g.deactivateHint(HintSystem.g.focusedHE)
             },
             alignGuiPosition() {
                 this.parent()

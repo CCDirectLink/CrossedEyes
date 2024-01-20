@@ -1,47 +1,48 @@
-import CrossedEyes, { PauseListener } from '../plugin'
-import { SoundManager, stopHandle } from '../sound-manager'
+import { SoundManager } from '../sound-manager'
 import { MenuOptions } from '../options-manager'
 import { HintSystem } from '../hint-system/hint-system'
 import { TextGather } from '../tts/gather-text'
 
-export class InteratableHandler implements PauseListener {
+const range = 6 * 16
+
+export class InteratableHandler {
+    private getId(e: ig.Entity) {
+        return `interact_${e.uuid}`
+    }
+
     constructor() {
         /* in prestart */
-        CrossedEyes.pauseables.push(this)
-        const interactableSound = new ig.Sound(SoundManager.sounds.interactable)
-        const interactSound = new ig.Sound(SoundManager.sounds.interact)
+        SoundManager.continiousCleanupFilters.push('interact')
+        const self = this
         sc.MapInteractEntry.inject({
+            init(entity, handler, icon, zCondition, interrupting) {
+                this.parent(entity, handler, icon, zCondition, interrupting)
+                SoundManager.continious[self.getId(entity)] = {
+                    paths: ['interactable', 'interact'],
+                    getVolume: () => MenuOptions.interactableVolume,
+                }
+            },
             setState(state) {
                 this.parent(state)
                 this.stateUpdate = true
             },
             customUpdate() {
                 if (this.stateUpdate && MenuOptions.loudEntities) {
+                    const id = self.getId(this.entity)
                     if (this.state == sc.INTERACT_ENTRY_STATE.FOCUS) {
-                        if (this.interactSoundType != SoundManager.sounds.interact) {
-                            this.interactSoundType = SoundManager.sounds.interact
-                            stopHandle(this.interactSoundHandle)
-                            this.interactSoundHandle = ig.SoundHelper.playAtEntity(interactSound, this.entity, true, {}, 6 * 16)
+                        const changed = SoundManager.handleContiniousEntry(id, this.entity.coll.pos, range, 1)
+                        if (changed) {
                             const hint = HintSystem.g.quickMenuAnalysisInstance.createHint(this.entity, false)
-                            if (!hint) {
-                                MenuOptions.ttsEnabled && TextGather.g.speakI('Unmapped interact hint')
+                            if (hint) {
+                                MenuOptions.ttsEnabled && TextGather.g.speakI(hint.nameGui.title.text)
                             } else {
-                                HintSystem.g.activateHint(0, hint, false)
+                                MenuOptions.ttsEnabled && TextGather.g.speakI('Unmapped interact hint')
                             }
                         }
                     } else if (this.state == sc.INTERACT_ENTRY_STATE.NEAR) {
-                        if (this.interactSoundType != SoundManager.sounds.interactable) {
-                            this.interactSoundType = SoundManager.sounds.interactable
-                            stopHandle(this.interactSoundHandle)
-                            this.interactSoundHandle = ig.SoundHelper.playAtEntity(interactableSound, this.entity, true, {}, 6 * 16)
-                            TextGather.g.interrupt()
-                        }
+                        SoundManager.handleContiniousEntry(id, this.entity.coll.pos, range, 0)
                     } else {
-                        if (this.interactSoundHandle) {
-                            stopHandle(this.interactSoundHandle)
-                            this.interactSoundHandle = undefined
-                            this.interactSoundType = undefined
-                        }
+                        SoundManager.stopCondinious(id)
                     }
                     this.stateUpdate = false
                 }
@@ -52,12 +53,6 @@ export class InteratableHandler implements PauseListener {
                 this.parent()
                 sc.mapInteract.entries.forEach(e => e.customUpdate())
             },
-        })
-    }
-    pause(): void {
-        sc.mapInteract.entries.forEach(e => {
-            e.interactSoundType = undefined
-            stopHandle(e.interactSoundHandle)
         })
     }
 }

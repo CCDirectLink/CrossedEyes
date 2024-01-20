@@ -65,11 +65,11 @@ export class EnemyHintMenu {
             },
             focusGained() {
                 this.parent()
-                HintSystem.g.activateHint(0, this)
+                HintSystem.g.activateHint(this.entity)
             },
             focusLost() {
                 this.parent()
-                HintSystem.g.deactivateHint(0)
+                HintSystem.g.deactivateHint(HintSystem.g.focusedHE)
             },
         })
     }

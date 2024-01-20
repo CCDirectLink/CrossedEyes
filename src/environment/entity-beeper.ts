@@ -1,104 +1,62 @@
 import { HintSystem } from '../hint-system/hint-system'
 import { MenuOptions } from '../options-manager'
-import CrossedEyes, { PauseListener } from '../plugin'
-import { SoundManager, stopHandle } from '../sound-manager'
+import CrossedEyes from '../plugin'
+import { SoundManager } from '../sound-manager'
 
-function getSoundName(e: ig.Entity): string | undefined {
-    if (
-        e instanceof ig.ENTITY.Enemy ||
-        e instanceof ig.ENTITY.MultiHitSwitch ||
-        e instanceof ig.ENTITY.Switch ||
-        e instanceof ig.ENTITY.OneTimeSwitch ||
-        e instanceof ig.ENTITY.Destructible
-    ) {
-        return SoundManager.sounds.entity
-    }
-    if ((e instanceof ig.ENTITY.Door && e.name && e.map) || e instanceof ig.ENTITY.TeleportField || e instanceof ig.ENTITY.TeleportGround) {
-        return SoundManager.sounds.tpr
-    }
-}
+export class EntityBeeper {
+    private range = 8 * 16
 
-function playAt(e: ig.Entity) {
-    const soundName = getSoundName(e)
-    stopHandle(e.playAtSoundHandle)
-    if (soundName) {
-        e.playAtSoundHandle = ig.SoundHelper.playAtEntity(new ig.Sound(soundName, 0.8), e, true, { fadeDuration: 0 }, 16 * 16)
+    private getSoundName(e: ig.Entity): Omit<SoundManager.ContiniousSettings, 'getVolume'> | undefined {
+        if (e instanceof ig.ENTITY.OneTimeSwitch || e instanceof ig.ENTITY.MultiHitSwitch) return { paths: ['entity'], condition: () => !e.isOn }
+        if (e instanceof ig.ENTITY.Enemy || e instanceof ig.ENTITY.Switch || e instanceof ig.ENTITY.Destructible) return { paths: ['entity'] }
+        if (e instanceof ig.ENTITY.Door && e.name && e.map) return { paths: ['tpr'], condition: () => e.active }
+        if (e instanceof ig.ENTITY.TeleportField) return { paths: ['tpr'], condition: () => !!e.interactEntry }
+        if (e instanceof ig.ENTITY.TeleportGround) return { paths: ['tpr'] }
     }
-}
+    private getId(e: ig.Entity) {
+        return `entity_${e.uuid}`
+    }
 
-export class EntityBeeper implements PauseListener {
+    private deactivateEntity(e: ig.Entity) {
+        SoundManager.stopCondinious(this.getId(e))
+        HintSystem.g.deactivateHint(e)
+    }
+
+    private handleEntity(e: ig.Entity) {
+        const pos = e.getAlignedPos(ig.ENTITY_ALIGN.CENTER)
+        SoundManager.handleContiniousEntry(this.getId(e), pos, this.range, 0)
+    }
+
     constructor() {
         /* in prestart */
-        CrossedEyes.pauseables.push(this)
-
+        SoundManager.continiousCleanupFilters.push('entity')
         const self = this
-        ig.Game.inject({
-            preloadLevel(mapName) {
-                this.parent(mapName)
-                self.pause() /* stop all handles */
-            },
-        })
         ig.Entity.inject({
-            playAtSoundHandle: null,
-            show(...args) {
-                if (MenuOptions.loudEntities) {
-                    this.playAtPleaseDontResume = false
-                    playAt(this)
+            init(x, y, z, settings) {
+                this.parent(x, y, z, settings)
+                const obj = self.getSoundName(this) as SoundManager.ContiniousSettings
+                if (obj) {
+                    obj.getVolume = () => MenuOptions.entityHintsVolume
+                    SoundManager.continious[self.getId(this)] = obj
                 }
-                return this.parent(...args)
             },
             hide(...args) {
                 this.parent(...args)
-                this.playAtPleaseDontResume = true
-                stopHandle(this.playAtSoundHandle)
-                HintSystem.g.deactivateHintAll(this)
+                self.deactivateEntity(this)
             },
             onKill(...args) {
                 this.parent(...args)
-                this.playAtPleaseDontResume = true
-                stopHandle(this.playAtSoundHandle)
-                HintSystem.g.deactivateHintAll(this)
+                self.deactivateEntity(this)
             },
             erase() {
                 this.parent()
-                this.playAtPleaseDontResume = true
-                stopHandle(this.playAtSoundHandle)
-                HintSystem.g.deactivateHintAll(this)
+                self.deactivateEntity(this)
             },
             update(...args) {
                 this.parent(...args)
-                if (this.playAtSoundHandle && !CrossedEyes.isPaused) {
-                    if (this.playAtSoundHandle._nodeSource) {
-                        const pFaceAngle: number = (Vec2.clockangle(ig.game.playerEntity.face) * 180) / Math.PI
-                        const diffPos: Vec2 = Vec2.create(ig.game.playerEntity.coll.pos)
-                        Vec2.sub(diffPos, this.coll.pos)
-                        const diffAngle: number = (Vec2.clockangle(diffPos) * 180) / Math.PI
-
-                        const angleDist: number = Math.min(Math.abs(pFaceAngle - diffAngle), 360 - Math.abs(pFaceAngle - diffAngle))
-                        this.playAtSoundHandle._nodeSource.bufferNode.playbackRate.value = angleDist < 40 ? 0.75 : 1
-                    }
-                    if (this.playAtSoundHandle._playing) {
-                        if (
-                            ((this instanceof ig.ENTITY.MultiHitSwitch || this instanceof ig.ENTITY.OneTimeSwitch) && this.isOn) ||
-                            (this instanceof ig.ENTITY.Door && !this.active) ||
-                            (this instanceof ig.ENTITY.TeleportField && !this.interactEntry)
-                        ) {
-                            stopHandle(this.playAtSoundHandle)
-                            HintSystem.g.deactivateHintAll(this)
-                            this.playAtPleaseDontResume = true
-                        }
-                    } else if (!this.playAtPleaseDontResume) {
-                        if (this instanceof ig.ENTITY.Door && !this.active) {
-                            return
-                        }
-                        playAt(this)
-                    }
-                }
+                if (CrossedEyes.isPaused) return
+                self.handleEntity(this)
             },
         })
-    }
-
-    pause(): void {
-        ig.game.entities.forEach(e => stopHandle(e.playAtSoundHandle))
     }
 }

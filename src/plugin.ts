@@ -72,6 +72,15 @@ export default class CrossedEyes {
 
     async prestart() {
         this.addVimAliases()
+
+        const self = this
+        ig.Entity.inject({
+            init(x, y, z, settings) {
+                this.parent(x, y, z, settings)
+                this.uuid = crypto.createHash('sha256').update(`${settings.name}-${x},${y}`).digest('hex')
+            },
+        })
+
         new AutoUpdater().checkAndInstall()
         new MenuOptionsManager()
         new SoundManager()
@@ -88,14 +97,6 @@ export default class CrossedEyes {
         new CharacterSpeechSynchronizer()
         new LangPopupFix()
         new EntityDecluterrer()
-
-        const self = this
-        ig.Entity.inject({
-            init(x, y, z, settings) {
-                this.parent(x, y, z, settings)
-                this.uuid = crypto.createHash('sha256').update(`${settings.name}-${x},${y}`).digest('hex')
-            },
-        })
 
         ig.Game.inject({
             setPaused(paused: boolean) {

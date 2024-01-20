@@ -1,58 +1,41 @@
-export function muteHandle(handle: ig.SoundHandleWebAudio, range: number) {
-    handle.setFixPosition(Vec3.createC(-1000, -1000, 0), range)
-}
-export function isHandleMuted(handle: ig.SoundHandleWebAudio) {
-    return handle.pos?.point3d == Vec3.createC(-1000, -1000, 0)
-}
+import CrossedEyes, { PauseListener } from './plugin'
 
-export function mulSoundVol(s: ig.Sound, mul: number): ig.Sound {
-    return new ig.Sound(s.webAudioBuffer.path, s.volume * mul, s.variance, s.group)
-}
-
-export function stopHandle(h?: ig.SoundHandleWebAudio) {
-    if (h) {
-        h._fadeIn = false
-        h._loop = false
-        h.stop()
-        h._disconnect()
-    }
+export namespace SoundManager {
+    export type ContiniousSettings = {
+        handle?: ig.SoundHandleWebAudio
+        paths: (keyof typeof SoundManager.sounds)[]
+        getVolume: () => number
+        condition?: () => boolean
+    } & (
+        | {
+              changePitchWhenBehind: true
+              angle?: number
+              pathsBehind: (keyof typeof SoundManager.sounds)[]
+          }
+        | { changePitchWhenBehind?: false }
+    )
 }
 
-export type SoundQueueEntry = {
-    name: keyof typeof SoundManager.sounds
-    wait?: number
-    speed?: number
-    volume?: number
-    condition?: () => boolean
-    action?: (played: boolean) => void
-} & (
-    | {
-          relativePos: true
-          pos: Vec2
-      }
-    | {
-          relativePos: false
-          pos: Vec3
-      }
-    | {
-          relativePos?: undefined
-          pos?: Vec3
-      }
-)
-
-export class SoundManager {
-    private static soundQueue: SoundQueueEntry[] = []
-    static continiousSounds: Record<string, ig.SoundHandleWebAudio> = {}
+export class SoundManager implements PauseListener {
+    static continious: Record<string, SoundManager.ContiniousSettings> = {}
+    static continiousCleanupFilters: string[] = []
 
     static sounds = {
         wall: 'media/sound/crossedeyes/wall.ogg',
+        wallLP: 'media/sound/crossedeyes/lowerpitch/wall.ogg',
         water: 'media/sound/background/waterfall.ogg',
+        waterLP: 'media/sound/crossedeyes/lowerpitch/waterfall.ogg',
         hole: 'media/sound/crossedeyes/hole.ogg',
+        holeLP: 'media/sound/crossedeyes/lowerpitch/hole.ogg',
         lower: 'media/sound/crossedeyes/lower.ogg',
+        lowerLP: 'media/sound/crossedeyes/lowerpitch/lower.ogg',
         higher: 'media/sound/crossedeyes/higher.ogg',
+        higherLP: 'media/sound/crossedeyes/lowerpitch/higher.ogg',
         land: 'media/sound/crossedeyes/land.ogg',
+        landLP: 'media/sound/crossedeyes/lowerpitch/land.ogg',
         entity: 'media/sound/crossedeyes/entity.ogg',
         hint: 'media/sound/crossedeyes/hint.ogg',
+        hintLP: 'media/sound/crossedeyes/lowerpitch/hint.ogg',
         tpr: 'media/sound/crossedeyes/tpr.ogg',
         interactable: 'media/sound/crossedeyes/interactable.ogg',
         interact: 'media/sound/crossedeyes/interact.ogg',
@@ -66,49 +49,62 @@ export class SoundManager {
         bounce3: 'media/sound/battle/ball-bounce-3.ogg',
     } as const
 
-    static getElementName(element: sc.ELEMENT): 'neutralMode' | 'coldMode' | 'heatMode' | 'waveMode' | 'shockMode' {
-        switch (element) {
-            case sc.ELEMENT.NEUTRAL:
-                return 'neutralMode'
-            case sc.ELEMENT.HEAT:
-                return 'heatMode'
-            case sc.ELEMENT.COLD:
-                return 'coldMode'
-            case sc.ELEMENT.SHOCK:
-                return 'shockMode'
-            case sc.ELEMENT.WAVE:
-                return 'waveMode'
-        }
-    }
-
     constructor() {
         /* in prestart */
+        CrossedEyes.pauseables.push(this)
         ig.Game.inject({
             preloadLevel(mapName) {
-                ig.soundManager.reset() /* vanilla bug fix?? fixes issues with hint sounds persisting after death */
+                // ig.soundManager.reset() /* vanilla bug fix?? fixes issues with hint sounds persisting after death */
                 this.parent(mapName)
-            },
-        })
-        let i = 0
-        ig.SoundManager.inject({
-            update() {
-                this.parent()
-                if ((i += ig.system.ingameTick) > 10) {
-                    i = 0
-                    SoundManager.cleanupDeadSounds()
+
+                for (const id in SoundManager.continious) {
+                    for (const filter of SoundManager.continiousCleanupFilters) {
+                        if (id.startsWith(filter)) {
+                            SoundManager.purgeContinious(id)
+                            break
+                        }
+                    }
                 }
             },
         })
-        this.preloadSounds()
+        // let i = 0
+        // ig.SoundManager.inject({
+        //     update() {
+        //         this.parent()
+        //         if ((i += ig.system.ingameTick) > 10) {
+        //             i = 0
+        //             SoundManager.cleanupDeadSounds()
+        //         }
+        //     },
+        // })
+        /* preload sounds */
+        Object.values(SoundManager.sounds).forEach(path => new ig.Sound(path))
     }
-    private preloadSounds() {
-        Object.values(SoundManager.sounds).forEach(str => new ig.Sound(str))
+
+    pause(): void {
+        for (const id in SoundManager.continious) {
+            SoundManager.stopCondinious(id)
+        }
+    }
+
+    static muliplySoundVol(s: ig.Sound, mul: number): ig.Sound {
+        return new ig.Sound(s.webAudioBuffer.path, s.volume * mul, s.variance, s.group)
+    }
+
+    private static stopHandle(h?: ig.SoundHandleWebAudio) {
+        if (h) {
+            h._fadeIn = false
+            h._loop = false
+            h.stop()
+            h._disconnect()
+        }
     }
 
     private static isHandleAlive(h: ig.SoundHandle): boolean {
         return h._playing || !!h._buffer
     }
-    static cleanupDeadSounds() {
+
+    private static cleanupDeadSounds() {
         ig.soundManager.soundStack = ig.soundManager.soundStack.map(e => e.filter(h => SoundManager.isHandleAlive(h)))
         ig.soundManager.soundHandles = ig.soundManager.soundHandles.filter(h => SoundManager.isHandleAlive(h))
     }
@@ -126,70 +122,72 @@ export class SoundManager {
         return SoundManager.playSoundPath(SoundManager.sounds[name], speed, volume, pos)
     }
 
-    static playSoundAtRelative(name: keyof typeof SoundManager.sounds, speed: number, volume: number, pos: Vec2): ig.SoundHandleWebAudio {
-        const soundPosVec2: Vec2 = Vec2.create(pos)
-        Vec2.add(soundPosVec2, ig.game.playerEntity.coll.pos)
-        const soundPos: Vec3 = Vec3.createC(soundPosVec2.x, soundPosVec2.y, ig.game.playerEntity.coll.pos.z)
+    static handleContiniousEntry(id: string, pos: Vec3, range: number, pathId: number, dir?: Vec2): boolean {
+        const entry = SoundManager.continious[id]
+        if (!entry) return false
 
-        return SoundManager.playSound(name, speed, volume, soundPos)
-    }
-
-    static appendQueue(queue: SoundQueueEntry[]) {
-        const isPlaying: boolean = SoundManager.soundQueue.length != 0
-        this.soundQueue.push(...queue)
-        if (!isPlaying) {
-            SoundManager.playQueueEntry(this.soundQueue[0], SoundManager.soundQueue)
-        }
-    }
-
-    static clearQueue() {
-        SoundManager.soundQueue = []
-    }
-
-    static playQueueEntry(e: SoundQueueEntry, queue: SoundQueueEntry[]) {
-        if (!e || queue.length === 0) {
-            return
+        if (entry.condition && !entry.condition()) {
+            SoundManager.stopCondinious(id)
+            return false
         }
 
-        const action = () => {
-            const play: boolean = e.condition ? e.condition() : true
-            if (play) {
-                if (e.relativePos) {
-                    SoundManager.playSoundAtRelative(e.name, e.speed ?? 1, e.volume ?? 1, e.pos)
-                } else {
-                    SoundManager.playSound(e.name, e.speed ?? 1, e.volume ?? 1, e.pos)
-                }
+        let handle = entry.handle
+        let name: keyof typeof SoundManager.sounds = entry.paths[pathId]
+        let preserveOffset: boolean = false
+
+        if (entry.changePitchWhenBehind) {
+            const playerFaceAngle: number = (Vec2.clockangle(ig.game.playerEntity.face) * 180) / Math.PI
+
+            const dirFaceAngle: number = (Vec2.clockangle(dir!) * 180) / Math.PI
+            const angleDist: number = Math.min(Math.abs(playerFaceAngle - dirFaceAngle), 360 - Math.abs(playerFaceAngle - dirFaceAngle))
+            const isBehind = angleDist >= (entry.angle ?? 100)
+            if (isBehind) {
+                name = entry.pathsBehind[pathId]
+                preserveOffset = true
             }
-            e.action && e.action(play)
-            queue.shift()
-            if (queue.length === 0) {
-                return
+        }
+        const path = SoundManager.sounds[name]
+        const volume = entry.getVolume()
+
+        let soundChanged: boolean = false
+        if (handle?.path != path) {
+            soundChanged = true
+            let offset
+            if (preserveOffset && handle?._nodeSource) {
+                offset = (handle._nodeSource.context.currentTime - handle._contextTimeOnStart) % handle._duration
             }
-            SoundManager.playQueueEntry(queue[0], queue)
+            SoundManager.stopHandle(handle)
+            handle = SoundManager.continious[id].handle = new ig.Sound(path, volume).play(true, { offset })
+        }
+        if (handle._nodeSource) {
+            handle._nodeSource.gainNode.gain.value = volume * sc.options.get('volume-sound')
         }
 
-        if (e.wait === undefined || e.wait === 0) {
-            action()
-        } else {
-            setTimeout(action, e.wait)
+        if (!handle.pos || !Vec3.equal(handle.pos.point3d, pos)) {
+            handle.setFixPosition(pos, range)
+        }
+
+        return soundChanged
+    }
+
+    static stopCondinious(id: string): boolean {
+        if (SoundManager.continious[id]?.handle) {
+            SoundManager.stopHandle(SoundManager.continious[id].handle)
+            SoundManager.continious[id].handle = undefined
+            return true
+        } else return false
+    }
+
+    static purgeContinious(id: string) {
+        if (SoundManager.continious[id]) {
+            SoundManager.stopCondinious(id)
+            delete SoundManager.continious[id]
         }
     }
 
-    static playContiniousSound(id: string, soundName: keyof typeof SoundManager.sounds, speed: number = 1, volume?: number, pos?: Vec3): ig.SoundHandleWebAudio {
-        if (this.continiousSounds[id]) {
-            this.continiousSounds[id].stop()
-        }
-        return (this.continiousSounds[id] = pos ? SoundManager.playSound(soundName, speed, volume, pos) : SoundManager.playSound(soundName, speed, volume))
-    }
-
-    static stopContiniousSound(id: string) {
-        if (this.continiousSounds[id]) {
-            this.continiousSounds[id].stop()
-            delete this.continiousSounds[id]
-        }
-    }
-
-    static isContiniousSoundPlaying(id: string): boolean {
-        return !!this.continiousSounds[id]
+    static getAngleVecToPlayer(e: ig.Entity): Vec2 {
+        const diffPos: Vec2 = e.getAlignedPos(ig.ENTITY_ALIGN.CENTER)
+        Vec2.sub(diffPos, ig.game.playerEntity.getAlignedPos(ig.ENTITY_ALIGN.CENTER))
+        return Vec2.normalize(diffPos)
     }
 }

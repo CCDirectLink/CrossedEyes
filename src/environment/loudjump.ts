@@ -1,6 +1,6 @@
 import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
 import { MenuOptions } from '../options-manager'
-import { SoundManager, stopHandle } from '../sound-manager'
+import { SoundManager } from '../sound-manager'
 import CrossedEyes from '../plugin'
 
 interface TickData {
@@ -218,22 +218,23 @@ export class LoudJump {
     ]
 
     checkDegrees: number[] = [
-        /* relative to player facing */ // 0,
-        // 22.5, -22.5,
-        // 67.5, -67.5,
-        // 90, -90,
-        // 112.5, -112.5,
-        // 135, -135,
-        // 157.5, -157.5,
-        // 180,
+        /* relative to player facing */
+        // 0, 22.5, -22.5, 67.5, -67.5, 90, -90, 112.5, -112.5, 135, -135, 157.5, -157.5, 180,
         0, 45, -45, 90, -90, 135, -135, 180,
     ]
 
-    dirHandles: { handle: ig.SoundHandleWebAudio; sound: string }[] = []
-
     constructor() {
         /* in prestart */
-        CrossedEyes.pauseables.push(this)
+        for (const deg of this.checkDegrees) {
+            SoundManager.continious[this.getId(deg)] = {
+                paths: ['water', 'hole', 'lower', 'higher', 'land'],
+                changePitchWhenBehind: true,
+                pathsBehind: ['waterLP', 'holeLP', 'lowerLP', 'higherLP', 'landLP'],
+                getVolume: () => MenuOptions.jumpHintsVolume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1),
+                condition: () => !(isAiming() && AimAnalyzer.g.wallScanOn),
+            }
+        }
+
         const self = this
         initCrossedEyesPositionPredictor()
         ig.Game.inject({
@@ -282,8 +283,8 @@ export class LoudJump {
         })
     }
 
-    pause() {
-        this.dirHandles.forEach(o => stopHandle(o?.handle))
+    private getId(deg: number) {
+        return `jump_${deg}`
     }
 
     handle() {
@@ -291,73 +292,27 @@ export class LoudJump {
         if (!MenuOptions.spacialAudio || !MenuOptions.loudWalls || CrossedEyes.isPaused || ig.game.playerEntity?.floating || !this.predictor || !p || !p.coll?.pos) {
             return
         }
-        if (isAiming() && AimAnalyzer.g.wallScanOn) {
-            this.pause()
-            return
-        }
         if (ig.game.now - this.lastTrack > this.trackInterval) {
             this.lastTrack = ig.game.now
 
-            for (let i = 0; i < this.checkDegrees.length; i++) {
-                const deg = this.checkDegrees[i]
-                let face: Vec2 = Vec2.create()
-                Vec2.rotate(ig.game.playerEntity.face, (deg * Math.PI) / 180, face)
-                const out = this.getTypeByTracking(face)
-                this.playRes(i, out.res, out.type)
+            for (const deg of this.checkDegrees) {
+                let dir: Vec2 = Vec2.create()
+                Vec2.rotate(ig.game.playerEntity.face, (deg * Math.PI) / 180, dir)
+                const out = this.getTypeByTracking(dir)
+                this.playRes(this.getId(deg), dir, out.res, out.type)
             }
         }
     }
 
-    playRes(i: number, res: PlayerTraceResult, type: TrackType) {
+    playRes(id: string, dir: Vec2, res: PlayerTraceResult, type: TrackType) {
         // console.log(TrackType[type])
-        let { handle, sound } = this.dirHandles[i] ?? { handle: undefined, sound: undefined }
         if (type == TrackType.None) {
-            stopHandle(handle)
+            SoundManager.stopCondinious(id)
             return
-        }
-        let soundName: string = ''
-        let volume: number = MenuOptions.jumpHintsVolume
-        if (volume == 0) {
-            return
-        }
-        let range: number = 16 * 16
-        switch (type) {
-            case TrackType.Water:
-                soundName = SoundManager.sounds.water
-                break
-            case TrackType.Hole:
-                soundName = SoundManager.sounds.hole
-                break
-            case TrackType.LowerLevel:
-                soundName = SoundManager.sounds.lower
-                break
-            case TrackType.HigherLevel:
-                soundName = SoundManager.sounds.higher
-                break
-            case TrackType.Land:
-                soundName = SoundManager.sounds.land
-                break
         }
 
-        if (soundName) {
-            if (soundName && (!handle || !handle._playing || sound != soundName)) {
-                stopHandle(handle)
-                this.dirHandles[i] = {
-                    handle: new ig.Sound(soundName, volume).play(true, {
-                        speed: 1,
-                    }),
-                    sound: soundName,
-                }
-                handle = this.dirHandles[i].handle
-            }
-            const pos: Vec3 = res.pos
-            if (!handle.pos || !Vec3.equal(handle.pos.point3d, pos)) {
-                handle.setFixPosition(pos, range)
-            }
-            if (handle._nodeSource) {
-                handle._nodeSource.gainNode.gain.value = volume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1) * sc.options.get('volume-sound')
-            }
-        }
+        const range: number = 16 * 16
+        SoundManager.handleContiniousEntry(id, res.pos, range, type, dir)
     }
 
     getTypeByTracking(face: Vec2): { res: PlayerTraceResult; type: TrackType } {

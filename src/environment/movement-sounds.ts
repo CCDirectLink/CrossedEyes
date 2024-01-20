@@ -1,5 +1,5 @@
 import { MenuOptions } from '../options-manager'
-import { SoundManager, mulSoundVol } from '../sound-manager'
+import { SoundManager } from '../sound-manager'
 
 export class MovementSoundTweaker {
     constructor() {
@@ -77,12 +77,12 @@ export class MovementSoundTweaker {
                         if (vol === undefined || vol < 0.6) {
                             if (frame == this.stepFx.frames[0]) {
                                 spawnFx = true
-                                ig.SoundHelper.playAtEntity(mulSoundVol(sound.step1!, MenuOptions.footstepVolume as number), this, null, null, 700)
+                                ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step1!, MenuOptions.footstepVolume as number), this, null, null, 700)
                                 this.onMoveEffect && this.onMoveEffect('step')
                             }
                             if (frame == this.stepFx.frames[1]) {
                                 spawnFx = true
-                                ig.SoundHelper.playAtEntity(mulSoundVol(sound.step2!, MenuOptions.footstepVolume as number), this, null, null, 700)
+                                ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step2!, MenuOptions.footstepVolume as number), this, null, null, 700)
                                 this.onMoveEffect && this.onMoveEffect('step')
                             }
                         }
@@ -104,7 +104,7 @@ export class MovementSoundTweaker {
                 if (!ignoreSounds) {
                     const soundObj1 = sc.ACTOR_SOUND[this.soundType] || sc.ACTOR_SOUND.none
                     const soundObj2 = (soundObj1 as any)[ig.terrain.getTerrain(this.coll, true, true)] || soundObj1[ig.TERRAIN_DEFAULT]
-                    if (soundObj2?.jump) ig.SoundHelper.playAtEntity(mulSoundVol(soundObj2.jump, MenuOptions.jumpVolume), this, null, null, 700)
+                    if (soundObj2?.jump) ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(soundObj2.jump, MenuOptions.jumpVolume), this, null, null, 700)
                 }
             },
         })

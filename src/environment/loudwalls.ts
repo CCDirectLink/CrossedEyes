@@ -1,7 +1,7 @@
 import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
 import { MenuOptions } from '../options-manager'
-import CrossedEyes, { PauseListener } from '../plugin'
-import { SoundManager, isHandleMuted, muteHandle } from '../sound-manager'
+import CrossedEyes from '../plugin'
+import { SoundManager } from '../sound-manager'
 
 const c_res = {}
 const c_tmpPos: Vec3 = { x: 0, y: 0, z: 0 }
@@ -11,15 +11,19 @@ const range: number = 5 * 16
 
 type CheckDirectionReturn = { type: 'none' | 'blocked' | 'collided'; pos: Vec3; distance: number; hitE?: ig.Physics.CollEntry[] }
 
-export class LoudWalls implements PauseListener {
+export class LoudWalls {
     static g: LoudWalls
 
-    private handles: Record<string, { handle: ig.SoundHandleWebAudio; sound: string }> = {}
+    private dirs: [string, Vec2][] = [
+        ['wall_down', { x: 0, y: 1 }],
+        ['wall_right', { x: 1, y: 0 }],
+        ['wall_up', { x: 0, y: -1 }],
+        ['wall_left', { x: -1, y: 0 }],
+    ]
 
     constructor() {
         /* in prestart */
         LoudWalls.g = this
-        CrossedEyes.pauseables.push(this)
         const self = this
         ig.ENTITY.Player.inject({
             update() {
@@ -27,55 +31,27 @@ export class LoudWalls implements PauseListener {
                 MenuOptions.spacialAudio && MenuOptions.loudWalls && self.handleWallSound()
             },
         })
-    }
-
-    pause(): void {
-        Object.values(this.handles ?? {}).forEach(h => h && muteHandle(h.handle, range))
+        for (const dir of this.dirs) {
+            SoundManager.continious[dir[0]] = {
+                paths: ['wall'],
+                changePitchWhenBehind: true,
+                pathsBehind: ['wallLP'],
+                getVolume: () => MenuOptions.wallVolume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1),
+                condition: () => !(isAiming() && AimAnalyzer.g.wallScanOn),
+            }
+        }
     }
 
     private handleWallSound() {
         if (CrossedEyes.isPaused || ig.game.playerEntity?.floating) {
             return
         }
-        if (isAiming() && AimAnalyzer.g.wallScanOn) {
-            this.pause()
-            return
-        }
-        const dirs: [string, Vec2][] = [
-            ['wallDown', { x: 0, y: 1 }],
-            ['wallRight', { x: 1, y: 0 }],
-            ['wallUp', { x: 0, y: -1 }],
-            ['wallLeft', { x: -1, y: 0 }],
-        ]
-        const playerFaceAngle: number = (Vec2.clockangle(ig.game.playerEntity.face) * 180) / Math.PI
-        for (const [dirId, dir] of dirs) {
-            if (this.handleSoundAt(dirId, dir, playerFaceAngle, SoundManager.sounds.wall, LoudWalls.checkDirection(Vec2.create(dir), range, ig.COLLTYPE.PROJECTILE))) {
+        for (const [dirId, dir] of this.dirs) {
+            const check = LoudWalls.checkDirection(Vec2.create(dir), range, ig.COLLTYPE.PROJECTILE)
+
+            if (check.type !== 'collided') {
+                SoundManager.stopCondinious(dirId)
                 continue
-            }
-
-            const { handle } = this.handles[dirId] ?? { handle: undefined }
-            if (handle && (!handle.pos || !isHandleMuted(handle))) {
-                muteHandle(handle, range)
-            }
-        }
-    }
-
-    private handleSoundAt(dirId: string, dir: Vec2, playerFaceAngle: number, soundName: string, check: CheckDirectionReturn): boolean {
-        const volume = MenuOptions.wallVolume
-        if (volume == 0) {
-            return false
-        }
-        let { handle, sound } = this.handles[dirId] ?? { handle: undefined, sound: undefined }
-        if (check.type === 'collided') {
-            if (!handle || !handle._playing || sound != soundName) {
-                this.handles[dirId] = {
-                    handle: new ig.Sound(soundName, volume).play(true, {
-                        speed: 1,
-                    }),
-                    sound: soundName,
-                }
-                handle = this.handles[dirId].handle
-                muteHandle(handle, range)
             }
 
             if (check.distance <= range * 0.02) {
@@ -85,20 +61,8 @@ export class LoudWalls implements PauseListener {
                 Vec2.add(check.pos, ig.game.playerEntity.getCenter(c_tmpPos))
                 check.pos.z = ig.game.playerEntity.coll.pos.z
             }
-
-            if (!handle.pos || !Vec3.equal(handle.pos.point3d, check.pos)) {
-                handle.setFixPosition(check.pos, range)
-            }
-
-            if (handle._nodeSource) {
-                const dirFaceAngle: number = (Vec2.clockangle(dir) * 180) / Math.PI
-                const angleDist: number = Math.min(Math.abs(playerFaceAngle - dirFaceAngle), 360 - Math.abs(playerFaceAngle - dirFaceAngle))
-                handle._nodeSource.bufferNode.playbackRate.value = angleDist >= 140 ? 0.7 : 1
-                handle._nodeSource.gainNode.gain.value = volume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1) * sc.options.get('volume-sound')
-            }
-            return true
+            SoundManager.handleContiniousEntry(dirId, check.pos, range, 0, dir)
         }
-        return false
     }
 
     static checkDirection(dir: Vec2, distance: number, collType: ig.COLLTYPE, trackEntityTouch: boolean = true): CheckDirectionReturn {

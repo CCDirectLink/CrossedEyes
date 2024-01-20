@@ -116,7 +116,7 @@ export class AimAnalyzer implements PauseListener {
                 SoundManager.playSound((['bounce1', 'bounce2', 'bounce3'] as const)[(this.bounceSoundIndex = (this.bounceSoundIndex + 1) % 3)], 1, 1, entry.bouncePos)
                 setTimeout(() => this.moveQueue(), 500)
             } else {
-                setTimeout(() => HintSystem.g.activateHint(0, entry.hint), 100)
+                setTimeout(() => HintSystem.g.activateHint(entry.hint.entity), 100)
             }
         }
     }
@@ -124,7 +124,7 @@ export class AimAnalyzer implements PauseListener {
     handle(tillBounce: boolean) {
         const deactivate = () => {
             this.lastUuids = undefined
-            HintSystem.g.deactivateHint(0)
+            HintSystem.g.deactivateHint(HintSystem.g.focusedHE)
         }
         if (isAiming() && ig.game.playerEntity.gui.crosshair?.active) {
             const allHints = this.predictBounceHints()

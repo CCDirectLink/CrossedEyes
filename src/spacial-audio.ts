@@ -151,6 +151,14 @@ export class SpacialAudio {
             },
         })
 
+        ig.SoundWebAudio.inject({
+            play(pos, settings) {
+                const ret = this.parent(pos, settings)
+                ret.path = this.webAudioBuffer.path
+                return ret
+            },
+        })
+
         const groupPosCache = Vec3.create()
         ig.SoundManager.inject({
             _solveGroupRequests(group) {
