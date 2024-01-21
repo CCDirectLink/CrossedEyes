@@ -47,7 +47,7 @@ export function getOptions() {
                     showPercentage: true,
                     name: 'Enemy vulnerable multiplier',
                     description: 'Extend the length of enemy vulnerablity',
-                }
+                },
             },
             tts: {
                 ttsEnabled: {

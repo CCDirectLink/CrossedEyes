@@ -9,5 +9,8 @@
             "type": "CROSSEDEYES_VULNERABLE_WAIT",
             "original": 8
         }
+    },
+    {
+        "type": "EXIT"
     }
 ]

@@ -19,7 +19,8 @@ import { TextGather } from './tts/gather-text'
 import { godmode } from './godmode'
 import { LangPopupFix } from './tts/lang-popup-fix'
 import { EntityDecluterrer } from './environment/entity-declutter'
-import {ScalableWaitStep} from './battle/scalable-wait'
+import { ScalableWaitStep } from './battle/scalable-wait'
+import { RuntimeResources } from './runtime-assets'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
@@ -84,6 +85,7 @@ export default class CrossedEyes {
 
         new AutoUpdater().checkAndInstall()
         new MenuOptionsManager()
+        new RuntimeResources()
         new SoundManager()
         new SpacialAudio()
         new MovementSoundTweaker()

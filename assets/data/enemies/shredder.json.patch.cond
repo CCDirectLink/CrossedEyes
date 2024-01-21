@@ -1,0 +1,14 @@
+[
+    {
+        "type": "ENTER",
+        "index": ["actions", "Attack", 11]
+    },
+    {
+        "type": "SET_KEY",
+        "index": "spawnCount",
+        "content": 2
+    },
+    {
+        "type": "EXIT"
+    }
+]

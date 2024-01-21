@@ -6,7 +6,9 @@ export class HEnemy implements Hint {
     static check(e: ig.ENTITY.Enemy) {
         return (
             (e.enemyName == 'target-bot' &&
-                (e.currentState == 'DO_HIT' || (e.currentState == 'PERMA_HIT' && e.name == 'targetBot1' && ig.vars.get('tmp.turrentHit') as number < 10) || e.currentState == 'DO_NOT_HIT')) ||
+                (e.currentState == 'DO_HIT' ||
+                    (e.currentState == 'PERMA_HIT' && e.name == 'targetBot1' && (ig.vars.get('tmp.turrentHit') as number) < 10) ||
+                    e.currentState == 'DO_NOT_HIT')) ||
             e.enemyName == 'baggy-kun'
         )
     }
