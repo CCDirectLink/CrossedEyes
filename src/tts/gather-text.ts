@@ -125,6 +125,7 @@ export class TextGather {
                     if (MenuOptions.ttsEnabled && model == sc.map && !sc.model.isCutscene() && msg == sc.MAP_EVENT.MAP_ENTERED) {
                         const area: string = sc.map.getCurrentAreaName().value
                         const map: string = sc.map.getCurrentMapName().value
+                        if (map === undefined) return
 
                         let toSpeak: string = ''
 

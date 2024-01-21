@@ -14,6 +14,7 @@
 
 - Fix potential crash on jump
 - Fix deck tutorial target bot not beaing a hint
+- Don't say the map name when it's missing
 
 ## [0.5.2] 2024-01-15
 
