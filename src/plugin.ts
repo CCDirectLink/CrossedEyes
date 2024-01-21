@@ -19,6 +19,7 @@ import { TextGather } from './tts/gather-text'
 import { godmode } from './godmode'
 import { LangPopupFix } from './tts/lang-popup-fix'
 import { EntityDecluterrer } from './environment/entity-declutter'
+import {ScalableWaitStep} from './battle/scalable-wait'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
@@ -97,6 +98,7 @@ export default class CrossedEyes {
         new CharacterSpeechSynchronizer()
         new LangPopupFix()
         new EntityDecluterrer()
+        new ScalableWaitStep()
 
         ig.Game.inject({
             setPaused(paused: boolean) {

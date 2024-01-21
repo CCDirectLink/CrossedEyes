@@ -10,6 +10,7 @@
 - Added entity hints volume slider
 - Enemy hint sounds, jump hint sounds, entity hint sounds and hint sounds are now pitched down when they're behind the player
 - Add dash volume slider
+- Added enemy vulnerability multiplier slider (for now only the crab boss is implemented)
 
 ### Fixed
 

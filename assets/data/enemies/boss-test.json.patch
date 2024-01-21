@@ -1,0 +1,13 @@
+[
+    {
+        "type": "ENTER",
+        "index": ["actions", "StartStun"]
+    },
+    {
+        "type": "ADD_ARRAY_ELEMENT",
+        "content": {
+            "type": "CROSSEDEYES_VULNERABLE_WAIT",
+            "original": 8
+        }
+    }
+]

@@ -36,6 +36,19 @@ export function getOptions() {
                     description: 'Enable text beeping when characters talk',
                 },
             },
+            battle: {
+                enemyVulnerableMulti: {
+                    type: 'OBJECT_SLIDER',
+                    init: 2,
+                    min: 1,
+                    max: 5,
+                    step: 0.1,
+                    fill: true,
+                    showPercentage: true,
+                    name: 'Enemy vulnerable multiplier',
+                    description: 'Extend the length of enemy vulnerablity',
+                }
+            },
             tts: {
                 ttsEnabled: {
                     type: 'CHECKBOX',
