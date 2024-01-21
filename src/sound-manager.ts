@@ -4,8 +4,9 @@ export namespace SoundManager {
     export type ContiniousSettings = {
         handle?: ig.SoundHandleWebAudio
         paths: (keyof typeof SoundManager.sounds)[]
-        getVolume: () => number
+        getVolume?: () => number
         condition?: () => boolean
+        range?: number
     } & (
         | {
               changePitchWhenBehind: true
@@ -34,6 +35,7 @@ export class SoundManager implements PauseListener {
         land: 'media/sound/crossedeyes/land.ogg',
         landLP: 'media/sound/crossedeyes/lowerpitch/land.ogg',
         entity: 'media/sound/crossedeyes/entity.ogg',
+        entityLP: 'media/sound/crossedeyes/lowerpitch/entity.ogg',
         hint: 'media/sound/crossedeyes/hint.ogg',
         hintLP: 'media/sound/crossedeyes/lowerpitch/hint.ogg',
         tpr: 'media/sound/crossedeyes/tpr.ogg',
@@ -100,15 +102,6 @@ export class SoundManager implements PauseListener {
         }
     }
 
-    private static isHandleAlive(h: ig.SoundHandle): boolean {
-        return h._playing || !!h._buffer
-    }
-
-    private static cleanupDeadSounds() {
-        ig.soundManager.soundStack = ig.soundManager.soundStack.map(e => e.filter(h => SoundManager.isHandleAlive(h)))
-        ig.soundManager.soundHandles = ig.soundManager.soundHandles.filter(h => SoundManager.isHandleAlive(h))
-    }
-
     static playSoundPath(path: string, speed: number, volume: number = 1, pos?: Vec3): ig.SoundHandleWebAudio {
         const sound = new ig.Sound(path, volume)
         const handle: ig.SoundHandleWebAudio = sound.play(false, {
@@ -122,7 +115,7 @@ export class SoundManager implements PauseListener {
         return SoundManager.playSoundPath(SoundManager.sounds[name], speed, volume, pos)
     }
 
-    static handleContiniousEntry(id: string, pos: Vec3, range: number, pathId: number, dir?: Vec2): boolean {
+    static handleContiniousEntry(id: string, pos: Vec3, range: number | undefined, pathId: number, dir?: Vec2): boolean {
         const entry = SoundManager.continious[id]
         if (!entry) return false
 
@@ -147,6 +140,7 @@ export class SoundManager implements PauseListener {
             }
         }
         const path = SoundManager.sounds[name]
+        if (entry.getVolume === undefined) throw new Error('volume is unset')
         const volume = entry.getVolume()
 
         let soundChanged: boolean = false
@@ -164,6 +158,8 @@ export class SoundManager implements PauseListener {
         }
 
         if (!handle.pos || !Vec3.equal(handle.pos.point3d, pos)) {
+            range ??= entry.range
+            if (range === undefined) throw new Error('range unset')
             handle.setFixPosition(pos, range)
         }
 

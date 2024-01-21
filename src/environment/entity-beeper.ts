@@ -4,14 +4,16 @@ import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 
 export class EntityBeeper {
-    private range = 8 * 16
+    private tprRange = 16 * 16
 
-    private getSoundName(e: ig.Entity): Omit<SoundManager.ContiniousSettings, 'getVolume'> | undefined {
-        if (e instanceof ig.ENTITY.OneTimeSwitch || e instanceof ig.ENTITY.MultiHitSwitch) return { paths: ['entity'], condition: () => !e.isOn }
-        if (e instanceof ig.ENTITY.Enemy || e instanceof ig.ENTITY.Switch || e instanceof ig.ENTITY.Destructible) return { paths: ['entity'] }
-        if (e instanceof ig.ENTITY.Door && e.name && e.map) return { paths: ['tpr'], condition: () => e.active }
-        if (e instanceof ig.ENTITY.TeleportField) return { paths: ['tpr'], condition: () => !!e.interactEntry }
-        if (e instanceof ig.ENTITY.TeleportGround) return { paths: ['tpr'] }
+    private getSoundName(e: ig.Entity): SoundManager.ContiniousSettings | undefined {
+        if (e instanceof ig.ENTITY.OneTimeSwitch || e instanceof ig.ENTITY.MultiHitSwitch)
+            return { paths: ['entity'], changePitchWhenBehind: true, pathsBehind: ['entityLP'], condition: () => !e.isOn }
+        if (e instanceof ig.ENTITY.Switch || e instanceof ig.ENTITY.Destructible) return { paths: ['entity'], changePitchWhenBehind: true, pathsBehind: ['entityLP'] }
+        if (e instanceof ig.ENTITY.Enemy) return { paths: ['entity'], changePitchWhenBehind: true, pathsBehind: ['entityLP'], range: 16 * 16 }
+        if (e instanceof ig.ENTITY.Door && e.name && e.map) return { paths: ['tpr'], range: this.tprRange, condition: () => e.active }
+        if (e instanceof ig.ENTITY.TeleportField) return { paths: ['tpr'], range: this.tprRange, condition: () => !!e.interactEntry }
+        if (e instanceof ig.ENTITY.TeleportGround) return { paths: ['tpr'], range: this.tprRange }
     }
     private getId(e: ig.Entity) {
         return `entity_${e.uuid}`
@@ -24,7 +26,7 @@ export class EntityBeeper {
 
     private handleEntity(e: ig.Entity) {
         const pos = e.getAlignedPos(ig.ENTITY_ALIGN.CENTER)
-        SoundManager.handleContiniousEntry(this.getId(e), pos, this.range, 0)
+        SoundManager.handleContiniousEntry(this.getId(e), pos, undefined, 0, SoundManager.getAngleVecToPlayer(e))
     }
 
     constructor() {
@@ -36,7 +38,8 @@ export class EntityBeeper {
                 this.parent(x, y, z, settings)
                 const obj = self.getSoundName(this) as SoundManager.ContiniousSettings
                 if (obj) {
-                    obj.getVolume = () => MenuOptions.entityHintsVolume
+                    obj.range ??= 4 * 16
+                    obj.getVolume ??= () => MenuOptions.entityHintsVolume
                     SoundManager.continious[self.getId(this)] = obj
                 }
             },
@@ -54,7 +57,7 @@ export class EntityBeeper {
             },
             update(...args) {
                 this.parent(...args)
-                if (CrossedEyes.isPaused) return
+                if (CrossedEyes.isPaused || this._hidden) return
                 self.handleEntity(this)
             },
         })
