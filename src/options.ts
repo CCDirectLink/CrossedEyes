@@ -113,6 +113,17 @@ export function getOptions() {
                     name: 'Jump volume',
                     description: 'Jump volume multiplier',
                 },
+                dashVoulme: {
+                    type: 'OBJECT_SLIDER',
+                    init: 1.5,
+                    min: 1,
+                    max: 3,
+                    step: 0.1,
+                    fill: true,
+                    showPercentage: true,
+                    name: 'Dash volume',
+                    description: 'Dash volume multiplier',
+                },
                 wallVolume: {
                     type: 'OBJECT_SLIDER',
                     init: 1,

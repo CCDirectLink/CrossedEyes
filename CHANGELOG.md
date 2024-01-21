@@ -9,6 +9,7 @@
 - Added interactable volume slider
 - Added entity hints volume slider
 - Enemy hint sounds, jump hint sounds, entity hint sounds and hint sounds are now pitched down when they're behind the player
+- Add dash volume slider
 
 ### Fixed
 

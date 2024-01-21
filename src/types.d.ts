@@ -47,6 +47,12 @@ declare global {
             skip(this: this, nextMsg?: boolean): void
         }
 
+        namespace ACTION_STEP {
+            interface PLAY_SOUND {
+                origVolume: number
+            }
+        }
+
         var isdemo: boolean
     }
     namespace sc {

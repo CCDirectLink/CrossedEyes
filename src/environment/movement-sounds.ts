@@ -108,5 +108,19 @@ export class MovementSoundTweaker {
                 }
             },
         })
+
+        /* dash sound multiplier */
+        ig.ACTION_STEP.PLAY_SOUND.inject({
+            init(settings) {
+                this.parent(settings)
+                this.origVolume = this.sound.volume
+            },
+            start(target) {
+                if (this.sound.webAudioBuffer.path == 'media/sound/battle/dash-3.ogg') {
+                    this.sound.volume = this.origVolume * MenuOptions.dashVoulme
+                }
+                this.parent(target)
+            },
+        })
     }
 }
