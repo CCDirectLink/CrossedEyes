@@ -4,7 +4,11 @@ import { Hint, HintData } from '../hint-system'
 export class HEnemy implements Hint {
     entryName = 'Enemy'
     static check(e: ig.ENTITY.Enemy) {
-        return (e.enemyName == 'target-bot' && (e.currentState == 'DO_HIT' || e.currentState == 'DO_NOT_HIT')) || e.enemyName == 'baggy-kun'
+        return (
+            (e.enemyName == 'target-bot' &&
+                (e.currentState == 'DO_HIT' || (e.currentState == 'PERMA_HIT' && e.name == 'targetBot1' && ig.vars.get('tmp.turrentHit') as number < 10) || e.currentState == 'DO_NOT_HIT')) ||
+            e.enemyName == 'baggy-kun'
+        )
     }
 
     constructor() {
@@ -19,7 +23,7 @@ export class HEnemy implements Hint {
         let name: string = ``
         let description: string = ''
         if (e.enemyName == 'target-bot') {
-            if (e.currentState == 'DO_HIT') {
+            if (e.currentState == 'DO_HIT' || e.currentState == 'PERMA_HIT') {
                 name = 'Target Bot, shootable'
                 description = 'Shoot me!'
             } else if (e.currentState == 'DO_NOT_HIT') {

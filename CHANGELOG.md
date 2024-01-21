@@ -13,6 +13,7 @@
 ### Fixed
 
 - Fix potential crash on jump
+- Fix deck tutorial target bot not beaing a hint
 
 ## [0.5.2] 2024-01-15
 
