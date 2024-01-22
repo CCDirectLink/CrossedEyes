@@ -1,5 +1,5 @@
 import { Options } from './options-manager'
-import { TTSTypes } from './tts/tts'
+import { TTS, TTSTypes } from './tts/tts'
 
 export function getOptions() {
     return {
@@ -62,6 +62,8 @@ export function getOptions() {
                     init: true,
                     name: 'Enable TTS',
                     description: 'Enable TTS',
+                    changeEvent: () => TTS.g.optionChangeEvent(),
+                    saveToLocalStorage: true,
                 },
                 ttsType: {
                     type: 'BUTTON_GROUP',
@@ -69,6 +71,8 @@ export function getOptions() {
                     enum: TTSTypes,
                     name: 'TTS Type',
                     description: 'Reader type, Requires a restart!',
+                    changeEvent: () => TTS.g.setup(),
+                    saveToLocalStorage: true,
                 },
                 ttsChar: {
                     type: 'CHECKBOX',

@@ -1,5 +1,4 @@
 import { MenuOptions } from '../options-manager'
-import CrossedEyes from '../plugin'
 import { TextGather } from './gather-text'
 import { AddonInstaller, TTSNvda } from './tts-nvda'
 import { TTSWebSpeech } from './tts-web-speech'
@@ -41,7 +40,6 @@ export class TTS {
     constructor() {
         /* in prestart */
         TTS.g = this
-        CrossedEyes.initPoststarters.push(this)
         this.textGather = new TextGather(
             (text: string) => {
                 this.ttsInstance && this.ttsInstance.speak(text)
@@ -53,13 +51,11 @@ export class TTS {
                 this.ttsInstance && this.ttsInstance.clearQueue()
             }
         )
-        const self = this
-        sc.OptionModel.inject({
-            set(option: string, value: any) {
-                this.parent(option, value)
-                option == MenuOptions.flatOpts.ttsType.id && self.setup()
-            },
-        })
+        this.optionChangeEvent()
+    }
+
+    optionChangeEvent() {
+        MenuOptions.ttsEnabled && this.init()
     }
 
     setup() {
@@ -73,7 +69,7 @@ export class TTS {
         }
     }
 
-    async initPoststart() {
+    async init() {
         AddonInstaller.checkInstall()
         this.setup()
 

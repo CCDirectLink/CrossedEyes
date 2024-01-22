@@ -14,6 +14,10 @@
 - Make the escape sequence (after defeating the crab boss) a bit easier
 - Add mod auto-update toggle
 
+### Changes
+
+- TTS should now initialize faster
+
 ### Fixed
 
 - Fix potential crash on jump

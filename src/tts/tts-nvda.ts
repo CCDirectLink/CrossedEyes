@@ -87,6 +87,8 @@ export class AddonInstaller {
                 console.log('version diffs: inst:', inst, 'pkg:', pkg)
                 if (pkg != inst) {
                     this.installAddon()
+                } else {
+                    if (MenuOptions.ttsType != TTSTypes.NVDA) MenuOptions.ttsType = TTSTypes.NVDA
                 }
             } else {
                 console.log('addon not installed')
