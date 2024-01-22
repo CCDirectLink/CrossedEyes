@@ -20,11 +20,38 @@ type Option = {
 export type Options = {
     [key in sc.OPTION_CATEGORY]?: Record<string, Record<string, Option>>
 }
-type Flatten<T> = T extends Record<string, infer U> ? (U extends Record<string, infer V> ? (V extends Record<string, unknown> ? keyof V : never) : never) : never
+
+// prettier-ignore
+type FlattenOptions<T extends Record<string, Record<string, Record<string, unknown>>>> =
+    T extends Record<string, infer U>
+    ? (U extends Record<infer K1 extends string, infer V extends Record<string, Record<string, unknown>>> 
+           ? { -readonly [K in keyof V]: K extends string ? (V[K] & { id: `${K1}-${K}`}) : never }
+       : never
+     )
+     : never
+
+// prettier-ignore
+type UnionToIntersection<U> = (U extends any 
+    ? (k: U) => void
+    : never) extends ((k: infer I) => void)
+    ? I
+    : never
+
+type FlattenUnion<T> = {
+    [K in keyof UnionToIntersection<T>]: UnionToIntersection<T>[K]
+}
 
 type OptionsObj = ReturnType<typeof getOptions>
-type OptionUnion = Flatten<OptionsObj>
-export const MenuOptions: Record<OptionUnion, number> & { flatOpts: Record<OptionUnion, Option & { id: string }> } = {} as any
+type FlatOpts = FlattenUnion<FlattenOptions<OptionsObj>>
+
+// prettier-ignore
+export const MenuOptions: { [T in keyof FlatOpts]: 
+      FlatOpts[T]['type'] extends 'CHECKBOX' ? boolean
+    : FlatOpts[T]['type'] extends 'BUTTON_GROUP' ?
+        // @ts-expect-error duno why this throws an error, but it works in practice
+        FlatOpts[T]['enum'][keyof FlatOpts[T]['enum']]
+    : number
+} & { flatOpts: FlatOpts } = {} as any
 
 export class MenuOptionsManager implements InitPoststart {
     private options = getOptions()
@@ -40,13 +67,13 @@ export class MenuOptionsManager implements InitPoststart {
             const headers = this.options[catKey]
             for (const headerKey in headers) {
                 this.headerNames.push(headerKey)
-                const optKeys = Object.entries((headers as any)[headerKey]) as [OptionUnion, Option][]
+                const optKeys = Object.entries((headers as any)[headerKey]) as [keyof FlatOpts, Option][]
                 for (let optKeyI = 0; optKeyI < optKeys.length; optKeyI++) {
-                    const optKey: OptionUnion = optKeys[optKeyI][0]
+                    const optKey: keyof FlatOpts = optKeys[optKeyI][0]
                     const option: Option = optKeys[optKeyI][1]
 
                     const id = `${headerKey}-${optKey}`
-                    MenuOptions.flatOpts[optKey] = Object.assign(option, { id })
+                    MenuOptions.flatOpts[optKey] = Object.assign(option, { id }) as any
 
                     const final = (sc.OPTIONS_DEFINITION[id] = Object.assign(
                         {

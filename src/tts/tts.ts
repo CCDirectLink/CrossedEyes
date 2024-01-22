@@ -32,7 +32,7 @@ export class TTS {
     static g: TTS
 
     ttsInstance!: TTSInterface
-    lastOption: number = -1
+    lastOption: TTSTypes | undefined = undefined
     textGather: TextGather
 
     onSpeechEndListeners: SpeechEndListener[] = []
@@ -65,7 +65,7 @@ export class TTS {
     setup() {
         if (this.lastOption != MenuOptions.ttsType) {
             this.lastOption = MenuOptions.ttsType
-            const imp = new implementations[MenuOptions.ttsType as TTSTypes]()
+            const imp = new implementations[MenuOptions.ttsType]()
             if (imp.supportedPlatforms.has(process.platform as any)) {
                 this.ttsInstance = imp
                 imp.init()

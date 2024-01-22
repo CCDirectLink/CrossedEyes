@@ -17,7 +17,6 @@ export class ConditionalEnemyPatcher implements InitPoststart {
             optionalAssets['data/enemies/shredder.json.patch'] = CrossedEyes.mod.baseDirectory + 'assets/data/enemies/shredder.json.patch.cond'
         }
 
-        console.log(optionalAssets, MenuOptions.hints)
         if (CrossedEyes.mod.isCCL3) {
             Object.entries(optionalAssets).forEach(e => {
                 ccmod.resources.assetOverridesTable.set(e[0], e[1])
