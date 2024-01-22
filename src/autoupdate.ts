@@ -6,6 +6,7 @@ import { AddonInstaller } from './tts/tts-nvda'
 
 export class AutoUpdater {
     async checkAndInstall() {
+        if (!MenuOptions.autoUpdate) return
         console.log('checking autoupdate')
         if (CrossedEyes.mod.isCCModPacked) {
             console.log('is ccmod packed')

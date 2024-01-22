@@ -12,6 +12,7 @@
 - Add dash volume slider
 - Added enemy vulnerability multiplier slider (for now only the crab boss is implemented)
 - Make the escape sequence (after defeating the crab boss) a bit easier
+- Add mod auto-update toggle
 
 ### Fixed
 

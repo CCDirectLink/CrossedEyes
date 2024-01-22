@@ -77,12 +77,11 @@ export class TTSNvda implements TTSInterface {
 
 export class AddonInstaller {
     static async checkInstall() {
-        console.log('nvda addon install attempt!')
-        console.log(process.platform)
         if (process.platform == 'win32' && (await AddonInstaller.isNvdaRunning())) {
             console.log('nvda running')
             if (this.isAddonInstalled()) {
                 console.log('addon installed')
+                if (!MenuOptions.autoUpdate) console.log('autoupdate off. aborting')
                 const inst = AddonInstaller.getInstalledAddonVersion()
                 const pkg = await AddonInstaller.getPackageAddonVersion()
                 console.log('version diffs: inst:', inst, 'pkg:', pkg)

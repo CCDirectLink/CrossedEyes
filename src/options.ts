@@ -5,10 +5,17 @@ export function getOptions() {
     return {
         [sc.OPTION_CATEGORY.ASSISTS]: {
             crossedeyes: {
+                autoUpdate: {
+                    type: 'CHECKBOX',
+                    init: true,
+                    name: 'Auto update',
+                    description: 'Automaticly update the CrossedEyes mod when a new version is availible',
+                    saveToLocalStorage: true,
+                },
                 spacialAudio: {
                     type: 'CHECKBOX',
                     init: true,
-                    name: 'Enable spacial audio',
+                    name: 'Spacial audio',
                     description: 'Makes it so you can clearly tell from where the sound is coming from',
                 },
                 loudWalls: {
