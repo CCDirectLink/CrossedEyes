@@ -7,6 +7,8 @@ type Option = {
     description: string
     restart?: boolean
     hasLocal?: boolean
+    changeEvent?: () => void
+    saveToLocalStorage?: boolean
 } & (
     | (Omit<sc.OptionDefinition.BUTTON_GROUP, 'data'> & { enum: Enum; group?: string[] })
     | sc.OptionDefinition.ARRAY_SLIDER
@@ -25,10 +27,10 @@ export type Options = {
 type FlattenOptions<T extends Record<string, Record<string, Record<string, unknown>>>> =
     T extends Record<string, infer U>
     ? (U extends Record<infer K1 extends string, infer V extends Record<string, Record<string, unknown>>> 
-           ? { -readonly [K in keyof V]: K extends string ? (V[K] & { id: `${K1}-${K}`}) : never }
-       : never
-     )
-     : never
+           ? { -readonly [K in keyof V]: K extends string ? (V[K] & { id: `${K1}-${K}` /* this isnt perfect */})
+                                                          : never }
+           : never)
+    : never
 
 // prettier-ignore
 type UnionToIntersection<U> = (U extends any 
@@ -61,6 +63,9 @@ export class MenuOptionsManager implements InitPoststart {
         CrossedEyes.initPoststarters.push(this)
         MenuOptions.flatOpts = {} as any
         this.headerNames = []
+
+        const changeEventOptions: Record<string, Option> = {}
+        const localStorageOptions: Set<string> = new Set()
 
         for (const _catKey in this.options) {
             const catKey = _catKey as unknown as keyof typeof this.options
@@ -95,9 +100,7 @@ export class MenuOptionsManager implements InitPoststart {
                             .splice(Object.keys(option.enum).length / 2)
                             .reduce(
                                 (acc, [k, _], i) => {
-                                    if (typeof k === 'string') {
-                                        acc[k] = i
-                                    }
+                                    if (typeof k === 'string') acc[k] = i
                                     return acc
                                 },
                                 {} as Record<string, number>
@@ -106,17 +109,46 @@ export class MenuOptionsManager implements InitPoststart {
                         option.group = Object.keys(data)
                     }
 
+                    if (option.changeEvent) changeEventOptions[id] = option
+
+                    if (option.saveToLocalStorage) {
+                        if (localStorage.getItem(id) === null) localStorage.setItem(id, option.init!.toString())
+                        localStorageOptions.add(id)
+                    }
+
                     Object.defineProperty(MenuOptions, optKey, {
-                        get(): number {
-                            return sc.options?.get(id) as number
-                        },
-                        set(v: any) {
-                            sc.options?.set(id, v)
-                        },
+                        get: option.saveToLocalStorage
+                            ? function () {
+                                  let v = localStorage.getItem(id)!
+                                  if (option.type == 'CHECKBOX') return v == 'true'
+                                  return parseInt(v)
+                              }
+                            : function () {
+                                  return sc.options?.get(id)
+                              },
+                        set: option.saveToLocalStorage
+                            ? function (v: any) {
+                                  sc.options?.set(id, v)
+                                  localStorage.setItem(id, v)
+                                  const func = option.changeEvent
+                                  func && func()
+                              }
+                            : function (v: any) {
+                                  sc.options?.set(id, v)
+                              },
                     })
                 }
             }
         }
+
+        sc.OptionModel.inject({
+            set(option: string, value: any) {
+                this.parent(option, value)
+                localStorageOptions.has(option) && localStorage.setItem(option, value.toString())
+                const func = changeEventOptions[option]?.changeEvent
+                func && func()
+            },
+        })
     }
 
     initPoststart() {
