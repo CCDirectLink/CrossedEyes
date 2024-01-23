@@ -21,6 +21,7 @@ import { LangPopupFix } from './tts/lang-popup-fix'
 import { EntityDecluterrer } from './environment/entity-declutter'
 import { ScalableWaitStep } from './battle/scalable-wait'
 import { RuntimeResources } from './runtime-assets'
+import { TestMapMisc } from './tutorial/test-map-misc'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
@@ -101,6 +102,7 @@ export default class CrossedEyes {
         new LangPopupFix()
         new EntityDecluterrer()
         new ScalableWaitStep()
+        new TestMapMisc()
 
         ig.Game.inject({
             setPaused(paused: boolean) {

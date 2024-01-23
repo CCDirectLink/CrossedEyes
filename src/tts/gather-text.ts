@@ -328,6 +328,41 @@ export class TextGather {
             },
         })
 
+        let levelStatData: sc.PlayerModel.LevelUpDelta
+        sc.PlayerLevelNotifier.inject({
+            runLevelUpScene(player, model) {
+                levelStatData = { ...model.levelUpDelta }
+                this.parent(player, model)
+            },
+            onLevelUpEventStart() {
+                this.parent()
+                if (MenuOptions.ttsEnabled) {
+                    const names = {
+                        level: 'Level',
+                        cp: 'Circuit points',
+                        hp: 'Health',
+                        attack: 'Attack',
+                        defense: 'Defense',
+                        focus: 'Focus',
+                    } as const
+                    let text = `Level up! `
+                    for (const key1 in names) {
+                        const key = key1 as keyof typeof names
+                        const statValue = levelStatData[key]
+                        if (statValue) {
+                            const humanReadable = names[key]
+                            text += `plus ${statValue} ${humanReadable},`
+                        }
+                    }
+                    self.speak(text)
+                }
+            },
+            onLevelUpEventEnd() {
+                this.parent()
+                self.interrupt()
+            },
+        })
+
         /* ------------------ menu ------------------ */
         let ignoreButtonFrom: number = 0
 
