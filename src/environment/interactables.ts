@@ -5,9 +5,16 @@ import { TextGather } from '../tts/gather-text'
 
 const range = 6 * 16
 
-export class InteratableHandler {
+export class InteractableHandler {
     private getId(e: ig.Entity) {
         return `interact_${e.uuid}`
+    }
+
+    static get continiousConfig(): SoundManager.ContiniousSettings {
+        return {
+            paths: ['interactable', 'interact'],
+            getVolume: () => MenuOptions.interactableVolume,
+        }
     }
 
     constructor() {
@@ -17,10 +24,7 @@ export class InteratableHandler {
         sc.MapInteractEntry.inject({
             init(entity, handler, icon, zCondition, interrupting) {
                 this.parent(entity, handler, icon, zCondition, interrupting)
-                SoundManager.continious[self.getId(entity)] = {
-                    paths: ['interactable', 'interact'],
-                    getVolume: () => MenuOptions.interactableVolume,
-                }
+                SoundManager.continious[self.getId(entity)] = InteractableHandler.continiousConfig
             },
             setState(state) {
                 this.parent(state)

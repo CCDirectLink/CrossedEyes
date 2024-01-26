@@ -3,7 +3,7 @@ import { Hint, HintData } from '../hint-system'
 
 export class HEnemy implements Hint {
     entryName = 'Enemy'
-    static check(e: ig.ENTITY.Enemy) {
+    static check(e: ig.ENTITY.Enemy): boolean {
         return (
             (e.enemyName == 'target-bot' &&
                 (e.currentState == 'DO_HIT' ||
@@ -11,6 +11,10 @@ export class HEnemy implements Hint {
                     e.currentState == 'DO_NOT_HIT')) ||
             e.enemyName == 'baggy-kun'
         )
+    }
+    static shouldEmitSound(e: ig.ENTITY.Enemy): boolean {
+        /* this is only considered if HEnemy.check return true */
+        return !(e.enemyName == 'target-bot' && e.currentState == 'DO_NOT_HIT')
     }
 
     constructor() {

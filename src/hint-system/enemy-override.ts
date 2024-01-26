@@ -11,7 +11,9 @@ export class EnemyHintMenu {
                     return this.parent!()
                 }
                 const isProperEnemy: boolean = this.params && this.visibility.analyzable && sc.combat.isEnemyAnalyzable(this.enemyName)
-                return isProperEnemy ? { type: 'Enemy', disabled: false } : { type: 'Hints', hintName: 'Enemy', hintType: 'Puzzle', disabled: !HEnemy.check(this) }
+                return isProperEnemy
+                    ? { type: 'Enemy', disabled: false }
+                    : { type: 'Hints', hintName: 'Enemy', hintType: 'Puzzle', disabled: !HEnemy.check(this), dontEmitSound: !HEnemy.shouldEmitSound(this) }
             },
             isBallDestroyer(_collPos, _collRes) {
                 if (!MenuOptions.hints) {

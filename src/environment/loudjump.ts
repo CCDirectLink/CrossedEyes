@@ -207,6 +207,16 @@ export class LoudJump {
     lastTrack: number = 0
     trackInterval: number = 0.1e3
 
+    static get continiousConfig(): SoundManager.ContiniousSettings {
+        return {
+            paths: ['water', 'hole', 'lower', 'higher', 'land'],
+            changePitchWhenBehind: true,
+            pathsBehind: ['waterLP', 'holeLP', 'lowerLP', 'higherLP', 'landLP'],
+            getVolume: () => MenuOptions.jumpHintsVolume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1),
+            condition: () => !(isAiming() && AimAnalyzer.g.wallScanOn),
+        }
+    }
+
     trackConfigs: {
         vel: number
         time: number
@@ -215,24 +225,18 @@ export class LoudJump {
         { vel: 0.7, time: 0.4285714285714286 },
         { vel: 0.8, time: 0.375 },
         { vel: 1, time: 0.3 },
-    ]
+    ] as const
 
-    checkDegrees: number[] = [
+    static checkDegrees: number[] = [
         /* relative to player facing */
         // 0, 22.5, -22.5, 67.5, -67.5, 90, -90, 112.5, -112.5, 135, -135, 157.5, -157.5, 180,
         0, 45, -45, 90, -90, 135, -135, 180,
-    ]
+    ] as const
 
     constructor() {
         /* in prestart */
-        for (const deg of this.checkDegrees) {
-            SoundManager.continious[this.getId(deg)] = {
-                paths: ['water', 'hole', 'lower', 'higher', 'land'],
-                changePitchWhenBehind: true,
-                pathsBehind: ['waterLP', 'holeLP', 'lowerLP', 'higherLP', 'landLP'],
-                getVolume: () => MenuOptions.jumpHintsVolume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1),
-                condition: () => !(isAiming() && AimAnalyzer.g.wallScanOn),
-            }
+        for (const deg of LoudJump.checkDegrees) {
+            SoundManager.continious[this.getId(deg)] = LoudJump.continiousConfig
         }
 
         const self = this
@@ -295,9 +299,8 @@ export class LoudJump {
         if (ig.game.now - this.lastTrack > this.trackInterval) {
             this.lastTrack = ig.game.now
 
-            for (const deg of this.checkDegrees) {
-                let dir: Vec2 = Vec2.create()
-                Vec2.rotate(ig.game.playerEntity.face, (deg * Math.PI) / 180, dir)
+            for (const deg of LoudJump.checkDegrees) {
+                let dir: Vec2 = Vec2.rotate(Vec2.create(ig.game.playerEntity.face), (deg * Math.PI) / 180)
                 const out = this.getTypeByTracking(dir)
                 this.playRes(this.getId(deg), dir, out.res, out.type)
             }

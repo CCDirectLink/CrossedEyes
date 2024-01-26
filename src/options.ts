@@ -42,6 +42,13 @@ export function getOptions() {
                     name: 'Text beeping',
                     description: 'Enable text beeping when characters talk',
                 },
+                hudVisible: {
+                    type: 'CHECKBOX',
+                    init: true,
+                    name: 'CrossedEyes button visibility',
+                    description: 'Show the CrossedEyes hud button in the pause menu',
+                    saveToLocalStorage: true,
+                },
             },
             battle: {
                 enemyVulnerableMulti: {

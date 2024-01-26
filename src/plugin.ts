@@ -11,7 +11,7 @@ import { EntityBeeper } from './environment/entity-beeper'
 import { AimAnalyzer } from './hint-system/aim-analyze'
 import { HintSystem } from './hint-system/hint-system'
 import { LoudJump } from './environment/loudjump'
-import { InteratableHandler } from './environment/interactables'
+import { InteractableHandler } from './environment/interactables'
 import { MovementSoundTweaker } from './environment/movement-sounds'
 import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
 import { AutoUpdater } from './autoupdate'
@@ -22,6 +22,8 @@ import { EntityDecluterrer } from './environment/entity-declutter'
 import { ScalableWaitStep } from './battle/scalable-wait'
 import { RuntimeResources } from './runtime-assets'
 import { TestMapMisc } from './tutorial/test-map-misc'
+import { SoundGlossary } from './tutorial/sound-glossary'
+import { CrossedEyesHud } from './tutorial/crossedeyes-hud'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
@@ -93,7 +95,7 @@ export default class CrossedEyes {
         new LoudWalls()
         new HintSystem()
         new LoudJump()
-        new InteratableHandler()
+        new InteractableHandler()
         new SpecialAction()
         new TTS()
         new AimAnalyzer()
@@ -103,6 +105,8 @@ export default class CrossedEyes {
         new EntityDecluterrer()
         new ScalableWaitStep()
         new TestMapMisc()
+        new CrossedEyesHud()
+        new SoundGlossary()
 
         ig.Game.inject({
             setPaused(paused: boolean) {

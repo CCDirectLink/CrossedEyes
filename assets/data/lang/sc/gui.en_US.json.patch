@@ -1,0 +1,19 @@
+[
+    {
+        "type": "ENTER",
+        "index": ["labels", "menu", "menu-titles"]
+    },
+    {
+        "type": "SET_KEY",
+        "index": "crossedeyeshud_menu",
+        "content": "CrossedEyes"
+    },
+    {
+        "type": "SET_KEY",
+        "index": "crossedeyeshud_soundglossary",
+        "content": "Sound glossary"
+    },
+    {
+        "type": "EXIT",
+    }
+]

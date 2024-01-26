@@ -49,6 +49,13 @@ export class SoundManager implements PauseListener {
         bounce1: 'media/sound/battle/ball-bounce-1.ogg',
         bounce2: 'media/sound/battle/ball-bounce-2.ogg',
         bounce3: 'media/sound/battle/ball-bounce-3.ogg',
+
+        // sound glossary stuff
+        dash: 'media/sound/battle/dash-3.ogg',
+        soundglossaryJump: 'media/sound/crossedeyes/soundglossary/jump.ogg',
+        soundglossaryWallbump: 'media/sound/crossedeyes/soundglossary/wallbump.ogg',
+        soundglossaryMeele: 'media/sound/crossedeyes/soundglossary/meele.ogg',
+        levelup: 'media/sound/battle/level-up.ogg',
     } as const
 
     constructor() {
@@ -115,7 +122,15 @@ export class SoundManager implements PauseListener {
         return SoundManager.playSoundPath(SoundManager.sounds[name], speed, volume, pos)
     }
 
-    static handleContiniousEntry(id: string, pos: Vec3, range: number | undefined, pathId: number, dir?: Vec2): boolean {
+    static handleContiniousEntry(
+        id: string,
+        pos: Vec3,
+        range: number | undefined,
+        pathId: number,
+        dir?: Vec2,
+        face: Vec2 = ig.game.playerEntity.face,
+        disableBackFacing: boolean = false
+    ): boolean {
         const entry = SoundManager.continious[id]
         if (!entry) return false
 
@@ -128,8 +143,8 @@ export class SoundManager implements PauseListener {
         let name: keyof typeof SoundManager.sounds = entry.paths[pathId]
         let preserveOffset: boolean = false
 
-        if (entry.changePitchWhenBehind) {
-            const playerFaceAngle: number = (Vec2.clockangle(ig.game.playerEntity.face) * 180) / Math.PI
+        if (entry.changePitchWhenBehind && !disableBackFacing) {
+            const playerFaceAngle: number = (Vec2.clockangle(face) * 180) / Math.PI
 
             const dirFaceAngle: number = (Vec2.clockangle(dir!) * 180) / Math.PI
             const angleDist: number = Math.min(Math.abs(playerFaceAngle - dirFaceAngle), 360 - Math.abs(playerFaceAngle - dirFaceAngle))
@@ -185,5 +200,13 @@ export class SoundManager implements PauseListener {
         const diffPos: Vec2 = e.getAlignedPos(ig.ENTITY_ALIGN.CENTER)
         Vec2.sub(diffPos, ig.game.playerEntity.getAlignedPos(ig.ENTITY_ALIGN.CENTER))
         return Vec2.normalize(diffPos)
+    }
+
+    static pickContiniousSettingsPath(sett: SoundManager.ContiniousSettings, index: number): SoundManager.ContiniousSettings {
+        const obj: SoundManager.ContiniousSettings = { ...sett, paths: [sett.paths[index]] }
+        if (obj.changePitchWhenBehind) {
+            obj.pathsBehind = [obj.pathsBehind[index]]
+        }
+        return obj
     }
 }

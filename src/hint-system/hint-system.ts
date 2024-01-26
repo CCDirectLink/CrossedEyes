@@ -35,6 +35,15 @@ export type HintUnion = sc.QUICK_MENU_TYPES.Hints | sc.QUICK_MENU_TYPES.NPC | sc
 export class HintSystem {
     static g: HintSystem
 
+    static get continiousConfig(): SoundManager.ContiniousSettings {
+        return {
+            paths: ['hint'],
+            changePitchWhenBehind: true,
+            pathsBehind: ['hintLP'],
+            getVolume: () => MenuOptions.hintsVolume,
+        }
+    }
+
     registeredTypes: Record<string, Hint>
     puzzleTypes: (new () => Hint)[] = [
         HBounceBlock,
@@ -99,14 +108,7 @@ export class HintSystem {
 
         const id = this.getContId(e)
         let entry = SoundManager.continious[id]
-        if (!entry)
-            entry = SoundManager.continious[id] = {
-                paths: ['hint'],
-                changePitchWhenBehind: true,
-                pathsBehind: ['hintLP'],
-                getVolume: () => MenuOptions.hintsVolume,
-            }
-
+        if (!entry) entry = SoundManager.continious[id] = HintSystem.continiousConfig
         const hint = this.getHintFromEntity(e)
 
         const isSelected = this.selectedHE.includes(e)

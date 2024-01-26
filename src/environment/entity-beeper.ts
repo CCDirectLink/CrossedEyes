@@ -2,19 +2,30 @@ import { HintSystem } from '../hint-system/hint-system'
 import { MenuOptions } from '../options-manager'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
+import { EntityUtil } from './entity-util'
 
 export class EntityBeeper {
-    private tprRange = 16 * 16
+    private static tprRange = 16 * 16
 
-    private getSoundName(e: ig.Entity): SoundManager.ContiniousSettings | undefined {
-        if (e instanceof ig.ENTITY.OneTimeSwitch || e instanceof ig.ENTITY.MultiHitSwitch)
+    private static getSoundConfigNonFull(e?: ig.Entity, id?: number): SoundManager.ContiniousSettings | undefined {
+        if (EntityUtil.isOneTimeSwitch(e, id) || EntityUtil.isMultiHitSwitch(e, id))
             return { paths: ['entity'], changePitchWhenBehind: true, pathsBehind: ['entityLP'], condition: () => !e.isOn }
-        if (e instanceof ig.ENTITY.Switch || e instanceof ig.ENTITY.Destructible) return { paths: ['entity'], changePitchWhenBehind: true, pathsBehind: ['entityLP'] }
-        if (e instanceof ig.ENTITY.Enemy) return { paths: ['entity'], changePitchWhenBehind: true, pathsBehind: ['entityLP'], range: 16 * 16 }
-        if (e instanceof ig.ENTITY.Door && e.name && e.map) return { paths: ['tpr'], range: this.tprRange, condition: () => e.active }
-        if (e instanceof ig.ENTITY.TeleportField) return { paths: ['tpr'], range: this.tprRange, condition: () => !!e.interactEntry }
-        if (e instanceof ig.ENTITY.TeleportGround) return { paths: ['tpr'], range: this.tprRange }
+        if (EntityUtil.isSwitch(e, id) || EntityUtil.isDestructible(e, id)) return { paths: ['entity'], changePitchWhenBehind: true, pathsBehind: ['entityLP'] }
+        if (EntityUtil.isEnemy(e, id)) return { paths: ['entity'], changePitchWhenBehind: true, pathsBehind: ['entityLP'], range: 16 * 16 }
+        if (EntityUtil.isDoor(e, id) && (id !== undefined || (e.name && e.map))) return { paths: ['tpr'], range: this.tprRange, condition: () => e.active }
+        if (EntityUtil.isTeleportField(e, id)) return { paths: ['tpr'], range: this.tprRange, condition: () => !!e.interactEntry }
+        if (EntityUtil.isTeleportGround(e, id)) return { paths: ['tpr'], range: this.tprRange }
     }
+
+    static getSoundConfig(e?: ig.Entity, id?: number): SoundManager.ContiniousSettings | undefined {
+        const config = this.getSoundConfigNonFull(e, id)
+        if (config) {
+            config.range ??= 6 * 16
+            config.getVolume ??= () => MenuOptions.entityHintsVolume
+        }
+        return config
+    }
+
     private getId(e: ig.Entity) {
         return `entity_${e.uuid}`
     }
@@ -25,8 +36,21 @@ export class EntityBeeper {
     }
 
     private handleEntity(e: ig.Entity) {
-        const pos = e.getAlignedPos(ig.ENTITY_ALIGN.CENTER)
-        SoundManager.handleContiniousEntry(this.getId(e), pos, undefined, 0, SoundManager.getAngleVecToPlayer(e))
+        const id = this.getId(e)
+        if (!e.entitySoundInited) {
+            e.entitySoundInited = true
+            const obj = EntityBeeper.getSoundConfig(e)
+            obj && (SoundManager.continious[id] = obj)
+        }
+        if (SoundManager.continious[id]) {
+            const sett = e.getQuickMenuSettings!()
+            if (sett.disabled || sett.dontEmitSound) {
+                SoundManager.stopCondinious(id)
+            } else {
+                const pos = e.getAlignedPos(ig.ENTITY_ALIGN.CENTER)
+                SoundManager.handleContiniousEntry(id, pos, undefined, 0, SoundManager.getAngleVecToPlayer(e))
+            }
+        }
     }
 
     constructor() {
@@ -34,15 +58,6 @@ export class EntityBeeper {
         SoundManager.continiousCleanupFilters.push('entity')
         const self = this
         ig.Entity.inject({
-            init(x, y, z, settings) {
-                this.parent(x, y, z, settings)
-                const obj = self.getSoundName(this) as SoundManager.ContiniousSettings
-                if (obj) {
-                    obj.range ??= 4 * 16
-                    obj.getVolume ??= () => MenuOptions.entityHintsVolume
-                    SoundManager.continious[self.getId(this)] = obj
-                }
-            },
             hide(...args) {
                 this.parent(...args)
                 self.deactivateEntity(this)

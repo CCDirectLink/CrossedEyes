@@ -5,7 +5,7 @@ import { expressionMap } from './expression-map'
 import { fontImgToName } from './font-img-to-text-map'
 import { CharacterSpeakData } from './tts'
 
-function getReadableText(orig: string): string {
+export function getReadableText(orig: string): string {
     let text: string = orig
         .replace(/\\c\[[^\]]*\]/g, '')
         .replace(/\\s\[[^\]]*\]/g, '')
@@ -351,7 +351,7 @@ export class TextGather {
                         const statValue = levelStatData[key]
                         if (statValue) {
                             const humanReadable = names[key]
-                            text += `plus ${statValue} ${humanReadable},`
+                            text += `plus ${statValue} ${humanReadable}, `
                         }
                     }
                     self.speak(text)

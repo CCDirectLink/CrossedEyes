@@ -6,7 +6,7 @@
 
 ### Added
 
-- Level up tts announcing
+- Added level up tts announcing
 - Added sound glossary
 
 ## [0.5.3] 2024-01-22

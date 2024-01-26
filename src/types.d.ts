@@ -1,5 +1,6 @@
 import { PlayerTraceResult } from './environment/loudjump'
 import { HintUnion, HintSubTypes } from './hint-system/hint-system'
+import { SoundGlossary } from './tutorial/sound-glossary'
 
 export {}
 
@@ -7,6 +8,22 @@ export type ClimbableMenuSettings = sc.QuickMenuTypesBaseSettings & {
     pos?: Vec3
     size?: Vec3
 }
+
+// why am i doing this
+// prettier-ignore
+type UnionToIntersection<U> =
+  (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never
+
+// prettier-ignore
+type LastOf<T> =
+  UnionToIntersection<T extends any ? () => T : never> extends () => (infer R) ? R : never
+
+// prettier-ignore
+type Push<T extends any[], V> = [...T, V];
+
+// prettier-ignore
+export type TuplifyUnion<T, L = LastOf<T>, N = [T] extends [never] ? true : false> =
+  true extends N ? [] : Push<TuplifyUnion<Exclude<T, L>>, L>
 
 declare global {
     namespace ig {
@@ -27,9 +44,13 @@ declare global {
             origVolume?: number
         }
 
+        // @ts-expect-error
         type SoundHandle = ig.SoundHandleWebAudio // | ig.SoundHandleDefault
+        // @ts-expect-error
         type Sound = ig.SoundWebAudio
+        // @ts-expect-error
         type SoundConstructor = SoundWebAudioConstructor
+        // @ts-expect-error
         var Sound: SoundConstructor
 
         namespace ENTITY {
@@ -42,6 +63,7 @@ declare global {
         }
         interface Entity {
             uuid: string
+            entitySoundInited?: boolean
         }
         interface MessageAreaGui {
             skip(this: this, nextMsg?: boolean): void
@@ -57,7 +79,7 @@ declare global {
     }
     namespace sc {
         interface RowButtonGroup {
-            elements: (ig.FocusGui & { optionRow: sc.OptionRow })[][]
+            elements: (sc.ButtonGui & { optionRow: sc.OptionRow })[][]
         }
         namespace QUICK_MENU_TYPES {
             interface Hints extends sc.QuickMenuTypesBase {
@@ -137,6 +159,7 @@ declare global {
         interface QuickMenuTypesBaseSettings {
             hintName?: string
             hintType?: (typeof HintSubTypes)[number]
+            dontEmitSound?: boolean
         }
 
         interface QuickMenuAnalysis {
@@ -169,6 +192,78 @@ declare global {
 
         interface SideMessageBoxGui {
             beepSound: ig.Sound | null
+        }
+
+        interface PauseScreenGui {
+            crossedEyesHudButton: sc.ButtonGui
+        }
+
+        enum MENU_SUBMENU {
+            CROSSEDEYESHUD_MENU,
+            CROSSEDEYESHUD_SOUNDGLOSSARY,
+        }
+
+        interface CrossedEyesHudMenu extends sc.BaseMenu {
+            buttons: sc.ButtonGui[]
+            buttonGroup: sc.ButtonGroup
+
+            onBackButtonPress(this: this): void
+        }
+        interface CrossedEyesHudMenuConstructor extends ImpactClass<CrossedEyesHudMenu> {
+            new (): CrossedEyesHudMenu
+        }
+        var CrossedEyesHudMenu: CrossedEyesHudMenuConstructor
+
+        namespace SoundGlossary {
+            interface List extends sc.ListTabbedPane {}
+            interface ListConstructor extends ImpactClass<List> {
+                new (): List
+            }
+            var List: ListConstructor
+
+            interface Menu extends sc.ListInfoMenu {
+                list: sc.SoundGlossary.List
+                info: sc.SoundGlossary.InfoBox
+                isEntrySelected: boolean
+                currentSelectedButton: sc.SoundGlossary.ListEntry
+                isSoundOn: boolean
+
+                toggleSoundSelected(this: this, button: sc.SoundGlossary.ListEntry): void
+                getContiniousId(this: this, entry: SoundGlossary.Entry): string
+                startSound(this: this): void
+                stopSound(this: this): void
+                updateSound(this: this): void
+            }
+            interface MenuConstructor extends ImpactClass<Menu> {
+                new (): Menu
+            }
+            var Menu: MenuConstructor
+
+            interface ListEntry extends sc.ListBoxButton {
+                entry: SoundGlossary.Entry
+                title: sc.TextGui
+
+                keepButtonPressed(this: this, state: boolean): void
+            }
+            interface ListEntryConstructor extends ImpactClass<ListEntry> {
+                new (entry: SoundGlossary.Entry): ListEntry
+            }
+            var ListEntry: ListEntryConstructor
+
+            interface InfoBox extends ig.BoxGui {
+                gfx: ig.Image
+                ninepatch: ig.NinePatch
+                title: sc.TextGui
+                description: sc.TextGui
+
+                show(this: this): void
+                hide(this: this): void
+                setData(this: this, entry: SoundGlossary.Entry): void
+            }
+            interface InfoBoxConstructor extends ImpactClass<InfoBox> {
+                new (): InfoBox
+            }
+            var InfoBox: InfoBoxConstructor
         }
     }
 }

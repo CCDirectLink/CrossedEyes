@@ -14,12 +14,21 @@ type CheckDirectionReturn = { type: 'none' | 'blocked' | 'collided'; pos: Vec3; 
 export class LoudWalls {
     static g: LoudWalls
 
-    private dirs: [string, Vec2][] = [
+    static dirs: [string, Vec2][] = [
         ['wall_down', { x: 0, y: 1 }],
         ['wall_right', { x: 1, y: 0 }],
         ['wall_up', { x: 0, y: -1 }],
         ['wall_left', { x: -1, y: 0 }],
     ]
+    static get continiousConfig(): SoundManager.ContiniousSettings {
+        return {
+            paths: ['wall'],
+            changePitchWhenBehind: true,
+            pathsBehind: ['wallLP'],
+            getVolume: () => MenuOptions.wallVolume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1),
+            condition: () => !(isAiming() && AimAnalyzer.g.wallScanOn),
+        }
+    }
 
     constructor() {
         /* in prestart */
@@ -31,14 +40,8 @@ export class LoudWalls {
                 MenuOptions.spacialAudio && MenuOptions.loudWalls && self.handleWallSound()
             },
         })
-        for (const dir of this.dirs) {
-            SoundManager.continious[dir[0]] = {
-                paths: ['wall'],
-                changePitchWhenBehind: true,
-                pathsBehind: ['wallLP'],
-                getVolume: () => MenuOptions.wallVolume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1),
-                condition: () => !(isAiming() && AimAnalyzer.g.wallScanOn),
-            }
+        for (const dir of LoudWalls.dirs) {
+            SoundManager.continious[dir[0]] = LoudWalls.continiousConfig
         }
     }
 
@@ -46,7 +49,7 @@ export class LoudWalls {
         if (CrossedEyes.isPaused || ig.game.playerEntity?.floating) {
             return
         }
-        for (const [dirId, dir] of this.dirs) {
+        for (const [dirId, dir] of LoudWalls.dirs) {
             const check = LoudWalls.checkDirection(Vec2.create(dir), range, ig.COLLTYPE.PROJECTILE)
 
             if (check.type !== 'collided') {
