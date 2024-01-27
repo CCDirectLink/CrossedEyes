@@ -1,6 +1,6 @@
 {
     "id": "crossedeyes",
-    "version": "0.5.3",
+    "version": "0.5.4",
     "name": "CrossedEyes",
     "description": "Accessibility mod for CrossCode",
     "plugin": "plugin.js",
