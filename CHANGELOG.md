@@ -3,6 +3,11 @@
 # Change Log
 
 ## [Unreleased]
+
+### Changed
+
+- Increased interactable volume slider maximum to 3
+
 ## [0.5.4] 2024-01-27
 
 ### Added

@@ -214,7 +214,7 @@ export function getOptions() {
                     type: 'OBJECT_SLIDER',
                     init: 1,
                     min: 0,
-                    max: 2,
+                    max: 3,
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
