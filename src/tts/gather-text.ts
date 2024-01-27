@@ -35,13 +35,13 @@ function interpolateString(template: string, ...values: (string | number)[]): st
 }
 
 export function speakC(textLike: ValidTextLike): void {
-    Opts.ttsEnabled && staticInstance.speak(textLike)
+    Opts.tts && staticInstance.speak(textLike)
 }
 export function speak(textLike: ValidTextLike): void {
     staticInstance.speak(textLike)
 }
 export function speakIC(textLike: ValidTextLike): void {
-    Opts.ttsEnabled && staticInstance.speakI(textLike)
+    Opts.tts && staticInstance.speakI(textLike)
 }
 export function speakI(textLike: ValidTextLike): void {
     staticInstance.speakI(textLike)
@@ -152,7 +152,7 @@ export class TextGather {
             sc.map,
             new (class {
                 modelChanged(model: sc.Model, msg: sc.MAP_EVENT) {
-                    if (Opts.ttsEnabled && model == sc.map && !sc.model.isCutscene() && msg == sc.MAP_EVENT.MAP_ENTERED) {
+                    if (Opts.tts && model == sc.map && !sc.model.isCutscene() && msg == sc.MAP_EVENT.MAP_ENTERED) {
                         const area: string = sc.map.getCurrentAreaName().value
                         const map: string = sc.map.getCurrentMapName().value
                         if (map === undefined) return
@@ -270,7 +270,7 @@ export class TextGather {
 
         sc.InputForcer.inject({
             setEntry(action, title, textKeyboard, textGamepad) {
-                if (Opts.ttsEnabled) {
+                if (Opts.tts) {
                     textGamepad = ig.LangLabel.getText(textGamepad as ig.LangLabel.Data)
                     if (textGamepad == 'Press \\i[throw] + \\i[throw] + \\i[throw] + \\i[throw]') {
                         textGamepad = 'Press \\i[throw] or \\i[gamepad-x] 4 times'
@@ -322,7 +322,7 @@ export class TextGather {
         sc.RingMenuButton.inject({
             focusGained() {
                 this.parent()
-                if (!Opts.ttsEnabled || this.state == sc.QUICK_MENU_STATE.NONE) return
+                if (!Opts.tts || this.state == sc.QUICK_MENU_STATE.NONE) return
                 // prettier-ignore
                 const text = 
                     this.state == sc.QUICK_MENU_STATE.ITEMS ? 'Items'
@@ -344,7 +344,7 @@ export class TextGather {
             },
             onLevelUpEventStart() {
                 this.parent()
-                if (!Opts.ttsEnabled) return
+                if (!Opts.tts) return
                 const names = {
                     level: 'Level',
                     cp: 'Circuit points',
@@ -375,7 +375,7 @@ export class TextGather {
 
         sc.ButtonGui.inject({
             focusGained() {
-                if (Opts.ttsEnabled) {
+                if (Opts.tts) {
                     const diff = Date.now() - ignoreButtonFrom
                     if (diff > 50) {
                         if (buttonSayChoice && sc.message.blocking && !ig.game.paused && !ig.loading && !sc.model.isTitle()) {
@@ -450,7 +450,7 @@ export class TextGather {
             init() {
                 this.parent()
                 this.addSelectionCallback((button?: ig.FocusGui) => {
-                    if (!Opts.ttsEnabled) return
+                    if (!Opts.tts) return
                     const or: sc.OptionRow = (button as sc.RowButtonGroup['elements'][0][0])?.optionRow
                     if (!or) {
                         return
@@ -512,7 +512,7 @@ export class TextGather {
         sc.SaveSlotButton.inject({
             focusGained() {
                 this.parent()
-                if (!Opts.ttsEnabled) return
+                if (!Opts.tts) return
                 const slot = this.slotOver
                 const sg = slot.slotGui
                 const name: string = sg instanceof sc.NumberGui ? sg.targetNumber.toString() : sg instanceof sc.TextGui ? sg.text!.toString() : ''

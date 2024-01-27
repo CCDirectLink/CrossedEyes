@@ -64,7 +64,7 @@ export function getOptions() {
                 },
             },
             tts: {
-                ttsEnabled: {
+                tts: {
                     type: 'CHECKBOX',
                     init: true,
                     name: 'Enable TTS',

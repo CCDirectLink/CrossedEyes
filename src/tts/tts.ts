@@ -54,7 +54,7 @@ export class TTS {
     }
 
     optionChangeEvent() {
-        Opts.ttsEnabled && this.init()
+        Opts.tts && this.init()
     }
 
     setup() {

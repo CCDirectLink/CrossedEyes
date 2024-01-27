@@ -45,7 +45,7 @@ export class AutoUpdater {
                 anyUpdated = true
             }
             if (anyUpdated) {
-                if (Opts.ttsEnabled) {
+                if (Opts.tts) {
                     setTimeout(() => {
                         speakI('Mod updated. Restarting...')
                         setTimeout(() => {
