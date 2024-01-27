@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import { HintSystem } from './hint-system'
 import { ClimbableMenuSettings } from '../types'
 
@@ -161,7 +161,7 @@ export class ClimbableTerrainHints {
                 return {
                     type: 'Climbable',
                     hintName: 'ClimbableProp',
-                    disabled: !((MenuOptions.hints && this.propName.startsWith('cargo-box') && self.checkIsJumpable(this)) || this.propName.startsWith('carla')),
+                    disabled: !((Opts.hints && this.propName.startsWith('cargo-box') && self.checkIsJumpable(this)) || this.propName.startsWith('carla')),
                 }
             },
         })

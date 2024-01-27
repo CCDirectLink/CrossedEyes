@@ -1,4 +1,4 @@
-import { MenuOptions } from './options-manager'
+import { Opts } from './options-manager'
 import CrossedEyes from './plugin'
 import { speakI, speakIC } from './tts/gather-text'
 import { TTS } from './tts/tts'
@@ -6,7 +6,7 @@ import { AddonInstaller } from './tts/tts-nvda'
 
 export class AutoUpdater {
     async checkAndInstall() {
-        if (!MenuOptions.autoUpdate) return
+        if (!Opts.autoUpdate) return
         console.log('checking autoupdate')
         if (CrossedEyes.mod.isCCModPacked) {
             console.log('is ccmod packed')
@@ -45,7 +45,7 @@ export class AutoUpdater {
                 anyUpdated = true
             }
             if (anyUpdated) {
-                if (MenuOptions.ttsEnabled) {
+                if (Opts.ttsEnabled) {
                     setTimeout(() => {
                         speakI('Mod updated. Restarting...')
                         setTimeout(() => {

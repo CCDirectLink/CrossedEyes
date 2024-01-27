@@ -1,5 +1,5 @@
 import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import { SoundManager } from '../sound-manager'
 import CrossedEyes from '../plugin'
 
@@ -212,7 +212,7 @@ export class LoudJump {
             paths: ['water', 'hole', 'lower', 'higher', 'land'],
             changePitchWhenBehind: true,
             pathsBehind: ['waterLP', 'holeLP', 'lowerLP', 'higherLP', 'landLP'],
-            getVolume: () => MenuOptions.jumpHintsVolume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1),
+            getVolume: () => Opts.jumpHintsVolume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1),
             condition: () => !(isAiming() && AimAnalyzer.g.wallScanOn),
         }
     }
@@ -293,7 +293,7 @@ export class LoudJump {
 
     handle() {
         const p: ig.ENTITY.Player = ig.game.playerEntity
-        if (!MenuOptions.spacialAudio || !MenuOptions.loudWalls || CrossedEyes.isPaused || ig.game.playerEntity?.floating || !this.predictor || !p || !p.coll?.pos) {
+        if (!Opts.spacialAudio || !Opts.loudWalls || CrossedEyes.isPaused || ig.game.playerEntity?.floating || !this.predictor || !p || !p.coll?.pos) {
             return
         }
         if (ig.game.now - this.lastTrack > this.trackInterval) {

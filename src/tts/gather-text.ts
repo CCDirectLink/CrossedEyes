@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import CrossedEyes from '../plugin'
 import { SpecialAction } from '../special-action'
 import { expressionMap } from './expression-map'
@@ -35,13 +35,13 @@ function interpolateString(template: string, ...values: (string | number)[]): st
 }
 
 export function speakC(textLike: ValidTextLike): void {
-    MenuOptions.ttsEnabled && staticInstance.speak(textLike)
+    Opts.ttsEnabled && staticInstance.speak(textLike)
 }
 export function speak(textLike: ValidTextLike): void {
     staticInstance.speak(textLike)
 }
 export function speakIC(textLike: ValidTextLike): void {
-    MenuOptions.ttsEnabled && staticInstance.speakI(textLike)
+    Opts.ttsEnabled && staticInstance.speakI(textLike)
 }
 export function speakI(textLike: ValidTextLike): void {
     staticInstance.speakI(textLike)
@@ -152,7 +152,7 @@ export class TextGather {
             sc.map,
             new (class {
                 modelChanged(model: sc.Model, msg: sc.MAP_EVENT) {
-                    if (MenuOptions.ttsEnabled && model == sc.map && !sc.model.isCutscene() && msg == sc.MAP_EVENT.MAP_ENTERED) {
+                    if (Opts.ttsEnabled && model == sc.map && !sc.model.isCutscene() && msg == sc.MAP_EVENT.MAP_ENTERED) {
                         const area: string = sc.map.getCurrentAreaName().value
                         const map: string = sc.map.getCurrentMapName().value
                         if (map === undefined) return
@@ -207,7 +207,7 @@ export class TextGather {
                 this.load()
             },
             play(exp: sc.CharacterExpression, label: ig.LangLabel) {
-                if (MenuOptions.ttsChar) {
+                if (Opts.ttsChar) {
                     let charName: string = ig.LangLabel.getText((exp.character.data as any).name)
                     if (charName == '???') {
                         charName = 'Unknown'
@@ -270,7 +270,7 @@ export class TextGather {
 
         sc.InputForcer.inject({
             setEntry(action, title, textKeyboard, textGamepad) {
-                if (MenuOptions.ttsEnabled) {
+                if (Opts.ttsEnabled) {
                     textGamepad = ig.LangLabel.getText(textGamepad as ig.LangLabel.Data)
                     if (textGamepad == 'Press \\i[throw] + \\i[throw] + \\i[throw] + \\i[throw]') {
                         textGamepad = 'Press \\i[throw] or \\i[gamepad-x] 4 times'
@@ -322,7 +322,7 @@ export class TextGather {
         sc.RingMenuButton.inject({
             focusGained() {
                 this.parent()
-                if (!MenuOptions.ttsEnabled || this.state == sc.QUICK_MENU_STATE.NONE) return
+                if (!Opts.ttsEnabled || this.state == sc.QUICK_MENU_STATE.NONE) return
                 // prettier-ignore
                 const text = 
                     this.state == sc.QUICK_MENU_STATE.ITEMS ? 'Items'
@@ -344,7 +344,7 @@ export class TextGather {
             },
             onLevelUpEventStart() {
                 this.parent()
-                if (!MenuOptions.ttsEnabled) return
+                if (!Opts.ttsEnabled) return
                 const names = {
                     level: 'Level',
                     cp: 'Circuit points',
@@ -375,7 +375,7 @@ export class TextGather {
 
         sc.ButtonGui.inject({
             focusGained() {
-                if (MenuOptions.ttsEnabled) {
+                if (Opts.ttsEnabled) {
                     const diff = Date.now() - ignoreButtonFrom
                     if (diff > 50) {
                         if (buttonSayChoice && sc.message.blocking && !ig.game.paused && !ig.loading && !sc.model.isTitle()) {
@@ -450,7 +450,7 @@ export class TextGather {
             init() {
                 this.parent()
                 this.addSelectionCallback((button?: ig.FocusGui) => {
-                    if (!MenuOptions.ttsEnabled) return
+                    if (!Opts.ttsEnabled) return
                     const or: sc.OptionRow = (button as sc.RowButtonGroup['elements'][0][0])?.optionRow
                     if (!or) {
                         return
@@ -512,7 +512,7 @@ export class TextGather {
         sc.SaveSlotButton.inject({
             focusGained() {
                 this.parent()
-                if (!MenuOptions.ttsEnabled) return
+                if (!Opts.ttsEnabled) return
                 const slot = this.slotOver
                 const sg = slot.slotGui
                 const name: string = sg instanceof sc.NumberGui ? sg.targetNumber.toString() : sg instanceof sc.TextGui ? sg.text!.toString() : ''

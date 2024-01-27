@@ -1,4 +1,4 @@
-import { MenuOptions } from '../../options-manager'
+import { Opts } from '../../options-manager'
 import { Hint, HintData } from '../hint-system'
 
 export class HDestructible implements Hint {
@@ -13,7 +13,7 @@ export class HDestructible implements Hint {
                 this.desType = settings.desType
             },
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !MenuOptions.hints }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !Opts.hints }
             },
         })
     }

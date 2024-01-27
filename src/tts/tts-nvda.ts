@@ -1,7 +1,7 @@
 import { WebSocket, WebSocketServer } from 'ws'
 import { CharacterSpeakData, TTS, TTSInterface, TTSTypes } from './tts'
 import CrossedEyes from '../plugin'
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 
 import AdmZip from 'adm-zip'
 
@@ -81,14 +81,14 @@ export class AddonInstaller {
             console.log('nvda running')
             if (this.isAddonInstalled()) {
                 console.log('addon installed')
-                if (!MenuOptions.autoUpdate) console.log('autoupdate off. aborting')
+                if (!Opts.autoUpdate) console.log('autoupdate off. aborting')
                 const inst = AddonInstaller.getInstalledAddonVersion()
                 const pkg = await AddonInstaller.getPackageAddonVersion()
                 console.log('version diffs: inst:', inst, 'pkg:', pkg)
                 if (pkg != inst) {
                     this.installAddon()
                 } else {
-                    if (MenuOptions.ttsType != TTSTypes.NVDA) MenuOptions.ttsType = TTSTypes.NVDA
+                    if (Opts.ttsType != TTSTypes.NVDA) Opts.ttsType = TTSTypes.NVDA
                 }
             } else {
                 console.log('addon not installed')
@@ -150,7 +150,7 @@ export class AddonInstaller {
         blitzkrieg.FsUtil.mkdirs(websocketClientParentPath)
         AddonInstaller.unzipFile(zipFilePath, websocketClientParentPath)
 
-        MenuOptions.ttsType = TTSTypes.NVDA
+        Opts.ttsType = TTSTypes.NVDA
         sc.options.persistOptions()
         console.log('install succesfull')
         require('child_process').exec('"C:\\Program Files (x86)\\NVDA\\nvda.exe"') /* restart NVDA */

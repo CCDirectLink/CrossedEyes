@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import { SoundManager } from '../sound-manager'
 
 export class MovementSoundTweaker {
@@ -57,7 +57,7 @@ export class MovementSoundTweaker {
                             }
                             if (frame == 2) {
                                 ig.SoundHelper.playAtEntity(
-                                    new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic1 : SoundManager.sounds.hitOrganic2, MenuOptions.wallBumpVolume * vol),
+                                    new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic1 : SoundManager.sounds.hitOrganic2, Opts.wallBumpVolume * vol),
                                     this,
                                     null,
                                     null,
@@ -65,7 +65,7 @@ export class MovementSoundTweaker {
                                 )
                             } else if (frame == 5) {
                                 ig.SoundHelper.playAtEntity(
-                                    new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic3 : SoundManager.sounds.hitOrganic4, MenuOptions.wallBumpVolume * vol),
+                                    new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic3 : SoundManager.sounds.hitOrganic4, Opts.wallBumpVolume * vol),
                                     this,
                                     null,
                                     null,
@@ -77,12 +77,12 @@ export class MovementSoundTweaker {
                         if (vol === undefined || vol < 0.6) {
                             if (frame == this.stepFx.frames[0]) {
                                 spawnFx = true
-                                ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step1!, MenuOptions.footstepVolume as number), this, null, null, 700)
+                                ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step1!, Opts.footstepVolume as number), this, null, null, 700)
                                 this.onMoveEffect && this.onMoveEffect('step')
                             }
                             if (frame == this.stepFx.frames[1]) {
                                 spawnFx = true
-                                ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step2!, MenuOptions.footstepVolume as number), this, null, null, 700)
+                                ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step2!, Opts.footstepVolume as number), this, null, null, 700)
                                 this.onMoveEffect && this.onMoveEffect('step')
                             }
                         }
@@ -104,7 +104,7 @@ export class MovementSoundTweaker {
                 if (!ignoreSounds) {
                     const soundObj1 = sc.ACTOR_SOUND[this.soundType] || sc.ACTOR_SOUND.none
                     const soundObj2 = (soundObj1 as any)[ig.terrain.getTerrain(this.coll, true, true)] || soundObj1[ig.TERRAIN_DEFAULT]
-                    if (soundObj2?.jump) ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(soundObj2.jump, MenuOptions.jumpVolume), this, null, null, 700)
+                    if (soundObj2?.jump) ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(soundObj2.jump, Opts.jumpVolume), this, null, null, 700)
                 }
             },
         })
@@ -117,7 +117,7 @@ export class MovementSoundTweaker {
             },
             start(target) {
                 if (this.sound.webAudioBuffer.path == 'media/sound/battle/dash-3.ogg') {
-                    this.sound.volume = this.origVolume * MenuOptions.dashVoulme
+                    this.sound.volume = this.origVolume * Opts.dashVoulme
                 }
                 this.parent(target)
             },

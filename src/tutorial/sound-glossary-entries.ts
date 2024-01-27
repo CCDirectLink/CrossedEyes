@@ -3,7 +3,7 @@ import { InteractableHandler as InteractableHandler } from '../environment/inter
 import { LoudJump } from '../environment/loudjump'
 import { LoudWalls } from '../environment/loudwalls'
 import { HintSystem } from '../hint-system/hint-system'
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import { SoundManager } from '../sound-manager'
 import { SoundGlossary } from './sound-glossary'
 
@@ -37,7 +37,7 @@ export function getSoundGlossaryEntries() {
                     The more your movement is blocked by the obstacle, the louder the sound.`,
                 config: {
                     paths: ['soundglossaryWallbump'],
-                    getVolume: () => MenuOptions.wallBumpVolume,
+                    getVolume: () => Opts.wallBumpVolume,
                 },
             },
             {
@@ -90,7 +90,7 @@ export function getSoundGlossaryEntries() {
                     After attacking 3 times in quick succesion, the forth attack will be a multi-directional spin that does more damage, but will leave you vulnerable for half a second.`,
                 config: {
                     paths: ['soundglossaryMeele'],
-                    getVolume: () => MenuOptions.dashVoulme,
+                    getVolume: () => Opts.dashVoulme,
                 },
             },
             {
@@ -99,7 +99,7 @@ export function getSoundGlossaryEntries() {
                     You can dash up to three times in a row, after that you have to wait a little bit, otherwise you will start spinning while covering very little distance.`,
                 config: {
                     paths: ['dash'],
-                    getVolume: () => MenuOptions.dashVoulme,
+                    getVolume: () => Opts.dashVoulme,
                 },
             },
             {

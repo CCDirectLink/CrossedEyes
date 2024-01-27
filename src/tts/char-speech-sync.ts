@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import { TextGather, interrupt, speakIC } from './gather-text'
 import { SpeechEndListener, TTS } from './tts'
 
@@ -26,7 +26,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
                 this.parent()
             },
             skip(nextMsg: boolean = true) {
-                if (MenuOptions.ttsChar) {
+                if (Opts.ttsChar) {
                     if (nextMsg) {
                         const msg = this.messages.last()
                         if (!msg.isFinished()) {
@@ -39,10 +39,10 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
         })
         sc.MsgBoxGui.inject({
             init(maxWidth, pointerType, text, speed, personEntry, beepSound) {
-                if (MenuOptions.ttsChar) {
-                    if (MenuOptions.textBeeping) {
+                if (Opts.ttsChar) {
+                    if (Opts.textBeeping) {
                         if (!ig.system.skipMode) {
-                            speed = ig.TextBlock.SPEED.SLOWEST / MenuOptions.ttsSpeed
+                            speed = ig.TextBlock.SPEED.SLOWEST / Opts.ttsSpeed
                         }
                     } else beepSound = null
                 }
@@ -57,7 +57,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
             },
             showNextSideMessage() {
                 this.parent()
-                if (MenuOptions.ttsChar) {
+                if (Opts.ttsChar) {
                     this.timer = 10000000
                     TextGather.ignoreInteractTo = Date.now() + 100
                 }
@@ -65,7 +65,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
             onSkipInteract(type) {
                 interrupt()
                 this.parent(type)
-                if (MenuOptions.ttsChar && type == sc.SKIP_INTERACT_MSG.SKIPPED) {
+                if (Opts.ttsChar && type == sc.SKIP_INTERACT_MSG.SKIPPED) {
                     if (this.visibleBoxes.length > 0) {
                         this.doMessageStep()
                     }
@@ -78,9 +78,9 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
         sc.SideMessageBoxGui.inject({
             init() {
                 this.parent()
-                if (MenuOptions.ttsChar) {
-                    if (MenuOptions.textBeeping) {
-                        this.text.setTextSpeed(ig.TextBlock.SPEED.SLOWEST / MenuOptions.ttsSpeed)
+                if (Opts.ttsChar) {
+                    if (Opts.textBeeping) {
+                        this.text.setTextSpeed(ig.TextBlock.SPEED.SLOWEST / Opts.ttsSpeed)
                     } else {
                         this.beepSound = null
                     }
@@ -91,7 +91,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
         sc.VoiceActing.inject({
             play(expression, label) {
                 this.parent(expression, label)
-                if (MenuOptions.ttsChar && TTS.g?.ttsInstance?.calibrateSpeed) {
+                if (Opts.ttsChar && TTS.g?.ttsInstance?.calibrateSpeed) {
                     if (self.rateCalibData.length <= self.rateCalibCount) {
                         self.rateCalibData.push([Date.now(), TextGather.lastMessage!.toString()])
                     }
@@ -113,7 +113,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
         // }
     }
     onSpeechEnd(): void {
-        if (MenuOptions.ttsChar) {
+        if (Opts.ttsChar) {
             if (this.sideMessageHudGuiIns.timer > 10000) {
                 this.sideMessageHudGuiIns.timer = 1
                 this.sideMessageHudGuiIns.visibleBoxes.last().text.finish()
@@ -134,10 +134,10 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
                     const newSpeed = Math.max(1, Math.min(3, (Math.round(((avg / 15) * 100) / 5) * 5) / 100))
                     // console.log('new speed:', newSpeed)
 
-                    const origSpeed = MenuOptions.ttsSpeed
+                    const origSpeed = Opts.ttsSpeed
                     // console.log('diff', origSpeed, newSpeed, Math.abs(origSpeed - newSpeed))
                     if (Math.abs(origSpeed - newSpeed) >= 0.2) {
-                        MenuOptions.ttsSpeed = newSpeed
+                        Opts.ttsSpeed = newSpeed
                         sc.options.persistOptions()
                         // console.log('setting new')
                     }

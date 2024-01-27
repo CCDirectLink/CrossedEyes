@@ -1,5 +1,5 @@
 import CrossedEyes, { InitPoststart } from './plugin'
-import { MenuOptions } from './options-manager'
+import { Opts } from './options-manager'
 
 export class RuntimeResources implements InitPoststart {
     constructor() {
@@ -8,7 +8,7 @@ export class RuntimeResources implements InitPoststart {
     }
 
     initPoststart() {
-        if (MenuOptions.hints) {
+        if (Opts.hints) {
             RuntimeResources.add('data/enemies/shredder.json.patch', 'assets/data/enemies/shredder.json.patch.cond')
         }
         RuntimeResources.reload()

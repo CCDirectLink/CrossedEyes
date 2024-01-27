@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import { speakIC } from '../tts/gather-text'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { HintSystem, HintUnion } from './hint-system'
@@ -39,7 +39,7 @@ export class AimAnalyzer implements PauseListener {
             },
             /* keep the aim in the quick menu and after closing it */
             handleStateStart(playerState, inputState) {
-                if (MenuOptions.hints && playerState.startState == 0 && sc.control.aiming() && ig.Timer.time <= quickMenuExitedTime + 0.02) {
+                if (Opts.hints && playerState.startState == 0 && sc.control.aiming() && ig.Timer.time <= quickMenuExitedTime + 0.02) {
                     /* do nothing (instead of canceling aiming), just call cancelJump() because it is always called (and im not calling parent) */
                     this.cancelJump()
                 } else {
@@ -49,7 +49,7 @@ export class AimAnalyzer implements PauseListener {
             /* disable player float up/down movement */
             varsChanged() {
                 this.parent!()
-                if (MenuOptions.hints && this.floating && ig.vars.get('playerVar.staticFloat')) {
+                if (Opts.hints && this.floating && ig.vars.get('playerVar.staticFloat')) {
                     this.configs.normal.clearOverwrite()
                     this.configs.aiming.clearOverwrite()
                 }
@@ -76,7 +76,7 @@ export class AimAnalyzer implements PauseListener {
         sc.QuickMenuAnalysis.inject({
             update() {
                 this.parent()
-                if (MenuOptions.hints && sc.quickmodel.activeState) {
+                if (Opts.hints && sc.quickmodel.activeState) {
                     if (sc.quickmodel.isQuickCheck()) {
                         if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
                             self.aimAnalyzeOn = !self.aimAnalyzeOn
@@ -294,7 +294,7 @@ export class AimAnalyzer implements PauseListener {
             return
         }
         if (!this.wallScanHandle) {
-            this.wallScanHandle = new ig.Sound(SoundManager.sounds.wall, 2 * MenuOptions.wallScanVolume).play(true)
+            this.wallScanHandle = new ig.Sound(SoundManager.sounds.wall, 2 * Opts.wallScanVolume).play(true)
         }
         const handle = this.wallScanHandle
 

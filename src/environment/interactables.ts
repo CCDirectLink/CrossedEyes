@@ -1,5 +1,5 @@
 import { SoundManager } from '../sound-manager'
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import { HintSystem } from '../hint-system/hint-system'
 import { speakIC } from '../tts/gather-text'
 
@@ -13,7 +13,7 @@ export class InteractableHandler {
     static get continiousConfig(): SoundManager.ContiniousSettings {
         return {
             paths: ['interactable', 'interact'],
-            getVolume: () => MenuOptions.interactableVolume,
+            getVolume: () => Opts.interactableVolume,
         }
     }
 
@@ -31,7 +31,7 @@ export class InteractableHandler {
                 if (!(this.entity instanceof ig.ENTITY.NPC && this.entity.xenoDialog)) this.stateUpdate = true
             },
             customUpdate() {
-                if (this.stateUpdate && MenuOptions.loudEntities) {
+                if (this.stateUpdate && Opts.loudEntities) {
                     const id = self.getId(this.entity)
                     if (this.state == sc.INTERACT_ENTRY_STATE.FOCUS) {
                         const changed = SoundManager.handleContiniousEntry(id, this.entity.coll.pos, range, 1)

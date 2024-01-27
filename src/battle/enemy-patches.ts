@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import CrossedEyes, { InitPoststart } from '../plugin'
 
 export class ConditionalEnemyPatcher implements InitPoststart {
@@ -13,7 +13,7 @@ export class ConditionalEnemyPatcher implements InitPoststart {
     updatePatchFiles() {
         const optionalAssets: Record<string, string> = {}
 
-        if (MenuOptions.hints) {
+        if (Opts.hints) {
             optionalAssets['data/enemies/shredder.json.patch'] = CrossedEyes.mod.baseDirectory + 'assets/data/enemies/shredder.json.patch.cond'
         }
 

@@ -1,5 +1,5 @@
 import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 
@@ -25,7 +25,7 @@ export class LoudWalls {
             paths: ['wall'],
             changePitchWhenBehind: true,
             pathsBehind: ['wallLP'],
-            getVolume: () => MenuOptions.wallVolume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1),
+            getVolume: () => Opts.wallVolume * (AimAnalyzer.g.aimAnalyzeOn && isAiming() ? 0.4 : 1),
             condition: () => !(isAiming() && AimAnalyzer.g.wallScanOn),
         }
     }
@@ -37,7 +37,7 @@ export class LoudWalls {
         ig.ENTITY.Player.inject({
             update() {
                 this.parent()
-                MenuOptions.spacialAudio && MenuOptions.loudWalls && self.handleWallSound()
+                Opts.spacialAudio && Opts.loudWalls && self.handleWallSound()
             },
         })
         for (const dir of LoudWalls.dirs) {

@@ -1,4 +1,4 @@
-import { MenuOptions } from '../../options-manager'
+import { Opts } from '../../options-manager'
 import { Hint, HintData } from '../hint-system'
 
 type TprsFlagSupported = ig.ENTITY.Door | ig.ENTITY.TeleportGround | ig.ENTITY.TeleportField
@@ -50,11 +50,11 @@ export class HDoor implements Hint {
                     type: 'Hints',
                     hintName: self.entryName,
                     hintType: 'Puzzle',
-                    disabled: !(MenuOptions.hints && this.name && this.map && this.condition.code != 'false'),
+                    disabled: !(Opts.hints && this.name && this.map && this.condition.code != 'false'),
                 }
             },
             open(entity, data) {
-                if (MenuOptions.hints && this.name && this.map) {
+                if (Opts.hints && this.name && this.map) {
                     ig.vars.set(getVarName(this), true)
                     justEnteredTpr = true
                 }
@@ -106,12 +106,12 @@ export class HTeleportField implements Hint {
                     type: 'Hints',
                     hintName: self.entryName,
                     hintType: 'Puzzle',
-                    disabled: !(MenuOptions.hints && this.interactEntry),
+                    disabled: !(Opts.hints && this.interactEntry),
                 }
             },
             onInteraction() {
                 this.parent()
-                if (MenuOptions.hints) {
+                if (Opts.hints) {
                     ig.vars.set(getVarName(this), true)
                     justEnteredTpr = true
                 }
@@ -138,11 +138,11 @@ export class HTeleportGround implements Hint {
         const self = this
         ig.ENTITY.TeleportGround.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !MenuOptions.hints }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !Opts.hints }
             },
             collideWith(entity, dir) {
                 this.parent(entity, dir)
-                if (/* this means the player just entered the tpr */ this.coll.ignoreCollision && MenuOptions.hints) {
+                if (/* this means the player just entered the tpr */ this.coll.ignoreCollision && Opts.hints) {
                     ig.vars.set(getVarName(this), true)
                     justEnteredTpr = true
                 }
@@ -172,7 +172,7 @@ export class HElevator implements Hint {
                     type: 'Hints',
                     hintName: self.entryName,
                     hintType: 'Puzzle',
-                    disabled: !(MenuOptions.hints && this.groundEntity.condition.code != 'false'),
+                    disabled: !(Opts.hints && this.groundEntity.condition.code != 'false'),
                 }
             },
         })

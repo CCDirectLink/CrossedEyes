@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 
 /* quick way to calculate hash for adding stuff
 const crypto = require('crypto')
@@ -29,7 +29,7 @@ export class EntityDecluterrer {
         ig.Game.inject({
             loadingComplete() {
                 this.parent()
-                if (!MenuOptions.hints) return
+                if (!Opts.hints) return
                 declutterData[ig.game.mapName]?.forEach(executeAction)
             },
         })

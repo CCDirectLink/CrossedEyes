@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import { TextGather } from './gather-text'
 import { AddonInstaller, TTSNvda } from './tts-nvda'
 import { TTSWebSpeech } from './tts-web-speech'
@@ -54,13 +54,13 @@ export class TTS {
     }
 
     optionChangeEvent() {
-        MenuOptions.ttsEnabled && this.init()
+        Opts.ttsEnabled && this.init()
     }
 
     setup() {
-        if (this.lastOption != MenuOptions.ttsType) {
-            this.lastOption = MenuOptions.ttsType
-            const imp = new implementations[MenuOptions.ttsType]()
+        if (this.lastOption != Opts.ttsType) {
+            this.lastOption = Opts.ttsType
+            const imp = new implementations[Opts.ttsType]()
             if (imp.supportedPlatforms.has(process.platform as any)) {
                 this.ttsInstance = imp
                 imp.init()

@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 
 const sc_MENU_SUBMENU_CROSSEDEYESHUD_MENU = 385943 as const
 export const sc_MENU_SUBMENU_CROSSEDEYESHUD_SOUND_GLOSSARY = 385944 as const
@@ -66,7 +66,7 @@ export class CrossedEyesHud {
         }
 
         function addButton(this: sc.PauseScreenGui) {
-            if (!MenuOptions.hudVisible) return
+            if (!Opts.hudVisible) return
             const b = this.crossedEyesHudButton
             b && this.removeChildGui(b)
             b.setAlign(ig.GUI_ALIGN.X_RIGHT, ig.GUI_ALIGN.Y_BOTTOM)

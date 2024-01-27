@@ -47,7 +47,7 @@ type OptionsObj = ReturnType<typeof getOptions>
 type FlatOpts = FlattenUnion<FlattenOptions<OptionsObj>>
 
 // prettier-ignore
-export const MenuOptions: { [T in keyof FlatOpts]: 
+export const Opts: { [T in keyof FlatOpts]: 
       FlatOpts[T]['type'] extends 'CHECKBOX' ? boolean
     : FlatOpts[T]['type'] extends 'BUTTON_GROUP' ?
         // @ts-expect-error duno why this throws an error, but it works in practice
@@ -61,7 +61,7 @@ export class MenuOptionsManager implements InitPoststart {
 
     constructor() {
         CrossedEyes.initPoststarters.push(this)
-        MenuOptions.flatOpts = {} as any
+        Opts.flatOpts = {} as any
         this.headerNames = []
 
         const changeEventOptions: Record<string, Option> = {}
@@ -78,7 +78,7 @@ export class MenuOptionsManager implements InitPoststart {
                     const option: Option = optKeys[optKeyI][1]
 
                     const id = `${headerKey}-${optKey}`
-                    MenuOptions.flatOpts[optKey] = Object.assign(option, { id }) as any
+                    Opts.flatOpts[optKey] = Object.assign(option, { id }) as any
 
                     const final = (sc.OPTIONS_DEFINITION[id] = Object.assign(
                         {
@@ -116,7 +116,7 @@ export class MenuOptionsManager implements InitPoststart {
                         localStorageOptions.add(id)
                     }
 
-                    Object.defineProperty(MenuOptions, optKey, {
+                    Object.defineProperty(Opts, optKey, {
                         get: option.saveToLocalStorage
                             ? function () {
                                   let v = localStorage.getItem(id)!
@@ -153,6 +153,6 @@ export class MenuOptionsManager implements InitPoststart {
 
     initPoststart() {
         this.headerNames.forEach(h => (ig.lang.labels.sc.gui.options.headers[h] = h))
-        Object.entries(MenuOptions.flatOpts).forEach(e => (ig.lang.labels.sc.gui.options[e[1].id] = e[1]))
+        Object.entries(Opts.flatOpts).forEach(e => (ig.lang.labels.sc.gui.options[e[1].id] = e[1]))
     }
 }

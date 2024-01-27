@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import { CharacterSpeakData, TTS, TTSInterface } from './tts'
 
 export class TTSWebSpeech implements TTSInterface {
@@ -76,9 +76,9 @@ export class TTSWebSpeech implements TTSInterface {
         ignoreLen || this.queue.push(text)
         if (ignoreLen || this.queue.length == 1) {
             const utter = new SpeechSynthesisUtterance(text)
-            utter.pitch = MenuOptions.ttsPitch
-            utter.rate = MenuOptions.ttsSpeed
-            utter.volume = MenuOptions.ttsVolume
+            utter.pitch = Opts.ttsPitch
+            utter.rate = Opts.ttsSpeed
+            utter.volume = Opts.ttsVolume
             utter.voice = this.voice
             speechSynthesis.speak(utter)
             utter.addEventListener('end', () => {

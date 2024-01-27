@@ -1,5 +1,5 @@
 import { HintSystem } from '../hint-system/hint-system'
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { EntityUtil } from './entity-util'
@@ -21,7 +21,7 @@ export class EntityBeeper {
         const config = this.getSoundConfigNonFull(e, id)
         if (config) {
             config.range ??= 6 * 16
-            config.getVolume ??= () => MenuOptions.entityHintsVolume
+            config.getVolume ??= () => Opts.entityHintsVolume
         }
         return config
     }

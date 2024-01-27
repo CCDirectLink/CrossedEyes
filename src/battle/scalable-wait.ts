@@ -1,4 +1,4 @@
-import { MenuOptions } from '../options-manager'
+import { Opts } from '../options-manager'
 
 declare global {
     namespace ig.ACTION_STEP {
@@ -20,7 +20,7 @@ export class ScalableWaitStep {
                 this.original = settings.original
             },
             start(actor: ig.ActorEntity) {
-                const time: number = this.original * (MenuOptions.enemyVulnerableMulti - 1)
+                const time: number = this.original * (Opts.enemyVulnerableMulti - 1)
                 actor.stepData.time = time
                 actor.stepTimer = actor.stepTimer + (actor.stepData.time || 0)
             },
