@@ -1,6 +1,6 @@
 import { MenuOptions } from './options-manager'
 import CrossedEyes from './plugin'
-import { TextGather } from './tts/gather-text'
+import { speakI, speakIC } from './tts/gather-text'
 import { TTS } from './tts/tts'
 import { AddonInstaller } from './tts/tts-nvda'
 
@@ -47,7 +47,7 @@ export class AutoUpdater {
             if (anyUpdated) {
                 if (MenuOptions.ttsEnabled) {
                     setTimeout(() => {
-                        TextGather.g.speakI('Mod updated. Restarting...')
+                        speakI('Mod updated. Restarting...')
                         setTimeout(() => {
                             window.location.reload()
                         }, 3000)
@@ -58,7 +58,7 @@ export class AutoUpdater {
             } else {
                 TTS.g.onReadyListeners.push(() => {
                     console.log(CrossedEyes.mod.version)
-                    MenuOptions.ttsEnabled && TextGather.g.speakI(`CrossedEyes version: ${CrossedEyes.mod.version!.toString().replace(/\./g, ': ')}: up to date`)
+                    speakIC(`CrossedEyes version: ${CrossedEyes.mod.version!.toString().replace(/\./g, ': ')}: up to date`)
                 })
             }
         }

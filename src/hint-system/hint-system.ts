@@ -2,7 +2,7 @@ import { MenuOptions } from '../options-manager'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
-import { TextGather } from '../tts/gather-text'
+import { interrupt, speakIC } from '../tts/gather-text'
 import { AimAnalyzer, isAiming } from './aim-analyze'
 import { AnalyzableHintMenu } from './analyzable-override'
 import { ClimbableTerrainHints } from './climbable-terrain'
@@ -92,7 +92,7 @@ export class HintSystem {
 
     deactivateHint(e: ig.Entity | undefined) {
         if (e && !(this.focusedHE == e && this.selectedHE.includes(e)) && SoundManager.stopCondinious(this.getContId(e))) {
-            TextGather.g.interrupt()
+            interrupt()
             SpecialAction.setListener('LSP', 'hintDescription', () => {})
             SpecialAction.setListener('R2', 'hintDescription', () => {})
 
@@ -112,14 +112,14 @@ export class HintSystem {
         const hint = this.getHintFromEntity(e)
 
         const isSelected = this.selectedHE.includes(e)
-        MenuOptions.ttsEnabled && TextGather.g.speakI(`${isSelected ? 'selected, ' : ''}${hint.nameGui.title.text}`)
+        speakIC(`${isSelected ? 'selected, ' : ''}${hint.nameGui.title.text}`)
 
         SpecialAction.setListener('LSP', 'hintDescription', () => {
-            MenuOptions.ttsEnabled && TextGather.g.speakI(hint.nameGui.description.text)
+            speakIC(hint.nameGui.description.text!)
         })
         if (hint.nameGui.description2) {
             SpecialAction.setListener('R2', 'hintDescription', () => {
-                MenuOptions.ttsEnabled && sc.quickmodel.isQuickCheck() && TextGather.g.speakI(hint.nameGui.description2)
+                sc.quickmodel.isQuickCheck() && speakIC(hint.nameGui.description2!)
             })
         }
 
@@ -201,7 +201,7 @@ export class HintSystem {
                 const foundHEI = this.selectedHE.findIndex(e => e.uuid == this.focusedHE!.uuid)
                 if (foundHEI != -1) {
                     this.selectedHE.splice(foundHEI, 1)
-                    MenuOptions.ttsEnabled && TextGather.g.speakI('unselected')
+                    speakIC('unselected')
                 } else {
                     this.activateHint(this.focusedHE, false)
                 }
@@ -421,9 +421,9 @@ export class HintSystem {
                     if (filterAdd) {
                         self.filterIndex += filterAdd
                         self.updateFilter()
-                        MenuOptions.ttsEnabled && TextGather.g.speakI(`${self.filterList[self.filterIndex]}`)
+                        speakIC(`${self.filterList[self.filterIndex]}`)
                     } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_UP)) {
-                        MenuOptions.ttsEnabled && TextGather.g.speakI(`Hint filter: ${self.filterList[self.filterIndex]}`)
+                        speakIC(`Hint filter: ${self.filterList[self.filterIndex]}`)
                     }
 
                     self.checkHintTogglePressed()

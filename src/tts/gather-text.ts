@@ -34,24 +34,55 @@ function interpolateString(template: string, ...values: (string | number)[]): st
     })
 }
 
-const leaSounds: boolean = false
+export function speakC(textLike: ValidTextLike): void {
+    MenuOptions.ttsEnabled && staticInstance.speak(textLike)
+}
+export function speak(textLike: ValidTextLike): void {
+    staticInstance.speak(textLike)
+}
+export function speakIC(textLike: ValidTextLike): void {
+    MenuOptions.ttsEnabled && staticInstance.speakI(textLike)
+}
+export function speakI(textLike: ValidTextLike): void {
+    staticInstance.speakI(textLike)
+}
+export function speakArgsC(template: string, ...textLikes: ValidTextLike[]) {
+    Opts.tts && staticInstance.speakArgs(template, ...textLikes)
+}
+export function speakArgs(template: string, ...textLikes: ValidTextLike[]) {
+    staticInstance.speakArgs(template, ...textLikes)
+}
+export function charSpeak(textLike: ValidTextLike, data: CharacterSpeakData): void {
+    staticInstance.charSpeak(textLike, data)
+}
+export function interrupt() {
+    staticInstance.interrupt()
+}
+
+let staticInstance: TextGather
 
 export class TextGather {
-    static g: TextGather
+    static set ignoreInteractTo(value: number) {
+        staticInstance.ignoreInteractTo = value
+    }
+    static get lastMessage() {
+        return staticInstance.lastMessage
+    }
+    private static interruptListeners: (() => void)[] = []
+    static addInterruptListener(func: () => void) {
+        TextGather.interruptListeners.push(func)
+    }
+    private connect: { count: number; template: string; args: ValidTextLike[] } | undefined
+    lastMessage: ValidTextLike = ''
+    ignoreInteract: number = 0
+    ignoreInteractTo: number = 0
 
-    private connect: { count: number; template: string; args: sc.TextLike[] } | undefined
-    public lastMessage: sc.TextLike = ''
-    public ignoreInteract: number = 0
-    public ignoreInteractTo: number = 0
-
-    public interruptListeners: (() => void)[] = []
-
-    public charSpeak(textLike: sc.TextLike, data: CharacterSpeakData): void {
+    charSpeak(textLike: ValidTextLike, data: CharacterSpeakData): void {
         this.interrupt()
-        this.characterSpeakCall(getReadableText(textLike!.toString()), data)
+        this.characterSpeakCall(getReadableText(textLike.toString()), data)
     }
 
-    public speak(textLike: sc.TextLike): void {
+    speak(textLike: ValidTextLike): void {
         if (this.connect?.count) {
             this.connect.count--
             this.connect.args.push(textLike)
@@ -60,22 +91,22 @@ export class TextGather {
             this.speakArgs(this.connect.template, ...this.connect.args)
             this.connect = undefined
         } else {
-            this.speakCall(getReadableText(textLike!.toString()))
+            this.speakCall(getReadableText(textLike.toString()))
         }
     }
 
-    public speakI(textLike: sc.TextLike): void {
+    speakI(textLike: ValidTextLike): void {
         this.interrupt()
         this.speak(textLike)
     }
 
-    public speakArgs(template: string, ...textLikes: sc.TextLike[]) {
+    speakArgs(template: string, ...textLikes: ValidTextLike[]) {
         const matchArr = template.match(interpolateStringRegex) ?? []
         if (textLikes.length < matchArr.length) {
             this.connect = { count: matchArr.length - textLikes.length, template, args: textLikes }
         } else {
             this.interrupt()
-            this.speakCall(interpolateString(template, ...textLikes.map(textLike => getReadableText(textLike!.toString()))))
+            this.speakCall(interpolateString(template, ...textLikes.map(textLike => getReadableText(textLike.toString()))))
         }
     }
 
@@ -85,11 +116,10 @@ export class TextGather {
         public interrupt: () => void
     ) {
         /* in prestart */
-
-        TextGather.g = this
+        staticInstance = this
         CrossedEyes.initPoststarters.push(this)
         SpecialAction.setListener('RSP', 'repeatLast', () => {
-            MenuOptions.ttsEnabled && this.speakI(this.lastMessage)
+            speakI(this.lastMessage)
         })
         const speakCallCopy = speakCall
         this.speakCall = (text: string) => {
@@ -107,7 +137,7 @@ export class TextGather {
             if (this.ignoreInteract > 0) {
                 this.ignoreInteract--
             } else if (Date.now() > this.ignoreInteractTo) {
-                this.interruptListeners.forEach(f => f())
+                TextGather.interruptListeners.forEach(f => f())
                 interruptCopy()
             }
         }
@@ -143,7 +173,7 @@ export class TextGather {
                         lastMapKeys = currMapKeys
 
                         toSpeak += `map: ${map}`
-                        self.speakI(toSpeak)
+                        speakI(toSpeak)
                         self.ignoreInteract = 1
                     }
                 }
@@ -159,13 +189,12 @@ export class TextGather {
     }
 
     private initGather() {
-        const self = this
         let prevChar: string | undefined
 
         let sideMsg: boolean = false
         sc.SideMessageHudGui.inject({
             showNextSideMessage() {
-                self.interrupt()
+                interrupt()
                 sideMsg = true
                 this.parent()
                 sideMsg = false
@@ -179,47 +208,39 @@ export class TextGather {
             },
             play(exp: sc.CharacterExpression, label: ig.LangLabel) {
                 if (MenuOptions.ttsChar) {
-                    if (leaSounds && exp.character.name == 'main.lea') {
-                        this.active = true
-                        self.interrupt()
-                    } else {
-                        let charName: string = ig.LangLabel.getText((exp.character.data as any).name)
-                        if (charName == '???') {
-                            charName = 'Unknown'
-                        }
-
-                        const labelStr: string = label.toString()
-                        let expression: string = ''
-                        if (!sc.message.blocking || prevChar != charName) {
-                            expression = expressionMap[exp.expression]
-                            if (expression === undefined) {
-                                console.error(`expression: "${exp.expression}" not mapped`)
-                                expression = 'Expression mapping error'
-                            }
-                        }
-                        let text: string
-                        if (labelStr == '[nods]') {
-                            text = `${charName} nods`
-                        } else if (labelStr.startsWith('...') && labelStr.length <= 5) {
-                            /* cover: ... ...! ...? ...?! */
-                            text = `${expression} ${charName} is silent${labelStr.substring(3)}`
-                        } else {
-                            text = `${prevChar != charName ? `${expression} ${charName} says: ` : ''}${labelStr}`
-                        }
-                        sideMsg && (text = `Side: ${text}`)
-                        prevChar = charName
-                        self.charSpeak(text, {})
+                    let charName: string = ig.LangLabel.getText((exp.character.data as any).name)
+                    if (charName == '???') {
+                        charName = 'Unknown'
                     }
+
+                    const labelStr: string = label.toString()
+                    let expression: string = ''
+                    if (!sc.message.blocking || prevChar != charName) {
+                        expression = expressionMap[exp.expression]
+                        if (expression === undefined) {
+                            console.error(`expression: "${exp.expression}" not mapped`)
+                            expression = 'Expression mapping error'
+                        }
+                    }
+                    let text: string
+                    if (labelStr == '[nods]') {
+                        text = `${charName} nods`
+                    } else if (labelStr.startsWith('...') && labelStr.length <= 5) {
+                        /* cover: ... ...! ...? ...?! */
+                        text = `${expression} ${charName} is silent${labelStr.substring(3)}`
+                    } else {
+                        text = `${prevChar != charName ? `${expression} ${charName} says: ` : ''}${labelStr}`
+                    }
+                    sideMsg && (text = `Side: ${text}`)
+                    prevChar = charName
+                    charSpeak(text, {})
                 }
                 this.parent(exp, label)
-                if (MenuOptions.ttsChar) {
-                    this.active = false
-                }
             },
         })
         sc.MessageModel.inject({
             clearBlocking() {
-                self.interrupt()
+                interrupt()
                 buttonSayChoice = true
                 this.parent()
             },
@@ -232,17 +253,17 @@ export class TextGather {
         sc.CenterMsgBoxGui.inject({
             init(...args) {
                 this.parent(...args)
-                MenuOptions.ttsEnabled && self.speakI(this.textGui.text)
+                speakIC(this.textGui.text!)
             },
             _close() {
-                MenuOptions.ttsEnabled && self.interrupt()
+                interrupt()
                 return this.parent()
             },
         })
 
         ig.EVENT_STEP.SHOW_AR_MSG.inject({
             start(...args) {
-                MenuOptions.ttsEnabled && self.speakI(this.text)
+                speakIC(this.text)
                 return this.parent(...args)
             },
         })
@@ -255,13 +276,13 @@ export class TextGather {
                         textGamepad = 'Press \\i[throw] or \\i[gamepad-x] 4 times'
                     }
                     this.parent(action, title, textKeyboard, textGamepad)
-                    self.speakI(`${ig.LangLabel.getText(title as ig.LangLabel.Data)}: ${textGamepad}`)
+                    speakI(`${ig.LangLabel.getText(title as ig.LangLabel.Data)}: ${textGamepad}`)
                 } else {
                     this.parent(action, title, textKeyboard, textGamepad)
                 }
             },
             _endBlock() {
-                MenuOptions.ttsEnabled && self.interrupt()
+                interrupt()
                 this.parent()
             },
         })
@@ -287,12 +308,13 @@ export class TextGather {
         sc.QuickMenuModel.inject({
             enterQuickMenu() {
                 this.parent()
-                MenuOptions.ttsEnabled && self.speakI('Quick Menu')
+                speakIC('Quick Menu')
             },
             exitQuickMenu() {
                 this.parent()
-                if (/* how is this called in the title screen???? dont know */ sc.model.currentState == sc.GAME_MODEL_STATE.GAME && /* why */ !ig.game.paused) {
-                    self.interrupt()
+                /* how is this called in the title screen???? dont know */
+                if (sc.model.currentState == sc.GAME_MODEL_STATE.GAME && /* why */ !ig.game.paused) {
+                    interrupt()
                 }
             },
         })
@@ -300,31 +322,17 @@ export class TextGather {
         sc.RingMenuButton.inject({
             focusGained() {
                 this.parent()
-                if (MenuOptions.ttsEnabled) {
-                    let text: string | undefined
-                    switch (this.state) {
-                        case sc.QUICK_MENU_STATE.NONE:
-                            break
-                        case sc.QUICK_MENU_STATE.ITEMS:
-                            text = 'Items'
-                            break
-                        case sc.QUICK_MENU_STATE.CHECK:
-                            text = 'Analysis'
-                            break
-                        case sc.QUICK_MENU_STATE.PARTY:
-                            text = 'Party'
-                            break
-                        case sc.QUICK_MENU_STATE.MAP:
-                            text = 'Map'
-                            break
-                    }
-                    if (text) {
-                        self.speakI(text)
-                        SpecialAction.setListener('LSP', 'quickMenuDescription', () => {
-                            MenuOptions.ttsEnabled && this.focus && self.speakI(this.data)
-                        })
-                    }
-                }
+                if (!MenuOptions.ttsEnabled || this.state == sc.QUICK_MENU_STATE.NONE) return
+                // prettier-ignore
+                const text = 
+                    this.state == sc.QUICK_MENU_STATE.ITEMS ? 'Items'
+                  : this.state == sc.QUICK_MENU_STATE.CHECK ? 'Analysis'
+                  : this.state == sc.QUICK_MENU_STATE.PARTY ? 'Party'
+                  : this.state == sc.QUICK_MENU_STATE.MAP ? 'Map' : ''
+                speakI(text)
+                SpecialAction.setListener('LSP', 'quickMenuDescription', () => {
+                    this.focus && speakI(this.data)
+                })
             },
         })
 
@@ -336,30 +344,29 @@ export class TextGather {
             },
             onLevelUpEventStart() {
                 this.parent()
-                if (MenuOptions.ttsEnabled) {
-                    const names = {
-                        level: 'Level',
-                        cp: 'Circuit points',
-                        hp: 'Health',
-                        attack: 'Attack',
-                        defense: 'Defense',
-                        focus: 'Focus',
-                    } as const
-                    let text = `Level up! `
-                    for (const key1 in names) {
-                        const key = key1 as keyof typeof names
-                        const statValue = levelStatData[key]
-                        if (statValue) {
-                            const humanReadable = names[key]
-                            text += `plus ${statValue} ${humanReadable}, `
-                        }
+                if (!MenuOptions.ttsEnabled) return
+                const names = {
+                    level: 'Level',
+                    cp: 'Circuit points',
+                    hp: 'Health',
+                    attack: 'Attack',
+                    defense: 'Defense',
+                    focus: 'Focus',
+                } as const
+                let text = `Level up! `
+                for (const key1 in names) {
+                    const key = key1 as keyof typeof names
+                    const statValue = levelStatData[key]
+                    if (statValue) {
+                        const humanReadable = names[key]
+                        text += `plus ${statValue} ${humanReadable}, `
                     }
-                    self.speak(text)
                 }
+                speak(text)
             },
             onLevelUpEventEnd() {
                 this.parent()
-                self.interrupt()
+                interrupt()
             },
         })
 
@@ -372,10 +379,10 @@ export class TextGather {
                     const diff = Date.now() - ignoreButtonFrom
                     if (diff > 50) {
                         if (buttonSayChoice && sc.message.blocking && !ig.game.paused && !ig.loading && !sc.model.isTitle()) {
-                            self.speak(this.text)
+                            speak(this.text!)
                             buttonSayChoice = false
                         } else {
-                            self.speakI(this.text)
+                            speakI(this.text!)
                         }
                     }
                 }
@@ -386,25 +393,21 @@ export class TextGather {
         sc.OptionsMenu.inject({
             exitMenu() {
                 this.parent()
-                MenuOptions.ttsEnabled && self.interrupt()
+                interrupt()
             },
         })
         sc.OptionsTabBox.inject({
             showMenu() {
-                if (MenuOptions.ttsEnabled) {
-                    self.speakArgs('Options menu, Category General: ${0}')
-                    ignoreButtonFrom = Date.now()
-                }
+                speakArgsC('Options menu, Category General: ${0}')
+                ignoreButtonFrom = Date.now()
                 this.parent()
             },
         })
 
         sc.ItemTabbedBox.TabButton.inject({
             onPressedChange(pressed: boolean) {
-                if (pressed && MenuOptions.ttsEnabled) {
-                    self.speakArgs('Category ${0}: ${1}', this.text)
-                    ignoreButtonFrom = Date.now()
-                }
+                speakArgsC('Category ${0}: ${1}', this.text!)
+                ignoreButtonFrom = Date.now()
                 return this.parent(pressed)
             },
         })
@@ -447,99 +450,96 @@ export class TextGather {
             init() {
                 this.parent()
                 this.addSelectionCallback((button?: ig.FocusGui) => {
-                    if (MenuOptions.ttsEnabled) {
-                        const or: sc.OptionRow = (button as sc.RowButtonGroup['elements'][0][0])?.optionRow
-                        if (!or) {
-                            return
-                        }
-                        const entry: { name: string; description: string } = ig.lang.labels.sc.gui.options[or.optionName]
-                        if (entry && Date.now() - lastRowButtonGroupSpeak > 100) {
-                            lastRowButtonGroupSpeak = Date.now()
-                            if (or.option.type == 'BUTTON_GROUP') {
-                                if (or.optionName == lastButtonGroup) {
-                                    return
-                                }
-                                const index: number = sc.options.get(or.optionName) as number
-                                this._lastRowIndex = index
-                                this.rowIndex[this.currentRow] = index
-                                this.focusCurrentButton(this.currentRow, this.rowIndex[this.currentRow], false, false, true)
-                                lastButtonGroup = or.optionName
-                            } else {
-                                lastButtonGroup = undefined
-                            }
-                            const optStr = optionValueToString(or.optionName)
-                            const text: string = `${entry.name}, ${optStr[0]}, ${optStr[1]}`
-                            self.speakI(text)
-                        }
-                        SpecialAction.setListener('LSP', 'optionsRead', () => {
-                            sc.menu.isOptions() && self.speakI(`${entry.description}`)
-                        })
+                    if (!MenuOptions.ttsEnabled) return
+                    const or: sc.OptionRow = (button as sc.RowButtonGroup['elements'][0][0])?.optionRow
+                    if (!or) {
+                        return
                     }
+                    const entry: { name: string; description: string } = ig.lang.labels.sc.gui.options[or.optionName]
+                    if (entry && Date.now() - lastRowButtonGroupSpeak > 100) {
+                        lastRowButtonGroupSpeak = Date.now()
+                        if (or.option.type == 'BUTTON_GROUP') {
+                            if (or.optionName == lastButtonGroup) {
+                                return
+                            }
+                            const index: number = sc.options.get(or.optionName) as number
+                            this._lastRowIndex = index
+                            this.rowIndex[this.currentRow] = index
+                            this.focusCurrentButton(this.currentRow, this.rowIndex[this.currentRow], false, false, true)
+                            lastButtonGroup = or.optionName
+                        } else {
+                            lastButtonGroup = undefined
+                        }
+                        const optStr = optionValueToString(or.optionName)
+                        const text: string = `${entry.name}, ${optStr[0]}, ${optStr[1]}`
+                        speakI(text)
+                    }
+                    SpecialAction.setListener('LSP', 'optionsRead', () => {
+                        sc.menu.isOptions() && speakI(`${entry.description}`)
+                    })
                 })
             },
         })
         sc.OPTION_GUIS[sc.OPTION_TYPES.CHECKBOX].inject({
             onPressed(checkbox: sc.CheckboxGui) {
                 this.parent(checkbox)
-                checkbox == this.button && MenuOptions.ttsEnabled && self.speakI(checkbox.pressed)
+                checkbox == this.button && speakIC(checkbox.pressed)
             },
         })
         sc.OPTION_GUIS[sc.OPTION_TYPES.ARRAY_SLIDER].inject({
             onLeftRight(direction: boolean) {
                 this.parent(direction)
-                MenuOptions.ttsEnabled && self.speakI(`${((this._lastVal / this.scale) * 100).floor()}%`)
+                speakIC(`${((this._lastVal / this.scale) * 100).floor()}%`)
             },
         })
         sc.OPTION_GUIS[sc.OPTION_TYPES.OBJECT_SLIDER].inject({
             onLeftRight(direction: boolean) {
                 this.parent(direction)
-                MenuOptions.ttsEnabled &&
-                    self.speakI(`${this.currentNumber instanceof sc.TextGui ? this.currentNumber.text : (this.currentNumber as sc.NumberGui).targetNumber}`)
+                speakIC(`${this.currentNumber instanceof sc.TextGui ? this.currentNumber.text : (this.currentNumber as sc.NumberGui).targetNumber}`)
             },
         })
 
         sc.ModalButtonInteract.inject({
             show() {
-                MenuOptions.ttsEnabled && self.speakArgs(`Dialog: \${0}, \${1}`, this.textGui.text)
+                speakArgsC(`Dialog: \${0}, \${1}`, this.textGui.text!)
                 this.parent()
             },
             hide() {
-                MenuOptions.ttsEnabled && self.interrupt()
+                interrupt()
                 this.parent()
             },
         })
         sc.SaveSlotButton.inject({
             focusGained() {
                 this.parent()
-                if (MenuOptions.ttsEnabled) {
-                    const slot = this.slotOver
-                    const sg = slot.slotGui
-                    const name: string = sg instanceof sc.NumberGui ? sg.targetNumber.toString() : sg instanceof sc.TextGui ? sg.text!.toString() : ''
+                if (!MenuOptions.ttsEnabled) return
+                const slot = this.slotOver
+                const sg = slot.slotGui
+                const name: string = sg instanceof sc.NumberGui ? sg.targetNumber.toString() : sg instanceof sc.TextGui ? sg.text!.toString() : ''
 
-                    const chapter: number = this.chapter.chapterGui.targetNumber
-                    const location: string = this.location.location.text!.toString()
-                    const speak = `Slot ${name}, chapter ${chapter}, ${location}`
-                    TextGather.g.speakI(speak)
+                const chapter: number = this.chapter.chapterGui.targetNumber
+                const location: string = this.location.location.text!.toString()
+                const speak = `Slot ${name}, chapter ${chapter}, ${location}`
+                speakI(speak)
 
-                    const level: number = this.level.targetNumber
-                    const hours = this.time.hour.targetNumber
-                    const playtime: string = `${hours > 0 ? `${hours} hours` : ''}${this.time.minute.targetNumber} minutes`
-                    SpecialAction.setListener('LSP', 'saveMenu', () => {
-                        TextGather.g.speakI(`level ${level}, playtime ${playtime}`)
-                    })
-                }
+                const level: number = this.level.targetNumber
+                const hours = this.time.hour.targetNumber
+                const playtime: string = `${hours > 0 ? `${hours} hours` : ''}${this.time.minute.targetNumber} minutes`
+                SpecialAction.setListener('LSP', 'saveMenu', () => {
+                    speakI(`level ${level}, playtime ${playtime}`)
+                })
             },
             focusLost() {
                 this.parent()
                 SpecialAction.setListener('LSP', 'saveMenu', () => {})
-                TextGather.g.interrupt()
+                interrupt()
             },
         })
 
         sc.SaveSlotNewButton.inject({
             focusGained() {
                 this.parent()
-                MenuOptions.ttsEnabled && TextGather.g.speakI('Create new save file')
+                speakIC('Create new save file')
             },
         })
     }

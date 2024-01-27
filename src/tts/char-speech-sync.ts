@@ -1,5 +1,5 @@
 import { MenuOptions } from '../options-manager'
-import { TextGather } from './gather-text'
+import { TextGather, interrupt, speakIC } from './gather-text'
 import { SpeechEndListener, TTS } from './tts'
 
 const startDate = Date.now()
@@ -44,9 +44,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
                         if (!ig.system.skipMode) {
                             speed = ig.TextBlock.SPEED.SLOWEST / MenuOptions.ttsSpeed
                         }
-                    } else {
-                        beepSound = null
-                    }
+                    } else beepSound = null
                 }
                 this.parent(maxWidth, pointerType, text, speed, personEntry, beepSound)
             },
@@ -61,11 +59,11 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
                 this.parent()
                 if (MenuOptions.ttsChar) {
                     this.timer = 10000000
-                    TextGather.g.ignoreInteractTo = Date.now() + 100
+                    TextGather.ignoreInteractTo = Date.now() + 100
                 }
             },
             onSkipInteract(type) {
-                TextGather.g.interrupt()
+                interrupt()
                 this.parent(type)
                 if (MenuOptions.ttsChar && type == sc.SKIP_INTERACT_MSG.SKIPPED) {
                     if (this.visibleBoxes.length > 0) {
@@ -73,7 +71,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
                     }
                 }
                 if (this.visibleBoxes.length == 0) {
-                    TextGather.g.speakI('Side end')
+                    speakIC('Side end')
                 }
             },
         })
@@ -95,13 +93,13 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
                 this.parent(expression, label)
                 if (MenuOptions.ttsChar && TTS.g?.ttsInstance?.calibrateSpeed) {
                     if (self.rateCalibData.length <= self.rateCalibCount) {
-                        self.rateCalibData.push([Date.now(), TextGather.g.lastMessage!.toString()])
+                        self.rateCalibData.push([Date.now(), TextGather.lastMessage!.toString()])
                     }
                 }
             },
         })
 
-        TextGather.g.interruptListeners.push(() => {
+        TextGather.addInterruptListener(() => {
             if (TTS.g?.ttsInstance?.calibrateSpeed) {
                 if ((self.rateCalibData.last() ?? [])[0] > startDate) self.rateCalibData.pop()
             }

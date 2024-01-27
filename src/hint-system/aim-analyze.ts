@@ -1,5 +1,5 @@
 import { MenuOptions } from '../options-manager'
-import { TextGather } from '../tts/gather-text'
+import { speakIC } from '../tts/gather-text'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { HintSystem, HintUnion } from './hint-system'
 import { TTS } from '../tts/tts'
@@ -80,19 +80,15 @@ export class AimAnalyzer implements PauseListener {
                     if (sc.quickmodel.isQuickCheck()) {
                         if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
                             self.aimAnalyzeOn = !self.aimAnalyzeOn
-                            if (MenuOptions.ttsEnabled) {
-                                TextGather.g.speakI(`Aim analysis: ${self.aimAnalyzeOn ? 'on' : 'off'}`)
-                            }
+                            speakIC(`Aim analysis: ${self.aimAnalyzeOn ? 'on' : 'off'}`)
                         } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE0 /* a */)) {
                             self.aimBounceOn = !self.aimBounceOn
-                            MenuOptions.ttsEnabled && TextGather.g.speakI(`Aim bounce: ${self.aimBounceOn ? 'on' : 'off'}`)
+                            speakIC(`Aim bounce: ${self.aimBounceOn ? 'on' : 'off'}`)
                         }
                     } else if (sc.quickmodel.isQuickNone()) {
                         if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
                             self.wallScanOn = !self.wallScanOn
-                            if (MenuOptions.ttsEnabled) {
-                                TextGather.g.speakI(`Wall scan: ${self.wallScanOn ? 'on' : 'off'}`)
-                            }
+                            speakIC(`Wall scan: ${self.wallScanOn ? 'on' : 'off'}`)
                         }
                     }
                 }

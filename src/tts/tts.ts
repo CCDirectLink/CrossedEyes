@@ -30,9 +30,8 @@ export interface SpeechEndListener {
 export class TTS {
     static g: TTS
 
-    ttsInstance!: TTSInterface
-    lastOption: TTSTypes | undefined = undefined
-    textGather: TextGather
+    ttsInstance?: TTSInterface
+    private lastOption: TTSTypes | undefined
 
     onSpeechEndListeners: SpeechEndListener[] = []
     onReadyListeners: (() => void)[] = []
@@ -40,15 +39,15 @@ export class TTS {
     constructor() {
         /* in prestart */
         TTS.g = this
-        this.textGather = new TextGather(
+        new TextGather(
             (text: string) => {
-                this.ttsInstance && this.ttsInstance.speak(text)
+                this.ttsInstance?.speak(text)
             },
             (text: string, data: CharacterSpeakData) => {
-                this.ttsInstance && this.ttsInstance.characterSpeak(text, data)
+                this.ttsInstance?.characterSpeak(text, data)
             },
             () => {
-                this.ttsInstance && this.ttsInstance.clearQueue()
+                this.ttsInstance?.clearQueue()
             }
         )
         this.optionChangeEvent()
@@ -74,7 +73,7 @@ export class TTS {
         this.setup()
 
         const interval = setInterval(() => {
-            if (this.ttsInstance.isReady()) {
+            if (this.ttsInstance?.isReady()) {
                 this.onReadyListeners.forEach(f => f())
                 this.onReadyListeners = []
                 clearInterval(interval)

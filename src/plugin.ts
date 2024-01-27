@@ -2,7 +2,7 @@ import { Mod1 } from 'cc-blitzkrieg/src/types'
 import { SpacialAudio } from './spacial-audio'
 import type * as _ from 'cc-vim'
 import type * as __ from 'cc-blitzkrieg'
-import { MenuOptions, MenuOptionsManager } from './options-manager'
+import { MenuOptionsManager } from './options-manager'
 import { LoudWalls } from './environment/loudwalls'
 import { SoundManager } from './sound-manager'
 import { TTS } from './tts/tts'
@@ -15,7 +15,7 @@ import { InteractableHandler } from './environment/interactables'
 import { MovementSoundTweaker } from './environment/movement-sounds'
 import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
 import { AutoUpdater } from './autoupdate'
-import { TextGather } from './tts/gather-text'
+import { speakIC } from './tts/gather-text'
 import { godmode } from './godmode'
 import { LangPopupFix } from './tts/lang-popup-fix'
 import { EntityDecluterrer } from './environment/entity-declutter'
@@ -191,7 +191,7 @@ export default class CrossedEyes {
                         if (lastLogSent + 2000 > Date.now()) return
                         lastLogSent = Date.now()
 
-                        MenuOptions.ttsEnabled && TextGather.g.speakI('uploading')
+                        speakIC('uploading')
                         const fs: typeof import('fs') = require('fs')
                         let data = fs.readFileSync('biglog.txt').toString()
                         const lines = data.split('\n')
@@ -220,7 +220,7 @@ export default class CrossedEyes {
                         const link = (await res.text()).trim()
                         console.log(link)
                         navigator.clipboard.writeText(link)
-                        MenuOptions.ttsEnabled && TextGather.g.speakI('Log link copied to clipboard')
+                        speakIC('Log link copied to clipboard')
                     }
                 }
             })()

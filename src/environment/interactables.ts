@@ -1,7 +1,7 @@
 import { SoundManager } from '../sound-manager'
 import { MenuOptions } from '../options-manager'
 import { HintSystem } from '../hint-system/hint-system'
-import { TextGather } from '../tts/gather-text'
+import { speakIC } from '../tts/gather-text'
 
 const range = 6 * 16
 
@@ -38,9 +38,9 @@ export class InteractableHandler {
                         if (changed) {
                             const hint = HintSystem.g.quickMenuAnalysisInstance.createHint(this.entity, false)
                             if (hint) {
-                                MenuOptions.ttsEnabled && TextGather.g.speakI(hint.nameGui.title.text)
+                                speakIC(hint.nameGui.title.text!)
                             } else {
-                                MenuOptions.ttsEnabled && TextGather.g.speakI('Unmapped interact hint')
+                                speakIC('Unmapped interact hint')
                             }
                         }
                     } else if (this.state == sc.INTERACT_ENTRY_STATE.NEAR) {

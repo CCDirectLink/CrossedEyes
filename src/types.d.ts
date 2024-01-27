@@ -26,6 +26,7 @@ export type TuplifyUnion<T, L = LastOf<T>, N = [T] extends [never] ? true : fals
   true extends N ? [] : Push<TuplifyUnion<Exclude<T, L>>, L>
 
 declare global {
+    type ValidTextLike = string | { toString(): string }
     namespace ig {
         interface SoundHandleBase {
             pos: null | {

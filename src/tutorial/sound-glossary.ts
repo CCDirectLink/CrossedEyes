@@ -1,7 +1,6 @@
-import { MenuOptions } from '../options-manager'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
-import { TextGather, getReadableText } from '../tts/gather-text'
+import { getReadableText, speakArgsC, speakC } from '../tts/gather-text'
 import { TuplifyUnion } from '../types'
 import { sc_MENU_SUBMENU_CROSSEDEYESHUD_SOUND_GLOSSARY } from './crossedeyes-hud'
 import { getSoundGlossaryEntries } from './sound-glossary-entries'
@@ -80,9 +79,9 @@ export class SoundGlossary {
             focusGained() {
                 this.parent()
                 sc.Model.notifyObserver(sc.menu, sc.MENU_EVENT.SYNO_CHANGED_TAB, this.entry)
-                MenuOptions.ttsEnabled && TextGather.g.speak(`${this.entry.name}`)
+                speakC(`${this.entry.name}`)
                 SpecialAction.setListener('LSP', 'soundglossary', () => {
-                    MenuOptions.ttsEnabled && TextGather.g.speak(`${this.entry.description}`)
+                    speakC(`${this.entry.description}`)
                 })
             },
             keepButtonPressed(state: boolean) {
@@ -193,7 +192,7 @@ export class SoundGlossary {
                 }
             },
             showMenu() {
-                MenuOptions.ttsEnabled && TextGather.g.speakArgs(`Sound glossary, Category ${self.categories[0]}: \${0}`)
+                speakArgsC(`Sound glossary, Category ${self.categories[0]}: \${0}`)
                 this.parent()
             },
             hideMenu() {
