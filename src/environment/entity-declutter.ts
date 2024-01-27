@@ -73,7 +73,6 @@ const declutterData: DeclutterData = {
         'U1e2de376fe201e387ed11b0abdfb8f00b4942ecd73d3c9673dc941c43cc43483' /* middle */,
         'Ud09dc7c1a6dcde542ec1dfa8f0cb3650694c7d3fea71d085ec907ffafe171c71' /* middle */,
         'U417629378f17b252a0f3be8f42d801f3a34e09ef5f66c2a5ed24205f0f56dc03' /* middle */,
-        'Uc2714a20bd79f1978bb138e9f0701e53ada2b15f9697ac8fcde9acd86d352fe9' /* bottom middle*/,
         'U351a4bff0b30b1c4fdcc635d85d3c53b68ceae54d4a1763955c17127fed46697' /* bottom middle*/,
         'U77bb760fdaefc989a23d4cf7e34fb5491c32db272c2155a15abcd6591025a723' /* bottom middle*/,
     ],
