@@ -102,7 +102,13 @@ export class ClimbableTerrainHints {
                 let description = ''
                 if (pt.startsWith('cargo-box')) {
                     name = 'Cargo box, jumpable'
-                    description = 'You can jump on me to get to higher places!'
+                    description = 'You can jump on it to get to higher places.'
+                } else if (pt == 'carla-box1') {
+                    name = 'Instant matter box, jumpable'
+                    description = 'You can jump on it to get to higher places.'
+                } else if (pt.startsWith('carla-bridge')) {
+                    name = 'Instant matter platform'
+                    description = 'Use it to do jumps impossible before.'
                 }
                 this.parent(() => {
                     return [name, description, null]
@@ -155,7 +161,7 @@ export class ClimbableTerrainHints {
                 return {
                     type: 'Climbable',
                     hintName: 'ClimbableProp',
-                    disabled: !(MenuOptions.hints && this.coll.type == ig.COLLTYPE.BLOCK && this.propName.startsWith('cargo-box') && self.checkIsJumpable(this)),
+                    disabled: !((MenuOptions.hints && this.propName.startsWith('cargo-box') && self.checkIsJumpable(this)) || this.propName.startsWith('carla')),
                 }
             },
         })

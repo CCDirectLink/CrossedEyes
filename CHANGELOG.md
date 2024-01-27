@@ -8,6 +8,7 @@
 
 - Added level up tts announcing
 - Added sound glossary
+- Added hints for instant matter objects in Cargo Hold 1
 
 ### Fixed
 
