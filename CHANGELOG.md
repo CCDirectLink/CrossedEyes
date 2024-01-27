@@ -13,6 +13,7 @@
 ### Fixed
 
 - Added back a nessesery missing container from Cargo Hold 3
+- Fix some entities being falsly treated as interactables
 
 ## [0.5.3] 2024-01-22
 
