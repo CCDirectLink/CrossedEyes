@@ -435,7 +435,12 @@ export class HintSystem {
                 if (entity && entity.getQuickMenuSettings) {
                     if (filter && self.filterType == 'Selected' && self.selectedHE.findIndex(e => e.uuid == entity.uuid) == -1) return
 
-                    if (filter && self.filterType == 'Interactable' && !sc.mapInteract.entries.find(o => o.entity.uuid == entity.uuid)) return
+                    if (
+                        filter &&
+                        self.filterType == 'Interactable' &&
+                        (!sc.mapInteract.entries.find(o => o.entity.uuid == entity.uuid) || (entity instanceof ig.ENTITY.NPC && entity.xenoDialog))
+                    )
+                        return
 
                     const sett = entity.getQuickMenuSettings() as sc.QuickMenuTypesBaseSettings
                     if (

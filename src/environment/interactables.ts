@@ -28,7 +28,10 @@ export class InteractableHandler {
             },
             setState(state) {
                 this.parent(state)
-                if (!(this.entity instanceof ig.ENTITY.NPC && this.entity.xenoDialog)) this.stateUpdate = true
+                if (this.entity instanceof ig.ENTITY.NPC) {
+                    if (this.entity.xenoDialog || this.entity.xenoDialogGui) return
+                }
+                this.stateUpdate = true
             },
             customUpdate() {
                 if (this.stateUpdate && Opts.loudEntities) {

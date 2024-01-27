@@ -7,6 +7,7 @@
 ### Changed
 
 - Increased interactable volume slider maximum to 3
+- Fix some entities being falsly treated as interactables (again)
 
 ## [0.5.4] 2024-01-27
 
