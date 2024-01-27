@@ -9,6 +9,10 @@
 - Increased interactable volume slider maximum to 3
 - Fix some entities being falsly treated as interactables (again)
 
+### Fixed
+
+- Fixed crash at entering rhombus dungeon
+
 ## [0.5.4] 2024-01-27
 
 ### Added

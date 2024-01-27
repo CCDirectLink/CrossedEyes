@@ -6,6 +6,9 @@ function getVarName(e: TprsFlagSupported): string {
     return genVarName('map', '', e.name!, e.map, e.marker)
 }
 function genVarName(prefix: string, currMap: string, name: string, map: string, marker: string): string {
+    if (typeof name != 'string') marker = ''
+    if (typeof map != 'string') marker = ''
+    if (typeof marker != 'string') marker = ''
     return `${prefix}${currMap.toCamel().replace(/\./, '/')}.crossedeyes-tpr-entered_${name.replace(/\./, '@')}-${map.toCamel().replace(/\./, '/')}-${marker.replace(
         /\./,
         '@'
