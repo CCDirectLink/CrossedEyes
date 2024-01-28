@@ -197,6 +197,9 @@ export class HintSystem {
             this.quickMenuAnalysisInstance.show()
             this.quickMenuAnalysisInstance.enter()
         }
+        if (this.focusedHE && !this.quickMenuAnalysisInstance.createHint(this.focusedHE)) {
+            this.deactivateHint(this.focusedHE)
+        }
     }
 
     private checkHintTogglePressed() {

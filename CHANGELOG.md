@@ -17,6 +17,7 @@
 ### Fixed
 
 - Fixed crash at entering rhombus dungeon
+- Fixed hints not unfocusing when focused and the filter is changed
 
 ## [0.5.4] 2024-01-27
 
