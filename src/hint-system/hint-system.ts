@@ -59,6 +59,7 @@ export class HintSystem {
         HDestructible,
         HEnemy,
         HEnemyCounter,
+        HOLPlatform,
     ]
     filterType: (typeof HintTypes)[number] | 'Hints' = 'All'
     filterHintType: (typeof HintSubTypes)[number] | undefined

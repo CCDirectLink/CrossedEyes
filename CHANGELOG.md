@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added "Moving Block" puzzle entity hint
+
 ### Changed
 
 - Increased interactable volume slider maximum to 3
