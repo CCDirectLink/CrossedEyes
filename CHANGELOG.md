@@ -7,6 +7,7 @@
 ### Added
 
 - Added "Moving Block" puzzle entity hint
+- Added "Chest" hints
 
 ### Changed
 

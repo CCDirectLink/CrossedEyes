@@ -8,15 +8,17 @@ import { AnalyzableHintMenu } from './analyzable-override'
 import { ClimbableTerrainHints } from './climbable-terrain'
 import { EnemyHintMenu } from './enemy-override'
 import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
+import { HChest } from './hints/chest'
 import { HDestructible } from './hints/destructible'
 import { HEnemy, HEnemyCounter } from './hints/enemy'
+import { HOLPlatform } from './hints/rhombus-puzzle'
 import { HMultiHitSwitch, HOneTimeSwitch, HSwitch } from './hints/switches'
 import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
 import { NPCHintMenu } from './npc-override'
 
 export const HintTypes = ['All', 'NPC', 'Enemy', 'Interactable', 'Climbable', 'Selected'] as const /* "Analyzable" category integrated into "Interactable" */
-export const HintSubTypes = ['Puzzle', 'Plants'] as const
+export const HintSubTypes = ['Puzzle', 'Plants', 'Chests'] as const
 
 export interface HintData {
     name: string
@@ -60,6 +62,7 @@ export class HintSystem {
         HEnemy,
         HEnemyCounter,
         HOLPlatform,
+        HChest,
     ]
     filterType: (typeof HintTypes)[number] | 'Hints' = 'All'
     filterHintType: (typeof HintSubTypes)[number] | undefined
@@ -248,8 +251,12 @@ export class HintSystem {
         sc.QUICK_MENU_TYPES.Hints = sc.QuickMenuTypesBase.extend({
             init(type: string, settings: sc.QuickMenuTypesBaseSettings, screen: sc.QuickFocusScreen) {
                 this.parent(type, settings, screen)
-                this.setIconColor(sc.ANALYSIS_COLORS.ORANGE)
-                this.showType = sc.SHOW_TYPE.INSTANT
+                if (settings.hintType == 'Chests') {
+                    this.setIconColor(sc.ANALYSIS_COLORS.GREEN)
+                } else {
+                    this.setIconColor(sc.ANALYSIS_COLORS.ORANGE)
+                }
+                this.showType = sc.SHOW_TYPE.DEFAULT
 
                 this.nameGui = new sc.HintsMenu(settings)
                 this.nameGui.setPivot(this.nameGui.hook.size.x / 2, 0)

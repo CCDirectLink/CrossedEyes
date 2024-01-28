@@ -21,6 +21,12 @@ export class InteractableHandler {
         /* in prestart */
         SoundManager.continiousCleanupFilters.push('interact')
         const self = this
+        ig.ENTITY.Chest.inject({
+            openUp() {
+                this.parent()
+                SoundManager.stopCondinious(self.getId(this))
+            },
+        })
         sc.MapInteractEntry.inject({
             init(entity, handler, icon, zCondition, interrupting) {
                 this.parent(entity, handler, icon, zCondition, interrupting)
@@ -28,9 +34,8 @@ export class InteractableHandler {
             },
             setState(state) {
                 this.parent(state)
-                if (this.entity instanceof ig.ENTITY.NPC) {
-                    if (this.entity.xenoDialog || this.entity.xenoDialogGui) return
-                }
+                if (this.entity instanceof ig.ENTITY.NPC && (this.entity.xenoDialog || this.entity.xenoDialogGui)) return
+                if (this.entity instanceof ig.ENTITY.Chest && this.entity.isOpen) return
                 this.stateUpdate = true
             },
             customUpdate() {

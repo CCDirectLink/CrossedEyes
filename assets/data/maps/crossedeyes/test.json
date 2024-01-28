@@ -160,6 +160,9 @@
                 "shape": "RECTANGLE"
             }
         },
+        { "type": "Chest", "x": 298, "y": 211, "level": 0, "settings": { "name": "", "chestType": "Default", "amount": 3, "variable": "map.chestOpen1", "mapId": 72, "item": "1", "spawnCondition": "map.chests" } },
+        { "type": "Chest", "x": 148, "y": 328, "level": 2, "settings": { "name": "", "chestType": "Default", "amount": 3, "variable": "", "mapId": 73, "item": "1", "spawnCondition": "" } },
+        { "type": "EventTrigger", "x": 170, "y": 148, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 74, "event": [{ "type": "CHANGE_VAR_NUMBER", "varName": "map.chest_73", "changeType": "set", "value": 0 }], "eventType": "INTERRUPTABLE", "startCondition": "tmp.s1", "triggerType": "ONCE_PER_ENTRY", "name": "resetChest", "loadCondition": true, "endCondition": "false" } },
         { "type": "ScalableProp", "x": 1216, "y": 205, "level": 2, "settings": { "size": { "x": 160, "y": 8 }, "mapId": 54, "patternOffset": { "x": 0, "y": 0 }, "propConfig": { "sheet": "arid", "name": "wireFenceH", "ends": { "west": "WEST_DOWN", "east": "EAST_DOWN" } } } },
         { "type": "ScalableProp", "x": 1216, "y": 348, "level": 2, "settings": { "size": { "x": 160, "y": 8 }, "mapId": 55, "patternOffset": { "x": 0, "y": 0 }, "propConfig": { "sheet": "arid", "name": "wireFenceH", "ends": { "west": "WEST_END", "east": "EAST_END" } } } },
         { "type": "ScalableProp", "x": 1368, "y": 204, "level": 2, "settings": { "size": { "x": 8, "y": 152 }, "mapId": 56, "patternOffset": { "x": 0, "y": 0 }, "propConfig": { "sheet": "arid", "name": "wireFenceV", "ends": { "north": "NORTH_END", "south": "SOUTH_END" } } } },
@@ -271,14 +274,14 @@
                 "mapId": 35
             }
         },
-        { "type": "Enemy", "x": 663, "y": 203, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 3, "enemyInfo": { "type": "baggy-kun", "face": "SOUTH", "party": "ENEMY" } } },
+        { "type": "Enemy", "x": 326, "y": 333, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 3, "enemyInfo": { "type": "baggy-kun", "face": "SOUTH", "party": "ENEMY" } } },
         { "type": "Enemy", "x": 546, "y": 206, "level": 2, "settings": { "name": "bot1", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 18 } },
         { "type": "Enemy", "x": 572, "y": 206, "level": 2, "settings": { "name": "bot2", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 19 } },
         { "type": "Enemy", "x": 598, "y": 206, "level": 2, "settings": { "name": "bot3", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_NOT_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 20 } },
-        { "type": "Enemy", "x": 1305, "y": 278, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 49, "enemyInfo": { "party": "ENEMY", "level": 1, "face": "SOUTH", "state": "IDLE", "type": "autumn-rh.practice-bot", "group": "cage" } } },
         { "type": "Enemy", "x": 1315, "y": 233, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 51, "enemyInfo": { "party": "ENEMY", "level": 1, "face": "SOUTH", "state": "IDLE", "type": "meerkat-alt", "group": "cage" } } },
         { "type": "Enemy", "x": 1016, "y": 211, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 52, "enemyInfo": { "party": "PLAYER", "level": 1, "face": "SOUTH", "state": "", "type": "heat.special.brew-machine" } } },
-        { "type": "Enemy", "x": 1243, "y": 226, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 53, "enemyInfo": { "party": "ENEMY", "level": 1, "face": "SOUTH", "state": "IDLE", "type": "jungle.blob", "group": "cage" } } }
+        { "type": "Enemy", "x": 1243, "y": 226, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 53, "enemyInfo": { "party": "ENEMY", "level": 1, "face": "SOUTH", "state": "IDLE", "type": "jungle.blob", "group": "cage" } } },
+        { "type": "Enemy", "x": 1327, "y": 294, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 75, "enemyInfo": { "type": "penguin", "group": "cage", "level": 2, "party": "ENEMY", "face": "NORTH" } } }
     ],
     "layer": [
         {

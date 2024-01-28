@@ -4,7 +4,7 @@ export class AnalyzableHintMenu {
     constructor() {
         /* in prestart */
         sc.AnalyzableHintMenu = sc.BasicHintMenu.extend({
-            init(origText: string, settings: sc.QuickMenuTypesBaseSettings) {
+            init(origText: string, _settings: sc.QuickMenuTypesBaseSettings) {
                 let text = origText,
                     description = 'none'
                 this.parent(() => {
