@@ -4,6 +4,37 @@ import { Hint, HintData } from '../hint-system'
 export class HDestructible implements Hint {
     entryName = 'Destructible'
 
+    private descturcibles: Record</* propName */ string, HintData> = {
+        boxLarge: {
+            name: 'Destructible, Large box',
+            description: 'Destroy with a few hits!',
+        },
+        boxMedium: {
+            name: 'Destructible, Medium box',
+            description: 'Destroy with a hit!',
+        },
+        boxMedNorth: {
+            name: 'Destructible, Medium box, Armored except north',
+            description: 'This box has armor! You can only hit it from the north.',
+        },
+        boxMedSouth: {
+            name: 'Destructible, Medium box, Armored except south',
+            description: 'This box has armor! You can only hit it from the south.',
+        },
+        boxMedEast: {
+            name: 'Destructible, Medium box, Armored except east',
+            description: 'This box has armor! You can only hit it from the east.',
+        },
+        boxMedWest: {
+            name: 'Destructible, Medium box, Armored except west',
+            description: 'This box has armor! You can only hit it from the west.',
+        },
+        default: {
+            name: 'Destructible, Unmapped',
+            description: 'report this to the developer!',
+        },
+    } as const
+
     constructor() {
         /* run in prestart */
         const self = this
@@ -18,31 +49,7 @@ export class HDestructible implements Hint {
         })
     }
     getDataFromEntity(e: ig.Entity): HintData {
-        if (!(e instanceof ig.ENTITY.Destructible)) {
-            throw new Error()
-        }
-
-        let name: string = 'Destructible'
-        let description: string = ''
-        if (e.desType == 'boxLarge') {
-            name = 'Destructible, Large box'
-            description = 'Destroy with a few hits!'
-        } else if (e.desType == 'boxMedium') {
-            name = 'Destructible, Medium box'
-            description = 'Destroy with a hit!'
-        } else if (e.desType == 'boxMedNorth') {
-            name = 'Destructible, Medium box, Armored except north'
-            description = 'This box has armor! You can only hit it from the north.'
-        } else if (e.desType == 'boxMedSouth') {
-            name = 'Destructible, Medium box, Armored except south'
-            description = 'This box has armor! You can only hit it from the south.'
-        } else if (e.desType == 'boxMedEast') {
-            name = 'Destructible, Medium box, Armored except east'
-            description = 'This box has armor! You can only hit it from the east.'
-        } else if (e.desType == 'boxMedWest') {
-            name = 'Destructible, Medium box, Armored except west'
-            description = 'This box has armor! You can only hit it from the west.'
-        }
-        return { name, description }
+        if (!(e instanceof ig.ENTITY.Destructible)) throw new Error()
+        return this.descturcibles[e.desType] ?? this.descturcibles.default
     }
 }

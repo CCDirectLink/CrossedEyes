@@ -1,11 +1,12 @@
 import { Opts } from '../../options-manager'
-import { Hint, HintData } from '../hint-system'
+import { Hint, HintData, HintSystem } from '../hint-system'
 
 export class HChest implements Hint {
     entryName = 'Chest'
 
     constructor() {
         /* run in prestart */
+        HintSystem.customColors['Chests'] = sc.ANALYSIS_COLORS.GREEN
         const self = this
         ig.ENTITY.Chest.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {

@@ -8,6 +8,7 @@
 
 - Added "Moving Block" puzzle entity hint
 - Added "Chest" hints
+- Added hint for the "upgrade field"
 
 ### Changed
 

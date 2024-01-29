@@ -161,7 +161,7 @@
             }
         },
         { "type": "Chest", "x": 298, "y": 211, "level": 0, "settings": { "name": "", "chestType": "Default", "amount": 3, "variable": "map.chestOpen1", "mapId": 72, "item": "1", "spawnCondition": "map.chests" } },
-        { "type": "Chest", "x": 148, "y": 328, "level": 2, "settings": { "name": "", "chestType": "Default", "amount": 3, "variable": "", "mapId": 73, "item": "1", "spawnCondition": "" } },
+        { "type": "Chest", "x": 148, "y": 328, "level": 2, "settings": { "name": "chest1", "chestType": "Default", "amount": 3, "variable": "", "mapId": 73, "item": "1", "spawnCondition": "" } },
         { "type": "EventTrigger", "x": 170, "y": 148, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 74, "event": [{ "type": "CHANGE_VAR_NUMBER", "varName": "map.chest_73", "changeType": "set", "value": 0 }], "eventType": "INTERRUPTABLE", "startCondition": "tmp.s1", "triggerType": "ONCE_PER_ENTRY", "name": "resetChest", "loadCondition": true, "endCondition": "false" } },
         { "type": "ScalableProp", "x": 1216, "y": 205, "level": 2, "settings": { "size": { "x": 160, "y": 8 }, "mapId": 54, "patternOffset": { "x": 0, "y": 0 }, "propConfig": { "sheet": "arid", "name": "wireFenceH", "ends": { "west": "WEST_DOWN", "east": "EAST_DOWN" } } } },
         { "type": "ScalableProp", "x": 1216, "y": 348, "level": 2, "settings": { "size": { "x": 160, "y": 8 }, "mapId": 55, "patternOffset": { "x": 0, "y": 0 }, "propConfig": { "sheet": "arid", "name": "wireFenceH", "ends": { "west": "WEST_END", "east": "EAST_END" } } } },
@@ -281,7 +281,8 @@
         { "type": "Enemy", "x": 1315, "y": 233, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 51, "enemyInfo": { "party": "ENEMY", "level": 1, "face": "SOUTH", "state": "IDLE", "type": "meerkat-alt", "group": "cage" } } },
         { "type": "Enemy", "x": 1016, "y": 211, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 52, "enemyInfo": { "party": "PLAYER", "level": 1, "face": "SOUTH", "state": "", "type": "heat.special.brew-machine" } } },
         { "type": "Enemy", "x": 1243, "y": 226, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 53, "enemyInfo": { "party": "ENEMY", "level": 1, "face": "SOUTH", "state": "IDLE", "type": "jungle.blob", "group": "cage" } } },
-        { "type": "Enemy", "x": 1327, "y": 294, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 75, "enemyInfo": { "type": "penguin", "group": "cage", "level": 2, "party": "ENEMY", "face": "NORTH" } } }
+        { "type": "Enemy", "x": 1327, "y": 294, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 75, "enemyInfo": { "type": "penguin", "group": "cage", "level": 2, "party": "ENEMY", "face": "NORTH" } } },
+        { "type": "Analyzable", "x": 277, "y": 328, "level": 2, "settings": { "name": "anal1", "color": "YELLOW", "showType": "DEFAULT", "text": { "en_US": "Watch CrossCode: the movie. I swear it's great!", "de_DE": "", "fr_FR": "fr_FR", "langUid": 0, "zh_CN": "", "ko_KR": "", "ja_JP": "", "zh_TW": "" }, "mapId": 76, "visible": "", "spawnCondition": "" } }
     ],
     "layer": [
         {
