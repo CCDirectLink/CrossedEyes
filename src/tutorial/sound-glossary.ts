@@ -202,6 +202,19 @@ export class SoundGlossary {
                 this.stopSound()
                 SpecialAction.setListener('LSP', 'soundglossary', () => {})
             },
+            createHelpGui() {
+                if (!this.helpGui) {
+                    this.helpGui = new sc.HelpScreen(
+                        this,
+                        ig.lang.get('sc.gui.menu.help-texts.load.title'),
+                        ig.lang.get('sc.gui.menu.help-texts.load.pages'),
+                        () => {},
+                        true
+                    )
+                    this.helpGui.hook.zIndex = 15e4
+                    this.helpGui.hook.pauseGui = true
+                }
+            },
             toggleSoundSelected(button: sc.SoundGlossary.ListEntry) {
                 this.isEntrySelected = !this.isEntrySelected
                 button.keepButtonPressed(this.isEntrySelected)

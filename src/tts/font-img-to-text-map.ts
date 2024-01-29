@@ -13,7 +13,9 @@ const fontImgToNameMap: Record<string, string> = {
     'gamepad-right': 'Gamepad: right,',
     'gamepad-up': 'Gamepad: up,',
     'gamepad-l1': 'Gamepad: L1,',
+    'circle-left': 'Gamepad: L1,',
     'gamepad-r1': 'Gamepad: R1,',
+    'circle-right': 'Gamepad: R1,',
     'gamepad-l2': 'Gamepad: L2,',
     'gamepad-r2': 'Gamepad: R2,',
     'gamepad-pause': 'Gamepad: pause,',
@@ -54,6 +56,7 @@ const fontImgToNameMap: Record<string, string> = {
     help: '',
     back: '',
     help3: '',
+    mousewheel: 'Mouse wheel',
 }
 
 export function fontImgToName(name: string): string {
