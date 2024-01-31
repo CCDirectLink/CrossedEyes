@@ -26,6 +26,13 @@ export type TuplifyUnion<T, L = LastOf<T>, N = [T] extends [never] ? true : fals
   true extends N ? [] : Push<TuplifyUnion<Exclude<T, L>>, L>
 
 declare global {
+    interface Object {
+        fromEntries<T, K extends string | number | symbol>(entries: [K, T][]): Record<K, T>
+    }
+    interface String {
+        interpolate(...values: (string | number)[]): string
+        supplant(vars: ValidTextLike[] | Record<string, ValidTextLike>): string
+    }
     type ValidTextLike = string | { toString(): string }
     namespace ig {
         interface SoundHandleBase {
@@ -230,7 +237,7 @@ declare global {
                 isSoundOn: boolean
 
                 toggleSoundSelected(this: this, button: sc.SoundGlossary.ListEntry): void
-                getContiniousId(this: this, entry: SoundGlossary.Entry): string
+                getContiniousId(this: this, entry: SoundGlossary.EntryP): string
                 startSound(this: this): void
                 stopSound(this: this): void
                 updateSound(this: this): void
@@ -241,13 +248,13 @@ declare global {
             var Menu: MenuConstructor
 
             interface ListEntry extends sc.ListBoxButton {
-                entry: SoundGlossary.Entry
+                entry: SoundGlossary.EntryP
                 title: sc.TextGui
 
                 keepButtonPressed(this: this, state: boolean): void
             }
             interface ListEntryConstructor extends ImpactClass<ListEntry> {
-                new (entry: SoundGlossary.Entry): ListEntry
+                new (entry: SoundGlossary.EntryP): ListEntry
             }
             var ListEntry: ListEntryConstructor
 
@@ -259,7 +266,7 @@ declare global {
 
                 show(this: this): void
                 hide(this: this): void
-                setData(this: this, entry: SoundGlossary.Entry): void
+                setData(this: this, entry: SoundGlossary.EntryP): void
             }
             interface InfoBoxConstructor extends ImpactClass<InfoBox> {
                 new (): InfoBox

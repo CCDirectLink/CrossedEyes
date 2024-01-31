@@ -4,6 +4,7 @@ import CrossedEyes, { PauseListener } from '../plugin'
 import { HintSystem, HintUnion } from './hint-system'
 import { TTS } from '../tts/tts'
 import { SoundManager } from '../sound-manager'
+import { Lang } from '../lang-manager'
 
 export function isAiming(): boolean {
     return ig.input.state('aim') || ig.gamepad.isRightStickDown()
@@ -80,15 +81,15 @@ export class AimAnalyzer implements PauseListener {
                     if (sc.quickmodel.isQuickCheck()) {
                         if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
                             self.aimAnalyzeOn = !self.aimAnalyzeOn
-                            speakIC(`Aim analysis: ${self.aimAnalyzeOn ? 'on' : 'off'}`)
+                            speakIC(self.aimAnalyzeOn ? Lang.hints.aimAnalysisOn : Lang.hints.aimAnalysisOff)
                         } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE0 /* a */)) {
                             self.aimBounceOn = !self.aimBounceOn
-                            speakIC(`Aim bounce: ${self.aimBounceOn ? 'on' : 'off'}`)
+                            speakIC(self.aimBounceOn ? Lang.hints.aimBounceOn : Lang.hints.aimBounceOff)
                         }
                     } else if (sc.quickmodel.isQuickNone()) {
                         if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
                             self.wallScanOn = !self.wallScanOn
-                            speakIC(`Wall scan: ${self.wallScanOn ? 'on' : 'off'}`)
+                            speakIC(self.wallScanOn ? Lang.hints.wallScanOn : Lang.hints.wallScanOff)
                         }
                     }
                 }

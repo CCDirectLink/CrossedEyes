@@ -1,3 +1,4 @@
+import { Lang } from '../lang-manager'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { getReadableText, speakArgsC, speakC } from '../tts/gather-text'
@@ -6,13 +7,15 @@ import { sc_MENU_SUBMENU_CROSSEDEYESHUD_SOUND_GLOSSARY } from './crossedeyes-hud
 import { getSoundGlossaryEntries } from './sound-glossary-entries'
 
 export namespace SoundGlossary {
-    export type Entry = {
-        name: string
-        description: string
+    export interface Entry {
         config: SoundManager.ContiniousSettings
         range?: number
         dirs?: [string, Vec2][]
         forceOmnidirectional?: boolean
+    }
+    export interface EntryP extends Entry {
+        id: string
+        category: string
     }
 }
 
@@ -20,8 +23,25 @@ export class SoundGlossary {
     private glossary = getSoundGlossaryEntries()
     private categories: TuplifyUnion<keyof typeof this.glossary> = Object.keys(this.glossary) as any
 
+    private getLangDataFromEntry(entry: SoundGlossary.EntryP) {
+        // @ts-expect-error
+        return Lang.menu.soundglossary.entries[entry.category][entry.id]
+    }
+
+    private setCategoriesAndIds() {
+        const glossary = this.glossary as Record</*category */ string, Record</* id */ string, SoundGlossary.Entry>>
+        for (const category in glossary) {
+            const entries = glossary[category]
+            for (const id in entries) {
+                const lang = entries[id] as SoundGlossary.EntryP
+                lang.id = id
+                lang.category = category
+            }
+        }
+    }
     constructor() {
         /* in prestart */
+        this.setCategoriesAndIds()
         const self = this
 
         sc.SoundGlossary = {} as any
@@ -59,29 +79,28 @@ export class SoundGlossary {
             hide() {
                 this.doStateTransition('HIDDEN')
             },
-            setData(entry: SoundGlossary.Entry) {
-                this.title.setText(entry.name)
+            setData(entry: SoundGlossary.EntryP) {
+                const lang = self.getLangDataFromEntry(entry)
+                this.title.setText(lang.name)
                 this.description.setSize(261, 0)
-                entry.description = entry.description
-                    .split('\n')
-                    .map(str => str.trim())
-                    .join('\n')
-                this.description.setText(getReadableText(entry.description))
+                this.description.setText(getReadableText(lang.description))
             },
         })
 
         const width = 250
         sc.SoundGlossary.ListEntry = sc.ListBoxButton.extend({
-            init(entry: SoundGlossary.Entry) {
+            init(entry: SoundGlossary.EntryP) {
                 this.entry = entry
-                this.parent(entry.name, width - 3, 73)
+                const lang = self.getLangDataFromEntry(entry)
+                this.parent(lang.name, width - 3, 73)
             },
             focusGained() {
                 this.parent()
                 sc.Model.notifyObserver(sc.menu, sc.MENU_EVENT.SYNO_CHANGED_TAB, this.entry)
-                speakC(`${this.entry.name}`)
+                const lang = self.getLangDataFromEntry(this.entry)
+                speakC(`${lang.name}`)
                 SpecialAction.setListener('LSP', 'soundglossary', () => {
-                    speakC(`${this.entry.description}`)
+                    speakC(`${lang.description}`)
                 })
             },
             keepButtonPressed(state: boolean) {
@@ -161,7 +180,8 @@ export class SoundGlossary {
                 list.clear()
                 buttonGroup.clear()
                 const entries = self.glossary[self.categories[type]]
-                for (const entry of entries) {
+                for (const entryId in entries) {
+                    const entry = entries[entryId as keyof typeof entries]
                     const button = new sc.SoundGlossary.ListEntry(entry)
                     list.addButton(button)
                 }
@@ -192,7 +212,7 @@ export class SoundGlossary {
                 }
             },
             showMenu() {
-                speakArgsC(`Sound glossary, Category ${self.categories[0]}: \${0}`)
+                speakArgsC(Lang.menu.soundglossary.firstOpen.supplant({ category: self.categories[0] }))
                 this.parent()
             },
             hideMenu() {
@@ -204,13 +224,7 @@ export class SoundGlossary {
             },
             createHelpGui() {
                 if (!this.helpGui) {
-                    this.helpGui = new sc.HelpScreen(
-                        this,
-                        ig.lang.get('sc.gui.menu.help-texts.load.title'),
-                        ig.lang.get('sc.gui.menu.help-texts.load.pages'),
-                        () => {},
-                        true
-                    )
+                    this.helpGui = new sc.HelpScreen(this, Lang.menu.soundglossary.helpTitle, Lang.menu.soundglossary.helpDescription, () => {}, true)
                     this.helpGui.hook.zIndex = 15e4
                     this.helpGui.hook.pauseGui = true
                 }

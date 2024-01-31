@@ -1,3 +1,4 @@
+import { Lang } from '../../lang-manager'
 import { Opts } from '../../options-manager'
 import { Hint, HintData, HintSystem } from '../hint-system'
 
@@ -16,9 +17,6 @@ export class HChest implements Hint {
     }
     getDataFromEntity(e: ig.Entity): HintData {
         if (!(e instanceof ig.ENTITY.Chest)) throw new Error()
-
-        const name: string = `Chest`
-        const description: string = "I wonder what's inside?"
-        return { name, description }
+        return Lang.hints.Chest
     }
 }

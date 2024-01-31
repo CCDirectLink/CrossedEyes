@@ -1,39 +1,11 @@
+import { Lang } from '../../lang-manager'
 import { Opts } from '../../options-manager'
 import { Hint, HintData } from '../hint-system'
 
 export class HDestructible implements Hint {
     entryName = 'Destructible'
 
-    private descturcibles: Record</* propName */ string, HintData> = {
-        boxLarge: {
-            name: 'Destructible, Large box',
-            description: 'Destroy with a few hits!',
-        },
-        boxMedium: {
-            name: 'Destructible, Medium box',
-            description: 'Destroy with a hit!',
-        },
-        boxMedNorth: {
-            name: 'Destructible, Medium box, Armored except north',
-            description: 'This box has armor! You can only hit it from the north.',
-        },
-        boxMedSouth: {
-            name: 'Destructible, Medium box, Armored except south',
-            description: 'This box has armor! You can only hit it from the south.',
-        },
-        boxMedEast: {
-            name: 'Destructible, Medium box, Armored except east',
-            description: 'This box has armor! You can only hit it from the east.',
-        },
-        boxMedWest: {
-            name: 'Destructible, Medium box, Armored except west',
-            description: 'This box has armor! You can only hit it from the west.',
-        },
-        default: {
-            name: 'Destructible, Unmapped',
-            description: 'report this to the developer!',
-        },
-    } as const
+    private descturcibles: Record</* propName */ string, HintData> = Lang.hints.destructibles
 
     constructor() {
         /* run in prestart */

@@ -1,5 +1,8 @@
+import { Lang } from '../../lang-manager'
 import { Opts } from '../../options-manager'
 import { Hint, HintData } from '../hint-system'
+
+/* NOTE: I call a thing that move me from map to another map "tpr" */
 
 type TprsFlagSupported = ig.ENTITY.Door | ig.ENTITY.TeleportGround | ig.ENTITY.TeleportField
 function getVarName(e: TprsFlagSupported): string {
@@ -17,13 +20,14 @@ function genVarName(prefix: string, currMap: string, name: string, map: string, 
 
 function getDestMapName(e: TprsFlagSupported): string {
     const visited: boolean = ig.vars.get(getVarName(e))
-    const destMapName = visited ? sc.map.getMapName(e.map).toString() : 'unknown'
+    const destMapName = visited ? sc.map.getMapName(e.map).toString() : Lang.hints.unknownDestMap
     if (/* this is true when the map isnt in the current area */ destMapName == ig.game.mapName) {
         const area = e.map.substring(0, e.map.indexOf('.'))
         let areaName = sc.map.getAreaName(area)
         if (!areaName) {
             /* ughhhhhhh */
-            /* this is a egde case where the area has different names in fs and sc.map.areas; for example: autumn in fs and autumn-area in sc.map.areas */
+            /* this is a egde case where the area has different names in fs and sc.map.areas;
+             * for example: autumn in fs and autumn-area in sc.map.areas */
             areaName = sc.map.getAreaName(
                 (
                     JSON.parse(
@@ -34,7 +38,7 @@ function getDestMapName(e: TprsFlagSupported): string {
                 ).attributes.area
             )
         }
-        return `area: ${areaName}`
+        return Lang.hints.areaTemplate.supplant({ area })
     }
     return destMapName
 }
@@ -65,6 +69,7 @@ export class HDoor implements Hint {
             },
         })
 
+        /* the code below applies for all tpr's */
         function filterTprs(e: ig.Entity[]): TprsFlagSupported[] {
             return e.filter(e => e instanceof ig.ENTITY.Door || e instanceof ig.ENTITY.TeleportGround || e instanceof ig.ENTITY.TeleportField) as any[]
         }
@@ -87,13 +92,12 @@ export class HDoor implements Hint {
     }
 
     getDataFromEntity(e: ig.Entity): HintData {
-        if (!(e instanceof ig.ENTITY.Door)) {
-            throw new Error()
-        }
+        if (!(e instanceof ig.ENTITY.Door)) throw new Error()
 
-        const name: string = `Door to ${getDestMapName(e)}, ${e.active ? 'active' : 'inactive'}`
-        const description: string = `Transports you to a different map`
-        return { name, description }
+        const lang = { ...Lang.hints.Door }
+        if (!e.active) lang.name = lang.nameInactive
+        lang.name = lang.name.supplant({ destMapName: getDestMapName(e) })
+        return lang
     }
 }
 
@@ -122,14 +126,22 @@ export class HTeleportField implements Hint {
         })
     }
     getDataFromEntity(e: ig.Entity): HintData {
-        if (!(e instanceof ig.ENTITY.TeleportField)) {
-            throw new Error()
-        }
+        if (!(e instanceof ig.ENTITY.TeleportField)) throw new Error()
 
         const text: string | undefined = ((e.interactEntry.gui.subGui as sc.IconHoverTextGui).getChildGuiByIndex(0).gui as sc.TextGui).text?.toString()
-        const name: string = `Teleport Field${text ? ` to ${text}` : ''}${ig.vars.get(getVarName(e)) ? ', visited ' : ''}`
-        const description: string = `Teleports you to ${text ? text : 'a different map'}`
-        return { name, description }
+        const lang = { ...Lang.hints.TeleportField }
+        if (text) {
+            lang.name = lang.nameWithMap
+            lang.description = lang.descriptionWithMap
+            lang.description = lang.description.supplant({
+                destPlaceName: text ?? '',
+            })
+        }
+        lang.name = lang.name.supplant({
+            destPlaceName: text ?? '',
+            conditionalVisited: ig.vars.get(getVarName(e)) ? `, ${Lang.hints.TeleportField.visitedSuffix}` : '',
+        })
+        return lang
     }
 }
 
@@ -153,13 +165,11 @@ export class HTeleportGround implements Hint {
         })
     }
     getDataFromEntity(e: ig.Entity): HintData {
-        if (!(e instanceof ig.ENTITY.TeleportGround)) {
-            throw new Error()
-        }
+        if (!(e instanceof ig.ENTITY.TeleportGround)) throw new Error()
 
-        const name: string = `Path to ${getDestMapName(e)}`
-        const description: string = `Transports you to a different map`
-        return { name, description }
+        const lang = { ...Lang.hints.TeleportGround }
+        lang.name = lang.name.supplant({ destMapName: getDestMapName(e) })
+        return lang
     }
 }
 
@@ -181,12 +191,10 @@ export class HElevator implements Hint {
         })
     }
     getDataFromEntity(e: ig.Entity): HintData {
-        if (!(e instanceof sc.ElevatorSwitchEntity)) {
-            throw new Error()
-        }
+        if (!(e instanceof sc.ElevatorSwitchEntity)) throw new Error()
 
-        const name: string = `Elevator${e.groundEntity.condition.evaluate() ? '' : ', inactive'}`
-        const description: string = `Transports you to a different map`
-        return { name, description }
+        const lang = Lang.hints.Elevator
+        if (!e.groundEntity.condition.evaluate()) lang.name = lang.nameInactive
+        return lang
     }
 }

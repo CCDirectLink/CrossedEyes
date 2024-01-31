@@ -72,7 +72,7 @@ export class EntityBeeper {
             },
             update(...args) {
                 this.parent(...args)
-                if (CrossedEyes.isPaused || this._hidden) return
+                if (CrossedEyes.isPaused || this._hidden || !Opts.loudEntities) return
                 self.handleEntity(this)
             },
         })

@@ -1,3 +1,4 @@
+import { Lang } from '../lang-manager'
 import { Opts } from '../options-manager'
 
 const sc_MENU_SUBMENU_CROSSEDEYESHUD_MENU = 385943 as const
@@ -15,7 +16,7 @@ export class CrossedEyesHud {
                 this.hook.size.x = ig.system.width
                 this.hook.size.y = ig.system.height
 
-                const buttonConfs: [string, sc.MENU_SUBMENU][] = [['Sound glossary', sc.MENU_SUBMENU.CROSSEDEYESHUD_SOUNDGLOSSARY]] as const
+                const buttonConfs: [string, sc.MENU_SUBMENU][] = [[Lang.menu.soundglossary.name, sc.MENU_SUBMENU.CROSSEDEYESHUD_SOUNDGLOSSARY]]
 
                 this.buttonGroup = new sc.ButtonGroup()
                 // sc.menu.buttonInteract.pushButtonGroup(this.buttonGroup)
@@ -83,7 +84,7 @@ export class CrossedEyesHud {
             init() {
                 this.parent()
 
-                const b = (this.crossedEyesHudButton = new sc.ButtonGui('CrossedEyes', sc.BUTTON_DEFAULT_WIDTH))
+                const b = (this.crossedEyesHudButton = new sc.ButtonGui(Lang.crossedeyes, sc.BUTTON_DEFAULT_WIDTH))
                 b.onButtonPress = () => {
                     sc.menu.setDirectMode(true, sc.MENU_SUBMENU.CROSSEDEYESHUD_MENU)
                     sc.model.enterMenu(true)

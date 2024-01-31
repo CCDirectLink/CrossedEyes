@@ -1,3 +1,4 @@
+import { Lang } from '../lang-manager'
 import { Opts } from '../options-manager'
 import { TextGather, interrupt, speakIC } from './gather-text'
 import { SpeechEndListener, TTS } from './tts'
@@ -65,13 +66,11 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
             onSkipInteract(type) {
                 interrupt()
                 this.parent(type)
-                if (Opts.ttsChar && type == sc.SKIP_INTERACT_MSG.SKIPPED) {
-                    if (this.visibleBoxes.length > 0) {
+                if (Opts.ttsChar) {
+                    if (type == sc.SKIP_INTERACT_MSG.SKIPPED && this.visibleBoxes.length > 0) {
                         this.doMessageStep()
                     }
-                }
-                if (this.visibleBoxes.length == 0) {
-                    speakIC('Side end')
+                    if (this.visibleBoxes.length == 0) speakIC(Lang.msg.sideMsgEnd)
                 }
             },
         })

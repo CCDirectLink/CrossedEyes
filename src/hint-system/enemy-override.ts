@@ -1,3 +1,4 @@
+import { Lang } from '../lang-manager'
 import { Opts } from '../options-manager'
 import { HintSystem } from './hint-system'
 import { HEnemy } from './hints/enemy'
@@ -37,23 +38,33 @@ export class EnemyHintMenu {
                 const text = `${name}`
 
                 const resArr = enemyInfoBoxIns.resistance.res.map(pn => pn.number.targetNumber) as [number, number, number, number]
-                let resStr: string = ''
-                for (let i = sc.ELEMENT.HEAT; i <= sc.ELEMENT.WAVE; i++) {
-                    const res: number = resArr[i - 1]
-                    if (res != 0) {
-                        resStr += `${Object.entries(sc.ELEMENT)
-                            .find(e => e[1] == i)![0]
-                            .toLowerCase()} resistance: ${res}, `
-                    }
-                }
-                const desc1 = `${resStr.length == 0 ? 'no elemental resistances' : resStr}`
+                // prettier-ignore
+                const str = [
+                    [resArr[0], Lang.stats.heat],
+                    [resArr[1], Lang.stats.cold],
+                    [resArr[2], Lang.stats.shock],
+                    [resArr[3], Lang.stats.wave],
+                ].filter(e => e[0] != 0).map(e => Lang.stats.resistanceTemplate.supplant({
+                    percentage: e[0],
+                    element: e[1]
+                })).join(', ')
+
+                const desc1 = `${str ? str : Lang.stats.noElementalResistances}`
 
                 const hp = enemyInfoBoxIns.baseHp.number.targetNumber
-                const def = enemyInfoBoxIns.baseDefense.number.targetNumber
-                const foc = enemyInfoBoxIns.baseFocus.number.targetNumber
-                const atk = enemyInfoBoxIns.baseAttack.number.targetNumber
+                const defense = enemyInfoBoxIns.baseDefense.number.targetNumber
+                const focus = enemyInfoBoxIns.baseFocus.number.targetNumber
+                const attack = enemyInfoBoxIns.baseAttack.number.targetNumber
                 const desc2 = `${
-                    enemyInfoBoxIns.baseHp.number.scramble ? 'unknown stats' : `level ${enemy.getLevel()}, max hp: ${hp}, defense: ${def}, attack: ${atk}, focus: ${foc}`
+                    enemyInfoBoxIns.baseHp.number.scramble
+                        ? Lang.stats.unknownStats
+                        : Lang.stats.statTemplate.supplant({
+                              level: enemy.getLevel(),
+                              hp,
+                              defense,
+                              focus,
+                              attack,
+                          })
                 }`
                 this.parent(() => {
                     return [text, desc1, desc2]

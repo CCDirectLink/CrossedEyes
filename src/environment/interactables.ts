@@ -2,6 +2,7 @@ import { SoundManager } from '../sound-manager'
 import { Opts } from '../options-manager'
 import { HintSystem } from '../hint-system/hint-system'
 import { speakIC } from '../tts/gather-text'
+import { Lang } from '../lang-manager'
 
 const range = 6 * 16
 
@@ -48,7 +49,7 @@ export class InteractableHandler {
                             if (hint) {
                                 speakIC(hint.nameGui.title.text!)
                             } else {
-                                speakIC('Unmapped interact hint')
+                                speakIC(Lang.enviroment.unmappedInteractHint)
                             }
                         }
                     } else if (this.state == sc.INTERACT_ENTRY_STATE.NEAR) {

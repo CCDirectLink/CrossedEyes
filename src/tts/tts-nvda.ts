@@ -4,6 +4,7 @@ import CrossedEyes from '../plugin'
 import { Opts } from '../options-manager'
 
 import AdmZip from 'adm-zip'
+import { Lang } from '../lang-manager'
 
 const fs: typeof import('fs') = (0, eval)('require("fs")')
 
@@ -31,7 +32,7 @@ export class TTSNvda implements TTSInterface {
 
         console.log('starting nvda server')
         this.server.on('connection', (socket: WebSocket) => {
-            this.speak('NVDA connected')
+            this.speak(Lang.tts.nvdaConnected)
             socket.on('close', () => {
                 this.sockets.splice(this.sockets.indexOf(socket))
             })

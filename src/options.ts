@@ -8,45 +8,31 @@ export function getOptions() {
                 autoUpdate: {
                     type: 'CHECKBOX',
                     init: true,
-                    name: 'Auto update',
-                    description: 'Automaticly update the CrossedEyes mod when a new version is availible',
                     saveToLocalStorage: true,
                 },
                 spacialAudio: {
                     type: 'CHECKBOX',
                     init: true,
-                    name: 'Spacial audio',
-                    description: 'Makes it so you can clearly tell from where the sound is coming from',
                 },
                 loudWalls: {
                     type: 'CHECKBOX',
                     init: true,
-                    name: 'Loud walls',
-                    description: 'Make the walls directonaly beep when you approach them',
                 },
                 loudEntities: {
                     type: 'CHECKBOX',
                     init: true,
-                    name: 'Entity noises',
-                    description: 'Makes entities emit noise while nearby',
                 },
                 hints: {
                     type: 'CHECKBOX',
                     init: true,
-                    name: 'Hint system',
-                    description: 'The hint sytstem allows you to see what objects are around you',
                 },
                 textBeeping: {
                     type: 'CHECKBOX',
                     init: true,
-                    name: 'Text beeping',
-                    description: 'Enable text beeping when characters talk',
                 },
                 hudVisible: {
                     type: 'CHECKBOX',
                     init: true,
-                    name: 'CrossedEyes button visibility',
-                    description: 'Show the CrossedEyes hud button in the pause menu',
                     saveToLocalStorage: true,
                 },
             },
@@ -59,16 +45,12 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'Enemy vulnerable multiplier',
-                    description: 'Extend the length of enemy vulnerablity',
                 },
             },
             tts: {
                 tts: {
                     type: 'CHECKBOX',
                     init: true,
-                    name: 'Enable TTS',
-                    description: 'Enable TTS',
                     changeEvent: () => TTS.g.optionChangeEvent(),
                     saveToLocalStorage: true,
                 },
@@ -76,16 +58,12 @@ export function getOptions() {
                     type: 'BUTTON_GROUP',
                     init: TTSTypes['Web Speech'],
                     enum: TTSTypes,
-                    name: 'TTS Type',
-                    description: 'Reader type, Requires a restart!',
                     changeEvent: () => TTS.g.setup(),
                     saveToLocalStorage: true,
                 },
                 ttsChar: {
                     type: 'CHECKBOX',
                     init: true,
-                    name: 'TTS Character text',
-                    description: 'Read character text',
                 },
                 ttsSpeed: {
                     type: 'OBJECT_SLIDER',
@@ -95,8 +73,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'TTS Speed',
-                    description: 'TTS voulme',
                 },
                 ttsVolume: {
                     type: 'OBJECT_SLIDER',
@@ -106,8 +82,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'TTS Volume',
-                    description: 'TTS Volume (may not work)',
                 },
                 ttsPitch: {
                     type: 'OBJECT_SLIDER',
@@ -117,8 +91,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'TTS Pitch',
-                    description: 'TTS pitch',
                 },
             },
             volumes: {
@@ -130,8 +102,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'Footstep volume',
-                    description: 'Footstep volume multiplier',
                 },
                 jumpVolume: {
                     type: 'OBJECT_SLIDER',
@@ -141,8 +111,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'Jump volume',
-                    description: 'Jump volume multiplier',
                 },
                 dashVoulme: {
                     type: 'OBJECT_SLIDER',
@@ -152,8 +120,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'Dash volume',
-                    description: 'Dash volume multiplier',
                 },
                 wallVolume: {
                     type: 'OBJECT_SLIDER',
@@ -163,8 +129,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'Wall volume',
-                    description: 'Wall volume multiplier',
                 },
                 wallBumpVolume: {
                     type: 'OBJECT_SLIDER',
@@ -174,8 +138,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'Wall bumping volume',
-                    description: 'Wall bumping volume multiplier',
                 },
                 jumpHintsVolume: {
                     type: 'OBJECT_SLIDER',
@@ -185,8 +147,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'Jump hints volume',
-                    description: 'Jump hints volume multiplier',
                 },
                 wallScanVolume: {
                     type: 'OBJECT_SLIDER',
@@ -196,8 +156,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'Wall scan volume',
-                    description: 'Wall scan volume multiplier',
                 },
                 hintsVolume: {
                     type: 'OBJECT_SLIDER',
@@ -207,8 +165,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'Hints volume',
-                    description: 'Hints volume multiplier',
                 },
                 interactableVolume: {
                     type: 'OBJECT_SLIDER',
@@ -218,8 +174,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'Interactable volume',
-                    description: 'Interactable volume multiplier',
                 },
                 entityHintsVolume: {
                     type: 'OBJECT_SLIDER',
@@ -229,8 +183,6 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
-                    name: 'Entity hints volume',
-                    description: 'Entity hints volume multiplier',
                 },
             },
         },

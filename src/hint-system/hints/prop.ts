@@ -1,3 +1,4 @@
+import { Lang } from '../../lang-manager'
 import { Opts } from '../../options-manager'
 import { Hint, HintData } from '../hint-system'
 import { HClimbableTerrain } from './climbable-terrain'
@@ -5,19 +6,14 @@ import { HClimbableTerrain } from './climbable-terrain'
 export class HProp implements Hint {
     entryName = 'Prop'
 
-    private props: Record</* propName */ string, HintData> = {
-        symbol: {
-            name: 'Upgrade field',
-            description: 'Walk into it to get an upgrade!',
-        },
-    } as const
+    private props: Record</* propName */ string, HintData> = Lang.hints.props
 
     constructor() {
         /* run in prestart */
         const self = this
         ig.ENTITY.Prop.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                const sett = HClimbableTerrain.checkProp(this)
+                const sett = HClimbableTerrain.getPropConfig(this)
                 if (sett) return sett
                 return { type: 'Hints', hintName: self.entryName, hintType: 'Chests', disabled: !Opts.hints || !self.props[this.propName] }
             },

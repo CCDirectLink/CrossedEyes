@@ -10,6 +10,7 @@
 - Added "Chest" hints
 - Added hint for the "upgrade field"
 - Added help menu tts support
+- Added full mod multi-language support
 
 ### Changed
 

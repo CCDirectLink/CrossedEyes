@@ -1,3 +1,4 @@
+import { Lang } from '../../lang-manager'
 import { Opts } from '../../options-manager'
 import { Hint, HintData } from '../hint-system'
 
@@ -22,21 +23,22 @@ export class HWalls implements Hint {
         })
     }
     getDataFromEntity(e: ig.Entity): HintData {
-        if (!(e instanceof ig.ENTITY.WallBlocker)) {
-            throw new Error()
-        }
+        if (!(e instanceof ig.ENTITY.WallBlocker)) throw new Error()
 
+        const lang = { ...Lang.hints.Wall }
         const whatBlocks = `${
+            // prettier-ignore
             e.coll.type == ig.COLLTYPE.FENCE
-                ? 'blocks everything'
+                ? lang.blocksEverything
                 : e.coll.type == ig.COLLTYPE.NPFENCE
-                  ? 'blocks players'
-                  : e.coll.type == ig.COLLTYPE.PBLOCK
-                    ? 'blocks projectiles'
-                    : ''
+                ? lang.blocksPlayers
+                : e.coll.type == ig.COLLTYPE.PBLOCK
+                ? lang.blocksPlayers
+                : ''
         }`
-        const name: string = `${e.parentWall.condition && e.parentWall.condition.code != 'true' ? 'Conditional ' : ''}Wall, ${whatBlocks}`
-        const description: string = `A wall that can be turned off, ${whatBlocks}`
-        return { name, description }
+        if (e.parentWall.condition && e.parentWall.condition.code != 'true') lang.name = lang.nameConditional
+        lang.name = lang.name.supplant({ whatBlocks })
+        lang.description = lang.description.supplant({ whatBlocks })
+        return lang
     }
 }

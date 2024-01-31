@@ -1,8 +1,8 @@
+import { Lang } from '../lang-manager'
 import { Opts } from '../options-manager'
 import CrossedEyes from '../plugin'
 import { SpecialAction } from '../special-action'
-import { expressionMap } from './expression-map'
-import { fontImgToName } from './font-img-to-text-map'
+import { FontToImgMap } from './font-img-to-text-map'
 import { CharacterSpeakData } from './tts'
 
 export function getReadableText(orig: string): string {
@@ -14,7 +14,7 @@ export function getReadableText(orig: string): string {
 
     const imgMatches: string[] | null = text.match(/\\i\[[^\]]*\]/g)
     for (let img of imgMatches ?? []) {
-        const replacement: string = fontImgToName(img.substring(3, img.length - 1))
+        const replacement: string = FontToImgMap.convert(img.substring(3, img.length - 1))
         if (replacement === undefined) {
             console.warn(`IMAGE: '${img}' is unmapped`)
         }
@@ -118,6 +118,9 @@ export class TextGather {
         /* in prestart */
         staticInstance = this
         CrossedEyes.initPoststarters.push(this)
+
+        new FontToImgMap()
+
         SpecialAction.setListener('RSP', 'repeatLast', () => {
             speakI(this.lastMessage)
         })
@@ -208,31 +211,30 @@ export class TextGather {
             },
             play(exp: sc.CharacterExpression, label: ig.LangLabel) {
                 if (Opts.ttsChar) {
-                    let charName: string = ig.LangLabel.getText((exp.character.data as any).name)
-                    if (charName == '???') {
-                        charName = 'Unknown'
-                    }
+                    let character: string = ig.LangLabel.getText(exp.character.data.name)
+                    if (character == '???') character = Lang.msg.unknownCharacter
 
-                    const labelStr: string = label.toString()
+                    const sentence: string = label.toString()
                     let expression: string = ''
-                    if (!sc.message.blocking || prevChar != charName) {
-                        expression = expressionMap[exp.expression]
+                    if (!sc.message.blocking || prevChar != character) {
+                        expression = (Lang.msg.expressionMap as Record<string, string>)[exp.expression]
                         if (expression === undefined) {
                             console.error(`expression: "${exp.expression}" not mapped`)
                             expression = 'Expression mapping error'
                         }
                     }
                     let text: string
-                    if (labelStr == '[nods]') {
-                        text = `${charName} nods`
-                    } else if (labelStr.startsWith('...') && labelStr.length <= 5) {
+                    if (sentence == Lang.msg.nodAsInGame) {
+                        text = Lang.msg.nodTemplate.supplant({ character }) // `${charName} nods`
+                    } else if (sentence.startsWith('...') && sentence.length <= 5) {
                         /* cover: ... ...! ...? ...?! */
-                        text = `${expression} ${charName} is silent${labelStr.substring(3)}`
+                        const punctuation = sentence.substring(3)
+                        text = Lang.msg.silentTemplate.supplant({ expression, character, punctuation })
                     } else {
-                        text = `${prevChar != charName ? `${expression} ${charName} says: ` : ''}${labelStr}`
+                        text = Lang.msg.regularTemplate.supplant({ expression, character, sentence })
                     }
-                    sideMsg && (text = `Side: ${text}`)
-                    prevChar = charName
+                    sideMsg && (text = Lang.msg.sideMsgTemplate.supplant({ rest: text }))
+                    prevChar = character
                     charSpeak(text, {})
                 }
                 this.parent(exp, label)
@@ -308,7 +310,7 @@ export class TextGather {
         sc.QuickMenuModel.inject({
             enterQuickMenu() {
                 this.parent()
-                speakIC('Quick Menu')
+                speakIC(Lang.menu.quickmenu)
             },
             exitQuickMenu() {
                 this.parent()
@@ -325,10 +327,11 @@ export class TextGather {
                 if (!Opts.tts || this.state == sc.QUICK_MENU_STATE.NONE) return
                 // prettier-ignore
                 const text = 
-                    this.state == sc.QUICK_MENU_STATE.ITEMS ? 'Items'
-                  : this.state == sc.QUICK_MENU_STATE.CHECK ? 'Analysis'
-                  : this.state == sc.QUICK_MENU_STATE.PARTY ? 'Party'
-                  : this.state == sc.QUICK_MENU_STATE.MAP ? 'Map' : ''
+                    this.state == sc.QUICK_MENU_STATE.ITEMS ? Lang.menu.quickmenuItems
+                  : this.state == sc.QUICK_MENU_STATE.CHECK ? Lang.menu.quickmenuAnalysis
+                  : this.state == sc.QUICK_MENU_STATE.PARTY ? Lang.menu.quickmenuParty
+                  : this.state == sc.QUICK_MENU_STATE.MAP ? Lang.menu.quickmenuMap
+                  : ''
                 speakI(text)
                 SpecialAction.setListener('LSP', 'quickMenuDescription', () => {
                     this.focus && speakI(this.data)
@@ -346,20 +349,20 @@ export class TextGather {
                 this.parent()
                 if (!Opts.tts) return
                 const names = {
-                    level: 'Level',
-                    cp: 'Circuit points',
-                    hp: 'Health',
-                    attack: 'Attack',
-                    defense: 'Defense',
-                    focus: 'Focus',
+                    level: Lang.stats.level,
+                    cp: Lang.stats.circuitPoints,
+                    hp: Lang.stats.health,
+                    attack: Lang.stats.attack,
+                    defense: Lang.stats.defense,
+                    focus: Lang.stats.focus,
                 } as const
-                let text = `Level up! `
+                let text = `${Lang.menu.levelup} `
                 for (const key1 in names) {
                     const key = key1 as keyof typeof names
-                    const statValue = levelStatData[key]
-                    if (statValue) {
-                        const humanReadable = names[key]
-                        text += `plus ${statValue} ${humanReadable}, `
+                    const value = levelStatData[key]
+                    if (value) {
+                        const statName = names[key]
+                        text += Lang.menu.levelupTemplate.supplant({ value, statName })
                     }
                 }
                 speak(text)
@@ -398,7 +401,7 @@ export class TextGather {
         })
         sc.OptionsTabBox.inject({
             showMenu() {
-                speakArgsC('Options menu, Category General: ${0}')
+                speakArgsC(Lang.menu.options.firstOpen)
                 ignoreButtonFrom = Date.now()
                 this.parent()
             },
@@ -406,7 +409,7 @@ export class TextGather {
 
         sc.ItemTabbedBox.TabButton.inject({
             onPressedChange(pressed: boolean) {
-                speakArgsC('Category ${0}: ${1}', this.text!)
+                speakArgsC(Lang.menu.options.categorySwitch, this.text!)
                 ignoreButtonFrom = Date.now()
                 return this.parent(pressed)
             },
@@ -423,15 +426,18 @@ export class TextGather {
             const val: string | number | boolean = sc.options.get(optionName) as any
             switch (entry.type) {
                 case 'BUTTON_GROUP':
-                    return ['Button group', Object.keys(entry.data)[val as number]]
+                    return [Lang.menu.options.buttonGroup, Object.keys(entry.data)[val as number]]
                 case 'ARRAY_SLIDER':
-                    return ['Slider', `${((val as number) * 100).floor()}%`]
+                    return [Lang.menu.options.slider, `${((val as number) * 100).floor()}%`]
                 case 'OBJECT_SLIDER':
-                    return ['Slider', `${entry.showPercentage ? `${((val as number) * 100).floor()}%` : Object.values(entry.data).findIndex(e => e == val) + 1}`]
+                    return [
+                        Lang.menu.options.slider,
+                        `${entry.showPercentage ? `${((val as number) * 100).floor()}%` : Object.values(entry.data).findIndex(e => e == val) + 1}`,
+                    ]
                 case 'CHECKBOX':
-                    return ['Checkbox', `${val}`]
+                    return [Lang.menu.options.checkbox, `${val}`]
                 case 'CONTROLS':
-                    return ['Keybinding', 'not supported']
+                    return [Lang.menu.options.keybinding, Lang.misc.notSupported]
                 case 'LANGUAGE':
                     return [
                         '',
@@ -501,7 +507,7 @@ export class TextGather {
 
         sc.ModalButtonInteract.inject({
             show() {
-                speakArgsC(`Dialog: \${0}, \${1}`, this.textGui.text!)
+                speakArgsC(Lang.menu.dialog, this.textGui.text!)
                 this.parent()
             },
             hide() {
@@ -519,14 +525,18 @@ export class TextGather {
 
                 const chapter: number = this.chapter.chapterGui.targetNumber
                 const location: string = this.location.location.text!.toString()
-                const speak = `Slot ${name}, chapter ${chapter}, ${location}`
+                const speak = Lang.menu.save.template1.supplant({ name, chapter, location })
                 speakI(speak)
 
                 const level: number = this.level.targetNumber
                 const hours = this.time.hour.targetNumber
-                const playtime: string = `${hours > 0 ? `${hours} hours` : ''}${this.time.minute.targetNumber} minutes`
+                const minutes = this.time.minute.targetNumber
+                const playtime = (hours > 0 ? Lang.menu.save.playtimeWithHoursTemplate : Lang.menu.save.playtimeTemplate).supplant({
+                    minutes,
+                    hours,
+                })
                 SpecialAction.setListener('LSP', 'saveMenu', () => {
-                    speakI(`level ${level}, playtime ${playtime}`)
+                    speakI(Lang.menu.save.template2.supplant({ level, playtime }))
                 })
             },
             focusLost() {
@@ -539,7 +549,7 @@ export class TextGather {
         sc.SaveSlotNewButton.inject({
             focusGained() {
                 this.parent()
-                speakIC('Create new save file')
+                speakIC(Lang.menu.save.createNewSaveFile)
             },
         })
 

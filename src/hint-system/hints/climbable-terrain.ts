@@ -1,16 +1,23 @@
+import { Lang } from '../../lang-manager'
 import { Opts } from '../../options-manager'
-import { Hint, HintSystem } from '../hint-system'
+import { Hint, HintData, HintSystem } from '../hint-system'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
 export class HClimbableTerrain implements Hint {
     entryName = 'Climbable'
 
+    private static wProps: Record<string, HintData>
+    private static sProps: Record<string, HintData>
+    private static checkIsClimbable = new Set<string>(['cargo-box'])
+
     constructor() {
         /* in prestart */
         HintSystem.customColors['Climbable'] = sc.ANALYSIS_COLORS.GREY
         /* ig.ENTITY.Prop injection in prop.ts */
 
+        HClimbableTerrain.wProps = Lang.hints.climbableProps.wholeMatch
+        HClimbableTerrain.sProps = Lang.hints.climbableProps.startsWith
         // sc.QuickMenuAnalysis.inject({
         //     populateHintList() {
         //         this.parent()
@@ -20,22 +27,22 @@ export class HClimbableTerrain implements Hint {
 
     getDataFromEntity(e: ig.Entity) {
         if (!(e instanceof ig.ENTITY.Prop)) throw new Error()
+        return HClimbableTerrain.getPropLang(e)!
+    }
 
-        let name: string = ''
-        let description: string = ''
-
+    private static getPropLang(e: ig.ENTITY.Prop) {
         const pt = e.propName
-        if (pt.startsWith('cargo-box')) {
-            name = 'Cargo box, jumpable'
-            description = 'You can jump on it to get to higher places.'
-        } else if (pt == 'carla-box1') {
-            name = 'Instant matter box, jumpable'
-            description = 'You can jump on it to get to higher places.'
-        } else if (pt.startsWith('carla-bridge')) {
-            name = 'Instant matter platform'
-            description = 'Use it to do jumps impossible before.'
+        if (this.wProps[pt]) return this.wProps[pt]
+        for (const startsWith in this.sProps) {
+            if (pt.startsWith(startsWith)) return this.sProps[startsWith]
         }
-        return { name, description }
+    }
+    private static checkProp(e: ig.ENTITY.Prop): boolean {
+        if (!Opts.hints) return false
+        const lang = this.getPropLang(e)
+        if (!lang) return false
+        if (this.checkIsClimbable.has(e.propName)) return this.checkIsJumpable(e)
+        return true
     }
 
     private static getLevelFromZ(z: number): number {
@@ -112,11 +119,11 @@ export class HClimbableTerrain implements Hint {
         return false
     }
 
-    static checkProp(e: ig.ENTITY.Prop): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> | undefined {
-        if (!Opts.hints || !((e.propName.startsWith('cargo-box') && this.checkIsJumpable(e)) || e.propName.startsWith('carla'))) return
-        return { type: 'Hints', hintType: 'Climbable', hintName: 'Climbable' }
+    static getPropConfig(e: ig.ENTITY.Prop): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> | undefined {
+        if (this.checkProp(e)) return { type: 'Hints', hintType: 'Climbable', hintName: 'Climbable' }
     }
 
+    /* unused (at least for now) */
     createFakeEntity(pos: Vec3, size: Vec3) {
         return {
             coll: { pos, size },

@@ -1,3 +1,4 @@
+import { Lang } from './lang-manager'
 import { Opts } from './options-manager'
 import CrossedEyes from './plugin'
 import { speakI, speakIC } from './tts/gather-text'
@@ -47,7 +48,7 @@ export class AutoUpdater {
             if (anyUpdated) {
                 if (Opts.tts) {
                     setTimeout(() => {
-                        speakI('Mod updated. Restarting...')
+                        speakI(Lang.autoupdate.restart)
                         setTimeout(() => {
                             window.location.reload()
                         }, 3000)
@@ -58,7 +59,7 @@ export class AutoUpdater {
             } else {
                 TTS.g.onReadyListeners.push(() => {
                     console.log(CrossedEyes.mod.version)
-                    speakIC(`CrossedEyes version: ${CrossedEyes.mod.version!.toString().replace(/\./g, ': ')}: up to date`)
+                    speakIC(Lang.autoupdate.versionAnnounce.supplant({ version: CrossedEyes.mod.version!.toString().replace(/\./g, ': ') }))
                 })
             }
         }

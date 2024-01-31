@@ -1,3 +1,4 @@
+import { Lang } from '../../lang-manager'
 import { Opts } from '../../options-manager'
 import { Hint, HintData } from '../hint-system'
 
@@ -19,33 +20,34 @@ export class HBounceBlock implements Hint {
         })
     }
     getDataFromEntity(e: ig.Entity): HintData {
-        if (!(e instanceof ig.ENTITY.BounceBlock || e instanceof ig.ENTITY.Blocker)) {
-            throw new Error()
-        }
+        if (!(e instanceof ig.ENTITY.BounceBlock || e instanceof ig.ENTITY.Blocker)) throw new Error()
 
         let dirs: [string, string]
         switch (e.coll.shape!) {
             case ig.COLLSHAPE.RECTANGLE:
-                dirs = ['Rectangle', '']
+                dirs = [Lang.misc.rectangle, '']
                 break
             case ig.COLLSHAPE.SLOPE_NE:
-                dirs = ['North', 'East']
+                dirs = [Lang.misc.north, Lang.misc.east]
                 break
             case ig.COLLSHAPE.SLOPE_SE:
-                dirs = ['South', 'East']
+                dirs = [Lang.misc.south, Lang.misc.east]
                 break
             case ig.COLLSHAPE.SLOPE_SW:
-                dirs = ['South', 'West']
+                dirs = [Lang.misc.south, Lang.misc.west]
                 break
             case ig.COLLSHAPE.SLOPE_NW:
-                dirs = ['North', 'West']
+                dirs = [Lang.misc.north, Lang.misc.west]
                 break
         }
-        const name: string = `Bounce Block ${dirs[0]} ${dirs[1] ?? ''}`
-        const description: string = `Balls bounce off it.\n${
-            dirs[0] != 'Rectangle' ? `A ball comint from the ${dirs[0]} will bounce to the ${dirs[1]} and the other way around.` : ''
-        }`
-        return { name, description }
+        const lang = { ...Lang.hints.BounceBlock }
+        lang.name = lang.name.supplant({ dir1: dirs[0], dir2: dirs[1] })
+        // prettier-ignore
+        lang.description = 
+            dirs[0] == 'Rectangle'
+            ? lang.descriptionRectangle 
+            : (lang.description = lang.description.supplant({ dir1: dirs[0], dir2: dirs[1] }))
+        return lang
     }
 }
 
@@ -62,12 +64,7 @@ export class HBounceSwitch implements Hint {
         })
     }
     getDataFromEntity(e: ig.Entity): HintData {
-        if (!(e instanceof ig.ENTITY.BounceSwitch)) {
-            throw new Error()
-        }
-
-        const name: string = `Bounce Switch`
-        const description: string = 'A final destination for a ball that bounced from a Bounce Block'
-        return { name, description }
+        if (!(e instanceof ig.ENTITY.BounceSwitch)) throw new Error()
+        return Lang.hints.BounceSwitch
     }
 }

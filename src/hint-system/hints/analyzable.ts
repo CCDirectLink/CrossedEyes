@@ -1,3 +1,4 @@
+import { Lang } from '../../lang-manager'
 import { Hint, HintData, HintSystem } from '../hint-system'
 
 export class HAnalyzable implements Hint {
@@ -9,8 +10,8 @@ export class HAnalyzable implements Hint {
         /* no need for ig.ENTITY.Analyzable inject, all 'Analyzable' hint types are redirected here */
     }
     getDataFromEntity(_: ig.Entity, settings: sc.QuickMenuTypesBaseSettings): HintData {
-        const name: string = `Analyzable: ${ig.LangLabel.getText(settings.text!)}`
-        const description: string = 'None'
-        return { name, description }
+        const lang = { ...Lang.hints.Analyzable }
+        lang.name = lang.name.supplant({ name: ig.LangLabel.getText(settings.text!) })
+        return lang
     }
 }

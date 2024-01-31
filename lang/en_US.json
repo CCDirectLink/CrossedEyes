@@ -1,0 +1,586 @@
+{
+    "crossedeyes": "CrossedEyes",
+    "opts": {
+        "autoUpdate": { "name": "Auto update", "description": "Automaticly update the CrossedEyes mod when a new version is availible" },
+        "spacialAudio": { "name": "Spacial audio", "description": "Makes it so you can clearly tell from where the sound is coming from" },
+        "loudWalls": { "name": "Loud walls", "description": "Make the walls directonaly beep when you approach them" },
+        "loudEntities": { "name": "Entity noises", "description": "Makes entities emit noise while nearby" },
+        "hints": { "name": "Hint system", "description": "The hint sytstem allows you to see what objects are around you" },
+        "textBeeping": { "name": "Text beeping", "description": "Enable text beeping when characters talk" },
+        "hudVisible": { "name": "CrossedEyes button visibility", "description": "Show the CrossedEyes hud button in the pause menu" },
+        "enemyVulnerableMulti": { "name": "Enemy vulnerable multiplier", "description": "Extend the length of enemy vulnerablity" },
+        "tts": { "name": "Enable TTS", "description": "Enable TTS" },
+        "ttsType": { "name": "TTS Type", "description": "Reader type, Requires a restart!" },
+        "ttsChar": { "name": "TTS Character text", "description": "Read character text" },
+        "ttsSpeed": { "name": "TTS Speed", "description": "TTS voulme" },
+        "ttsVolume": { "name": "TTS Volume", "description": "TTS Volume (may not work)" },
+        "ttsPitch": { "name": "TTS Pitch", "description": "TTS pitch" },
+        "footstepVolume": { "name": "Footstep volume", "description": "Footstep volume multiplier" },
+        "jumpVolume": { "name": "Jump volume", "description": "Jump volume multiplier" },
+        "dashVoulme": { "name": "Dash volume", "description": "Dash volume multiplier" },
+        "wallVolume": { "name": "Wall volume", "description": "Wall volume multiplier" },
+        "wallBumpVolume": { "name": "Wall bumping volume", "description": "Wall bumping volume multiplier" },
+        "jumpHintsVolume": { "name": "Jump hints volume", "description": "Jump hints volume multiplier" },
+        "wallScanVolume": { "name": "Wall scan volume", "description": "Wall scan volume multiplier" },
+        "hintsVolume": { "name": "Hints volume", "description": "Hints volume multiplier" },
+        "interactableVolume": { "name": "Interactable volume", "description": "Interactable volume multiplier" },
+        "entityHintsVolume": { "name": "Entity hints volume", "description": "Entity hints volume multiplier" }
+    },
+    "autoupdate": {
+        "restart": "Mod updated. Restarting...",
+        "versionAnnounce": "CrossedEyes version: {version}: up to date"
+    },
+    "logupload": {
+        "uploading": "Uploading...",
+        "copied": "Log link copied to clipboard"
+    },
+    "enviroment": {
+        "unmappedInteractHint": "Unmapped interact hint"
+    },
+    "menu": {
+        "quickmenu": "Quick Menu",
+        "quickmenuItems": "Items",
+        "quickmenuAnalysis": "Analysis",
+        "quickmenuParty": "Party",
+        "quickmenuMap": "Map",
+        "levelup": "Level up!",
+        "levelupTemplate": "plus {value} {statName}",
+        "dialog": "Dialog: ${0}, ${1}",
+        "save": {
+            "template1": "Slot {name}, chapter {chapter}, {location}",
+            "template2": "level {level}, playtime {playtime}",
+            "playtimeTemplate": "{minutes} minutes.",
+            "playtimeWithHoursTemplate": "{hours} hours, {minutes} minutes.",
+            "createNewSaveFile": "Create new save file"
+        },
+        "options": {
+            "firstOpen": "Options menu, Category General: ${0}",
+            "categorySwitch": "Category ${0}: ${1}",
+            "buttonGroup": "Button group",
+            "slider": "Slider",
+            "keybinding": "Keybinding",
+            "checkbox": "Checkbox"
+        },
+        "fontImgToTextMap": {
+            "left-stick": "Gamepad: left stick,",
+            "right-stick": "Gamepad: right stick,",
+            "gamepad-left": "Gamepad: left,",
+            "gamepad-down": "Gamepad: down,",
+            "gamepad-right": "Gamepad: right,",
+            "gamepad-up": "Gamepad: up,",
+            "gamepad-l1": "Gamepad: L1,",
+            "circle-left": "Gamepad: L1,",
+            "gamepad-r1": "Gamepad: R1,",
+            "circle-right": "Gamepad: R1,",
+            "gamepad-l2": "Gamepad: L2,",
+            "gamepad-r2": "Gamepad: R2,",
+            "gamepad-pause": "Gamepad: pause,",
+            "gamepad-select": "Gamepad: select,",
+            "gamepad-a": "Gamepad: A,",
+            "gamepad-b": "Gamepad: B,",
+            "gamepad-x": "Gamepad: X,",
+            "gamepad-y": "Gamepad: Y,",
+            "gamepad-dualshock-x": "Gamepad: square,",
+            "gamepad-dualshock-y": "Gamepad: triangle,",
+            "gamepad-dualshock-b": "Gamepad: circle,",
+            "gamepad-dualshock-a": "Gamepad: X,",
+            "left-stick-left": "Gamepad: left stick: left,",
+            "left-stick-right": "Gamepad: left stick: right,",
+            "left-stick-press": "Gamepad: left stick: press,",
+            "right-stick-press": "Gamepad: right stick: press,",
+            "gamepad-l1-off": "Gamepad: L1 off,",
+            "gamepad-r1-off": "Gamepad: R1 off,",
+            "dash": "Gamepad: L1,",
+            "guard": "Gamepad: A,",
+            "throw": "Gamepad: R1,",
+            "special": "Gamepad: R2,",
+            "twitter": "twitter",
+            "mousewheel": "Mouse wheel"
+        },
+        "soundglossary": {
+            "name": "Sound glossary",
+            "firstOpen": "Sound glossary, Category {category}: ${0}",
+            "helpTitle": "Sound glossary",
+            "helpDescription": [
+                {
+                    "content": ["test"]
+                }
+            ],
+            "entries": {
+                "Navigation": {
+                    "wall": {
+                        "name": "Wall",
+                        "description": "Plays at the wall if it there is one.\nIt checks four directions: north, east, south and east.\nThe directions aren't related to which way the player is facing.\nThe closer you are, the louder the sound gets.\nWhen the player is facing away from the wall, a lower pitch version plays."
+                    },
+                    "jump": {
+                        "name": "Jump",
+                        "description": "The player jumps automaticly right before the edge.\nCan vary depending on the terrain you are jumping from."
+                    },
+                    "collision": {
+                        "name": "Collision",
+                        "description": "Plays when you run into an obstacle that stops your movement.\nThe more your movement is blocked by the obstacle, the louder the sound."
+                    },
+                    "jumphintWater": {
+                        "name": "Jump hint: water",
+                        "description": "For 8 directions around the player, this sound will play at each location where the player would fall into water.\nThe directions are rotated with the player facing.\nWhen the player is facing away from the hint, a lower pitch version plays."
+                    },
+                    "jumphintHole": {
+                        "name": "Jump hint: hole",
+                        "description": "For 8 directions around the player, this sound will play at each location where the player would fall into a hole.\nThe directions are rotated with the player facing.\nWhen the player is facing away from the hint, a lower pitch version plays."
+                    },
+                    "jumphintLower": {
+                        "name": "Jump hint: lower",
+                        "description": "For 8 directions around the player, this sound will play at each location where the player would descend into a lower Y level.\nThis can mean downwards stairs or that you can jump down onto a lower platfrom.\nThe directions are rotated with the player facing.\nWhen the player is facing away from the hint, a lower pitch version plays."
+                    },
+                    "jumphintHigher": {
+                        "name": "Jump hint: higer",
+                        "description": "For 8 directions around the player, this sound will play at each location where the player would ascend into a higer Y level.\nThis can mean upwards stairs or that you can jump up onto a higer platfrom.\nThe directions are rotated with the player facing.\nWhen the player is facing away from the hint, a lower pitch version plays."
+                    },
+                    "jumphintPlatform": {
+                        "name": "Jump hint: platform",
+                        "description": "For 8 directions around the player, this sound will play at each location where the player would jump across a hole and land onto a platform.\nThe directions are rotated with the player facing.\nWhen the player is facing away from the hint, a lower pitch version plays."
+                    }
+                },
+                "Combat": {
+                    "melee": {
+                        "name": "Melee attack",
+                        "description": "You attack using \\i[gamepad-x] or \\i[gamepad-r1].\nAfter attacking 3 times in quick succesion, the forth attack will be a multi-directional spin that does more damage, but will leave you vulnerable for half a second."
+                    },
+                    "dash": {
+                        "name": "Dash",
+                        "description": "You dash using \\i[gamepad-l1].\nYou can dash up to three times in a row, after that you have to wait a little bit, otherwise you will start spinning while covering very little distance."
+                    },
+                    "levelup": {
+                        "name": "Level up",
+                        "description": "You level up after gathering more than 1000 expiernce points since last level up.\nAn animation plays, annoucing how much stats you've gained."
+                    }
+                },
+                "Entities": {
+                    "interactableNearby": {
+                        "name": "Interactable nearby",
+                        "description": "Plays when something you can interact with is nearby."
+                    },
+                    "interactable": {
+                        "name": "Can interact",
+                        "description": "Plays when you can interact with something.\nUse \\i[gamepad-a] to interact."
+                    },
+                    "tpr": {
+                        "name": "Door or path to a different map",
+                        "description": "Plays at doors or paths."
+                    },
+                    "enemy": {
+                        "name": "Enemy",
+                        "description": "Plays at enemies.\nWhen the player is facing away from the entity, a lower pitch version plays."
+                    },
+                    "puzzle": {
+                        "name": "Various hit-able puzzle elements",
+                        "description": "Plays at various hit-able puzzle elements.\nYou can hit them either with a ball or a melee attack.\nWhen the player is facing away from the hint, a lower pitch version plays."
+                    }
+                },
+                "Hints": {
+                    "hint": {
+                        "name": "Hint",
+                        "description": "Plays when a hint is selected.\nWhen the player is facing away from the hint, a lower pitch version plays."
+                    },
+                    "wallscan": {
+                        "name": "Wall scan",
+                        "description": "To turn on wall scanning, to the quick menu with \\i[gamepad-l2] and press \\i[gamepad-y].\nWhen wall scanning is on, plays at a wall you're aiming at."
+                    }
+                }
+            }
+        }
+    },
+    "tts": {
+        "nvdaConnected": "NVDA connected."
+    },
+    "stats": {
+        "unknownStats": "unknows stats",
+        "noElementalResistances": "no elemental resistances",
+        "resistance": "resistance",
+        "statTemplate": "level {level}, {hp} max health, {defense} defense, {attack} attack, {focus} focus.",
+        "level": "Level",
+        "circuitPoints": "Circuit points",
+        "health": "Health",
+        "attack": "Attack",
+        "defense": "Defense",
+        "focus": "Focus",
+        "cold": "cold",
+        "heat": "heat",
+        "shock": "shock",
+        "wave": "wave",
+        "resistanceTemplate": "{percentage} {element} resistance"
+    },
+    "misc": {
+        "north": "North",
+        "east": "East",
+        "south": "South",
+        "west": "West",
+        "rectangle": "Rectangle",
+        "notSupported": "Not supported."
+    },
+    "hints": {
+        "focused": "{hintTitle}",
+        "focusedSelected": "Selected, {hintTitle}",
+        "unselected": "Unselected.",
+        "hintFilter": "Hint filter",
+        "aimAnalysisOn": "Aim analysis: on.",
+        "aimAnalysisOff": "Aim analysis: off.",
+        "aimBounceOn": "Aim bounce: on.",
+        "aimBounceOff": "Aim bounce: off.",
+        "wallScanOn": "Wall scan: on.",
+        "wallScanOff": "Wall scan: off.",
+
+        "Analyzable": { "name": "Analyzable: {name}", "description": "None." },
+
+        "BounceBlock": {
+            "name": "Bounce Block {dir1} {dir2}",
+            "description": "Balls bounce off it.\nA ball coming from the {dir1} will bounce to the {dir2} and the other way around.",
+            "descriptionRectangle": "Balls bounce off it."
+        },
+        "BounceSwitch": { "name": "Bounce Switch", "description": "A final destination for a ball that bounced from a Bounce Block." },
+
+        "Chest": { "name": "Chest", "description": "I wonder what's inside?" },
+
+        "climbableProps": {
+            "wholeMatch": {},
+            "startsWith": {
+                "cargo-box": { "name": "Cargo box, jumpable", "description": "You can jump on it to get to higher places." },
+                "carla-box": { "name": "Instant matter box, jumpable", "description": "You can jump on it to get to higher places." },
+                "carla-bridge": { "name": "Instant matter platform", "description": "Use it to do jumps impossible before." }
+            }
+        },
+        "props": {
+            "symbol": {
+                "name": "Upgrade field",
+                "description": "Walk into it to get an upgrade!"
+            }
+        },
+        "destructibles": {
+            "boxLarge": { "name": "Destructible, Large box", "description": "Destroy with a few hits!" },
+            "boxMedium": { "name": "Destructible, Medium box", "description": "Destroy with a hit!" },
+            "boxMedNorth": {
+                "name": "Destructible, Medium box, Armored except north",
+                "description": "This box has armor! You can only hit it from the north."
+            },
+            "boxMedSouth": {
+                "name": "Destructible, Medium box, Armored except south",
+                "description": "This box has armor! You can only hit it from the south."
+            },
+            "boxMedEast": {
+                "name": "Destructible, Medium box, Armored except east",
+                "description": "This box has armor! You can only hit it from the east."
+            },
+            "boxMedWest": {
+                "name": "Destructible, Medium box, Armored except west",
+                "description": "This box has armor! You can only hit it from the west."
+            },
+            "default": { "name": "Destructible, Unmapped", "description": "report this to the developer!" }
+        },
+        "enemies": {
+            "target-bot": {
+                "canShoot": { "name": "Target Bot, shootable", "description": "Shoot me!" },
+                "blocker": { "name": "Target Bot, blocker", "description": "Do not shoot! Will block your balls." }
+            },
+            "baggy-kun": { "name": "Training bag", "description": "Hit as you will! Cannot be moved and won't fight you back." }
+        },
+        "EnemyCounter": {
+            "name": "Enemy Counter, enemies left: {enemiesLeft}",
+            "description": "Counts enemies left. Triggers something after reaching zero."
+        },
+
+        "OLPlatform": { "name": "Moving block", "description": "Extends or retracts when a certain condition is met." },
+
+        "Switch": {
+            "name": "Switch, on",
+            "nameOff": "Switch, off",
+            "description": "Hit with a ball or a melee to toggle."
+        },
+        "OneTimeSwitch": { "name": "One Time Switch", "description": "Hit with a ball or a melee to activate pernamently." },
+        "MultiHitSwitch": {
+            "name": "Multi Hit Switch",
+            "description": "Hit with a ball or a melee {hitsToActive} times in rapid succession to activate pernamently."
+        },
+
+        "unknownDestMap": "unknown",
+        "areaTemplate": "area: {area}",
+        "Door": {
+            "name": "Door to {destMapName}, active",
+            "nameInactive": "Door to {destMapName}, inactive",
+            "description": "Transports you to a different map."
+        },
+        "TeleportField": {
+            "name": "Teleport Field",
+            "nameWithMap": "Teleport Field to {destPlaceName}{conditionalVisited}",
+            "visitedSuffix": "visited",
+            "description": "Teleports you somewhere",
+            "descriptionWithMap": "Teleports you to {destPlaceName}"
+        },
+        "TeleportGround": {
+            "name": "Path to {destMapName}",
+            "nameInactive": "Elevator, inactive",
+            "description": "Transports you to a different map."
+        },
+        "Elevator": {
+            "name": "Elevator",
+            "nameInactive": "Elevator, inactive",
+            "description": "Transports you to a different map."
+        },
+
+        "Wall": {
+            "name": "Wall, {whatBlocks}",
+            "nameConditional": "Conditional Wall, {whatBlocks}",
+            "blocksEverything": "blocks everything",
+            "blocksPlayers": "blocks players",
+            "blocksProjectiles": "blocks projectiles",
+            "description": "A wall that can be turned off, {whatBlocks}"
+        }
+    },
+    "msg": {
+        "unknownCharacter": "Unknown",
+        "regularTemplate": "{expression} {character} says: {sentence}",
+        "silentTemplate": "{expression} {character} is silent{punctuation}",
+        "sideMsgTemplate": "Side: {rest}",
+        "sideMsgEnd": "Side end.",
+        "nodAsInGame": "[nods]",
+        "nodTemplate": "{character} nods.",
+        "expressionMap": {
+            "ANGRY": "Angry",
+            "ANGRY_GLASS": "Angry",
+            "ANNOYED": "Annoyed",
+            "ASKING": "Asking",
+            "ASTONISHED": "Astonished",
+            "AWAY": "",
+            "AWAY_PANIC": "Panicing",
+            "AWESOME": "Poggers",
+            "AWWW": "Adoring",
+            "BADASS": "",
+            "BALD": "",
+            "BLANK": "",
+            "BORED": "Bored",
+            "BORED_AR": "Bored",
+            "BRIGHT": "Happy",
+            "BROKEN": "",
+            "CHAIR_BACK": "Sitting in a chair,",
+            "CHAIR_DEFAULT": "Sitting in a chair,",
+            "CHAIR_DOWN": "Sitting in a chair,",
+            "CHAIR_SIDE": "Sitting in a chair,",
+            "CHARMED": "Charmed",
+            "COMPLAINING": "Complaining",
+            "COMPLEX": "Complex",
+            "CONCERNED": "Concerned",
+            "CONCERNED_GLASS": "Concerned",
+            "CONDESCENDING": "Condescending",
+            "CONDESCENDING_AR": "Condescending",
+            "CONFLICTED": "Conflicted",
+            "CONFUSED": "Confused",
+            "CONFUSED_AR": "Confused",
+            "CONTENT": "Content",
+            "CRAZY_GRIN": "Stressed Smiling",
+            "CRAZY_GRIN2": "Stressed Smiling",
+            "CRAZY_GRIN3": "Stressed Squinted eyes",
+            "CRAZY_PANIC": "Stressed Panicking",
+            "CRAZY_PANIC2": "Stressed Panicking",
+            "CRAZY_SMILE": "Stressed Smiling",
+            "CRY": "Sobbing",
+            "CULTURE": "Smiling Closed eyes",
+            "CURIOUS": "Curious",
+            "DARK": "",
+            "DEAD_INSIDE": "Dead inside",
+            "DEAD_INSIDE2": "Dead inside",
+            "DEFAULT": "",
+            "DEFAULT_AR": "",
+            "DEFAULT_GLASS": "",
+            "DENYING": "Denying",
+            "DESPERATE": "Desperate",
+            "DETERMINED": "Determined",
+            "DISGUSTED": "Disgusted",
+            "DOWN": "",
+            "DOWN_AR": "",
+            "DOWN_EYE_CLOSED": "",
+            "DOWN_GLASS": "",
+            "DOWN_PANIC": "Panicking",
+            "DOWN_SMILE": "Smiling",
+            "DOWN_SMILE_GLASS": "Smiling",
+            "DOWN_TALK": "",
+            "DOWN_TALK_AR": "",
+            "DRAMATIC": "Dramatic",
+            "DUMBFOUNDED": "Dumbfounded",
+            "EMBARRASSED": "Embarrassed",
+            "EVIL_GRIN": "Closed eyes",
+            "EXCITED": "Excited",
+            "EXHAUSTED": "Exhausted",
+            "EYES_CLOSED": "Closed eyes",
+            "FROWN": "Frown",
+            "FROWN_AR": "Frown",
+            "FUNNY_SMILE": "Funny smile",
+            "GLASS": "",
+            "GLASS_ANGRY": "Angry",
+            "GLASS_COOL": "",
+            "GLASS_DEFAULT": "",
+            "GLASS_GRIN": "Smiling",
+            "GLASS_IRRITATED": "Irritated",
+            "GLASS_NERVOUS": "Nervous",
+            "GLASS_SMILE": "Smiling",
+            "GLASS_TOWARD": "",
+            "GLASS_UP": "",
+            "GLASS_UP_COOL": "",
+            "GLASS_UP_GRIN": "Grinning",
+            "GLASS_WHISTLING": "Whistling",
+            "GRIN": "Grinning",
+            "HAND_FIVE": "Showing five fingers",
+            "HAND_FOUR": "Showing four fingers",
+            "HAND_FOUR_SMUG": "Showing four fingers, smug",
+            "HAND_ONE": "Showing one finger",
+            "HAND_ONE_THINKING": "Showing one finger, thinking",
+            "HAND_ONE_WHISTLING": "Showing one finger, whistling",
+            "HAND_POINT": "Finger pointing",
+            "HAND_POINT_ANGRY": "Finger pointing, angry",
+            "HAND_POINT_DETERMINED": "Finger pointing, determined",
+            "HAND_POINT_JOKE": "Finger pointing, joking",
+            "HAND_POINT_SELF": "Finger pointing at self",
+            "HAND_POINT_SELF_DETERMINED": "Finger pointing at self, determined",
+            "HAND_SELF_SURPRISED": "Finger pointing at self, suprised",
+            "HAND_THREE": "Showing three fingers",
+            "HAND_THREE_SMUG": "Showing three fingers, smug",
+            "HAND_THREE_THINKING": "Showing three fingers, thinking",
+            "HAND_TWO": "Showing two fingers",
+            "HAND_TWO_THINKING": "Showing two fingers, thinking",
+            "HAND_WEIRD": "Trying to curle fingers",
+            "HAND_WEIRD_DETERMINED": "Trying to curle finges, determined",
+            "HAND_WEIRD_THINK": "Trying to curle finges, thinking",
+            "HAND_WEIRD_TIRED": "Trying to curle fingers, tired",
+            "HAND_WTF": "Showing impossibly curled fingers",
+            "HAND_WTF_SURPRISED": "Showing impossibly curled fingers, suprised",
+            "HAPPY": "Happy",
+            "HOLD": "Beaing held",
+            "HOLD_HORNS": "Holding horns, suprised",
+            "HOLD_HORNS_ANNOYED": "Holding horns, very annoyed",
+            "HOLOGRAM": "Hologram",
+            "INNOCENT": "Innocent",
+            "INSANE": "Insane",
+            "INSANE_DOWN": "Insane, grinning",
+            "INTENSE1": "Intense",
+            "INTENSE2": "Intense",
+            "IRRITATED": "Irritated",
+            "JOKING": "Joking",
+            "LAUGH": "Laughing",
+            "LAUGH_AR": "Laughing",
+            "LAUGHING": "Laughing",
+            "LAUGHING_DOWN": "Laughing",
+            "LECTURING": "Lecturing",
+            "MASKED": "Masked",
+            "MASKED_DOWN": "Masked",
+            "MASKED_DOWN_SMILE": "Masked, smiling",
+            "MASKED_FROWN": "Masked, frown",
+            "MASKED_GNASH": "Masked, gnash",
+            "MASKED_GRIN": "Masked, grin",
+            "MASKED_LAUGH": "Masked, laughing",
+            "MASKED_SMILE": "Masked, smiling",
+            "MASKED_UNPLEASED": "Masked, unpleased",
+            "MASKED_WARN": "Masked, suprised",
+            "MOPING": "Moping",
+            "NERVOUS": "Nervous",
+            "NOD": "Nod",
+            "NOD_HAPPY": "Happy nod",
+            "NOD_HARD1": "Sad, hard nod",
+            "NOD_HARD2": "Sad, hard nod",
+            "NOD_NERVOUS": "Nervous nod",
+            "NOD_SAD": "Sad nod",
+            "NODS_DEAD_INSIDE": "Dead inside nod",
+            "NORM_SERIOUS": "Serious",
+            "NOSTALGIC": "Nostalgic",
+            "NOTIFYING": "Notifying",
+            "PAIN": "In pain",
+            "PAIN_EYE_CLOSED": "In pain",
+            "PANIC": "Panicing",
+            "PISSED": "Pissed",
+            "PLOTTING": "Plotting",
+            "PLOTTING_GLASS": "Plotting",
+            "POINTING": "Heroic pointing ",
+            "PONDERING": "Pondering",
+            "PONDERING_NORM": "Pondering",
+            "PRE_CRY": "Tearing up",
+            "PRE_CRY1": "Tearing up",
+            "PRE_CRY2": "Tearing up",
+            "PROUD": "Proud",
+            "RAGING": "Raging",
+            "RANTING": "Ranting",
+            "ROAR": "Yelling",
+            "ROAR_GLASS": "Yelling",
+            "ROLL_EYES": "Rolling eyes",
+            "SAD": "Sad",
+            "SAD_AWAY": "Sad",
+            "SAD_SMILE": "Sad smile",
+            "SARCASTIC": "Sarcastic",
+            "SCARED": "Scared",
+            "SCEPTICAL": "Sceptical",
+            "SCEPTICAL_GLASS": "Sceptical",
+            "SCOLDING": "Annoyed",
+            "SCREAM": "Screaming",
+            "SERIOUS": "Serious",
+            "SHADOW": "Shadow",
+            "SHAKE": "Shaking head",
+            "SHAKE_EYE_CLOSED": "Angry shaking head",
+            "SHAKE_PANIC": "Terrified shaking head",
+            "SHAKE_SAD": "Sad shaking head",
+            "SHAKE_SCARED": "Scared shaking head",
+            "SHOCK": "Shocked",
+            "SHOCKED": "Shocked",
+            "SHOUT": "Shouting",
+            "SHOUT_AR": "Shouting",
+            "SHOUT_GLASS": "Shouting",
+            "SHOUTING": "Shouting",
+            "SHOUTING2": "Shouting",
+            "SHOUT_PANIC": "Panic shouting",
+            "SHRUG": "Shrug",
+            "SIDE_SMILE": "Smiling",
+            "SKEPTICAL": "Sceptical",
+            "SLEEP": "Sleeping",
+            "SLEEPING": "Sleeping",
+            "SMILE": "Smiling",
+            "SMILE_AR": "Smiling",
+            "SMILE_GLASS": "Smiling",
+            "SMUG": "Smug",
+            "SNARL": "Snarling",
+            "STAR_POINTING": "Showing star sign",
+            "STAR_POINTING_DETERMINED": "Showing star in sign language, determined",
+            "STAR_POINTING_PRE": "Trying to show star in sign language",
+            "STERN": "",
+            "STERN_GLASS": "",
+            "STRICT": "Angry",
+            "SURPRISED": "Suprised",
+            "SURPRISED_AWAY": "Suprised",
+            "SURPRISED_TOWARD": "Suprised",
+            "SUSPICIOUS": "Suspicious",
+            "SWEATY_SMILE": "Sweaty, smiling",
+            "TAUNTING": "Taunting",
+            "THINKING": "Thinking",
+            "THOUGHTFUL": "Thoughtful",
+            "THOUGHTFUL_NORM": "Thoughtful",
+            "THOUGHTFUL_TOWARD": "Thoughtful",
+            "TIRED": "Tired",
+            "TOUCHED": "Touched",
+            "TOWARD": "",
+            "TOWARD_AR": "",
+            "TOWARD_GLASS": "",
+            "TOWARDS": "",
+            "TOWARD_TALK": "",
+            "TOWARD_TALK_AR": "",
+            "UNCERTAIN": "Uncertain",
+            "UNHORNED": "",
+            "UP": "",
+            "UP_GRIN": "",
+            "WAKING": "Waking up",
+            "WATCH_OUT_BADASS": "",
+            "WEIRD_HAND": "Showing impossibly curled fingers",
+            "WHISTLING": "Whistling",
+            "WHY": "Baffled",
+            "WINK": "Winking",
+            "WONDERING": "Wondering",
+            "WORRIED": "Worried",
+            "WRAP_HEAD": "Terrified, wraping head",
+            "WRAP_SHOULDER": "Terrified, wraping shoulders",
+            "YELL": "Yelling"
+        }
+    }
+}

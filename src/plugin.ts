@@ -24,14 +24,10 @@ import { RuntimeResources } from './runtime-assets'
 import { TestMapMisc } from './tutorial/test-map-misc'
 import { SoundGlossary } from './tutorial/sound-glossary'
 import { CrossedEyesHud } from './tutorial/crossedeyes-hud'
+import { Lang, LangManager } from './lang-manager'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
-declare global {
-    interface Object {
-        fromEntries<T, K extends string | number | symbol>(entries: [K, T][]): Record<K, T>
-    }
-}
 if (!Object.fromEntries) {
     Object.fromEntries = function <T, K extends string | number | symbol>(entries: [K, T][]): Record<K, T> {
         return entries.reduce(
@@ -42,6 +38,13 @@ if (!Object.fromEntries) {
             {} as Record<K, T>
         )
     }
+}
+
+String.prototype.supplant = function (this: string, o: any) {
+    return this.replace(/{([^{}]*)}/g, function (a: any, b: any) {
+        var r = o[b]
+        return typeof r === 'string' || typeof r === 'number' ? r : a
+    })
 }
 
 export interface PauseListener {
@@ -86,6 +89,7 @@ export default class CrossedEyes {
             },
         })
 
+        new LangManager()
         new AutoUpdater().checkAndInstall()
         new MenuOptionsManager()
         new RuntimeResources()
@@ -191,7 +195,7 @@ export default class CrossedEyes {
                         if (lastLogSent + 2000 > Date.now()) return
                         lastLogSent = Date.now()
 
-                        speakIC('uploading')
+                        speakIC(Lang.logupload.uploading)
                         const fs: typeof import('fs') = require('fs')
                         let data = fs.readFileSync('biglog.txt').toString()
                         const lines = data.split('\n')
@@ -220,7 +224,7 @@ export default class CrossedEyes {
                         const link = (await res.text()).trim()
                         console.log(link)
                         navigator.clipboard.writeText(link)
-                        speakIC('Log link copied to clipboard')
+                        speakIC(Lang.logupload.copied)
                     }
                 }
             })()

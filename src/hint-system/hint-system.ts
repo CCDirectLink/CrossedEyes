@@ -1,3 +1,4 @@
+import { Lang } from '../lang-manager'
 import { Opts } from '../options-manager'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
@@ -122,7 +123,7 @@ export class HintSystem {
         const hint = this.getHintFromEntity(e)
 
         const isSelected = this.selectedHE.includes(e)
-        speakIC(`${isSelected ? 'selected, ' : ''}${hint.nameGui.title.text}`)
+        speakIC((isSelected ? Lang.hints.focusedSelected : Lang.hints.focused).supplant({ hintTitle: hint.nameGui.title.text! }))
 
         SpecialAction.setListener('LSP', 'hintDescription', () => {
             speakIC(hint.nameGui.description.text!)
@@ -214,7 +215,7 @@ export class HintSystem {
                 const foundHEI = this.selectedHE.findIndex(e => e.uuid == this.focusedHE!.uuid)
                 if (foundHEI != -1) {
                     this.selectedHE.splice(foundHEI, 1)
-                    speakIC('unselected')
+                    speakIC(Lang.hints.unselected)
                 } else {
                     this.activateHint(this.focusedHE, false)
                 }
@@ -437,7 +438,7 @@ export class HintSystem {
                         self.updateFilter()
                         speakIC(`${self.filterList[self.filterIndex]}`)
                     } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_UP)) {
-                        speakIC(`Hint filter: ${self.filterList[self.filterIndex]}`)
+                        speakIC(`${Lang.hints.hintFilter}: ${self.filterList[self.filterIndex]}`)
                     }
 
                     self.checkHintTogglePressed()

@@ -1,10 +1,9 @@
+import { Lang } from './lang-manager'
 import { getOptions } from './options'
 import CrossedEyes, { InitPoststart } from './plugin'
 
 type Enum = Record<string, number | string> & { [k: number]: string }
 type Option = {
-    name: string
-    description: string
     restart?: boolean
     hasLocal?: boolean
     changeEvent?: () => void
@@ -45,6 +44,25 @@ type FlattenUnion<T> = {
 
 type OptionsObj = ReturnType<typeof getOptions>
 type FlatOpts = FlattenUnion<FlattenOptions<OptionsObj>>
+
+{
+    /* check if options.ts and the language .json file contain the same entries */
+    // prettier-ignore
+    type IfEquals<T, U, Y=unknown, N=never> =
+        (<G>() => G extends T ? 1 : 2) extends
+        (<G>() => G extends U ? 1 : 2) ? Y : N;
+    type Diff<T, U> = T extends U ? never : T
+
+    type OptLangEntryMissing = Diff<keyof FlatOpts, keyof (typeof Lang)['opts']>
+    const optLangEntryMissingError = `ERROR: Option language entry missing: -->`
+    const _optLangEntryMissingCheck: IfEquals<OptLangEntryMissing, never, typeof optLangEntryMissingError, ` ${OptLangEntryMissing}`> = optLangEntryMissingError
+    typeof _optLangEntryMissingCheck /* supress unused info */
+
+    type OptConfigEntryMissing = Diff<keyof (typeof Lang)['opts'], keyof FlatOpts>
+    const optConfigEntryMissingError = `ERROR: Option config entry missing: -->`
+    const _optConfigEntryMissing: IfEquals<OptConfigEntryMissing, never, typeof optConfigEntryMissingError, ` ${OptConfigEntryMissing}`> = optConfigEntryMissingError
+    typeof _optConfigEntryMissing /* supress unused info */
+}
 
 // prettier-ignore
 export const Opts: { [T in keyof FlatOpts]: 
@@ -153,6 +171,8 @@ export class MenuOptionsManager implements InitPoststart {
 
     initPoststart() {
         this.headerNames.forEach(h => (ig.lang.labels.sc.gui.options.headers[h] = h))
-        Object.entries(Opts.flatOpts).forEach(e => (ig.lang.labels.sc.gui.options[e[1].id] = e[1]))
+        Object.entries(Opts.flatOpts).forEach(e => {
+            ig.lang.labels.sc.gui.options[e[1].id] = Lang.opts[e[0] as keyof (typeof Lang)['opts']]
+        })
     }
 }
