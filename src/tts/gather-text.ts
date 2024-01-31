@@ -163,19 +163,19 @@ export class TextGather {
                         let toSpeak: string = ''
 
                         if (area != lastArea) {
-                            toSpeak += `${area} - `
+                            toSpeak += Lang.enviroment.mapEnterAreaTemplate.supplant({ area })
                             lastArea = area
                         }
                         let currMapKeys = Object.keys(ig.vars.storage.maps)
+                        let isNew = false
                         if (lastMapKeys) {
                             const mapPath = ig.game.mapName.toCamel().toPath('', '')
-                            if (!lastMapKeys.includes(mapPath) && currMapKeys.includes(mapPath)) {
-                                toSpeak += 'new'
-                            }
+                            if (!lastMapKeys.includes(mapPath) && currMapKeys.includes(mapPath)) isNew = true
                         }
                         lastMapKeys = currMapKeys
 
-                        toSpeak += `map: ${map}`
+                        toSpeak += (isNew ? Lang.enviroment.mapEnterNewTemplate : Lang.enviroment.mapEnterTemplate).supplant({ map })
+                        console.log(toSpeak)
                         speakI(toSpeak)
                         self.ignoreInteract = 1
                     }

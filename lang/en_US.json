@@ -35,7 +35,10 @@
         "copied": "Log link copied to clipboard"
     },
     "enviroment": {
-        "unmappedInteractHint": "Unmapped interact hint"
+        "unmappedInteractHint": "Unmapped interact hint",
+        "mapEnterTemplate": "map: {map}",
+        "mapEnterNewTemplate": "new map: {map}",
+        "mapEnterAreaTemplate": "area: {area}: "
     },
     "menu": {
         "quickmenu": "Quick Menu",
