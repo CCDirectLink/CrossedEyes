@@ -172,7 +172,9 @@ export class MenuOptionsManager implements InitPoststart {
     initPoststart() {
         this.headerNames.forEach(h => (ig.lang.labels.sc.gui.options.headers[h] = h))
         Object.entries(Opts.flatOpts).forEach(e => {
-            ig.lang.labels.sc.gui.options[e[1].id] = Lang.opts[e[0] as keyof (typeof Lang)['opts']]
+            const obj: any = { ...Lang.opts[e[0] as keyof (typeof Lang)['opts']] }
+            Object.assign(obj, e[1])
+            ig.lang.labels.sc.gui.options[e[1].id] = obj
         })
     }
 }
