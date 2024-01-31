@@ -1,7 +1,7 @@
 import { Lang } from '../lang-manager'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
-import { getReadableText, speakArgsC, speakC } from '../tts/gather-text'
+import { getReadableText, speakArgsC, speakC, speakIC } from '../tts/gather-text'
 import { TuplifyUnion } from '../types'
 import { sc_MENU_SUBMENU_CROSSEDEYESHUD_SOUND_GLOSSARY } from './crossedeyes-hud'
 import { getSoundGlossaryEntries } from './sound-glossary-entries'
@@ -98,9 +98,9 @@ export class SoundGlossary {
                 this.parent()
                 sc.Model.notifyObserver(sc.menu, sc.MENU_EVENT.SYNO_CHANGED_TAB, this.entry)
                 const lang = self.getLangDataFromEntry(this.entry)
-                speakC(`${lang.name}`)
+                speakIC(lang.name)
                 SpecialAction.setListener('LSP', 'soundglossary', () => {
-                    speakC(`${lang.description}`)
+                    speakC(lang.description)
                 })
             },
             keepButtonPressed(state: boolean) {
