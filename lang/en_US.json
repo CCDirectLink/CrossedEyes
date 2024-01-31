@@ -103,7 +103,9 @@
             "helpTitle": "Sound glossary",
             "helpDescription": [
                 {
-                    "content": ["test"]
+                    "content": [
+                        "To activate or deactivate the currently selected item, press \\i[gamepad-a].\nMove up or down with \\i[left-stick].\nRead the sound description with \\i[left-stick-press].\nChange sound categories with \\i[gamepad-l1] and \\i[gamepad-r1].\nSome sounds are directional, and moving \\i[left-stick] will make the sound come from the coresponding direction.\nSome sounds have a lower pitch version when you're facing them with your back, to hear it rotate the player facing with \\i[right-stick]."
+                    ]
                 }
             ],
             "entries": {

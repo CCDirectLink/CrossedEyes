@@ -11,6 +11,7 @@
 - Added hint for the "upgrade field"
 - Added help menu tts support
 - Added full mod multi-language support
+- Added sound glossary help menu
 
 ### Changed
 
