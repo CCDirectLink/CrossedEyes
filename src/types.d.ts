@@ -1,6 +1,6 @@
 import { PlayerTraceResult } from './environment/loudjump'
 import { HintUnion, HintSubTypes } from './hint-system/hint-system'
-import { SoundGlossary } from './tutorial/sound-glossary'
+import { SoundGlossaryEntryP } from './tutorial/sound-glossary'
 
 export {}
 
@@ -237,7 +237,7 @@ declare global {
                 isSoundOn: boolean
 
                 toggleSoundSelected(this: this, button: sc.SoundGlossary.ListEntry): void
-                getContiniousId(this: this, entry: SoundGlossary.EntryP): string
+                getContiniousId(this: this, entry: SoundGlossaryEntryP): string
                 startSound(this: this): void
                 stopSound(this: this): void
                 updateSound(this: this): void
@@ -248,13 +248,13 @@ declare global {
             var Menu: MenuConstructor
 
             interface ListEntry extends sc.ListBoxButton {
-                entry: SoundGlossary.EntryP
+                entry: SoundGlossaryEntryP
                 title: sc.TextGui
 
                 keepButtonPressed(this: this, state: boolean): void
             }
             interface ListEntryConstructor extends ImpactClass<ListEntry> {
-                new (entry: SoundGlossary.EntryP): ListEntry
+                new (entry: SoundGlossaryEntryP): ListEntry
             }
             var ListEntry: ListEntryConstructor
 
@@ -266,7 +266,7 @@ declare global {
 
                 show(this: this): void
                 hide(this: this): void
-                setData(this: this, entry: SoundGlossary.EntryP): void
+                setData(this: this, entry: SoundGlossaryEntryP): void
             }
             interface InfoBoxConstructor extends ImpactClass<InfoBox> {
                 new (): InfoBox

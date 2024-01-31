@@ -5,7 +5,7 @@ import { LoudWalls } from '../environment/loudwalls'
 import { HintSystem } from '../hint-system/hint-system'
 import { Opts } from '../options-manager'
 import { SoundManager } from '../sound-manager'
-import { SoundGlossary } from './sound-glossary'
+import { SoundGlossaryEntry } from './sound-glossary'
 
 export function getSoundGlossaryEntries() {
     const loudjumpDirs: [string, Vec2][] = LoudJump.checkDegrees.map(deg => [`${deg}`, Vec2.mulC(Vec2.rotate({ x: 0, y: -1 }, (deg * Math.PI) / 180), 16)])
@@ -95,5 +95,5 @@ export function getSoundGlossaryEntries() {
                 forceOmnidirectional: true,
             },
         },
-    } as const satisfies Record</*category */ string, Record</* id */ string, SoundGlossary.Entry>>
+    } as const satisfies Record</*category */ string, Record</* id */ string, SoundGlossaryEntry>>
 }

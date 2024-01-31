@@ -6,34 +6,32 @@ import { TuplifyUnion } from '../types'
 import { sc_MENU_SUBMENU_CROSSEDEYESHUD_SOUND_GLOSSARY } from './crossedeyes-hud'
 import { getSoundGlossaryEntries } from './sound-glossary-entries'
 
-export namespace SoundGlossary {
-    export interface Entry {
-        config: SoundManager.ContiniousSettings
-        range?: number
-        dirs?: [string, Vec2][]
-        forceOmnidirectional?: boolean
-    }
-    export interface EntryP extends Entry {
-        id: string
-        category: string
-    }
+export interface SoundGlossaryEntry {
+    config: SoundManager.ContiniousSettings
+    range?: number
+    dirs?: [string, Vec2][]
+    forceOmnidirectional?: boolean
+}
+export interface SoundGlossaryEntryP extends SoundGlossaryEntry {
+    id: string
+    category: string
 }
 
 export class SoundGlossary {
     private glossary = getSoundGlossaryEntries()
     private categories: TuplifyUnion<keyof typeof this.glossary> = Object.keys(this.glossary) as any
 
-    private getLangDataFromEntry(entry: SoundGlossary.EntryP) {
+    private getLangDataFromEntry(entry: SoundGlossaryEntryP) {
         // @ts-expect-error
         return Lang.menu.soundglossary.entries[entry.category][entry.id]
     }
 
     private setCategoriesAndIds() {
-        const glossary = this.glossary as Record</*category */ string, Record</* id */ string, SoundGlossary.Entry>>
+        const glossary = this.glossary as Record</*category */ string, Record</* id */ string, SoundGlossaryEntry>>
         for (const category in glossary) {
             const entries = glossary[category]
             for (const id in entries) {
-                const lang = entries[id] as SoundGlossary.EntryP
+                const lang = entries[id] as SoundGlossaryEntryP
                 lang.id = id
                 lang.category = category
             }
@@ -79,7 +77,7 @@ export class SoundGlossary {
             hide() {
                 this.doStateTransition('HIDDEN')
             },
-            setData(entry: SoundGlossary.EntryP) {
+            setData(entry: SoundGlossaryEntryP) {
                 const lang = self.getLangDataFromEntry(entry)
                 this.title.setText(lang.name)
                 this.description.setSize(261, 0)
@@ -89,7 +87,7 @@ export class SoundGlossary {
 
         const width = 250
         sc.SoundGlossary.ListEntry = sc.ListBoxButton.extend({
-            init(entry: SoundGlossary.EntryP) {
+            init(entry: SoundGlossaryEntryP) {
                 this.entry = entry
                 const lang = self.getLangDataFromEntry(entry)
                 this.parent(lang.name, width - 3, 73)
@@ -203,7 +201,7 @@ export class SoundGlossary {
             modelChanged(model, message, data) {
                 if (model == sc.menu) {
                     if (message == sc.MENU_EVENT.SYNO_CHANGED_TAB) {
-                        this.info.setData(data)
+                        this.info.setData(data as SoundGlossaryEntryP)
                     } else if (message == sc.MENU_EVENT.SYNOP_BUTTON_PRESS) {
                         const button = data as sc.SoundGlossary.ListEntry
                         this.currentSelectedButton = button
@@ -236,10 +234,10 @@ export class SoundGlossary {
                 else menu.stopSound()
             },
             getContiniousId(entry) {
-                return `soundglossary_${entry.name}`
+                return `soundglossary_${entry.id}`
             },
             startSound() {
-                const entry: SoundGlossary.Entry = this.currentSelectedButton.entry
+                const entry = this.currentSelectedButton.entry
                 const id = this.getContiniousId(entry)
                 let config: SoundManager.ContiniousSettings
                 config = entry.config
@@ -250,14 +248,14 @@ export class SoundGlossary {
             },
             stopSound() {
                 this.isSoundOn = false
-                const entry: SoundGlossary.Entry = this.currentSelectedButton?.entry
+                const entry = this.currentSelectedButton?.entry
                 if (!entry) return
                 const id = this.getContiniousId(entry)
                 SoundManager.stopCondinious(id)
             },
             updateSound() {
                 if (!this.isSoundOn) return
-                const entry: SoundGlossary.Entry = this.currentSelectedButton.entry
+                const entry: SoundGlossaryEntryP = this.currentSelectedButton.entry
                 let pos: Vec3 = Vec3.create()
                 let dir: Vec2 = Vec2.create()
                 let range: number = 5 * 16
