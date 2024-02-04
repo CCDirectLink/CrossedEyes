@@ -198,13 +198,6 @@ export class TextGather {
                 }
             })()
         )
-        sc.GameModel.inject({
-            enterTitle() {
-                this.parent()
-                lastArea = undefined
-                lastMapKeys = undefined
-            },
-        })
 
         sc.GameModel.inject({
             enterTitle() {
