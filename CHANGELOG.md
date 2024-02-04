@@ -12,6 +12,7 @@
 - Added recived item announcing
 - Add "Floating Moving Platform" puzzle entity hint
 - Added info sign hint
+- Added tutorial popups announcing
 
 ### Fixed
 

@@ -94,6 +94,7 @@
             "gamepad-r1": "Gamepad: R1,",
             "circle-right": "Gamepad: R1,",
             "gamepad-l2": "Gamepad: L2,",
+            "quick": "Gamepad: L2",
             "gamepad-r2": "Gamepad: R2,",
             "gamepad-pause": "Gamepad: pause,",
             "gamepad-select": "Gamepad: select,",

@@ -57,6 +57,7 @@ export class HEnemy implements Hint {
 
 export class HEnemyCounter implements Hint {
     entryName = 'EnemyCounter'
+    disableWalkedOn = true
 
     constructor() {
         /* run in prestart */
