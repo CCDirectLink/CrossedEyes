@@ -14,7 +14,7 @@ export class HOLPlatform implements Hint {
                     type: 'Hints',
                     hintName: self.entryName,
                     hintType: 'Puzzle',
-                    disabled: !Opts.hints || ig.game.mapName == 'rhombus-dng.room-1-6',
+                    disabled: !Opts.hints || ig.game.mapName == 'rhombus-dng.room-1-6' || ig.game.mapName == 'rhombus-dng.room-5-newer',
                 }
             },
         })
