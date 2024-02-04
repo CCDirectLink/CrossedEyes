@@ -8,6 +8,10 @@
 
 - Announce walking onto hints
 
+### Fixed
+
+- Properly center the interactable sound
+
 ## [0.5.5] 2024-01-31
 
 ### Added

@@ -43,7 +43,7 @@ export class InteractableHandler {
                 if (this.stateUpdate && Opts.loudEntities) {
                     const id = self.getId(this.entity)
                     if (this.state == sc.INTERACT_ENTRY_STATE.FOCUS) {
-                        const changed = SoundManager.handleContiniousEntry(id, this.entity.coll.pos, range, 1)
+                        const changed = SoundManager.handleContiniousEntry(id, this.entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER), range, 1)
                         if (changed) {
                             const hint = HintSystem.g.quickMenuAnalysisInstance.createHint(this.entity, false)
                             if (hint) {
@@ -53,7 +53,7 @@ export class InteractableHandler {
                             }
                         }
                     } else if (this.state == sc.INTERACT_ENTRY_STATE.NEAR) {
-                        SoundManager.handleContiniousEntry(id, this.entity.coll.pos, range, 0)
+                        SoundManager.handleContiniousEntry(id, this.entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER), range, 0)
                     } else {
                         SoundManager.stopCondinious(id)
                     }
