@@ -7,10 +7,12 @@ import { CharacterSpeakData } from './tts'
 
 export function getReadableText(orig: string): string {
     let text: string = orig
+        .trim()
         .replace(/\\c\[[^\]]*\]/g, '')
         .replace(/\\s\[[^\]]*\]/g, '')
         .replace(/%/g, ' percent')
         .replace(/\+/g, ' plus')
+        .replace(/\\\./g, ' ')
 
     const imgMatches: string[] | null = text.match(/\\i\[[^\]]*\]/g)
     for (let img of imgMatches ?? []) {
