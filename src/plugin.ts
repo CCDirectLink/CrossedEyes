@@ -63,6 +63,8 @@ export default class CrossedEyes {
     static initPoststarters: InitPoststart[] = []
     static isPaused: boolean = false
 
+    private startWithTestMap: boolean = false
+
     constructor(mod: Mod1) {
         CrossedEyes.dir = mod.baseDirectory
         CrossedEyes.mod = mod
@@ -145,28 +147,29 @@ export default class CrossedEyes {
         this.addTestMapTitleScreenButton()
     }
 
+    private startTestMap(titleGuiInstance?: sc.TitleScreenButtonGui) {
+        this.startWithTestMap = true
+        ig.bgm.clear('MEDIUM_OUT')
+        if (titleGuiInstance) {
+            ig.interact.removeEntry(titleGuiInstance.buttonInteract)
+        } else {
+            ig.interact.entries.forEach(e => ig.interact.removeEntry(e))
+        }
+        ig.game.start(sc.START_MODE.STORY, 0)
+        ig.game.setPaused(false)
+        godmode()
+    }
+
     addTestMapTitleScreenButton() {
         if (ig.isdemo) return
-        let startWithTestMap: boolean = false
-        function startTestMap(titleGuiInstance?: sc.TitleScreenButtonGui) {
-            startWithTestMap = true
-            ig.bgm.clear('MEDIUM_OUT')
-            if (titleGuiInstance) {
-                ig.interact.removeEntry(titleGuiInstance.buttonInteract)
-            } else {
-                ig.interact.entries.forEach(e => ig.interact.removeEntry(e))
-            }
-            ig.game.start(sc.START_MODE.STORY, 0)
-            ig.game.setPaused(false)
-            godmode()
-        }
+        const self = this
         sc.TitleScreenButtonGui.inject({
             init() {
                 this.parent()
                 ig.lang.labels.sc.gui['title-screen']['CrossedEyesTestMap'] = 'CrossedEyes test map'
                 const self1 = this
                 this._createButton('CrossedEyesTestMap', this.buttons.last().hook.pos.y + 39, 100 - this.buttons.length, () => {
-                    startTestMap(self1)
+                    self.startTestMap(self1)
                 })
             },
         })
@@ -175,9 +178,9 @@ export default class CrossedEyes {
                 this.parent(mode, transitionTime)
             },
             transitionEnded() {
-                if (startWithTestMap) {
+                if (self.startWithTestMap) {
                     ig.game.teleport('crossedeyes/test', new ig.TeleportPosition('entrance'), 'NEW')
-                    startWithTestMap = false
+                    self.startWithTestMap = false
                 } else {
                     this.parent()
                 }
@@ -234,6 +237,8 @@ export default class CrossedEyes {
     async poststart() {
         CrossedEyes.initPoststarters.forEach(p => p.initPoststart())
         this.addLogCopyKeybinding()
+
+        localStorage.getItem('crossedeyesDev') && this.startTestMap()
     }
 
     addVimAliases() {

@@ -212,7 +212,7 @@ export class SpacialAudio {
         sc.Combat.inject({
             showHitEffect(entity, hitPos, hitDegree, hitElement, shielded, critical, ignoreSounds, spriteFilter) {
                 const assignC_copy = Vec2.assignC
-                Vec2.assignC = function (vec: Vec2, x?: Optional<number>, y?: Optional<number>) {
+                Vec2.assignC = function (vec: Vec2, x?: Nullable<number>, y?: Nullable<number>) {
                     if (Opts.spacialAudio && x == hitPos.x && y == hitPos.y - hitPos.z) {
                         return Vec3.assign(vec as Vec3, hitPos)
                     } else {
