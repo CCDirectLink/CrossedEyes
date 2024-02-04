@@ -12,6 +12,7 @@
 ### Fixed
 
 - Properly center the interactable sound
+- Fix crash at entering rhombus dungeon (again)
 
 ## [0.5.5] 2024-01-31
 
