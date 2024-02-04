@@ -9,7 +9,7 @@ export class HClimbableTerrain implements Hint {
 
     private static wProps: Record<string, HintData>
     private static sProps: Record<string, HintData>
-    private static checkIsClimbable = new Set<string>(['cargo-box'])
+    private static checkIsClimbable = new Set<string>(['cargo-box1', 'cargo-box2'])
 
     constructor() {
         /* in prestart */

@@ -14,6 +14,7 @@
 
 - Properly center the interactable sound
 - Fix crash at entering rhombus dungeon (again)
+- A lot of cargo boxes were falsly detected as climbable
 
 ## [0.5.5] 2024-01-31
 
