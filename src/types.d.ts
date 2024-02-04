@@ -255,5 +255,10 @@ declare global {
             }
             var InfoBox: InfoBoxConstructor
         }
+
+        interface PropInteract {
+            iconType: keyof typeof sc.PROP_INTERACT_ICONS
+            hoverText?: ig.LangLabel.Data
+        }
     }
 }

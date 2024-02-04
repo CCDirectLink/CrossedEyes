@@ -116,7 +116,16 @@
             "throw": "Gamepad: R1,",
             "special": "Gamepad: R2,",
             "twitter": "twitter",
-            "mousewheel": "Mouse wheel"
+            "mousewheel": "Mouse wheel",
+            "item-helm-scale": "helmet: ",
+            "item-sword-scale": "sword: ",
+            "item-belt-scale": "torso: ",
+            "item-shoe-scale": "boots: ",
+            "item-sword-rare": "",
+            "item-helm": "helmet: ",
+            "item-shoe": "boots: ",
+            "item-belt": "torso: ",
+            "item-sword": "sword: "
         },
         "soundglossary": {
             "name": "Sound glossary",
@@ -280,6 +289,10 @@
                 "name": "Upgrade field",
                 "description": "Walk into it to get an upgrade!"
             }
+        },
+        "propInteractableInfo": {
+            "name": "Info sign: {rest}",
+            "description": "Info sign."
         },
         "destructibles": {
             "boxLarge": { "name": "Destructible, Large box", "description": "Destroy with a few hits!" },

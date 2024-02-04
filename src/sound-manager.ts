@@ -166,16 +166,16 @@ export class SoundManager implements PauseListener {
                 offset = (handle._nodeSource.context.currentTime - handle._contextTimeOnStart) % handle._duration
             }
             SoundManager.stopHandle(handle)
-            handle = SoundManager.continious[id].handle = new ig.Sound(path, volume).play(true, { offset })
+            handle = SoundManager.continious[id].handle = new ig.Sound(path, volume > 0 ? volume : Number.MIN_VALUE).play(true, { offset })
         }
-        if (handle._nodeSource) {
+        if (handle?._nodeSource) {
             handle._nodeSource.gainNode.gain.value = volume * sc.options.get('volume-sound')
         }
 
-        if (!handle.pos || !Vec3.equal(handle.pos.point3d, pos)) {
+        if (!handle?.pos || !Vec3.equal(handle.pos.point3d, pos)) {
             range ??= entry.range
             if (range === undefined) throw new Error('range unset')
-            handle.setFixPosition(pos, range)
+            handle?.setFixPosition(pos, range)
         }
 
         return soundChanged

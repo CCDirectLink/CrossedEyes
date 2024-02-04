@@ -3,6 +3,7 @@ import { Opts } from '../options-manager'
 import { HintSystem } from '../hint-system/hint-system'
 import { speakIC } from '../tts/gather-text'
 import { Lang } from '../lang-manager'
+import { HProp } from '../hint-system/hints/prop'
 
 const range = 6 * 16
 
@@ -37,6 +38,11 @@ export class InteractableHandler {
                 this.parent(state)
                 if (this.entity instanceof ig.ENTITY.NPC && (this.entity.xenoDialog || this.entity.xenoDialogGui)) return
                 if (this.entity instanceof ig.ENTITY.Chest && this.entity.isOpen) return
+
+                /* this should be in init but if I do it in init then this.entity.propName is still uninitialized */
+                if (this.entity instanceof ig.ENTITY.Prop && HProp.getInteractLang(this.entity)) {
+                    SoundManager.continious[self.getId(this.entity)].getVolume = () => 0
+                }
                 this.stateUpdate = true
             },
             customUpdate() {
