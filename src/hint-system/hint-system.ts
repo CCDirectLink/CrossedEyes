@@ -140,7 +140,9 @@ export class HintSystem {
     }
 
     private updateHintSound(e: ig.Entity) {
-        const handle = SoundManager.continious[this.getContId(e)].handle!
+        const config = SoundManager.continious[this.getContId(e)]
+        if (!('paths' in config)) throw new Error('invalid pickContiniousSettingsPath settings: paths not included')
+        const handle = config.handle!
         const dist = Vec3.distance(ig.game.playerEntity.getAlignedPos(ig.ENTITY_ALIGN.CENTER), e.getAlignedPos(ig.ENTITY_ALIGN.CENTER))
         const maxRange = 16 * 30
         const diff = maxRange - dist

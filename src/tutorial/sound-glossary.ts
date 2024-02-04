@@ -242,7 +242,7 @@ export class SoundGlossary {
                 let config: SoundManager.ContiniousSettings
                 config = entry.config
                 config.condition = undefined
-                config.getVolume ??= () => 1
+                if ('paths' in config) config.getVolume ??= () => 1
                 SoundManager.continious[id] = config
                 this.isSoundOn = true
             },

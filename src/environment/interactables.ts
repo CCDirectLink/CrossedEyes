@@ -41,7 +41,11 @@ export class InteractableHandler {
 
                 /* this should be in init but if I do it in init then this.entity.propName is still uninitialized */
                 if (this.entity instanceof ig.ENTITY.Prop && HProp.getInteractLang(this.entity)) {
-                    SoundManager.continious[self.getId(this.entity)].getVolume = () => 0
+                    const config = SoundManager.continious[self.getId(this.entity)]
+                    if (config) {
+                        if (!('paths' in config)) throw new Error('invalid pickContiniousSettingsPath settings: paths not included')
+                        config.getVolume = () => 0
+                    }
                 }
                 this.stateUpdate = true
             },

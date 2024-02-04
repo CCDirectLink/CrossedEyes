@@ -66,6 +66,28 @@ export function getSoundGlossaryEntries() {
                 config: { paths: ['levelup'] },
             },
         },
+        Puzzle: {
+            puzzle: {
+                config: EntityBeeper.getSoundConfig(undefined, ig.ENTITY.Switch.classId)!,
+            },
+            switch: {
+                config: { paths: ['switchToggle'] },
+            },
+            barrierGoUp: {
+                config: { paths: ['barrierGoUp'] },
+            },
+            barrierGoDown: {
+                config: { paths: ['barrierGoDown'] },
+            },
+            OLPlatformMove: {
+                config: {
+                    eventSteps: [
+                        { type: 'PLAY_SOUND', sound: 'media/sound/puzzle/push-start.ogg' },
+                        { type: 'WAIT', time: 1 },
+                    ],
+                },
+            },
+        },
         Entities: {
             interactableNearby: {
                 config: SoundManager.pickContiniousSettingsPath(InteractableHandler.continiousConfig, 0),
@@ -82,8 +104,20 @@ export function getSoundGlossaryEntries() {
             enemy: {
                 config: EntityBeeper.getSoundConfig(undefined, ig.ENTITY.Enemy.classId)!,
             },
-            puzzle: {
-                config: EntityBeeper.getSoundConfig(undefined, ig.ENTITY.Switch.classId)!,
+            enemyDeath: {
+                config: {
+                    eventSteps: [
+                        { volume: 0.5, global: false, loop: false, type: 'PLAY_SOUND', sound: 'media/sound/battle/airon/explosion-woosh.ogg' },
+                        { volume: 0.7, global: false, loop: false, variance: 0.2, type: 'PLAY_SOUND', sound: 'media/sound/battle/airon/exposion-enemy-small-1.ogg' },
+                        { time: 0.13, type: 'WAIT' },
+                        { volume: 0.7, global: false, loop: false, variance: 0.2, type: 'PLAY_SOUND', sound: 'media/sound/battle/airon/exposion-enemy-small-2.ogg' },
+                        { time: 0.13, type: 'WAIT' },
+                        { volume: 0.7, global: false, loop: false, variance: 0.2, type: 'PLAY_SOUND', sound: 'media/sound/battle/airon/exposion-enemy-small-3.ogg' },
+                        { time: 0.13, type: 'WAIT' },
+                        { volume: 0.7, global: false, loop: false, variance: 0.2, type: 'PLAY_SOUND', sound: 'media/sound/battle/airon/exposion-enemy-small-4.ogg' },
+                        { time: 1.4, type: 'WAIT' },
+                    ],
+                },
             },
         },
         Hints: {

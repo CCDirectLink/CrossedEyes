@@ -20,6 +20,7 @@ export class EntityBeeper {
     static getSoundConfig(e?: ig.Entity, id?: number): SoundManager.ContiniousSettings | undefined {
         const config = this.getSoundConfigNonFull(e, id)
         if (config) {
+            if (!('paths' in config)) throw new Error('invalid pickContiniousSettingsPath settings: paths not included')
             config.range ??= 6 * 16
             config.getVolume ??= () => Opts.entityHintsVolume
         }

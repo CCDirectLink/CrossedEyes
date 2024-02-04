@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+- Added a few puzzle elements to sound glossary
+- Added info sign hint
+- Added tutorial popups announcing
+
 ## [0.5.6] 2024-02-04
 
 ### Added
@@ -11,8 +15,6 @@
 - Announce walking onto hints
 - Added recived item announcing
 - Add "Floating Moving Platform" puzzle entity hint
-- Added info sign hint
-- Added tutorial popups announcing
 
 ### Fixed
 

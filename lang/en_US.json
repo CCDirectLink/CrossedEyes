@@ -188,6 +188,28 @@
                         "description": "You level up after gathering more than 1000 expiernce points since last level up.\nAn animation plays, annoucing how much stats you've gained."
                     }
                 },
+                "Puzzle": {
+                    "puzzle": {
+                        "name": "Various hit-able puzzle elements",
+                        "description": "Plays at various hit-able puzzle elements.\nYou can hit them either with a ball or a melee attack.\nWhen the player is facing away from the hint, a lower pitch version plays."
+                    },
+                    "switch": {
+                        "name": "Switch toggle",
+                        "description": "Plays when you toggle a switch."
+                    },
+                    "barrierGoUp": {
+                        "name": "Barrier activates",
+                        "description": "Plays when a barrier turns on."
+                    },
+                    "barrierGoDown": {
+                        "name": "Barrier deactivates",
+                        "description": "Plays when a barrier turns off."
+                    },
+                    "OLPlatformMove": {
+                        "name": "Moving block",
+                        "description": "Plays when the moving block extends or retracts."
+                    }
+                },
                 "Entities": {
                     "interactableNearby": {
                         "name": "Interactable nearby",
@@ -205,9 +227,9 @@
                         "name": "Enemy",
                         "description": "Plays at enemies.\nWhen the player is facing away from the entity, a lower pitch version plays."
                     },
-                    "puzzle": {
-                        "name": "Various hit-able puzzle elements",
-                        "description": "Plays at various hit-able puzzle elements.\nYou can hit them either with a ball or a melee attack.\nWhen the player is facing away from the hint, a lower pitch version plays."
+                    "enemyDeath": {
+                        "name": "Enemy death",
+                        "description": "Plays when an enemy dies."
                     }
                 },
                 "Hints": {

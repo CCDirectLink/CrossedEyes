@@ -2,19 +2,27 @@ import CrossedEyes, { PauseListener } from './plugin'
 
 export namespace SoundManager {
     export type ContiniousSettings = {
-        handle?: ig.SoundHandleWebAudio
-        paths: (keyof typeof SoundManager.sounds)[]
-        getVolume?: () => number
         condition?: () => boolean
-        range?: number
     } & (
         | {
-              changePitchWhenBehind: true
-              angle?: number
-              pathsBehind: (keyof typeof SoundManager.sounds)[]
+              paths: (keyof typeof SoundManager.sounds)[]
+              getVolume?: () => number
+              range?: number
+              handle?: ig.SoundHandleWebAudio
           }
-        | { changePitchWhenBehind?: false }
-    )
+        | {
+              eventSteps: ig.EventStepBase.Settings[]
+              eventCall?: ig.EventCall
+          }
+    ) &
+        (
+            | {
+                  changePitchWhenBehind: true
+                  angle?: number
+                  pathsBehind: (keyof typeof SoundManager.sounds)[]
+              }
+            | { changePitchWhenBehind?: false }
+        )
 }
 
 export class SoundManager implements PauseListener {
@@ -56,6 +64,9 @@ export class SoundManager implements PauseListener {
         soundglossaryWallbump: 'media/sound/crossedeyes/soundglossary/wallbump.ogg',
         soundglossaryMeele: 'media/sound/crossedeyes/soundglossary/meele.ogg',
         levelup: 'media/sound/battle/level-up.ogg',
+        switchToggle: 'media/sound/puzzle/switch-activate-2.ogg',
+        barrierGoUp: 'media/sound/puzzle/barrier-up.ogg',
+        barrierGoDown: 'media/sound/puzzle/barrier-down.ogg',
     } as const
 
     constructor() {
@@ -88,6 +99,25 @@ export class SoundManager implements PauseListener {
         // })
         /* preload sounds */
         Object.values(SoundManager.sounds).forEach(path => new ig.Sound(path))
+
+        /* name sounds that are run in continious sound event steps */
+        let nameNextSound: string | undefined
+        ig.SoundWebAudio.inject({
+            play(pos, settings) {
+                const handle = this.parent(pos, settings)
+                if (nameNextSound) {
+                    ig.soundManager.addNamedSound(nameNextSound, handle)
+                    nameNextSound = undefined
+                }
+                return handle
+            },
+        })
+        ig.EVENT_STEP.PLAY_SOUND.inject({
+            start() {
+                if (this.name?.startsWith('crossedeyes')) nameNextSound = this.name
+                this.parent()
+            },
+        })
     }
 
     pause(): void {
@@ -122,6 +152,10 @@ export class SoundManager implements PauseListener {
         return SoundManager.playSoundPath(SoundManager.sounds[name], speed, volume, pos)
     }
 
+    private static getContiniousEventName(id: string) {
+        return `crossedeyes_continious${id}`
+    }
+
     static handleContiniousEntry(
         id: string,
         pos: Vec3,
@@ -139,54 +173,83 @@ export class SoundManager implements PauseListener {
             return false
         }
 
-        let handle = entry.handle
-        let name: keyof typeof SoundManager.sounds = entry.paths[pathId]
-        let preserveOffset: boolean = false
+        if ('paths' in entry) {
+            let handle = entry.handle
+            let name: keyof typeof SoundManager.sounds = entry.paths[pathId]
+            let preserveOffset: boolean = false
 
-        if (entry.changePitchWhenBehind && !disableBackFacing) {
-            const playerFaceAngle: number = (Vec2.clockangle(face) * 180) / Math.PI
+            if (entry.changePitchWhenBehind && !disableBackFacing) {
+                const playerFaceAngle: number = (Vec2.clockangle(face) * 180) / Math.PI
 
-            const dirFaceAngle: number = (Vec2.clockangle(dir!) * 180) / Math.PI
-            const angleDist: number = Math.min(Math.abs(playerFaceAngle - dirFaceAngle), 360 - Math.abs(playerFaceAngle - dirFaceAngle))
-            const isBehind = angleDist >= (entry.angle ?? 100)
-            if (isBehind) {
-                name = entry.pathsBehind[pathId]
-                preserveOffset = true
+                const dirFaceAngle: number = (Vec2.clockangle(dir!) * 180) / Math.PI
+                const angleDist: number = Math.min(Math.abs(playerFaceAngle - dirFaceAngle), 360 - Math.abs(playerFaceAngle - dirFaceAngle))
+                const isBehind = angleDist >= (entry.angle ?? 100)
+                if (isBehind) {
+                    name = entry.pathsBehind[pathId]
+                    preserveOffset = true
+                }
+            }
+            const path = SoundManager.sounds[name]
+            if (entry.getVolume === undefined) throw new Error('volume is unset')
+            const volume = entry.getVolume()
+
+            let soundChanged: boolean = false
+            if (handle?.path != path) {
+                soundChanged = true
+                let offset
+                if (preserveOffset && handle?._nodeSource) {
+                    offset = (handle._nodeSource.context.currentTime - handle._contextTimeOnStart) % handle._duration
+                }
+                SoundManager.stopHandle(handle)
+                handle = entry.handle = new ig.Sound(path, volume > 0 ? volume : Number.MIN_VALUE).play(true, { offset })
+            }
+            if (handle?._nodeSource) {
+                handle._nodeSource.gainNode.gain.value = volume * sc.options.get('volume-sound')
+            }
+
+            if (!handle?.pos || !Vec3.equal(handle.pos.point3d, pos)) {
+                range ??= entry.range
+                if (range === undefined) throw new Error('range unset')
+                handle?.setFixPosition(pos, range)
+            }
+
+            return soundChanged
+        } else {
+            if (!entry.eventCall) {
+                const eventName = this.getContiniousEventName(id)
+                const steps = entry.eventSteps.map(step => {
+                    if (step.type == 'PLAY_SOUND') return { ...step, name: eventName }
+                    return step
+                })
+
+                const event = new ig.Event({ name: eventName, steps })
+                const eventCall = ig.game.events.callEvent(event, ig.EventRunType.PARALLEL, null, () => (entry.eventCall = undefined))
+                eventCall.pauseParallel = true
+                entry.eventCall = eventCall
             }
         }
-        const path = SoundManager.sounds[name]
-        if (entry.getVolume === undefined) throw new Error('volume is unset')
-        const volume = entry.getVolume()
 
-        let soundChanged: boolean = false
-        if (handle?.path != path) {
-            soundChanged = true
-            let offset
-            if (preserveOffset && handle?._nodeSource) {
-                offset = (handle._nodeSource.context.currentTime - handle._contextTimeOnStart) % handle._duration
-            }
-            SoundManager.stopHandle(handle)
-            handle = SoundManager.continious[id].handle = new ig.Sound(path, volume > 0 ? volume : Number.MIN_VALUE).play(true, { offset })
-        }
-        if (handle?._nodeSource) {
-            handle._nodeSource.gainNode.gain.value = volume * sc.options.get('volume-sound')
-        }
-
-        if (!handle?.pos || !Vec3.equal(handle.pos.point3d, pos)) {
-            range ??= entry.range
-            if (range === undefined) throw new Error('range unset')
-            handle?.setFixPosition(pos, range)
-        }
-
-        return soundChanged
+        return false
     }
 
     static stopCondinious(id: string): boolean {
-        if (SoundManager.continious[id]?.handle) {
-            SoundManager.stopHandle(SoundManager.continious[id].handle)
-            SoundManager.continious[id].handle = undefined
-            return true
-        } else return false
+        const entry = SoundManager.continious[id]
+        if (!entry) return false
+        if ('paths' in entry) {
+            if (entry.handle) {
+                SoundManager.stopHandle(entry.handle)
+                entry.handle = undefined
+                return true
+            } else return false
+        } else {
+            if (entry.eventCall) {
+                /* stop the damn event */
+                entry.eventCall.stack = [{ vars: {}, currentStep: null, stepData: [], event: { rootStep: null as any } as any }]
+                entry.eventCall.setDone()
+                ig.soundManager.stopNamedSounds(this.getContiniousEventName(id))
+                return true
+            } else return false
+        }
     }
 
     static purgeContinious(id: string) {
@@ -203,6 +266,7 @@ export class SoundManager implements PauseListener {
     }
 
     static pickContiniousSettingsPath(sett: SoundManager.ContiniousSettings, index: number): SoundManager.ContiniousSettings {
+        if (!('paths' in sett)) throw new Error('invalid pickContiniousSettingsPath settings: paths not included')
         const obj: SoundManager.ContiniousSettings = { ...sett, paths: [sett.paths[index]] }
         if (obj.changePitchWhenBehind) {
             obj.pathsBehind = [obj.pathsBehind[index]]
