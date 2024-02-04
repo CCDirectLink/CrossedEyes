@@ -8,6 +8,7 @@
 
 - Announce walking onto hints
 - Added recived item announcing
+- Add "Floating Moving Platform" puzzle entity hint
 
 ### Fixed
 

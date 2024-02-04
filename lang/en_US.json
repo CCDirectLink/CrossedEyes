@@ -315,6 +315,11 @@
         },
 
         "OLPlatform": { "name": "Moving block", "description": "Extends or retracts when a certain condition is met." },
+        "DynamicPlatform": {
+            "name": "Floating moving platform",
+            "namePaused": "Floating moving platform, paused",
+            "description": "Floats in the air, loops around a certain path."
+        },
 
         "Switch": {
             "name": "Switch, on",

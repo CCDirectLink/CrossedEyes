@@ -24,3 +24,28 @@ export class HOLPlatform implements Hint {
         return Lang.hints.OLPlatform
     }
 }
+
+export class HDynamicPlatform implements Hint {
+    entryName = 'DynamicPlatform'
+
+    constructor() {
+        /* run in prestart */
+        const self = this
+        ig.ENTITY.DynamicPlatform.inject({
+            getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
+                return {
+                    type: 'Hints',
+                    hintName: self.entryName,
+                    hintType: 'Puzzle',
+                    disabled: !Opts.hints,
+                }
+            },
+        })
+    }
+    getDataFromEntity(e: ig.Entity): HintData {
+        if (!(e instanceof ig.ENTITY.DynamicPlatform)) throw new Error()
+        const lang = { ...Lang.hints.DynamicPlatform }
+        if (e.paused) lang.name = lang.namePaused
+        return lang
+    }
+}
