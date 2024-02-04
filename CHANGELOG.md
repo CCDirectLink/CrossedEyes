@@ -7,6 +7,7 @@
 ### Added
 
 - Announce walking onto hints
+- Added recived item announcing
 
 ### Fixed
 

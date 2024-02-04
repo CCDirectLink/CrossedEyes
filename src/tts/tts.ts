@@ -41,6 +41,7 @@ export class TTS {
         TTS.g = this
         new TextGather(
             (text: string) => {
+                console.log(text)
                 this.ttsInstance?.speak(text)
             },
             (text: string, data: CharacterSpeakData) => {

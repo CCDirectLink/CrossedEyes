@@ -49,6 +49,24 @@
         "levelup": "Level up!",
         "levelupTemplate": "plus {value} {statName}",
         "dialog": "Dialog: ${0}, ${1}",
+        "oneItemRecivedTemplate": "Recived {rarity} {type} item: {itemName}",
+        "multipleItemsRecivedTemplate": "Recived {count} {rarity} {type} items: {itemName}",
+        "itemRarityMap": {
+            "LOW": "common",
+            "NORMAL": "normal",
+            "RARE": "rare",
+            "LEGENDARY": "legendary",
+            "UNIQUE": "unique",
+            "BACKER": "backer",
+            "SCALE": "scale"
+        },
+        "itemTypesMap": {
+            "CONS": "consumable",
+            "EQUIP": "equipable",
+            "TRADE": "trade",
+            "KEY": "key",
+            "TOGGLE": "toggleable"
+        },
         "save": {
             "template1": "Slot {name}, chapter {chapter}, {location}",
             "template2": "level {level}, playtime {playtime}",
@@ -237,7 +255,6 @@
         "onItTopTemplate": "On it, {rest}",
         "walkedOntoTemplate": "Walked onto: {rest}.",
         "walkedOff": "Walked off.",
-
 
         "Analyzable": { "name": "Analyzable: {name}", "description": "None." },
 

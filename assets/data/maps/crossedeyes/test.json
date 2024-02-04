@@ -161,8 +161,28 @@
             }
         },
         { "type": "Chest", "x": 298, "y": 211, "level": 0, "settings": { "name": "", "chestType": "Default", "amount": 3, "variable": "map.chestOpen1", "mapId": 72, "item": "1", "spawnCondition": "map.chests" } },
-        { "type": "Chest", "x": 148, "y": 328, "level": 2, "settings": { "name": "chest1", "chestType": "Default", "amount": 3, "variable": "", "mapId": 73, "item": "1", "spawnCondition": "" } },
-        { "type": "EventTrigger", "x": 170, "y": 148, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 74, "event": [{ "type": "CHANGE_VAR_NUMBER", "varName": "map.chest_73", "changeType": "set", "value": 0 }], "eventType": "INTERRUPTABLE", "startCondition": "tmp.s1", "triggerType": "ONCE_PER_ENTRY", "name": "resetChest", "loadCondition": true, "endCondition": "false" } },
+        { "type": "Chest", "x": 331, "y": 328, "level": 2, "settings": { "name": "chest1", "chestType": "Default", "amount": 3, "variable": "", "mapId": 73, "item": "1", "spawnCondition": "" } },
+        { "type": "EventTrigger", "x": 170, "y": 148, "level": 2, "settings": {
+            "size": { "x": 16, "y": 16 },
+            "mapId": 74,
+            "event": [
+                { "type": "CHANGE_VAR_NUMBER", "varName": "map.chest_73", "changeType": "set", "value": 0 },
+                { "type": "CHANGE_VAR_NUMBER", "varName": "map.chest_74", "changeType": "set", "value": 0 },
+                { "type": "CHANGE_VAR_NUMBER", "varName": "map.chest_77", "changeType": "set", "value": 0 },
+                { "type": "CHANGE_VAR_NUMBER", "varName": "map.chest_78", "changeType": "set", "value": 0 },
+                { "type": "CHANGE_VAR_NUMBER", "varName": "map.chest_79", "changeType": "set", "value": 0 },
+                { "type": "CHANGE_VAR_NUMBER", "varName": "map.chest_80", "changeType": "set", "value": 0 },
+                { "type": "CHANGE_VAR_NUMBER", "varName": "map.chest_81", "changeType": "set", "value": 0 },
+                { "type": "CHANGE_VAR_NUMBER", "varName": "map.chest_82", "changeType": "set", "value": 0 }
+            ],
+            "eventType": "INTERRUPTABLE",
+            "startCondition": "tmp.s1",
+            "triggerType": "ONCE_PER_ENTRY",
+            "name": "resetChest",
+            "loadCondition": true,
+            "endCondition": "false"
+        } },
+        { "type": "Analyzable", "x": 277, "y": 328, "level": 2, "settings": { "name": "anal1", "color": "YELLOW", "showType": "DEFAULT", "text": { "en_US": "Watch CrossCode: the movie. I swear it's great!", "de_DE": "", "fr_FR": "fr_FR", "langUid": 0, "zh_CN": "", "ko_KR": "", "ja_JP": "", "zh_TW": "" }, "mapId": 76, "visible": "", "spawnCondition": "" } },
         { "type": "ScalableProp", "x": 1216, "y": 205, "level": 2, "settings": { "size": { "x": 160, "y": 8 }, "mapId": 54, "patternOffset": { "x": 0, "y": 0 }, "propConfig": { "sheet": "arid", "name": "wireFenceH", "ends": { "west": "WEST_DOWN", "east": "EAST_DOWN" } } } },
         { "type": "ScalableProp", "x": 1216, "y": 348, "level": 2, "settings": { "size": { "x": 160, "y": 8 }, "mapId": 55, "patternOffset": { "x": 0, "y": 0 }, "propConfig": { "sheet": "arid", "name": "wireFenceH", "ends": { "west": "WEST_END", "east": "EAST_END" } } } },
         { "type": "ScalableProp", "x": 1368, "y": 204, "level": 2, "settings": { "size": { "x": 8, "y": 152 }, "mapId": 56, "patternOffset": { "x": 0, "y": 0 }, "propConfig": { "sheet": "arid", "name": "wireFenceV", "ends": { "north": "NORTH_END", "south": "SOUTH_END" } } } },
@@ -274,7 +294,7 @@
                 "mapId": 35
             }
         },
-        { "type": "Enemy", "x": 326, "y": 333, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 3, "enemyInfo": { "type": "baggy-kun", "face": "SOUTH", "party": "ENEMY" } } },
+        { "type": "Enemy", "x": 1024, "y": 331, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 3, "enemyInfo": { "type": "baggy-kun", "face": "SOUTH", "party": "ENEMY" } } },
         { "type": "Enemy", "x": 546, "y": 206, "level": 2, "settings": { "name": "bot1", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 18 } },
         { "type": "Enemy", "x": 572, "y": 206, "level": 2, "settings": { "name": "bot2", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 19 } },
         { "type": "Enemy", "x": 598, "y": 206, "level": 2, "settings": { "name": "bot3", "enemyInfo": { "type": "target-bot", "attribs": { "target": { "x": 0, "y": 0 }, "onSuccess": "tmp.hitSuccess", "onFail": "tmp.hitFail" }, "state": "DO_NOT_HIT", "group": "" }, "spawnCondition": null, "enemyType": "target-bot", "mapId": 20 } },
@@ -282,7 +302,12 @@
         { "type": "Enemy", "x": 1016, "y": 211, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 52, "enemyInfo": { "party": "PLAYER", "level": 1, "face": "SOUTH", "state": "", "type": "heat.special.brew-machine" } } },
         { "type": "Enemy", "x": 1243, "y": 226, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 53, "enemyInfo": { "party": "ENEMY", "level": 1, "face": "SOUTH", "state": "IDLE", "type": "jungle.blob", "group": "cage" } } },
         { "type": "Enemy", "x": 1327, "y": 294, "level": 2, "settings": { "size": { "x": 16, "y": 16 }, "mapId": 75, "enemyInfo": { "type": "penguin", "group": "cage", "level": 2, "party": "ENEMY", "face": "NORTH" } } },
-        { "type": "Analyzable", "x": 277, "y": 328, "level": 2, "settings": { "name": "anal1", "color": "YELLOW", "showType": "DEFAULT", "text": { "en_US": "Watch CrossCode: the movie. I swear it's great!", "de_DE": "", "fr_FR": "fr_FR", "langUid": 0, "zh_CN": "", "ko_KR": "", "ja_JP": "", "zh_TW": "" }, "mapId": 76, "visible": "", "spawnCondition": "" } }
+        { "type": "Chest", "x": 365, "y": 328, "level": 2, "settings": { "name": "chest2_head", "chestType": "Default", "amount": 1, "variable": "", "mapId": 77, "item": "657", "spawnCondition": "" } },
+        { "type": "Chest", "x": 406, "y": 329, "level": 2, "settings": { "name": "chest3_arm", "chestType": "Default", "amount": 1, "variable": "", "mapId": 78, "item": "577", "spawnCondition": "" } },
+        { "type": "Chest", "x": 448, "y": 329, "level": 2, "settings": { "name": "chest4_arm", "chestType": "Default", "amount": 1, "variable": "", "mapId": 79, "item": "607", "spawnCondition": "" } },
+        { "type": "Chest", "x": 492, "y": 329, "level": 2, "settings": { "name": "chest5_arm", "chestType": "Default", "amount": 1, "variable": "", "mapId": 80, "item": "114", "spawnCondition": "" } },
+        { "type": "Chest", "x": 532, "y": 329, "level": 2, "settings": { "name": "chest6_torso", "chestType": "Default", "amount": 1, "variable": "", "mapId": 81, "item": "583", "spawnCondition": "" } },
+        { "type": "Chest", "x": 577, "y": 330, "level": 2, "settings": { "name": "chest7_feet", "chestType": "Default", "amount": 1, "variable": "", "mapId": 82, "item": "596", "spawnCondition": "" } }
     ],
     "layer": [
         {
