@@ -234,6 +234,10 @@
         "aimBounceOff": "Aim bounce: off.",
         "wallScanOn": "Wall scan: on.",
         "wallScanOff": "Wall scan: off.",
+        "onItTopTemplate": "On it, {rest}",
+        "walkedOntoTemplate": "Walked onto: {rest}.",
+        "walkedOff": "Walked off.",
+
 
         "Analyzable": { "name": "Analyzable: {name}", "description": "None." },
 

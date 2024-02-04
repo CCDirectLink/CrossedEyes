@@ -1,5 +1,5 @@
 import { PlayerTraceResult } from './environment/loudjump'
-import { HintUnion, HintSubTypes } from './hint-system/hint-system'
+import { Hint, HintUnion, HintSubTypes } from './hint-system/hint-system'
 import { SoundGlossaryEntryP } from './tutorial/sound-glossary'
 
 export {}
@@ -72,6 +72,7 @@ declare global {
         interface Entity {
             uuid: string
             entitySoundInited?: boolean
+            isPlayerStandingOnMe?: boolean
         }
         interface MessageAreaGui {
             skip(this: this, nextMsg?: boolean): void
@@ -105,17 +106,6 @@ declare global {
                 entity: ig.ENTITY.Enemy
                 nameGui: sc.EnemyHintMenu
             }
-            interface Analyzable {
-                nameGui: sc.AnalyzableHintMenu
-            }
-
-            interface Climbable extends sc.QuickMenuTypesBase {
-                nameGui: sc.ClimbableMenu
-            }
-            interface ClimbableConstructor extends ImpactClass<Climbable> {
-                new (type: string, settings: ClimbableMenuSettings, screen: sc.QuickFocusScreen): Climbable
-            }
-            var Climbable: ClimbableConstructor
         }
 
         interface BasicHintMenu extends ig.BoxGui {
@@ -134,7 +124,9 @@ declare global {
         }
         var BasicHintMenu: BasicHintMenuConstructor
 
-        interface HintsMenu extends sc.BasicHintMenu {}
+        interface HintsMenu extends sc.BasicHintMenu {
+            hintClass?: Hint
+        }
         interface HintsMenuConstructor extends ImpactClass<HintsMenu> {
             new (settings: sc.QuickMenuTypesBaseSettings): HintsMenu
         }
@@ -152,18 +144,6 @@ declare global {
         }
         var EnemyHintMenu: EnemyHintMenuConstructor
 
-        interface AnalyzableHintMenu extends sc.BasicHintMenu {}
-        interface AnalyzableHintMenuConstructor extends ImpactClass<AnalyzableHintMenu> {
-            new (text: string, settings: sc.QuickMenuTypesBaseSettings): AnalyzableHintMenu
-        }
-        var AnalyzableHintMenu: AnalyzableHintMenuConstructor
-
-        interface ClimbableMenu extends sc.BasicHintMenu {}
-        interface ClimbableMenuConstructor extends ImpactClass<ClimbableMenu> {
-            new (settings: ClimbableMenuSettings): ClimbableMenu
-        }
-        var ClimbableMenu: ClimbableMenuConstructor
-
         interface QuickMenuTypesBaseSettings {
             hintName?: string
             hintType?: (typeof HintSubTypes)[number]
@@ -171,6 +151,8 @@ declare global {
         }
 
         interface QuickMenuAnalysis {
+            entities: HintUnion[]
+
             createHint(this: this, entity: ig.Entity, filter?: boolean): HintUnion | undefined
             populateHintList(this: this): void
         }

@@ -67,8 +67,10 @@ export class SpacialAudio {
         const playerPosCache = Vec3.create()
 
         ig.SoundHandleWebAudio.inject({
+            // @ts-expect-error
             play() {
                 if (!Opts.spacialAudio) {
+                    // @ts-expect-error
                     return this.parent()
                 }
                 if (!this._playing && this._buffer) {

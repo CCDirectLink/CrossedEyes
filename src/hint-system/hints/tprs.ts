@@ -103,6 +103,7 @@ export class HDoor implements Hint {
 
 export class HTeleportField implements Hint {
     entryName = 'TeleportField'
+    disableWalkedOn = true
 
     constructor() {
         /* run in prestart */
