@@ -278,6 +278,8 @@
         "focusedSelected": "Selected, {hintTitle}",
         "unselected": "Unselected.",
         "hintFilter": "Hint filter",
+        "puzzleFilterOn": "Puzzle filter: on",
+        "puzzleFilterOff": "Puzzle filter: off",
         "aimAnalysisOn": "Aim analysis: on.",
         "aimAnalysisOff": "Aim analysis: off.",
         "aimBounceOn": "Aim bounce: on.",

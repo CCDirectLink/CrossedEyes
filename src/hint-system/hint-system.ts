@@ -1,3 +1,4 @@
+import { EntityPoint, MapPoint } from 'cc-map-util/src/pos'
 import { Lang } from '../lang-manager'
 import { Opts } from '../plugin'
 import CrossedEyes from '../plugin'
@@ -18,6 +19,8 @@ import { HMultiHitSwitch, HOneTimeSwitch, HSwitch } from './hints/switches'
 import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
 import { NPCHintMenu } from './npc-override'
+import type { Selection } from 'cc-blitzkrieg/types/selection'
+import { isVecInRectArr } from 'cc-map-util/src/rect'
 
 export const HintTypes = ['All', 'Enemy', 'NPC', 'Interactable', 'Selected'] as const
 export const HintSubTypes = ['Puzzle', 'Plants', 'Chests', 'Climbable', 'Analyzable'] as const
@@ -79,6 +82,7 @@ export class HintSystem {
     filterIndex: number = 0
     currentSelectIndex: number = 0
     prevEntry: sc.QuickMenuTypesBase | undefined
+    filterInSelection: boolean = false
 
     quickMenuAnalysisInstance!: sc.QuickMenuAnalysis
 
@@ -123,6 +127,7 @@ export class HintSystem {
         let entry = SoundManager.continious[id]
         if (!entry) entry = SoundManager.continious[id] = HintSystem.continiousConfig
         const hint = this.getHintFromEntity(e)
+        if (!hint) return
 
         const isSelected = this.selectedHE.includes(e)
         speakIC((isSelected ? Lang.hints.focusedSelected : Lang.hints.focused).supplant({ hintTitle: hint.nameGui.title.text! }))
@@ -252,6 +257,7 @@ export class HintSystem {
 
     constructor() {
         /* runs in prestart */
+        CrossedEyes.initPoststarters.push(this)
         HintSystem.g = this
         this.filterList = [...HintTypes, ...HintSubTypes]
         this.filterList.slice(this.filterList.indexOf('Hints'))
@@ -473,6 +479,7 @@ export class HintSystem {
                 }
             },
         })
+
         sc.QuickMenuAnalysis.inject({
             update(...args) {
                 if (sc.quickmodel.isQuickCheck() && Opts.hints) {
@@ -488,6 +495,10 @@ export class HintSystem {
                         speakIC(`${self.filterList[self.filterIndex]}`)
                     } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_UP)) {
                         speakIC(`${Lang.hints.hintFilter}: ${self.filterList[self.filterIndex]}`)
+                    } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_DOWN)) {
+                        self.filterInSelection = !self.filterInSelection
+                        speakIC(self.filterInSelection ? Lang.hints.puzzleFilterOn : Lang.hints.puzzleFilterOff)
+                        self.updateFilter()
                     }
 
                     self.checkHintTogglePressed()
@@ -505,6 +516,12 @@ export class HintSystem {
                         (!sc.mapInteract.entries.find(o => o.entity.uuid == entity.uuid) || (entity instanceof ig.ENTITY.NPC && entity.xenoDialog))
                     )
                         return
+
+                    if (filter && self.filterInSelection) {
+                        const sel: Selection = blitzkrieg.sels.puzzle.inSelStack.peek()
+                        const mapPoint = EntityPoint.fromVec(entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER)).to(MapPoint)
+                        if (sel && !isVecInRectArr(mapPoint, sel.bb)) return
+                    }
 
                     const sett = entity.getQuickMenuSettings() as sc.QuickMenuTypesBaseSettings
 
@@ -577,5 +594,11 @@ export class HintSystem {
 
         new NPCHintMenu()
         new EnemyHintMenu()
+    }
+
+    initPoststart() {
+        const selEvent = () => this.filterInSelection && this.quickMenuAnalysisInstance.populateHintList()
+        blitzkrieg.sels.puzzle.walkInListeners.push(selEvent)
+        blitzkrieg.sels.puzzle.walkOutListeners.push(selEvent)
     }
 }

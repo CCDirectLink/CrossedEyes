@@ -7,6 +7,7 @@
 - Added a few puzzle elements to sound glossary
 - Added info sign hint
 - Added tutorial popups announcing
+- Added hint filtering to only show the hints relevant to the puzzle
 
 ### Fixed
 
