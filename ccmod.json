@@ -4,14 +4,13 @@
     "name": "CrossedEyes",
     "description": "Accessibility mod for CrossCode",
     "plugin": "plugin.js",
-	"icons": {
-		"24": "icon/icon.png"
-	},
-	"dependencies": {
-		"input-api": ">=1.0.0",
-		"cc-blitzkrieg": ">=0.4.6",
-		"crosscode": ">=1.4.0",
+    "icons": {
+        "24": "icon/icon.png"
+    },
+    "dependencies": {
+        "input-api": ">=1.0.0",
+        "cc-blitzkrieg": ">=0.4.6",
+        "crosscode": ">=1.4.0",
         "cc-diorbital-menu": ">=1.0.4"
-	}
-  }
-  
+    }
+}
