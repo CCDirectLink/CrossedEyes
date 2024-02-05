@@ -1,4 +1,4 @@
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 import CrossedEyes, { InitPoststart } from '../plugin'
 
 export class ConditionalEnemyPatcher implements InitPoststart {

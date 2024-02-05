@@ -1,5 +1,5 @@
 import { Lang } from '../../lang-manager'
-import { Opts } from '../../options-manager'
+import { Opts } from '../../plugin'
 import { Hint, HintData, HintSystem } from '../hint-system'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')

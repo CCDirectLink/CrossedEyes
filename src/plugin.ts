@@ -2,7 +2,7 @@ import { Mod1 } from 'cc-blitzkrieg/src/types'
 import { SpacialAudio } from './spacial-audio'
 import type * as _ from 'cc-vim'
 import type * as __ from 'cc-blitzkrieg'
-import { MenuOptionsManager } from './options-manager'
+import { MenuOptionsManager, OptsType } from './options-manager'
 import { LoudWalls } from './environment/loudwalls'
 import { SoundManager } from './sound-manager'
 import { TTS } from './tts/tts'
@@ -25,6 +25,7 @@ import { TestMapMisc } from './tutorial/test-map-misc'
 import { SoundGlossary } from './tutorial/sound-glossary'
 import { CrossedEyesHud } from './tutorial/crossedeyes-hud'
 import { Lang, LangManager } from './lang-manager'
+import { getOptions } from './options'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
@@ -54,6 +55,8 @@ export interface PauseListener {
 export interface InitPoststart {
     initPoststart(): void
 }
+
+export let Opts: OptsType<ReturnType<typeof getOptions>>
 
 export default class CrossedEyes {
     static dir: string
@@ -92,7 +95,7 @@ export default class CrossedEyes {
         })
 
         new LangManager()
-        new MenuOptionsManager()
+        Opts = new MenuOptionsManager(getOptions()).getOpts()
         new AutoUpdater().checkAndInstall()
         new RuntimeResources()
         new SoundManager()

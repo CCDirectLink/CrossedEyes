@@ -1,5 +1,5 @@
 import { Lang } from './lang-manager'
-import { Opts } from './options-manager'
+import { Opts } from './plugin'
 import CrossedEyes from './plugin'
 import { speakI, speakIC } from './tts/gather-text'
 import { TTS } from './tts/tts'

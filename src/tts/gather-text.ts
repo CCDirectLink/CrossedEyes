@@ -1,5 +1,5 @@
 import { Lang } from '../lang-manager'
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 import CrossedEyes from '../plugin'
 import { SpecialAction } from '../special-action'
 import { FontToImgMap } from './font-img-to-text-map'

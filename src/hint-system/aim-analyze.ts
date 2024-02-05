@@ -1,4 +1,4 @@
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 import { speakIC } from '../tts/gather-text'
 import CrossedEyes, { PauseListener } from '../plugin'
 import { HintSystem, HintUnion } from './hint-system'

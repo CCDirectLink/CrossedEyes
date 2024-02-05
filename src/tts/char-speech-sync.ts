@@ -1,5 +1,5 @@
 import { Lang } from '../lang-manager'
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 import { TextGather, interrupt, speakIC } from './gather-text'
 import { SpeechEndListener, TTS } from './tts'
 

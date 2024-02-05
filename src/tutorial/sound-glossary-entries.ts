@@ -3,7 +3,7 @@ import { InteractableHandler as InteractableHandler } from '../environment/inter
 import { LoudJump } from '../environment/loudjump'
 import { LoudWalls } from '../environment/loudwalls'
 import { HintSystem } from '../hint-system/hint-system'
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SoundGlossaryEntry } from './sound-glossary'
 

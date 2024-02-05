@@ -1,5 +1,5 @@
 import { Lang } from '../lang-manager'
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'

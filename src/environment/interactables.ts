@@ -1,5 +1,5 @@
 import { SoundManager } from '../sound-manager'
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 import { HintSystem } from '../hint-system/hint-system'
 import { speakIC } from '../tts/gather-text'
 import { Lang } from '../lang-manager'

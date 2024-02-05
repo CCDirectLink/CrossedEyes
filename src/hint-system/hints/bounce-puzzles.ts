@@ -1,5 +1,5 @@
 import { Lang } from '../../lang-manager'
-import { Opts } from '../../options-manager'
+import { Opts } from '../../plugin'
 import { Hint, HintData } from '../hint-system'
 
 export class HBounceBlock implements Hint {

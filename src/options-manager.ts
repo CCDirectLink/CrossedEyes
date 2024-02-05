@@ -1,5 +1,4 @@
 import { Lang } from './lang-manager'
-import { getOptions } from './options'
 import CrossedEyes, { InitPoststart } from './plugin'
 
 type Enum = Record<string, number | string> & { [k: number]: string }
@@ -42,61 +41,52 @@ type FlattenUnion<T> = {
     [K in keyof UnionToIntersection<T>]: UnionToIntersection<T>[K]
 }
 
-type OptionsObj = ReturnType<typeof getOptions>
-type FlatOpts = FlattenUnion<FlattenOptions<OptionsObj>>
-
-{
-    /* check if options.ts and the language .json file contain the same entries */
-    // prettier-ignore
-    type IfEquals<T, U, Y=unknown, N=never> =
-        (<G>() => G extends T ? 1 : 2) extends
-        (<G>() => G extends U ? 1 : 2) ? Y : N;
-    type Diff<T, U> = T extends U ? never : T
-
-    type OptLangEntryMissing = Diff<keyof FlatOpts, keyof (typeof Lang)['opts']>
-    const optLangEntryMissingError = `ERROR: Option language entry missing: -->`
-    const _optLangEntryMissingCheck: IfEquals<OptLangEntryMissing, never, typeof optLangEntryMissingError, ` ${OptLangEntryMissing}`> = optLangEntryMissingError
-    typeof _optLangEntryMissingCheck /* supress unused info */
-
-    type OptConfigEntryMissing = Diff<keyof (typeof Lang)['opts'], keyof FlatOpts>
-    const optConfigEntryMissingError = `ERROR: Option config entry missing: -->`
-    const _optConfigEntryMissing: IfEquals<OptConfigEntryMissing, never, typeof optConfigEntryMissingError, ` ${OptConfigEntryMissing}`> = optConfigEntryMissingError
-    typeof _optConfigEntryMissing /* supress unused info */
-}
+type FlatOpts<T extends Options> = FlattenUnion<FlattenOptions<T>>
 
 // prettier-ignore
-export const Opts: { [T in keyof FlatOpts]: 
-      FlatOpts[T]['type'] extends 'CHECKBOX' ? boolean
-    : FlatOpts[T]['type'] extends 'BUTTON_GROUP' ?
-        // @ts-expect-error duno why this throws an error, but it works in practice
-        FlatOpts[T]['enum'][keyof FlatOpts[T]['enum']]
+export type OptsType<E extends Options> = 
+    E extends Options ? (
+    { [T in keyof FlatOpts<E>]: 
+        // @ts-expect-error
+      FlatOpts<E>[T]['type'] extends 'CHECKBOX' ? boolean
+        // @ts-expect-error
+    : FlatOpts<E>[T]['type'] extends 'BUTTON_GROUP' ?
+        // @ts-expect-error
+        FlatOpts<E>[T]['enum'][keyof FlatOpts<E>[T]['enum']]
     : number
-} & { flatOpts: FlatOpts } = {} as any
+} & { flatOpts: FlatOpts<E> }
 
-export class MenuOptionsManager implements InitPoststart {
-    private options = getOptions()
+) : never
+
+export class MenuOptionsManager<T extends Options> implements InitPoststart {
     private headerNames: string[]
+    private Opts: OptsType<T> = {} as any
 
-    constructor() {
+    public getOpts() {
+        return this.Opts
+    }
+
+    constructor(public options: T) {
         CrossedEyes.initPoststarters.push(this)
-        Opts.flatOpts = {} as any
+        this.Opts.flatOpts = {} as any
         this.headerNames = []
 
         const changeEventOptions: Record<string, Option> = {}
         const localStorageOptions: Set<string> = new Set()
 
         for (const _catKey in this.options) {
-            const catKey = _catKey as unknown as keyof typeof this.options
+            const catKey = _catKey as keyof T
             const headers = this.options[catKey]
             for (const headerKey in headers) {
                 this.headerNames.push(headerKey)
-                const optKeys = Object.entries((headers as any)[headerKey]) as [keyof FlatOpts, Option][]
+                const optKeys = Object.entries((headers as any)[headerKey]) as [keyof FlatOpts<T>, Option][]
                 for (let optKeyI = 0; optKeyI < optKeys.length; optKeyI++) {
-                    const optKey: keyof FlatOpts = optKeys[optKeyI][0]
+                    const optKey: keyof FlatOpts<T> = optKeys[optKeyI][0]
                     const option: Option = optKeys[optKeyI][1]
 
-                    const id = `${headerKey}-${optKey}`
-                    Opts.flatOpts[optKey] = Object.assign(option, { id }) as any
+                    const id = `${headerKey}-${optKey as string}`
+                    // @ts-ignore
+                    this.Opts.flatOpts[optKey] = Object.assign(option, { id }) as any
 
                     const final = (sc.OPTIONS_DEFINITION[id] = Object.assign(
                         {
@@ -134,7 +124,7 @@ export class MenuOptionsManager implements InitPoststart {
                         localStorageOptions.add(id)
                     }
 
-                    Object.defineProperty(Opts, optKey, {
+                    Object.defineProperty(this.Opts, optKey, {
                         get: option.saveToLocalStorage
                             ? function () {
                                   let v = localStorage.getItem(id)!
@@ -171,9 +161,10 @@ export class MenuOptionsManager implements InitPoststart {
 
     initPoststart() {
         this.headerNames.forEach(h => (ig.lang.labels.sc.gui.options.headers[h] = h))
-        Object.entries(Opts.flatOpts).forEach(e => {
+        Object.entries(this.Opts.flatOpts).forEach(e => {
             const obj: any = { ...Lang.opts[e[0] as keyof (typeof Lang)['opts']] }
             Object.assign(obj, e[1])
+            // @ts-expect-error
             ig.lang.labels.sc.gui.options[e[1].id] = obj
         })
     }

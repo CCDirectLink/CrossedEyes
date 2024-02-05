@@ -1,4 +1,4 @@
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 
 export class LangPopupFix {
     constructor() {

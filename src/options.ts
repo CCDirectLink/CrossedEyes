@@ -1,4 +1,6 @@
+import { Lang } from './lang-manager'
 import { Options } from './options-manager'
+import { Opts } from './plugin'
 import { TTS, TTSTypes } from './tts/tts'
 
 export function getOptions() {
@@ -190,4 +192,23 @@ export function getOptions() {
             },
         },
     } as const satisfies Options
+}
+
+{
+    /* check if options.ts and the language .json file contain the same entries */
+    // prettier-ignore
+    type IfEquals<T, U, Y=unknown, N=never> =
+        (<G>() => G extends T ? 1 : 2) extends
+        (<G>() => G extends U ? 1 : 2) ? Y : N;
+    type Diff<T, U> = T extends U ? never : T
+
+    type OptLangEntryMissing = Diff<keyof typeof Opts.flatOpts, keyof (typeof Lang)['opts']>
+    const optLangEntryMissingError = `ERROR: Option language entry missing: -->`
+    const _optLangEntryMissingCheck: IfEquals<OptLangEntryMissing, never, typeof optLangEntryMissingError, ` ${OptLangEntryMissing}`> = optLangEntryMissingError
+    typeof _optLangEntryMissingCheck /* supress unused info */
+
+    type OptConfigEntryMissing = Diff<keyof (typeof Lang)['opts'], keyof typeof Opts.flatOpts>
+    const optConfigEntryMissingError = `ERROR: Option config entry missing: -->`
+    const _optConfigEntryMissing: IfEquals<OptConfigEntryMissing, never, typeof optConfigEntryMissingError, ` ${OptConfigEntryMissing}`> = optConfigEntryMissingError
+    typeof _optConfigEntryMissing /* supress unused info */
 }

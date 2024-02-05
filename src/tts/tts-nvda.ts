@@ -1,7 +1,7 @@
 import { WebSocket, WebSocketServer } from 'ws'
 import { CharacterSpeakData, TTS, TTSInterface, TTSTypes } from './tts'
 import CrossedEyes from '../plugin'
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 
 import AdmZip from 'adm-zip'
 import { Lang } from '../lang-manager'

@@ -1,5 +1,5 @@
 import { HintSystem } from '../hint-system/hint-system'
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { EntityUtil } from './entity-util'

@@ -1,4 +1,4 @@
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 
 /* quick way to calculate hash for adding stuff
 const crypto = require('crypto')

@@ -1,5 +1,5 @@
 import { Lang } from '../lang-manager'
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 
 const sc_MENU_SUBMENU_CROSSEDEYESHUD_MENU = 385943 as const
 export const sc_MENU_SUBMENU_CROSSEDEYESHUD_SOUND_GLOSSARY = 385944 as const

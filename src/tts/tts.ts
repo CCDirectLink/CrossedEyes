@@ -1,4 +1,4 @@
-import { Opts } from '../options-manager'
+import { Opts } from '../plugin'
 import { TextGather } from './gather-text'
 import { AddonInstaller, TTSNvda } from './tts-nvda'
 import { TTSWebSpeech } from './tts-web-speech'
