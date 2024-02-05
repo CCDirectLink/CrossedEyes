@@ -73,6 +73,7 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
+                    saveToLocalStorage: true,
                 },
                 ttsVolume: {
                     type: 'OBJECT_SLIDER',
@@ -82,6 +83,7 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
+                    saveToLocalStorage: true,
                 },
                 ttsPitch: {
                     type: 'OBJECT_SLIDER',
@@ -91,6 +93,7 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
+                    saveToLocalStorage: true,
                 },
             },
             volumes: {

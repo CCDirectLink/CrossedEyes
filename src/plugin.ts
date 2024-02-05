@@ -92,8 +92,8 @@ export default class CrossedEyes {
         })
 
         new LangManager()
-        new AutoUpdater().checkAndInstall()
         new MenuOptionsManager()
+        new AutoUpdater().checkAndInstall()
         new RuntimeResources()
         new SoundManager()
         new SpacialAudio()

@@ -8,6 +8,11 @@
 - Added info sign hint
 - Added tutorial popups announcing
 
+### Fixed
+
+- Fixed auto updater not working (you have to update to this version manually)
+- Mod version should be annouced properly now
+
 ## [0.5.6] 2024-02-04
 
 ### Added
