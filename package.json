@@ -20,6 +20,8 @@
         "@typescript-eslint/parser": "^6.16.0",
         "adm-zip": "^0.5.10",
         "cc-blitzkrieg": "github:krypciak/cc-blitzkrieg",
+        "cc-diorbital-menu": "github:krypciak/cc-diorbital-menu",
+        "cc-map-util": "github:krypciak/cc-map-util",
         "cc-vim": "github:krypciak/cc-vim",
         "esbuild": "^0.19.11",
         "eslint": "^8.56.0",
@@ -28,8 +30,5 @@
         "typescript": "^5.3.3",
         "ultimate-crosscode-typedefs": "github:krypciak/ultimate-crosscode-typedefs",
         "ws": "^8.16.0"
-    },
-    "dependencies": {
-        "cc-map-util": "github:krypciak/cc-map-util"
     }
 }

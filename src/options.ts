@@ -1,3 +1,4 @@
+import { CCDiorbitalMenuEnforce } from './cc-diorbital-menu-enforce'
 import { Lang } from './lang-manager'
 import { Options } from './options-manager'
 import { Opts } from './plugin'
@@ -11,6 +12,14 @@ export function getOptions() {
                     type: 'CHECKBOX',
                     init: true,
                     saveToLocalStorage: true,
+                },
+                lockDiorbitalMenu: {
+                    type: 'CHECKBOX',
+                    init: true,
+                    changeEvent: () => {
+                        CCDiorbitalMenuEnforce.update()
+                        sc.QuickRingMenuWidgets.lockLayout = Opts.lockDiorbitalMenu
+                    },
                 },
                 spacialAudio: {
                     type: 'CHECKBOX',

@@ -8,6 +8,7 @@
 - Added info sign hint
 - Added tutorial popups announcing
 - Added hint filtering to only show the hints relevant to the puzzle
+- Added puzzle skip button to the quick menu
 
 ### Fixed
 

@@ -26,6 +26,7 @@ import { SoundGlossary } from './tutorial/sound-glossary'
 import { CrossedEyesHud } from './tutorial/crossedeyes-hud'
 import { Lang, LangManager } from './lang-manager'
 import { getOptions } from './options'
+import { CCDiorbitalMenuEnforce } from './cc-diorbital-menu-enforce'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
@@ -241,6 +242,7 @@ export default class CrossedEyes {
         CrossedEyes.initPoststarters.forEach(p => p.initPoststart())
         this.addLogCopyKeybinding()
 
+        CCDiorbitalMenuEnforce.update()
         localStorage.getItem('crossedeyesDev') && this.startTestMap()
     }
 

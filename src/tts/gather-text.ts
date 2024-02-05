@@ -4,6 +4,7 @@ import CrossedEyes from '../plugin'
 import { SpecialAction } from '../special-action'
 import { FontToImgMap } from './font-img-to-text-map'
 import { CharacterSpeakData } from './tts'
+import 'cc-diorbital-menu/src/quick-menu-extension' /* import the types */
 
 export function getReadableText(orig: string): string {
     let text: string = orig
@@ -343,14 +344,8 @@ export class TextGather {
             focusGained() {
                 this.parent()
                 if (!Opts.tts || this.state == sc.QUICK_MENU_STATE.NONE) return
-                // prettier-ignore
-                const text = 
-                    this.state == sc.QUICK_MENU_STATE.ITEMS ? Lang.menu.quickmenuItems
-                  : this.state == sc.QUICK_MENU_STATE.CHECK ? Lang.menu.quickmenuAnalysis
-                  : this.state == sc.QUICK_MENU_STATE.PARTY ? Lang.menu.quickmenuParty
-                  : this.state == sc.QUICK_MENU_STATE.MAP ? Lang.menu.quickmenuMap
-                  : ''
-                speakI(text)
+
+                speakI(this.title)
                 SpecialAction.setListener('LSP', 'quickMenuDescription', () => {
                     this.focus && speakI(this.data)
                 })

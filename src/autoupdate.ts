@@ -29,21 +29,26 @@ export class AutoUpdater {
                 anyUpdated = true
             }
 
-            const bvReq = (await this.getUrlJson('https://raw.githubusercontent.com/CCDirectLink/CrossedEyes/master/ccmod.json')).match(
-                /"cc-blitzkrieg": ">=(\d+\.\d+\.\d+)"/
-            )![1]
-            // @ts-expect-error
-            const bvHas: string = window.activeMods.find(e => e.name == 'cc-blitzkrieg').version
-            if (bvReq != bvHas) {
-                console.log('cc-blitzkrieg outdated')
-                const fn = `cc-blitzkrieg-${bvReq}.ccmod`
-                const url = `https://github.com/krypciak/cc-blitzkrieg/releases/download/v${bvReq}/${fn}`
-                await AddonInstaller.downloadFile(url, `assets/mods/${fn}`)
-                const delPath = `${mainDir}/assets/mods/cc-blitzkrieg-${bvHas}.ccmod`
-                fs.unlink(delPath, err => {
-                    err && console.log(err)
-                })
-                anyUpdated = true
+            const modsToUpdate = ['cc-blitzkrieg', 'cc-diorbital-menu']
+            for (const modName of modsToUpdate) {
+                const matches = (await this.getUrlJson('https://raw.githubusercontent.com/CCDirectLink/CrossedEyes/master/ccmod.json')).match(
+                    new RegExp(`"${modName}": ">=(\d+\.\d+\.\d+)"`)
+                )
+                if (!matches) continue
+                const bvReq = matches[1]
+                // @ts-expect-error
+                const bvHas: string = window.activeMods.find(e => e.name == modName).version
+                if (bvReq != bvHas) {
+                    console.log(`${modName} outdated`)
+                    const fn = `${modName}-${bvReq}.ccmod`
+                    const url = `https://github.com/krypciak/${modName}/releases/download/v${bvReq}/${fn}`
+                    await AddonInstaller.downloadFile(url, `assets/mods/${fn}`)
+                    const delPath = `${mainDir}/assets/mods/${modName}-${bvHas}.ccmod`
+                    fs.unlink(delPath, err => {
+                        err && console.log(err)
+                    })
+                    anyUpdated = true
+                }
             }
             if (anyUpdated) {
                 if (Opts.tts) {
