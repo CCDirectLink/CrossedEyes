@@ -1,11 +1,12 @@
 import { Lang } from '../lang-manager'
-import { Opts } from '../plugin'
+import CrossedEyes, { Opts } from '../plugin'
 
 const sc_MENU_SUBMENU_CROSSEDEYESHUD_MENU = 385943 as const
 export const sc_MENU_SUBMENU_CROSSEDEYESHUD_SOUND_GLOSSARY = 385944 as const
 
 export class CrossedEyesHud {
     constructor() {
+        CrossedEyes.initPoststarters.push(this)
         /* in prestart */
         sc.CrossedEyesHudMenu = sc.BaseMenu.extend({
             gfx: new ig.Image('media/gui/menu.png'),
@@ -110,5 +111,8 @@ export class CrossedEyesHud {
                 } else this.buttonGroup.focusCurrentButton(0, origFocusIndex, false, true)
             },
         })
+    }
+    initPoststart() {
+        ig.lang.labels.sc.gui.menu['menu-titles'][sc.SUB_MENU_INFO[sc.MENU_SUBMENU.CROSSEDEYESHUD_MENU].name] = Lang.crossedeyes
     }
 }

@@ -1,4 +1,5 @@
 import { Lang } from '../lang-manager'
+import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { getReadableText, speakArgsC, speakC, speakIC } from '../tts/gather-text'
@@ -39,6 +40,7 @@ export class SoundGlossary {
     }
     constructor() {
         /* in prestart */
+        CrossedEyes.initPoststarters.push(this)
         this.setCategoriesAndIds()
         const self = this
 
@@ -298,5 +300,8 @@ export class SoundGlossary {
             Clazz: sc.SoundGlossary.Menu,
             name: 'crossedeyeshud_soundglossary',
         }
+    }
+    initPoststart() {
+        ig.lang.labels.sc.gui.menu['menu-titles'][sc.SUB_MENU_INFO[sc.MENU_SUBMENU.CROSSEDEYESHUD_SOUNDGLOSSARY].name] = Lang.menu.soundglossary.name
     }
 }
