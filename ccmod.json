@@ -9,8 +9,8 @@
     },
     "dependencies": {
         "input-api": ">=1.0.0",
-        "cc-blitzkrieg": ">=0.4.6",
+        "cc-blitzkrieg": ">=0.4.7",
         "crosscode": ">=1.4.0",
-        "cc-diorbital-menu": ">=1.0.4"
+        "cc-diorbital-menu": ">=1.0.5"
     }
 }

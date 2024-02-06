@@ -272,7 +272,9 @@
         "south": "South",
         "west": "West",
         "rectangle": "Rectangle",
-        "notSupported": "Not supported."
+        "notSupported": "Not supported.",
+        "puzzleSolved": "Puzzle solved.",
+        "notStandingInPuzzle": "Not standing in a puzzle area."
     },
     "hints": {
         "focused": "{hintTitle}",

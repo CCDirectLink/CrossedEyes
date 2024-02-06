@@ -200,6 +200,21 @@ export class TextGather {
             })()
         )
 
+        sc.Model.addObserver<sc.QuickRingMenuWidgets>(
+            sc.QuickRingMenuWidgets,
+            new (class {
+                modelChanged(model: sc.QuickRingMenuWidgets, msg: sc.QUICK_MENU_WIDGET_EVENT, data: sc.QuickMenuWidget) {
+                    if (Opts.tts && model == sc.QuickRingMenuWidgets && msg == sc.QUICK_MENU_WIDGET_EVENT.CLICK && data.name == 'cc-blitzkrieg_puzzleSkip') {
+                        if (blitzkrieg.sels.puzzle.inSelStack.peek()) {
+                            speakI(Lang.misc.puzzleSolved)
+                        } else {
+                            speakI(Lang.misc.notStandingInPuzzle)
+                        }
+                    }
+                }
+            })()
+        )
+
         sc.GameModel.inject({
             enterTitle() {
                 this.parent()
