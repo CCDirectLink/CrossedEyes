@@ -3,6 +3,7 @@
 # Change Log
 
 ## [Unreleased]
+## [0.5.7] 2024-02-06
 
 - Added a few puzzle elements to sound glossary
 - Added info sign hint
