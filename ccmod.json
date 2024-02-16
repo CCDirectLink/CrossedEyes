@@ -12,6 +12,7 @@
     "dependencies": {
         "input-api": ">=1.0.0",
         "cc-blitzkrieg": ">=0.4.7",
+        "nax-ccuilib": ">=1.2.2",
         "crosscode": ">=1.4.0"
     },
     "plugin": "plugin.js"

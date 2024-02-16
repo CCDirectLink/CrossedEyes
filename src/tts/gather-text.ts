@@ -4,7 +4,10 @@ import CrossedEyes from '../plugin'
 import { SpecialAction } from '../special-action'
 import { FontToImgMap } from './font-img-to-text-map'
 import { CharacterSpeakData } from './tts'
-import 'cc-diorbital-menu/src/quick-menu-extension' /* import the types */
+
+import 'nax-ccuilib/src/headers/nax/quick-menu-public-api.d.ts'
+import 'nax-ccuilib/src/headers/nax/quick-menu.d.ts'
+import 'nax-ccuilib/src/headers/sc/quick-menu.d.ts'
 
 export function getReadableText(orig: string): string {
     let text: string = orig
@@ -156,64 +159,60 @@ export class TextGather {
         const self = this
         let lastArea: string | undefined
         let lastMapKeys: string[] | undefined
-        sc.Model.addObserver<sc.MapModel>(
-            sc.map,
-            new (class {
-                modelChanged(model: sc.Model, msg: sc.MAP_EVENT) {
-                    if (Opts.tts && model == sc.map && !sc.model.isCutscene() && msg == sc.MAP_EVENT.MAP_ENTERED) {
-                        const area: string = sc.map.getCurrentAreaName().value
-                        const map: string = sc.map.getCurrentMapName().value
-                        if (map === undefined) return
+        sc.Model.addObserver<sc.MapModel>(sc.map, {
+            modelChanged(model: sc.Model, msg: sc.MAP_EVENT) {
+                if (Opts.tts && model == sc.map && !sc.model.isCutscene() && msg == sc.MAP_EVENT.MAP_ENTERED) {
+                    const area: string = sc.map.getCurrentAreaName().value
+                    const map: string = sc.map.getCurrentMapName().value
+                    if (map === undefined) return
 
-                        let toSpeak: string = ''
+                    let toSpeak: string = ''
 
-                        if (area != lastArea) {
-                            toSpeak += Lang.enviroment.mapEnterAreaTemplate.supplant({ area })
-                            lastArea = area
-                        }
-                        let currMapKeys = Object.keys(ig.vars.storage.maps)
-                        let isNew = false
-                        if (lastMapKeys) {
-                            const mapPath = ig.game.mapName.toCamel().toPath('', '')
-                            if (!lastMapKeys.includes(mapPath) && currMapKeys.includes(mapPath)) isNew = true
-                        }
-                        lastMapKeys = currMapKeys
+                    if (area != lastArea) {
+                        toSpeak += Lang.enviroment.mapEnterAreaTemplate.supplant({ area })
+                        lastArea = area
+                    }
+                    let currMapKeys = Object.keys(ig.vars.storage.maps)
+                    let isNew = false
+                    if (lastMapKeys) {
+                        const mapPath = ig.game.mapName.toCamel().toPath('', '')
+                        if (!lastMapKeys.includes(mapPath) && currMapKeys.includes(mapPath)) isNew = true
+                    }
+                    lastMapKeys = currMapKeys
 
-                        toSpeak += (isNew ? Lang.enviroment.mapEnterNewTemplate : Lang.enviroment.mapEnterTemplate).supplant({ map })
-                        console.log(toSpeak)
-                        speakI(toSpeak)
-                        self.ignoreInteract = 1
+                    toSpeak += (isNew ? Lang.enviroment.mapEnterNewTemplate : Lang.enviroment.mapEnterTemplate).supplant({ map })
+                    console.log(toSpeak)
+                    speakI(toSpeak)
+                    self.ignoreInteract = 1
+                }
+            },
+        })
+
+        sc.Model.addObserver<sc.PlayerModel>(sc.model.player, {
+            modelChanged(model: sc.Model, msg: sc.PLAYER_MSG, data: sc.PLAYER_MSG_ITEM_OBTAINED_DATA) {
+                if (Opts.tts && model == sc.model.player && !sc.model.isCutscene() && msg == sc.PLAYER_MSG.ITEM_OBTAINED) {
+                    self.recivedItemRecord[data.id] ??= 0
+                    self.recivedItemRecord[data.id] += data.amount
+                }
+            },
+        })
+
+        sc.Model.addObserver<nax.ccuilib.QuickRingMenuWidgets>(nax.ccuilib.QuickRingMenuWidgets, {
+            modelChanged(model: nax.ccuilib.QuickRingMenuWidgets, msg: nax.ccuilib.QUICK_MENU_WIDGET_EVENT, data: nax.ccuilib.QuickMenuWidget) {
+                if (
+                    Opts.tts &&
+                    model == nax.ccuilib.QuickRingMenuWidgets &&
+                    msg == nax.ccuilib.QUICK_MENU_WIDGET_EVENT.CLICK &&
+                    data.name == 'cc-blitzkrieg_puzzleSkip'
+                ) {
+                    if (blitzkrieg.sels.puzzle.inSelStack.peek()) {
+                        speakI(Lang.misc.puzzleSolved)
+                    } else {
+                        speakI(Lang.misc.notStandingInPuzzle)
                     }
                 }
-            })()
-        )
-
-        sc.Model.addObserver<sc.PlayerModel>(
-            sc.model.player,
-            new (class {
-                modelChanged(model: sc.Model, msg: sc.PLAYER_MSG, data: sc.PLAYER_MSG_ITEM_OBTAINED_DATA) {
-                    if (Opts.tts && model == sc.model.player && !sc.model.isCutscene() && msg == sc.PLAYER_MSG.ITEM_OBTAINED) {
-                        self.recivedItemRecord[data.id] ??= 0
-                        self.recivedItemRecord[data.id] += data.amount
-                    }
-                }
-            })()
-        )
-
-        sc.Model.addObserver<sc.QuickRingMenuWidgets>(
-            sc.QuickRingMenuWidgets,
-            new (class {
-                modelChanged(model: sc.QuickRingMenuWidgets, msg: sc.QUICK_MENU_WIDGET_EVENT, data: sc.QuickMenuWidget) {
-                    if (Opts.tts && model == sc.QuickRingMenuWidgets && msg == sc.QUICK_MENU_WIDGET_EVENT.CLICK && data.name == 'cc-blitzkrieg_puzzleSkip') {
-                        if (blitzkrieg.sels.puzzle.inSelStack.peek()) {
-                            speakI(Lang.misc.puzzleSolved)
-                        } else {
-                            speakI(Lang.misc.notStandingInPuzzle)
-                        }
-                    }
-                }
-            })()
-        )
+            },
+        })
 
         sc.GameModel.inject({
             enterTitle() {

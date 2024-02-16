@@ -1,8 +1,10 @@
-import { CCDiorbitalMenuEnforce } from './cc-diorbital-menu-enforce'
+import 'nax-ccuilib/src/headers/nax/quick-menu-public-api.d.ts'
+import 'nax-ccuilib/src/headers/nax/quick-menu.d.ts'
 import { Lang } from './lang-manager'
 import { Options } from './options-manager'
 import { Opts } from './plugin'
 import { TTS, TTSTypes } from './tts/tts'
+import { QuickMenuLayoutEnforce } from './quick-menu-layout-enforce'
 
 export function getOptions() {
     return {
@@ -17,8 +19,8 @@ export function getOptions() {
                     type: 'CHECKBOX',
                     init: true,
                     changeEvent: () => {
-                        CCDiorbitalMenuEnforce.update()
-                        sc.QuickRingMenuWidgets.lockLayout = Opts.lockDiorbitalMenu
+                        QuickMenuLayoutEnforce.update()
+                        nax.ccuilib.QuickRingMenuWidgets.lockLayout = Opts.lockDiorbitalMenu
                     },
                 },
                 spacialAudio: {
