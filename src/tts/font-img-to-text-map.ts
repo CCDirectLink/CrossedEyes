@@ -4,6 +4,11 @@ export class FontToImgMap {
     private static map: Record<string, string>
 
     public static convert(name: string): string {
+        if (name == 'help') return this.convert('gamepad-pause')
+        if (name == 'help2') return this.convert('gamepad-x')
+        if (name == 'help3') return this.convert('gamepad-y')
+        if (name == 'help4') return this.convert('right-stick-press')
+
         if (sc.fontsystem.gamepadIconStyle == sc.GAMEPAD_ICON_STYLE.PS3) {
             if (name == 'gamepad-x') return Lang.menu.fontImgToTextMap['gamepad-dualshock-x']
             if (name == 'gamepad-y') return Lang.menu.fontImgToTextMap['gamepad-dualshock-y']
@@ -25,8 +30,6 @@ export class FontToImgMap {
                 return obj
             })(),
             ...Lang.menu.fontImgToTextMap,
-            menu: '',
-            help2: '',
             'language-0': '',
             'language-1': '',
             'language-2': '',
@@ -39,9 +42,10 @@ export class FontToImgMap {
             tech: '',
             'item-items': '',
             'item-key': '',
-            help: '',
-            back: '',
-            help3: '',
+            'item-news': '',
+            quest: '' /* todo? */,
+            'lore-others': '',
+            'stats-general': '',
         }
     }
 }
