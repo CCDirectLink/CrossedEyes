@@ -14,7 +14,6 @@ import { LoudJump } from './environment/loudjump'
 import { InteractableHandler } from './environment/interactables'
 import { MovementSoundTweaker } from './environment/movement-sounds'
 import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
-import { AutoUpdater } from './autoupdate'
 import { speakIC } from './tts/gather-text'
 import { godmode } from './godmode'
 import { LangPopupFix } from './tts/lang-popup-fix'
@@ -97,7 +96,7 @@ export default class CrossedEyes {
 
         new LangManager()
         Opts = new MenuOptionsManager(getOptions()).getOpts()
-        new AutoUpdater().checkAndInstall()
+
         new RuntimeResources()
         new SoundManager()
         new SpacialAudio()
@@ -117,6 +116,11 @@ export default class CrossedEyes {
         new TestMapMisc()
         new CrossedEyesHud()
         new SoundGlossary()
+
+        TTS.g.onReadyListeners.push(() => {
+            console.log(CrossedEyes.mod.version)
+            speakIC(Lang.misc.versionAnnounce.supplant({ version: CrossedEyes.mod.version!.toString().replace(/\./g, ': ') }))
+        })
 
         ig.Game.inject({
             setPaused(paused: boolean) {
