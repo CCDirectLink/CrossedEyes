@@ -27,10 +27,6 @@
         "interactableVolume": { "name": "Interactable volume", "description": "Interactable volume multiplier." },
         "entityHintsVolume": { "name": "Entity hints volume", "description": "Entity hints volume multiplier." }
     },
-    "autoupdate": {
-        "restart": "Mod updated. Restarting...",
-        "versionAnnounce": "CrossedEyes version: {version}: up to date"
-    },
     "logupload": {
         "uploading": "Uploading...",
         "copied": "Log link copied to clipboard"
@@ -276,7 +272,8 @@
         "rectangle": "Rectangle",
         "notSupported": "Not supported.",
         "puzzleSolved": "Puzzle solved.",
-        "notStandingInPuzzle": "Not standing in a puzzle area."
+        "notStandingInPuzzle": "Not standing in a puzzle area.",
+        "versionAnnounce": "CrossedEyes version: {version}"
     },
     "hints": {
         "focused": "{hintTitle}",

@@ -4,7 +4,7 @@ import { Lang } from './lang-manager'
 import { Options } from './options-manager'
 import { Opts } from './plugin'
 import { TTS, TTSTypes } from './tts/tts'
-import { QuickMenuLayoutEnforce } from './quick-menu-layout-enforce'
+import { updateQuickRingMenuLayoutLock } from './misc/quick-menu-layout-enforce'
 
 export function getOptions() {
     return {
@@ -19,8 +19,7 @@ export function getOptions() {
                     type: 'CHECKBOX',
                     init: true,
                     changeEvent: () => {
-                        QuickMenuLayoutEnforce.update()
-                        nax.ccuilib.QuickRingMenuWidgets.lockLayout = Opts.lockDiorbitalMenu
+                        updateQuickRingMenuLayoutLock()
                     },
                 },
                 spacialAudio: {

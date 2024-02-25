@@ -6,7 +6,6 @@ import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { interrupt, speakI, speakIC } from '../tts/gather-text'
 import { AimAnalyzer, isAiming } from './aim-analyze'
-import { EnemyHintMenu } from './enemy-override'
 import { HAnalyzable } from './hints/analyzable'
 import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
 import { HChest } from './hints/chest'
@@ -18,7 +17,6 @@ import { HDynamicPlatform, HOLPlatform } from './hints/rhombus-puzzle'
 import { HMultiHitSwitch, HOneTimeSwitch, HSwitch } from './hints/switches'
 import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
-import { NPCHintMenu } from './npc-override'
 import type { Selection } from 'cc-blitzkrieg/types/selection'
 import { isVecInRectArr } from 'cc-map-util/src/rect'
 
@@ -592,8 +590,8 @@ export class HintSystem {
             },
         })
 
-        new NPCHintMenu()
-        new EnemyHintMenu()
+        import('./npc-override')
+        import('./enemy-override')
     }
 
     initPoststart() {

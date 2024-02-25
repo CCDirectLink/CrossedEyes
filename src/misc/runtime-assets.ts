@@ -1,5 +1,5 @@
-import CrossedEyes, { InitPoststart } from './plugin'
-import { Opts } from './plugin'
+import CrossedEyes, { InitPoststart } from '../plugin'
+import { Opts } from '../plugin'
 
 export class RuntimeResources implements InitPoststart {
     constructor() {

@@ -1,10 +1,11 @@
 import { Opts } from '../plugin'
 import { speakIC } from '../tts/gather-text'
-import CrossedEyes, { PauseListener } from '../plugin'
+import CrossedEyes from '../plugin'
 import { HintSystem, HintUnion } from './hint-system'
 import { TTS } from '../tts/tts'
 import { SoundManager } from '../sound-manager'
 import { Lang } from '../lang-manager'
+import { PauseListener } from '../misc/menu-pause'
 
 export function isAiming(): boolean {
     return ig.input.state('aim') || ig.gamepad.isRightStickDown()

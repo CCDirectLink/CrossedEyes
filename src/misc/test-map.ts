@@ -1,3 +1,5 @@
+import { godmode } from './godmode'
+
 declare global {
     namespace ig.EVENT_STEP {
         interface CROSSEDEYES_LEVEL_UP extends ig.ActionStepBase {}
@@ -8,9 +10,20 @@ declare global {
     }
 }
 
-export class TestMapMisc {
+export class TestMap {
+    static startWithTestMap: boolean = false
+
     constructor() {
         /* in prestart */
+        sc.CrossCode.inject({
+            transitionEnded() {
+                if (!TestMap.startWithTestMap) return this.parent()
+
+                ig.game.teleport('crossedeyes/test', new ig.TeleportPosition('entrance'), 'NEW')
+                TestMap.startWithTestMap = false
+            },
+        })
+
         ig.EVENT_STEP.CROSSEDEYES_LEVEL_UP = ig.EventStepBase.extend({
             run(_actor) {
                 const p = ig.game.playerEntity
@@ -24,5 +37,18 @@ export class TestMapMisc {
                 return true
             },
         })
+    }
+
+    static start(titleGuiInstance?: sc.TitleScreenButtonGui) {
+        TestMap.startWithTestMap = true
+        ig.bgm.clear('MEDIUM_OUT')
+        if (titleGuiInstance) {
+            ig.interact.removeEntry(titleGuiInstance.buttonInteract)
+        } else {
+            ig.interact.entries.forEach(e => ig.interact.removeEntry(e))
+        }
+        ig.game.start(sc.START_MODE.STORY, 0)
+        ig.game.setPaused(false)
+        godmode()
     }
 }

@@ -1,4 +1,5 @@
-import CrossedEyes, { PauseListener } from './plugin'
+import { PauseListener } from './misc/menu-pause'
+import CrossedEyes from './plugin'
 
 export namespace SoundManager {
     export type ContiniousSettings = {
