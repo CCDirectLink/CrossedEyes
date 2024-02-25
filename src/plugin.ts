@@ -26,15 +26,11 @@ import './misc/modify-prototypes'
 
 export let Opts: OptsType<ReturnType<typeof getOptions>>
 
-export interface InitPoststart {
-    initPoststart(): void
-}
-
 export default class CrossedEyes implements PluginClass {
     static dir: string
     static mod: Mod1
 
-    static initPoststarters: InitPoststart[] = []
+    static initPoststart: (() => void)[] = []
 
     static pauseables: PauseListener[] = []
     static isPaused: boolean = false /* see ./misc/menu-pause */
@@ -79,7 +75,7 @@ export default class CrossedEyes implements PluginClass {
     }
 
     async poststart() {
-        CrossedEyes.initPoststarters.forEach(p => p.initPoststart())
+        CrossedEyes.initPoststart.forEach(p => p())
         await import('./misc/log-keybinding')
 
         localStorage.getItem('crossedeyesDev') && TestMap.start()

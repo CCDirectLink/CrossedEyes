@@ -14,10 +14,9 @@ export class SpecialAction {
     constructor() {
         /* in prestart */
         SpecialAction.g = this
-        CrossedEyes.initPoststarters.push(this)
-    }
-    initPoststart() {
-        ig.game.addons.preUpdate.push(this)
+        CrossedEyes.initPoststart.push(() => {
+            ig.game.addons.preUpdate.push(this)
+        })
     }
 
     onPreUpdate() {

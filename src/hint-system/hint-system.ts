@@ -4,7 +4,6 @@ import { Opts } from '../plugin'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
-import { interrupt, speakI, speakIC } from '../tts/gather-text'
 import { AimAnalyzer, isAiming } from './aim-analyze'
 import { HAnalyzable } from './hints/analyzable'
 import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
@@ -19,6 +18,7 @@ import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
 import type { Selection } from 'cc-blitzkrieg/types/selection'
 import { isVecInRectArr } from 'cc-map-util/src/rect'
+import { interrupt, speakI, speakIC } from '../tts/gather/api'
 
 export const HintTypes = ['All', 'Enemy', 'NPC', 'Interactable', 'Selected'] as const
 export const HintSubTypes = ['Puzzle', 'Plants', 'Chests', 'Climbable', 'Analyzable'] as const
@@ -255,7 +255,7 @@ export class HintSystem {
 
     constructor() {
         /* runs in prestart */
-        CrossedEyes.initPoststarters.push(this)
+        CrossedEyes.initPoststart.push(() => this.initPoststart())
         HintSystem.g = this
         this.filterList = [...HintTypes, ...HintSubTypes]
         this.filterList.slice(this.filterList.indexOf('Hints'))

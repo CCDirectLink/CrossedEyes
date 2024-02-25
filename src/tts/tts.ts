@@ -1,5 +1,5 @@
 import { Opts } from '../plugin'
-import { TextGather } from './gather-text'
+import { TextGather } from './gather/api'
 import { AddonInstaller, TTSNvda } from './tts-nvda'
 import { TTSWebSpeech } from './tts-web-speech'
 

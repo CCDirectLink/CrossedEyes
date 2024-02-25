@@ -1,5 +1,5 @@
 import { Lang } from '../lang-manager'
-import { speakIC } from '../tts/gather-text'
+import { speakIC } from '../tts/gather/api'
 
 /* in poststart */
 

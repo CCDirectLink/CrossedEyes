@@ -1,6 +1,6 @@
 import { Lang } from '../lang-manager'
 import { Opts } from '../plugin'
-import { TextGather, interrupt, speakIC } from './gather-text'
+import { TextGather, interrupt, speakIC } from './gather/api'
 import { SpeechEndListener, TTS } from './tts'
 
 const startDate = Date.now()

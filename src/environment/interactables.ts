@@ -1,9 +1,9 @@
 import { SoundManager } from '../sound-manager'
 import { Opts } from '../plugin'
 import { HintSystem } from '../hint-system/hint-system'
-import { speakIC } from '../tts/gather-text'
 import { Lang } from '../lang-manager'
 import { HProp } from '../hint-system/hints/prop'
+import { speakIC } from '../tts/gather/api'
 
 const range = 6 * 16
 

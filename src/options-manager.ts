@@ -1,5 +1,5 @@
 import { Lang } from './lang-manager'
-import CrossedEyes, { InitPoststart } from './plugin'
+import CrossedEyes from './plugin'
 
 type Enum = Record<string, number | string> & { [k: number]: string }
 type Option = {
@@ -58,7 +58,7 @@ export type OptsType<E extends Options> =
 
 ) : never
 
-export class MenuOptionsManager<T extends Options> implements InitPoststart {
+export class MenuOptionsManager<T extends Options> {
     private headerNames: string[]
     private Opts: OptsType<T> = {} as any
 
@@ -67,7 +67,7 @@ export class MenuOptionsManager<T extends Options> implements InitPoststart {
     }
 
     constructor(public options: T) {
-        CrossedEyes.initPoststarters.push(this)
+        CrossedEyes.initPoststart.push(() => this.initPoststart())
         this.Opts.flatOpts = {} as any
         this.headerNames = []
 

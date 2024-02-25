@@ -1,6 +1,6 @@
 import { Lang } from '../lang-manager'
 import CrossedEyes from '../plugin'
-import { speakIC } from '../tts/gather-text'
+import { speakIC } from '../tts/gather/api'
 import { TTS } from '../tts/tts'
 
 /* in prestart */

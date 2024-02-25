@@ -1,10 +1,10 @@
-import CrossedEyes, { InitPoststart } from '../plugin'
+import CrossedEyes from '../plugin'
 import { Opts } from '../plugin'
 
-export class RuntimeResources implements InitPoststart {
+export class RuntimeResources {
     constructor() {
         /* in prestart */
-        CrossedEyes.initPoststarters.push(this)
+        CrossedEyes.initPoststart.push(() => this.initPoststart())
     }
 
     initPoststart() {
