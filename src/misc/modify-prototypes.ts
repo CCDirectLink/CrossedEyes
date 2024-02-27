@@ -11,6 +11,12 @@ if (!Object.fromEntries) {
     }
 }
 
+if (!Array.prototype.flat) {
+    Array.prototype.flat = function <T>(this: T[][]): T[] {
+        return this.reduce((acc, val) => acc.concat(val), [])
+    }
+}
+
 String.prototype.supplant = function (this: string, o: any) {
     return this.replace(/{([^{}]*)}/g, function (a: any, b: any) {
         var r = o[b]

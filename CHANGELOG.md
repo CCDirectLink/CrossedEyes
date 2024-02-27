@@ -3,6 +3,12 @@
 # Change Log
 
 ## [Unreleased]
+
+### Added
+
+- Moved mod auto-updating to CCModManager
+- Added CCModManager support
+
 ## [0.5.7] 2024-02-06
 
 - Added a few puzzle elements to sound glossary

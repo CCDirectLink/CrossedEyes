@@ -29,6 +29,9 @@ declare global {
     interface Object {
         fromEntries<T, K extends string | number | symbol>(entries: [K, T][]): Record<K, T>
     }
+    interface Array<T> {
+        flat(): T extends Array<any> ? T : T[]
+    }
     interface String {
         interpolate(...values: (string | number)[]): string
         supplant(vars: ValidTextLike[] | Record<string, ValidTextLike>): string

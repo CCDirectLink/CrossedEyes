@@ -46,6 +46,7 @@
         "levelup": "Level up!",
         "levelupTemplate": "plus {value} {statName}",
         "dialog": "Dialog: ${0}, ${1}",
+        "dialogNoOptions": "Dialog: {text}",
         "oneItemRecivedTemplate": "Recived {rarity} {type} item: {itemName}",
         "multipleItemsRecivedTemplate": "Recived {count} {rarity} {type} items: {itemName}",
         "itemRarityMap": {

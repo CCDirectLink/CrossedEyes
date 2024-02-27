@@ -162,5 +162,6 @@ export class TextGather {
         await import('./quick-menu')
         await import('./save-menu')
         await import('./tutorial-popup')
+        await import('./mod-manager')
     }
 }
