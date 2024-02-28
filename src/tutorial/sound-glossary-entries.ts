@@ -3,6 +3,7 @@ import { InteractableHandler as InteractableHandler } from '../environment/inter
 import { LoudJump } from '../environment/loudjump'
 import { LoudWalls } from '../environment/loudwalls'
 import { HintSystem } from '../hint-system/hint-system'
+import { Lang } from '../lang-manager'
 import { Opts } from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SoundGlossaryEntry } from './sound-glossary'
@@ -130,4 +131,36 @@ export function getSoundGlossaryEntries() {
             },
         },
     } as const satisfies Record</*category */ string, Record</* id */ string, SoundGlossaryEntry>>
+}
+
+{
+    // prettier-ignore
+    type Flatten<T extends Record<string, unknown>, Key = keyof T> = Key extends string
+      ? T[Key] extends Record<string, unknown>
+        ? (
+            keyof T[Key] extends string ? 
+                `${Key}.${keyof T[Key]}`
+                : never
+        )
+        : `${Key}`
+      : never
+
+    type GConfigE = Flatten<ReturnType<typeof getSoundGlossaryEntries>>
+    type GLangE = Flatten<typeof Lang.menu.soundglossary.entries>
+    /* check if getSoundGlossaryEntries() and the language .json file contain the same entries */
+    // prettier-ignore
+    type IfEquals<T, U, Y=unknown, N=never> =
+        (<G>() => G extends T ? 1 : 2) extends
+        (<G>() => G extends U ? 1 : 2) ? Y : N;
+    type Diff<T, U> = T extends U ? never : T
+
+    type OptLangEntryMissing = Diff<GConfigE, GLangE>
+    const optLangEntryMissingError = `ERROR: Sound glossary language entry missing: -->`
+    const _optLangEntryMissingCheck: IfEquals<OptLangEntryMissing, never, typeof optLangEntryMissingError, ` ${OptLangEntryMissing}`> = optLangEntryMissingError
+    typeof _optLangEntryMissingCheck /* supress unused info */
+
+    type OptConfigEntryMissing = Diff<GLangE, GConfigE>
+    const optConfigEntryMissingError = `ERROR: Sound glossary config entry missing: -->`
+    const _optConfigEntryMissing: IfEquals<OptConfigEntryMissing, never, typeof optConfigEntryMissingError, ` ${OptConfigEntryMissing}`> = optConfigEntryMissingError
+    typeof _optConfigEntryMissing /* supress unused info */
 }
