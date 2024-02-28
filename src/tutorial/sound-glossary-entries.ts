@@ -130,6 +130,11 @@ export function getSoundGlossaryEntries() {
                 forceOmnidirectional: true,
             },
         },
+        Menu: {
+            denied: {
+                config: { paths: ['menuBlocked'] },
+            },
+        },
     } as const satisfies Record</*category */ string, Record</* id */ string, SoundGlossaryEntry>>
 }
 

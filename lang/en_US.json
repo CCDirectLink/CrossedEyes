@@ -240,6 +240,12 @@
                         "name": "Wall scan",
                         "description": "To turn on wall scanning, to the quick menu with \\i[gamepad-l2] and press \\i[gamepad-y].\nWhen wall scanning is on, plays at a wall you're aiming at."
                     }
+                },
+                "Menu": {
+                    "denied": {
+                        "name": "Button denied",
+                        "description": "Plays when you press a disabled button."
+                    }
                 }
             }
         }

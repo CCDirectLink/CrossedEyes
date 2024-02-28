@@ -8,6 +8,7 @@
 
 - Moved mod auto-updating to CCModManager
 - Added CCModManager support
+- Added "Button denied" sound to the sound glossary
 
 ## [0.5.7] 2024-02-06
 

@@ -68,6 +68,7 @@ export class SoundManager implements PauseListener {
         switchToggle: 'media/sound/puzzle/switch-activate-2.ogg',
         barrierGoUp: 'media/sound/puzzle/barrier-up.ogg',
         barrierGoDown: 'media/sound/puzzle/barrier-down.ogg',
+        menuBlocked: 'media/sound/menu/menu-blocked.ogg'
     } as const
 
     constructor() {
