@@ -130,6 +130,14 @@
                     ]
                 }
             ],
+            "categories": {
+                "Navigation": "Navigation",
+                "Combat": "Combat",
+                "Puzzle": "Puzzle",
+                "Entities": "Entities",
+                "Hints": "Hints",
+                "Menu": "Menu"
+            },
             "entries": {
                 "Navigation": {
                     "wall": {

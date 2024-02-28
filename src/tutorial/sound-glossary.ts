@@ -76,9 +76,11 @@ export class SoundGlossary {
                 this.addChildGui(this.description)
             },
             show() {
+                this.parent()
                 this.doStateTransition('DEFAULT')
             },
             hide() {
+                this.parent()
                 this.doStateTransition('HIDDEN')
             },
             setData(entry: SoundGlossaryEntryP) {
@@ -147,8 +149,8 @@ export class SoundGlossary {
                 this.parent()
                 this.doStateTransition('HIDDEN')
             },
-            onTabButtonCreation(key: string, _index: number, settings) {
-                const button = new sc.ItemTabbedBox.TabButton(` ${key}`, `${key}`, 85)
+            onTabButtonCreation(key, _index: number, settings) {
+                const button = new sc.ItemTabbedBox.TabButton(Lang.menu.soundglossary.categories[key as keyof typeof self.glossary], 'nonexistingicon', 85)
                 button.textChild.setPos(7, 1)
                 button.setPos(0, 2)
                 button.setData({ type: settings.type })
