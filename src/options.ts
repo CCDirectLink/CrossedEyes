@@ -10,11 +10,6 @@ export function getOptions() {
     return {
         [sc.OPTION_CATEGORY.ASSISTS]: {
             crossedeyes: {
-                autoUpdate: {
-                    type: 'CHECKBOX',
-                    init: true,
-                    saveToLocalStorage: true,
-                },
                 lockDiorbitalMenu: {
                     type: 'CHECKBOX',
                     init: true,

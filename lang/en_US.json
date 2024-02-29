@@ -1,7 +1,6 @@
 {
     "crossedeyes": "CrossedEyes",
     "opts": {
-        "autoUpdate": { "name": "Auto update", "description": "Automaticly update the CrossedEyes mod when a new version is availible." },
         "lockDiorbitalMenu": { "name": "Lock cc-diorbital-menu", "description": "Lock the cc-diorbital-menu quick menu button layout." },
         "spacialAudio": { "name": "Spacial audio", "description": "Makes it so you can clearly tell from where the sound is coming from." },
         "loudWalls": { "name": "Loud walls", "description": "Make the walls directonaly beep when you approach them." },

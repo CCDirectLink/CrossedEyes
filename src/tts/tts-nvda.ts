@@ -82,7 +82,6 @@ export class AddonInstaller {
             console.log('nvda running')
             if (this.isAddonInstalled()) {
                 console.log('addon installed')
-                if (!Opts.autoUpdate) console.log('autoupdate off. aborting')
                 const inst = AddonInstaller.getInstalledAddonVersion()
                 const pkg = await AddonInstaller.getPackageAddonVersion()
                 console.log('version diffs: inst:', inst, 'pkg:', pkg)
