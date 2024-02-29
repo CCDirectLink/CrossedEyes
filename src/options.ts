@@ -16,6 +16,7 @@ export function getOptions() {
                     changeEvent: () => {
                         updateQuickRingMenuLayoutLock()
                     },
+                    saveToLocalStorage: true,
                 },
                 spacialAudio: {
                     type: 'CHECKBOX',
