@@ -1,3 +1,4 @@
+import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
 import { SpecialAction } from '../../special-action'
 import { FontToImgMap } from '../font-img-to-text-map'
@@ -8,9 +9,10 @@ export function getReadableText(orig: string): string {
         .trim()
         .replace(/\\c\[[^\]]*\]/g, '')
         .replace(/\\s\[[^\]]*\]/g, '')
-        .replace(/%/g, ' percent')
-        .replace(/\+/g, ' plus')
+        .replace(/%/g, ` ${Lang.misc.percent}`)
+        .replace(/\+/g, ` ${Lang.misc.plus}`)
         .replace(/\\\./g, ' ')
+        .replace(/\?\?\?/g, Lang.misc.unknown)
 
     const imgMatches: string[] | null = text.match(/\\i\[[^\]]*\]/g)
     for (let img of imgMatches ?? []) {
