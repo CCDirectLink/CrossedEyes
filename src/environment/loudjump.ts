@@ -171,8 +171,6 @@ function initCrossedEyesPositionPredictor() {
                 ig.game.physics.updateCollEntry(this.coll, [])
             }
 
-            // const time = ig.Timer.time - this.rfc.startTime
-            // console.log((`Tracking done, Time spend: ${time}`))
             restoreTickData(save)
 
             this.stopRunning()
@@ -326,7 +324,6 @@ export class LoudJump {
             const res: PlayerTraceResult = this.predictor.runPlayerTrace(config.time, config.vel)
             const type: TrackType = this.getTypeFromRes(res)
             const obj = { res, type }
-            // console.log(res.pos.x, res.pos.y, res.pos.z, 'coll', !!res.collided, 'edge:', !!res.touchedEdge, 'j:', !!res.jumped, 'l:', !!res.jumpLanded, 'fallType:', res.fallType)
             if (type == TRACK_TYPE.Land) {
                 return obj
             }

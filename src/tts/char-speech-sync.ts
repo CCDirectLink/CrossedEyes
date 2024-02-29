@@ -122,23 +122,17 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
             }
             if (TTS.g?.ttsInstance?.calibrateSpeed && this.rateCalibData.length <= this.rateCalibCount && (this.rateCalibData.last() ?? [])[0] > startDate) {
                 this.rateCalibData[this.rateCalibData.length - 1][0] = Date.now() - this.rateCalibData.last()[0]
-                // console.log(`text speed calibration ${this.rateCalibData.length}/${this.rateCalibCount}`)
                 if (this.rateCalibData.length == this.rateCalibCount) {
                     this.rateCalibCount = 0
                     this.rateCalibData = this.rateCalibData.filter(e => e[0] < 10e3)
-                    // console.log('calibration complete')
                     const cps = this.rateCalibData.map(e => e[1].length / (e[0] / 1000))
                     const avg = cps.reduce((acc, v) => acc + v, 0) / cps.length
-                    // console.log(cps, avg)
                     const newSpeed = Math.max(1, Math.min(3, (Math.round(((avg / 15) * 100) / 5) * 5) / 100))
-                    // console.log('new speed:', newSpeed)
 
                     const origSpeed = Opts.ttsSpeed
-                    // console.log('diff', origSpeed, newSpeed, Math.abs(origSpeed - newSpeed))
                     if (Math.abs(origSpeed - newSpeed) >= 0.2) {
                         Opts.ttsSpeed = newSpeed
                         sc.options.persistOptions()
-                        // console.log('setting new')
                     }
                 }
             }

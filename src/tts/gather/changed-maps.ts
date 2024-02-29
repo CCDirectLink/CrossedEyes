@@ -37,7 +37,6 @@ CrossedEyes.initPoststart.push(() => {
                 lastMapKeys = currMapKeys
 
                 toSpeak += (isNew ? Lang.enviroment.mapEnterNewTemplate : Lang.enviroment.mapEnterTemplate).supplant({ map })
-                console.log(toSpeak)
                 speakI(toSpeak)
                 TextGather.ignoreInteractTo = 1
             }
