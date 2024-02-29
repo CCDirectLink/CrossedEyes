@@ -1,7 +1,7 @@
 import { Lang } from './lang-manager'
 import CrossedEyes from './plugin'
 
-type Enum = Record<string, number | string> & { [k: number]: string }
+type Enum = Record<string, number>
 type Option = {
     restart?: boolean
     hasLocal?: boolean
@@ -82,34 +82,23 @@ export class MenuOptionsManager<T extends Options> {
                     // @ts-expect-error
                     this.Opts.flatOpts[optKey] = Object.assign(option, { id })
 
-                    const final = (sc.OPTIONS_DEFINITION[id] = Object.assign(
-                        {
-                            cat: catKey as sc.OPTION_CATEGORY,
-                            init: option.init as boolean,
-                            header: headerKey,
-                            hasDivider: optKeyI == 0,
-                        },
-                        option
-                    ))
-                    if (option.type == 'OBJECT_SLIDER') {
+                    const final: Option & sc.OptionDefinition = option as any
+                    final.cat = catKey
+                    final.init = option.init
+                    final.header = headerKey
+                    final.hasDivider = optKeyI == 0
+
+                    if (final.type == 'OBJECT_SLIDER') {
                         const data: Record<number, number> = {}
-                        for (let i = option.min, h = 0; i.round(2) <= option.max; i += option.step, h++) {
+                        for (let i = final.min, h = 0; i.round(2) <= final.max; i += final.step, h++) {
                             data[h] = i.round(2)
                         }
-                        final.data = data as any
-                    } else if (option.type == 'BUTTON_GROUP') {
-                        const data = Object.entries(option.enum)
-                            .splice(Object.keys(option.enum).length / 2)
-                            .reduce(
-                                (acc, [k, _], i) => {
-                                    if (typeof k === 'string') acc[k] = i
-                                    return acc
-                                },
-                                {} as Record<string, number>
-                            )
-                        final.data = data as any
-                        option.group = Object.keys(data)
+                        final.data = data
+                    } else if (final.type == 'BUTTON_GROUP') {
+                        final.data = final.enum
+                        final.group = Object.keys(final.data)
                     }
+                    sc.OPTIONS_DEFINITION[id] = final
 
                     if (option.changeEvent) changeEventOptions[id] = option
 

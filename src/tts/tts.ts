@@ -16,10 +16,12 @@ export interface TTSInterface {
     clearQueue(): void
 }
 
-export enum TTSTypes {
-    'Web Speech' = 0,
-    'NVDA' = 1,
-}
+export const TTS_TYPES = {
+    'Web Speech': 0,
+    NVDA: 1,
+} as const
+
+export type TTSTypes = ObjectValues<typeof TTS_TYPES>
 
 const implementations: (new () => TTSInterface)[] = [TTSWebSpeech, TTSNvda]
 
@@ -41,6 +43,7 @@ export class TTS {
         TTS.g = this
         new TextGather(
             (text: string) => {
+                console.log(text)
                 this.ttsInstance?.speak(text)
             },
             (text: string, data: CharacterSpeakData) => {

@@ -193,14 +193,15 @@ function initCrossedEyesPositionPredictor() {
     })
 }
 
-enum TrackType {
-    Water,
-    Hole,
-    LowerLevel,
-    HigherLevel,
-    Land,
-    None,
-}
+const TRACK_TYPE = {
+    Water: 0,
+    Hole: 1,
+    LowerLevel: 2,
+    HigherLevel: 3,
+    Land: 4,
+    None: 5,
+} as const
+type TrackType = ObjectValues<typeof TRACK_TYPE>
 
 export class LoudJump {
     predictor!: sc.CrossedEyesPositionPredictor
@@ -308,8 +309,7 @@ export class LoudJump {
     }
 
     playRes(id: string, dir: Vec2, res: PlayerTraceResult, type: TrackType) {
-        // console.log(TrackType[type])
-        if (type == TrackType.None) {
+        if (type == TRACK_TYPE.None) {
             SoundManager.stopCondinious(id)
             return
         }
@@ -327,18 +327,18 @@ export class LoudJump {
             const type: TrackType = this.getTypeFromRes(res)
             const obj = { res, type }
             // console.log(res.pos.x, res.pos.y, res.pos.z, 'coll', !!res.collided, 'edge:', !!res.touchedEdge, 'j:', !!res.jumped, 'l:', !!res.jumpLanded, 'fallType:', res.fallType)
-            if (type == TrackType.Land) {
+            if (type == TRACK_TYPE.Land) {
                 return obj
             }
             results.push(obj)
         }
         for (const res of results) {
-            if (res.type == TrackType.HigherLevel) {
+            if (res.type == TRACK_TYPE.HigherLevel) {
                 return res
             }
         }
         for (const res of results) {
-            if (res.type == TrackType.LowerLevel) {
+            if (res.type == TRACK_TYPE.LowerLevel) {
                 return res
             }
         }
@@ -348,25 +348,25 @@ export class LoudJump {
     getTypeFromRes(res: PlayerTraceResult): TrackType {
         if (res.jumped && res.fallType !== undefined) {
             if (res.fallType == ig.TERRAIN.HOLE || res.fallType == ig.TERRAIN.HIGHWAY) {
-                return TrackType.Hole
+                return TRACK_TYPE.Hole
             }
             if (res.fallType == ig.TERRAIN.WATER) {
-                return TrackType.Water
+                return TRACK_TYPE.Water
             }
         }
         const diff = ig.game.playerEntity.coll.pos.z - res.pos.z
         if (diff > 6) {
-            return TrackType.LowerLevel
+            return TRACK_TYPE.LowerLevel
         } else if (diff < -6) {
-            return TrackType.HigherLevel
+            return TRACK_TYPE.HigherLevel
         }
         if (res.jumped) {
             if (res.fallType === undefined) {
                 if (res.jumpLanded) {
-                    return TrackType.Land
+                    return TRACK_TYPE.Land
                 }
             }
         }
-        return TrackType.None
+        return TRACK_TYPE.None
     }
 }

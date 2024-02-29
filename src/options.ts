@@ -3,7 +3,7 @@ import 'nax-ccuilib/src/headers/nax/quick-menu.d.ts'
 import { Lang } from './lang-manager'
 import { Options } from './options-manager'
 import { Opts } from './plugin'
-import { TTS, TTSTypes } from './tts/tts'
+import { TTS, TTS_TYPES } from './tts/tts'
 import { updateQuickRingMenuLayoutLock } from './misc/quick-menu-layout-enforce'
 
 export function getOptions() {
@@ -68,8 +68,8 @@ export function getOptions() {
                 },
                 ttsType: {
                     type: 'BUTTON_GROUP',
-                    init: TTSTypes['Web Speech'],
-                    enum: TTSTypes,
+                    init: TTS_TYPES['Web Speech'],
+                    enum: TTS_TYPES,
                     changeEvent: () => TTS.g.setup(),
                     saveToLocalStorage: true,
                 },

@@ -23,6 +23,9 @@ declare global {
         supplant(vars: ValidTextLike[] | Record<string, ValidTextLike>): string
     }
     type ValidTextLike = string | { toString(): string }
+
+    type ObjectValues<T> = T[keyof T]
+
     namespace ig {
         interface SoundHandleBase {
             pos: null | {

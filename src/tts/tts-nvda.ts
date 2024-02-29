@@ -1,5 +1,5 @@
 import { WebSocket, WebSocketServer } from 'ws'
-import { CharacterSpeakData, TTS, TTSInterface, TTSTypes } from './tts'
+import { CharacterSpeakData, TTS, TTSInterface, TTS_TYPES } from './tts'
 import CrossedEyes from '../plugin'
 import { Opts } from '../plugin'
 
@@ -89,7 +89,7 @@ export class AddonInstaller {
                 if (pkg != inst) {
                     this.installAddon()
                 } else {
-                    if (Opts.ttsType != TTSTypes.NVDA) Opts.ttsType = TTSTypes.NVDA
+                    if (Opts.ttsType != TTS_TYPES.NVDA) Opts.ttsType = TTS_TYPES.NVDA
                 }
             } else {
                 console.log('addon not installed')
@@ -151,7 +151,7 @@ export class AddonInstaller {
         blitzkrieg.FsUtil.mkdirs(websocketClientParentPath)
         AddonInstaller.unzipFile(zipFilePath, websocketClientParentPath)
 
-        Opts.ttsType = TTSTypes.NVDA
+        Opts.ttsType = TTS_TYPES.NVDA
         sc.options.persistOptions()
         console.log('install succesfull')
         require('child_process').exec('"C:\\Program Files (x86)\\NVDA\\nvda.exe"') /* restart NVDA */
