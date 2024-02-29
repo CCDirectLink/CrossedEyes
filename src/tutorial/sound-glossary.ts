@@ -3,7 +3,6 @@ import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
 import { getReadableText, speakArgsC, speakC, speakIC } from '../tts/gather/api'
-import { TuplifyUnion } from '../types'
 import { sc_MENU_SUBMENU_CROSSEDEYESHUD_SOUND_GLOSSARY } from './crossedeyes-hud'
 import { getSoundGlossaryEntries } from './sound-glossary-entries'
 
@@ -20,7 +19,7 @@ export interface SoundGlossaryEntryP extends SoundGlossaryEntry {
 
 export class SoundGlossary {
     private glossary = getSoundGlossaryEntries()
-    private categories: TuplifyUnion<keyof typeof this.glossary> = Object.keys(this.glossary) as any
+    private categories = Object.keysT(this.glossary)
 
     private getLangDataFromEntry(entry: SoundGlossaryEntryP) {
         // @ts-expect-error

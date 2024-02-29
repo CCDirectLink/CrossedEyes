@@ -21,7 +21,7 @@ export class SpecialAction {
 
     onPreUpdate() {
         /* run by ig.game.addons.preUpdate */
-        for (const actionName of Object.keys(this.actions) as SpecialAction.Actions[]) {
+        for (const actionName of Object.keysT(this.actions)) {
             const action = this.actions[actionName]
             if (action.check()) {
                 Object.values(action.callbacks).forEach(c => c())

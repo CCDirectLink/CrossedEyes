@@ -11,10 +11,10 @@ if (!Object.fromEntries) {
     }
 }
 
-Object.keysT = function<K extends string | number | symbol, V>(object: Record<K, V>): K[] {
+Object.keysT = function <K extends string | number | symbol, V>(object: Record<K, V>): K[] {
     return Object.keys(object) as K[]
 }
-Object.entriesT = function<K extends string | number | symbol, V>(object: Record<K, V>): [K, V][] {
+Object.entriesT = function <K extends string | number | symbol, V>(object: { [key in K]?: V }): [K, V][] {
     return Object.entries(object) as [K, V][]
 }
 

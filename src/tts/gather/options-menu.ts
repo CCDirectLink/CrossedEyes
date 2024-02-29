@@ -49,8 +49,8 @@ function optionValueToString(optionName: string): [string, string] {
         case 'LANGUAGE':
             return [
                 '',
-                Object.entries(sc.LANGUAGE)
-                    .sort((a, b) => (a[1] as number) - (b[1] as number))
+                Object.entriesT(sc.LANGUAGE)
+                    .sort(([_, langA], [__, langB]) => langA - langB)
                     .map(e => e[0])[val as number],
             ]
         case 'INFO':

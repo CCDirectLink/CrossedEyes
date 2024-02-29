@@ -9,27 +9,11 @@ export type ClimbableMenuSettings = sc.QuickMenuTypesBaseSettings & {
     size?: Vec3
 }
 
-// why am i doing this
-// prettier-ignore
-type UnionToIntersection<U> =
-  (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never
-
-// prettier-ignore
-type LastOf<T> =
-  UnionToIntersection<T extends any ? () => T : never> extends () => (infer R) ? R : never
-
-// prettier-ignore
-type Push<T extends any[], V> = [...T, V];
-
-// prettier-ignore
-export type TuplifyUnion<T, L = LastOf<T>, N = [T] extends [never] ? true : false> =
-  true extends N ? [] : Push<TuplifyUnion<Exclude<T, L>>, L>
-
 declare global {
     interface Object {
         fromEntries<T, K extends string | number | symbol>(entries: [K, T][]): Record<K, T>
         keysT<K extends string | number | symbol, V>(object: Record<K, V>): K[]
-        entriesT<K extends string | number | symbol, V>(object: Record<K, V>): [K, V][]
+        entriesT<K extends string | number | symbol, V>(object: { [key in K]?: V }): [K, V][]
     }
     interface Array<T> {
         flat(): T extends Array<any> ? T : T[]

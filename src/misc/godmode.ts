@@ -21,7 +21,7 @@ export function godmode() {
         .forEach(e => sc.stats.addMap('combat', 'kill' + e[0], 1))
     /* load all maps */
 
-    for (const k of Object.keys(sc.model.player.core) as unknown as sc.PLAYER_CORE[]) {
+    for (const k of Object.keysT(sc.model.player.core)) {
         sc.model.player.core[k] = true
     }
 

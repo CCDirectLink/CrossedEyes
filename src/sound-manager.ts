@@ -6,7 +6,7 @@ export namespace SoundManager {
         condition?: () => boolean
     } & (
         | {
-              paths: (keyof typeof SoundManager.sounds)[]
+              paths: Sounds[]
               getVolume?: () => number
               range?: number
               handle?: ig.SoundHandleWebAudio
@@ -20,10 +20,12 @@ export namespace SoundManager {
             | {
                   changePitchWhenBehind: true
                   angle?: number
-                  pathsBehind: (keyof typeof SoundManager.sounds)[]
+                  pathsBehind: Sounds[]
               }
             | { changePitchWhenBehind?: false }
         )
+
+    export type Sounds = keyof typeof SoundManager.sounds
 }
 
 export class SoundManager implements PauseListener {
@@ -68,7 +70,7 @@ export class SoundManager implements PauseListener {
         switchToggle: 'media/sound/puzzle/switch-activate-2.ogg',
         barrierGoUp: 'media/sound/puzzle/barrier-up.ogg',
         barrierGoDown: 'media/sound/puzzle/barrier-down.ogg',
-        menuBlocked: 'media/sound/menu/menu-blocked.ogg'
+        menuBlocked: 'media/sound/menu/menu-blocked.ogg',
     } as const
 
     constructor() {
@@ -150,7 +152,7 @@ export class SoundManager implements PauseListener {
         return handle
     }
 
-    static playSound(name: keyof typeof SoundManager.sounds, speed: number, volume?: number, pos?: Vec3): ig.SoundHandleWebAudio {
+    static playSound(name: SoundManager.Sounds, speed: number, volume?: number, pos?: Vec3): ig.SoundHandleWebAudio {
         return SoundManager.playSoundPath(SoundManager.sounds[name], speed, volume, pos)
     }
 
@@ -177,7 +179,7 @@ export class SoundManager implements PauseListener {
 
         if ('paths' in entry) {
             let handle = entry.handle
-            let name: keyof typeof SoundManager.sounds = entry.paths[pathId]
+            let name: SoundManager.Sounds = entry.paths[pathId]
             let preserveOffset: boolean = false
 
             if (entry.changePitchWhenBehind && !disableBackFacing) {

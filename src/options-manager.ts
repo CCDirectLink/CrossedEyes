@@ -74,19 +74,13 @@ export class MenuOptionsManager<T extends Options> {
         const changeEventOptions: Record<string, Option> = {}
         const localStorageOptions: Set<string> = new Set()
 
-        for (const _catKey in this.options) {
-            const catKey = _catKey as keyof T
-            const headers = this.options[catKey]
-            for (const headerKey in headers) {
+        Object.entriesT(this.options).forEach(([catKey, headers]) => {
+            Object.entriesT(headers).forEach(([headerKey, optionEntries]) => {
                 this.headerNames.push(headerKey)
-                const optKeys = Object.entries((headers as any)[headerKey]) as [keyof FlatOpts<T>, Option][]
-                for (let optKeyI = 0; optKeyI < optKeys.length; optKeyI++) {
-                    const optKey: keyof FlatOpts<T> = optKeys[optKeyI][0]
-                    const option: Option = optKeys[optKeyI][1]
-
+                ;(Object.entriesT(optionEntries) as [keyof FlatOpts<T>, Option][]).forEach(([optKey, option], optKeyI) => {
                     const id = `${headerKey}-${optKey as string}`
-                    // @ts-ignore
-                    this.Opts.flatOpts[optKey] = Object.assign(option, { id }) as any
+                    // @ts-expect-error
+                    this.Opts.flatOpts[optKey] = Object.assign(option, { id })
 
                     const final = (sc.OPTIONS_DEFINITION[id] = Object.assign(
                         {
@@ -145,9 +139,9 @@ export class MenuOptionsManager<T extends Options> {
                                   sc.options?.set(id, v)
                               },
                     })
-                }
-            }
-        }
+                })
+            })
+        })
 
         sc.OptionModel.inject({
             set(option: string, value: any) {
@@ -161,11 +155,13 @@ export class MenuOptionsManager<T extends Options> {
 
     initPoststart() {
         this.headerNames.forEach(h => (ig.lang.labels.sc.gui.options.headers[h] = h))
-        Object.entries(this.Opts.flatOpts).forEach(e => {
-            const obj: any = { ...Lang.opts[e[0] as keyof (typeof Lang)['opts']] }
-            Object.assign(obj, e[1])
-            // @ts-expect-error
-            ig.lang.labels.sc.gui.options[e[1].id] = obj
+
+        Object.entries(this.Opts.flatOpts).forEach(([_option, _config]) => {
+            const option = _option as keyof typeof Lang.opts
+            const config = _config as Option & { id: number }
+            const obj: any = { ...Lang.opts[option] }
+            Object.assign(obj, config)
+            ig.lang.labels.sc.gui.options[config.id] = obj
         })
     }
 }
