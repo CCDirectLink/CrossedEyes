@@ -44,7 +44,6 @@
         "quickmenuParty": "Party",
         "quickmenuMap": "Map",
         "levelup": "Level up!",
-        "levelupTemplate": "plus {value} {statName}",
         "dialog": "Dialog: ${0}, ${1}",
         "dialogNoOptions": "Dialog: {text}",
         "oneItemRecivedTemplate": "Recived {rarity} {type} item: {itemName}",
@@ -256,6 +255,7 @@
     "stats": {
         "unknownStats": "unknows stats",
         "noElementalResistances": "no elemental resistances",
+        "resistanceTemplate": "{percentage} % {element}",
         "resistance": "resistance",
         "statTemplate": "level {level}, {hp} max health, {defense} defense, {attack} attack, {focus} focus.",
         "level": "Level",
@@ -268,7 +268,7 @@
         "heat": "heat",
         "shock": "shock",
         "wave": "wave",
-        "resistanceTemplate": "{percentage} {element} resistance"
+        "statDifferenceTemplate": "{sign} {value} {statName}"
     },
     "misc": {
         "north": "North",
@@ -279,7 +279,11 @@
         "notSupported": "Not supported.",
         "puzzleSolved": "Puzzle solved.",
         "notStandingInPuzzle": "Not standing in a puzzle area.",
-        "versionAnnounce": "CrossedEyes version: {version}"
+        "versionAnnounce": "CrossedEyes version: {version}",
+        "percent": "percent",
+        "plus": "plus",
+        "minus": "minus",
+        "unknown": "unknown"
     },
     "hints": {
         "focused": "{hintTitle}",

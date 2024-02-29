@@ -20,15 +20,15 @@ sc.PlayerLevelNotifier.inject({
             defense: Lang.stats.defense,
             focus: Lang.stats.focus,
         } as const
-        let text = `${Lang.menu.levelup} `
-        for (const key1 in names) {
-            const key = key1 as keyof typeof names
-            const value = levelStatData[key]
-            if (value) {
-                const statName = names[key]
-                text += Lang.menu.levelupTemplate.supplant({ value, statName })
-            }
-        }
+
+        const strings: string[] = Object.entriesT(names)
+            .map(([key, statName]) => {
+                const value = levelStatData[key]
+                if (value) return Lang.stats.statDifferenceTemplate.supplant({ sign: Lang.misc.plus, value, statName })
+            })
+            .filter(Boolean) as string[]
+
+        const text = `${Lang.menu.levelup} ${strings.join(', ')}.`
         speak(text)
     },
     onLevelUpEventEnd() {

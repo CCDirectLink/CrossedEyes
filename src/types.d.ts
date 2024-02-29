@@ -28,6 +28,8 @@ export type TuplifyUnion<T, L = LastOf<T>, N = [T] extends [never] ? true : fals
 declare global {
     interface Object {
         fromEntries<T, K extends string | number | symbol>(entries: [K, T][]): Record<K, T>
+        keysT<K extends string | number | symbol, V>(object: Record<K, V>): K[]
+        entriesT<K extends string | number | symbol, V>(object: Record<K, V>): [K, V][]
     }
     interface Array<T> {
         flat(): T extends Array<any> ? T : T[]
