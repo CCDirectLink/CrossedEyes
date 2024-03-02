@@ -9,6 +9,7 @@ export class SpecialAction {
         LSP: { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_STICK), callbacks: {} },
         RSP: { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_STICK), callbacks: {} },
         R2: { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_TRIGGER), callbacks: {} },
+        L2: { check: () => ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_TRIGGER), callbacks: {} },
     }
 
     constructor() {
@@ -35,5 +36,5 @@ export class SpecialAction {
 }
 
 export namespace SpecialAction {
-    export type Actions = 'LSP' | 'RSP' | 'R2'
+    export type Actions = 'LSP' | 'RSP' | 'R2' | 'L2'
 }

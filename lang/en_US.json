@@ -246,6 +246,18 @@
                     }
                 }
             }
+        },
+        "equipment": {
+            "prependHelpPages": [
+                {
+                    "title": "Equipment menu: CrossedEyes",
+                    "content": [
+                        "Read the equipment piece description with \\i[left-stick-press].\nRead the player stat changes an equipment piece brings with \\i[gamepad-r2].\nRead the player modifier changes an equipment piece brings with \\i[gamepad-l2].\nThe following pages are the original help pages."
+                    ]
+                }
+            ],
+            "noStatChanges": "No stat changes.",
+            "noModifierChanges": "No modifier changes."
         }
     },
     "tts": {

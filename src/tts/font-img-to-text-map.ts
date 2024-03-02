@@ -61,6 +61,7 @@ export class FontToImgMap {
             quest: '' /* todo? */,
             'lore-others': '',
             'stats-general': '',
+            ascended: '',
         }
     }
 }
