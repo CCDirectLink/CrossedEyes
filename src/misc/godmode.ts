@@ -40,7 +40,12 @@ export function godmode() {
         sc.model.player.skillPoints[i] = 0
     }
 
-    sc.model.player.addItem(135, 1) /* enable a bunch of submenus */
-    sc.model.player.addItem(285, 1) /* enable botanic submenu */
+    /* filter out circuit override givers */
+    const skipItems = new Set([150, 225, 230, 231, 286, 410, 428])
+    for (let i = 0; i < sc.inventory.items.length; i++) {
+        if (skipItems.has(i)) continue
+        sc.model.player.items[i] = 4
+        sc.model.player._addNewItem(i)
+    }
     sc.model.player.updateStats()
 }
