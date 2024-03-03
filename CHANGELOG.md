@@ -10,6 +10,7 @@
 - Added CCModManager support
 - Added "Button denied" sound to the sound glossary
 - Added equipment menu support
+- Added quick menu item submenu support
 
 ## [0.5.7] 2024-02-06
 

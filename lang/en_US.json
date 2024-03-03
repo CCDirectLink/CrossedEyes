@@ -38,10 +38,6 @@
     },
     "menu": {
         "quickmenu": "Quick Menu",
-        "quickmenuItems": "Items",
-        "quickmenuAnalysis": "Analysis",
-        "quickmenuParty": "Party",
-        "quickmenuMap": "Map",
         "levelup": "Level up!",
         "dialog": "Dialog: ${0}, ${1}",
         "dialogNoOptions": "Dialog: {text}",
@@ -115,7 +111,12 @@
             "item-helm": "helmet: ",
             "item-shoe": "boots: ",
             "item-belt": "torso: ",
-            "item-sword": "sword: "
+            "item-sword": "sword: ",
+            "item-items": "Common consumable: ",
+            "item-items-normal": "Normal consumable: ",
+            "item-items-rare": "Rare consumable: ",
+            "item-items-legend": "Legendary consumable: ",
+            "item-items-backer": "Backer consumable: "
         },
         "soundglossary": {
             "name": "Sound glossary",
@@ -279,7 +280,8 @@
         "heat": "heat",
         "shock": "shock",
         "wave": "wave",
-        "statDifferenceTemplate": "{sign} {value} {statName}"
+        "statDifferenceTemplate": "{sign} {value} {statName}",
+        "buffTemplate": "for {duration} seconds: {buffs}"
     },
     "misc": {
         "north": "North",

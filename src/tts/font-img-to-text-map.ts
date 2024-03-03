@@ -55,13 +55,16 @@ export class FontToImgMap {
             '<': '',
             '>': '',
             tech: '',
-            'item-items': '',
             'item-key': '',
             'item-news': '',
             quest: '' /* todo? */,
             'lore-others': '',
             'stats-general': '',
             ascended: '',
+            'arrow-right': '',
+            'arrow-left': '',
+            'page-left': '!left',
+            'page-right': '!right',
         }
     }
 }
