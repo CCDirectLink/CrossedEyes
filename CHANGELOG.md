@@ -12,6 +12,7 @@
 - Added equipment menu support
 - Added quick menu item submenu support
 - Added analysis menu help menu
+- Added quick menu help menu
 
 ## [0.5.7] 2024-02-06
 

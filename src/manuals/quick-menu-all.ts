@@ -15,6 +15,14 @@ export function injectQuickMenuManuals() {
             return this.parent()
         },
     })
+    sc.QuickMenu.inject({
+        update() {
+            this.parent()
+            if (Opts.tts && sc.control.menuHotkeyHelp() && sc.quickmodel.activeState && sc.quickmodel.isQuickNone() && !isQuickMenuManualVisible()) {
+                manual = openManualScreen(Lang.menu.quickMenu.noneHelpPages)
+            }
+        },
+    })
     sc.QuickItemMenu.inject({
         update() {
             this.parent()

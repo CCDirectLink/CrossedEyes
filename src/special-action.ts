@@ -33,6 +33,10 @@ export class SpecialAction {
     static setListener(type: SpecialAction.Actions, name: string, callback: () => void) {
         SpecialAction.g.actions[type].callbacks[name] = callback
     }
+
+    static clearKey(type: SpecialAction.Actions) {
+        SpecialAction.g.actions[type].callbacks = {}
+    }
 }
 
 export namespace SpecialAction {

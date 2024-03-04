@@ -1,3 +1,4 @@
+import { SpecialAction } from '../special-action'
 import { injectQuickMenuManuals } from './quick-menu-all'
 
 export async function addMenuManuals() {
@@ -12,6 +13,7 @@ export function openManualScreen(pages: sc.MultiPageBoxGui.ConditionalPage[]) {
     manual.hook.pauseGui = true
     ig.gui.addGuiElement(manual)
     manual.openMenu()
+    SpecialAction.clearKey('LSP')
     return manual
 }
 

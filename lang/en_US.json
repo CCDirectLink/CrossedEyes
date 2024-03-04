@@ -292,6 +292,18 @@
                         "To turn aim analysis on and off, press \\i[gamepad-y].\nWhen it's on, aiming at objects that have hints will focus the hint.\nYou can also turn on aim bounce with \\i[gamepad-a].\nAim bounce simulates a charged ball bouncing off walls and puzzle elements.\nIt announces all the objects with hints it hit, but doesn't actually shoot anything.\nAt the end, it focused the last hint is the simulated ball hit."
                     ]
                 }
+            ],
+            "noneHelpPages": [
+                {
+                    "title": "Quick menu",
+                    "content": ["Welcome to the quick menu!\nNavigate through a ring of buttons with \\i[left-stick].\n"]
+                },
+                {
+                    "title": "Quick menu: Wall scanning",
+                    "content": [
+                        "To turn wall scanning on and off, press \\i[gamepad-y].\nWhen it's on, a wall sound will play at the first wall in the direction you aimed.\nRegular wall sounds and jump hints are also muted when this mode is on and aiming.\n"
+                    ]
+                }
             ]
         }
     },
