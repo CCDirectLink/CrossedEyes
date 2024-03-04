@@ -305,6 +305,21 @@
                     ]
                 }
             ]
+        },
+        "modMenu": {
+            "mod": "Mod",
+            "enabled": "Enabled",
+            "disabled": "Disabled",
+            "selected": "Selected",
+            "awaitingRestart": "awaiting restart",
+            "hasUpdateAvailible": "has update availible",
+            "empty": "Empty",
+            "lastUpdated": "Last updated",
+            "version": "Version",
+            "stars": "Stars",
+            "tags": "Tags",
+            "author": "Author",
+            "authors": "Authors"
         }
     },
     "tts": {

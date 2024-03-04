@@ -5,6 +5,7 @@ import { SpecialAction } from '../../special-action'
 import type * as _ from 'ccmodmanager/types/gui/list-entry'
 import type * as __ from 'ccmodmanager/types/gui/menu'
 import type { ModEntryLocal, ModEntryServer } from 'ccmodmanager/src/types.d.ts'
+import { Lang } from '../../lang-manager'
 
 let ignoreModEntryButtonPressFrom: number = 0
 export function modManager_setignoreModEntryButtonPressFrom(value: number) {
@@ -19,21 +20,25 @@ sc.ModListEntry.inject({
         const m = this.mod
         const lm: ModEntryLocal | undefined = m.isLocal ? m : m.localCounterpart
         const sm: ModEntryServer | undefined = m.isLocal ? m.serverCounterpart : m
-        let str = `Mod: ${m.name}, `
-        if (this.nameText.text?.toString().startsWith('\\c[3]')) str += `Selected, `
-        if (lm) str += `${lm.active ? 'Enabled' : 'Disabled'}, `
-        if (m.awaitingRestart) str += `awaiting restart, `
-        if (lm?.hasUpdate) str += 'has update availible, '
+        let str = `${Lang.menu.modMenu.mod}: ${m.name}, `
+        if (this.nameText.text?.toString().startsWith('\\c[3]')) str += `${Lang.menu.modMenu.selected}, `
+        if (lm) str += `${lm.active ? Lang.menu.modMenu.enabled : Lang.menu.modMenu.disabled}, `
+        if (m.awaitingRestart) str += `${Lang.menu.modMenu.awaitingRestart}, `
+        if (lm?.hasUpdate) str += `${Lang.menu.modMenu.hasUpdateAvailible}, `
 
         speakI(str)
 
         let desc = `${m.description ?? ''}.\n`
-        if (sm) desc += `Tags: ${sm.tags.join(': ')}.\n`
-        desc += `${(sm?.authors.length ?? 0) > 1 ? 'Authors' : 'Author'}: ${sm ? sm.authors.join(': ') : 'Unknown'}.\n`
-        if (sm) desc += `Stars: ${sm.stars}.\n`
-        desc += `Version: ${m.version.replace(/\./g, ': ')}.\n`
+        if (sm) desc += `${Lang.menu.modMenu.tags}: ${sm.tags.join(': ')}.\n`
+        desc += `${(sm?.authors.length ?? 0) > 1 ? Lang.menu.modMenu.authors : Lang.menu.modMenu.author}: ${sm ? sm.authors.join(': ') : Lang.misc.unknown}.\n`
+        if (sm) desc += `${Lang.menu.modMenu.stars}: ${sm.stars}.\n`
+        desc += `${Lang.menu.modMenu.version}: ${m.version.replace(/\./g, ': ')}.\n`
         if (sm?.lastUpdateTimestamp)
-            desc += `Last updated: ${new Date(sm.lastUpdateTimestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}.\n`
+            desc += `${Lang.menu.modMenu.lastUpdated}: ${new Date(sm.lastUpdateTimestamp).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            })}.\n`
 
         SpecialAction.setListener('LSP', 'modMenuDescription', () => speakI(desc))
     },
@@ -55,7 +60,7 @@ sc.ModMenuList.inject({
         this.parent(index, ignorePrev, settings)
         if (Opts.tts && !isSame && index == sc.MOD_MENU_TAB_INDEXES.SELECTED) {
             const elements = sc.modMenu.list.currentList.buttonGroup.elements.flat()
-            if (elements.length == 0) speakI('Empty')
+            if (elements.length == 0) speakI(Lang.menu.modMenu.empty)
         }
     },
 })
