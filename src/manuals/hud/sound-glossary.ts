@@ -1,8 +1,8 @@
-import { Lang } from '../lang-manager'
-import CrossedEyes from '../plugin'
-import { SoundManager } from '../sound-manager'
-import { SpecialAction } from '../special-action'
-import { getReadableText, speakArgsC, speakC, speakIC } from '../tts/gather/api'
+import { Lang } from '../../lang-manager'
+import CrossedEyes from '../../plugin'
+import { SoundManager } from '../../sound-manager'
+import { SpecialAction } from '../../special-action'
+import { getReadableText, speakArgsC, speakC, speakIC } from '../../tts/gather/api'
 import { sc_MENU_SUBMENU_CROSSEDEYESHUD_SOUND_GLOSSARY } from './crossedeyes-hud'
 import { getSoundGlossaryEntries } from './sound-glossary-entries'
 
