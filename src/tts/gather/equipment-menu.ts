@@ -1,5 +1,5 @@
 import { Lang } from '../../lang-manager'
-import CrossedEyes, { Opts } from '../../plugin'
+import { Opts } from '../../plugin'
 import { SpecialAction } from '../../special-action'
 import { interrupt, speakArgsC, speakI } from './api'
 
@@ -17,14 +17,6 @@ sc.EquipMenu.inject({
         SpecialAction.setListener('R2', 'equipmentDiff', () => {})
         SpecialAction.setListener('L2', 'equipmentModifierDiff', () => {})
     },
-})
-
-CrossedEyes.initPoststart.push(() => {
-    // prettier-ignore
-    ig.lang.labels.sc.gui.menu['help-texts'].equip.pages = [
-        ...Lang.menu.equipment.prependHelpPages,
-        ...ig.lang.labels.sc.gui.menu['help-texts'].equip.pages
-    ]
 })
 
 sc.EquipRightContainer.inject({

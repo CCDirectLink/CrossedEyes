@@ -23,4 +23,8 @@ sc.MultiPageBoxGui.inject({
         this.parent(index)
         speakIC(`${this.header.text!.toString()}: ${this.pages[index].content.filter(str => !str.startsWith('!!')).join(' ')}`)
     },
+    closeMenu() {
+        this.parent()
+        interrupt()
+    },
 })

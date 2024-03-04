@@ -37,7 +37,6 @@
         "mapEnterAreaTemplate": "area: {area}: "
     },
     "menu": {
-        "quickmenu": "Quick Menu",
         "levelup": "Level up!",
         "dialog": "Dialog: ${0}, ${1}",
         "dialogNoOptions": "Dialog: {text}",
@@ -259,6 +258,41 @@
             ],
             "noStatChanges": "No stat changes.",
             "noModifierChanges": "No modifier changes."
+        },
+        "quickMenu": {
+            "name": "Quick Menu",
+            "itemHelpPages": [
+                {
+                    "title": "Quick menu items",
+                    "content": [
+                        "Navigate through the consumable list with \\i[gamepad-down] and \\i[gamepad-up].\nPress \\i[gamepad-x] to eat the item.\nRead the consumable description with \\i[left-stick-press].\nRead the buffs an item gives with \\i[gamepad-r2]."
+                    ]
+                }
+            ],
+            "analysisHelpPages": [
+                {
+                    "title": "Quick menu analysis: Basics",
+                    "content": [
+                        "Navigate through the hints with \\i[gamepad-l1] and \\i[gamepad-r1].\nWhen a hint is focused, a continuous sound will play at the hint's location.\nRead the hint description with \\i[left-stick-press]."
+                    ]
+                },
+                {
+                    "title": "Quick menu analysis: Hint sounds",
+                    "content": [
+                        "The speed of continuous hint sounds changes based on your relative Y position.\nThe lower the player is relative to the hint, the slower the continuous sound is.\nThe higher the player is relative to the hint, the faster the continuous sound is.\nWhen you face away from the hint, or in other words, the hint is behind you, the pitch of the continuous sound decreases."
+                    ]
+                },
+                {
+                    "title": "Quick menu analysis: Selecting hints",
+                    "content": ["To select and deselect a hint, press \\i[gamepad-x].\nSelected hints stay focused even after the quick menu is closed.\n"]
+                },
+                {
+                    "title": "Quick menu analysis: Aim analysis",
+                    "content": [
+                        "To turn aim analysis on and off, press \\i[gamepad-y].\nWhen it's on, aiming at objects that have hints will focus the hint.\nYou can also turn on aim bounce with \\i[gamepad-a].\nAim bounce simulates a charged ball bouncing off walls and puzzle elements.\nIt announces all the objects with hints it hit, but doesn't actually shoot anything.\nAt the end, it focused the last hint is the simulated ball hit."
+                    ]
+                }
+            ]
         }
     },
     "tts": {

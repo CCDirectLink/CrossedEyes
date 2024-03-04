@@ -19,6 +19,7 @@ import { HWalls } from './hints/walls'
 import type { Selection } from 'cc-blitzkrieg/types/selection'
 import { isVecInRectArr } from 'cc-map-util/src/rect'
 import { interrupt, speakI, speakIC } from '../tts/gather/api'
+import { isQuickMenuManualVisible } from '../manuals/quick-menu-all'
 
 export const HintTypes = ['All', 'Enemy', 'NPC', 'Interactable', 'Selected'] as const
 export const HintSubTypes = ['Puzzle', 'Plants', 'Chests', 'Climbable', 'Analyzable'] as const
@@ -219,7 +220,7 @@ export class HintSystem {
     }
 
     private checkHintTogglePressed() {
-        if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE2 /* x */)) {
+        if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE2 /* x */) && !isQuickMenuManualVisible()) {
             if (this.focusedHE) {
                 const foundHEI = this.selectedHE.findIndex(e => e.uuid == this.focusedHE!.uuid)
                 if (foundHEI != -1) {
@@ -480,7 +481,7 @@ export class HintSystem {
 
         sc.QuickMenuAnalysis.inject({
             update(...args) {
-                if (sc.quickmodel.isQuickCheck() && Opts.hints) {
+                if (sc.quickmodel.isQuickCheck() && Opts.hints && !isQuickMenuManualVisible()) {
                     let add = ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_SHOULDER) ? -1 : ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_SHOULDER) ? 1 : 0
                     if (add != 0) {
                         self.selectNextHint(add)

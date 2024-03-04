@@ -6,6 +6,7 @@ import { SoundManager } from '../sound-manager'
 import { Lang } from '../lang-manager'
 import { PauseListener } from '../misc/menu-pause'
 import { speakIC } from '../tts/gather/api'
+import { isQuickMenuManualVisible } from '../manuals/quick-menu-all'
 
 export function isAiming(): boolean {
     return ig.input.state('aim') || ig.gamepad.isRightStickDown()
@@ -78,7 +79,7 @@ export class AimAnalyzer implements PauseListener {
         sc.QuickMenuAnalysis.inject({
             update() {
                 this.parent()
-                if (Opts.hints && sc.quickmodel.activeState) {
+                if (Opts.hints && sc.quickmodel.activeState && !isQuickMenuManualVisible()) {
                     if (sc.quickmodel.isQuickCheck()) {
                         if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
                             self.aimAnalyzeOn = !self.aimAnalyzeOn

@@ -19,6 +19,7 @@ import { updateQuickRingMenuLayoutLock } from './misc/quick-menu-layout-enforce'
 import { PauseListener } from './misc/menu-pause'
 import { PluginClass } from 'ultimate-crosscode-typedefs/modloader/mod'
 import { TestMap } from './misc/test-map'
+import { addMenuManuals } from './manuals/all'
 
 import type * as _ from 'cc-vim'
 import type * as __ from 'cc-blitzkrieg'
@@ -71,6 +72,7 @@ export default class CrossedEyes implements PluginClass {
         await import('./misc/announce-version')
         await import('./misc/menu-pause')
         await import('./misc/title-screen-button')
+        await addMenuManuals()
         updateQuickRingMenuLayoutLock()
     }
 

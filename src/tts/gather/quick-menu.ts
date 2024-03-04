@@ -11,7 +11,7 @@ import 'nax-ccuilib/src/headers/sc/quick-menu.d.ts'
 sc.QuickMenuModel.inject({
     enterQuickMenu() {
         this.parent()
-        speakIC(Lang.menu.quickmenu)
+        speakIC(Lang.menu.quickMenu.name)
     },
     exitQuickMenu() {
         this.parent()
