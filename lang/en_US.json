@@ -320,7 +320,9 @@
             "tags": "Tags",
             "author": "Author",
             "authors": "Authors"
-        }
+        },
+        "nextPage": "Has next page...",
+        "noMorePages": "No more pages."
     },
     "tts": {
         "nvdaConnected": "NVDA connected."

@@ -1,3 +1,4 @@
+import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
 import { interrupt, speakIC } from './api'
 
@@ -21,7 +22,11 @@ sc.HelpScreen.inject({
 sc.MultiPageBoxGui.inject({
     _setPage(index: number) {
         this.parent(index)
-        speakIC(`${this.header.text!.toString()}: ${this.pages[index].content.filter(str => !str.startsWith('!!')).join(' ')}`)
+        speakIC(
+            `${this.header.text!.toString()}: ${this.pages[index].content.filter(str => !str.startsWith('!!')).join(' ')}. ${
+                this.pages.length - 1 == index ? Lang.menu.noMorePages : Lang.menu.nextPage
+            }`
+        )
     },
     closeMenu() {
         this.parent()
