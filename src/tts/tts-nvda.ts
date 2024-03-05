@@ -174,7 +174,7 @@ export class AddonInstaller {
     static async downloadFile(url: string, outPath: string): Promise<void> {
         const blob = await (await fetch(url, { mode: 'cors' })).blob()
         const arrayBuffer = await AddonInstaller.blobToArrayBuffer(blob)
-        return fs.promises.writeFile(outPath, Buffer.from(arrayBuffer))
+        return new Promise(resolve => fs.writeFile(outPath, Buffer.from(arrayBuffer), () => resolve()))
     }
 
     private static unzipFile(path: string, outPath: string) {
