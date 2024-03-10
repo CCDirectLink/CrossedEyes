@@ -51,8 +51,8 @@ If you're installing from the bundle, the dependencies are already included.
 ```bash
 git clone https://github.com/CCDirectLink/CrossedEyes
 cd CrossedEyes
-npm install
-npm run start
+pnpm install
+pnpm run start
 # this should return no errors (hopefully)
 npx tsc
 ```
