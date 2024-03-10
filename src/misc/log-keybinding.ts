@@ -29,7 +29,7 @@ ig.game.addons.preUpdate.push(
 
                 const nvdaLogPath: string = `${process.env.TMP ?? ''}/nvda.log`
                 if (blitzkrieg.FsUtil.doesFileExist(nvdaLogPath)) {
-                    data += `\n\n----------------NVDA LOG----------------\n${fs.readFileSync(nvdaLogPath)}`
+                    data += `\n\n----------------NVDA LOG----------------\n${await fs.promises.readFile(nvdaLogPath)}`
                 }
                 const form = new FormData()
                 form.append('file', new File([data], 'crosscode.log'))
