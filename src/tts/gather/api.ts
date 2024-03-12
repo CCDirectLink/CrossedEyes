@@ -22,6 +22,10 @@ export function getReadableText(orig: string): string {
         }
         text = text.replace(img, replacement ?? '')
     }
+
+    text = text.replace(/\,\./g, '.')
+    if (text.endsWith(',')) text = text.substring(0, text.length - 1) + '.'
+
     return text
 }
 

@@ -15,6 +15,10 @@
 - Added quick menu help menu
 - Added a mod icon
 
+### Fixed
+
+- Fixed minor punctuation errors at the end of sentences
+
 ## [0.5.7] 2024-02-06
 
 - Added a few puzzle elements to sound glossary
