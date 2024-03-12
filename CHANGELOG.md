@@ -13,6 +13,7 @@
 - Added quick menu item submenu support
 - Added analysis menu help menu
 - Added quick menu help menu
+- Added a mod icon
 
 ## [0.5.7] 2024-02-06
 
