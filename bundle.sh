@@ -5,7 +5,7 @@ MOD_URLS=(
     "cc-blitzkrieg" "https://github.com/krypciak/cc-blitzkrieg/releases/download/v@VERSION/cc-blitzkrieg-@VERSION.ccmod"
     "input-api" "https://github.com/krypciak/input-api/releases/download/v1.0.2/input-api.ccmod"
     "ccmodmanager" "https://github.com/CCDirectLink/CCModManager/releases/download/v@VERSION/ccmodmanager-@VERSION.ccmod"
-    "nax-ccuilib" "https://github.com/krypciak/nax-ccuilib/releases/download/v1.2.4/nax-ccuilib.ccmod"
+    "nax-ccuilib" "https://github.com/krypciak/nax-ccuilib/releases/download/v1.2.5/nax-ccuilib.ccmod"
     "nax-module-cache" "https://github.com/krypciak/nax-module-cache/releases/download/v1.0.2/nax-module-cache.ccmod"
 )
 mkdir -p pack/assets/mods
