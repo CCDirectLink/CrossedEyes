@@ -7,7 +7,7 @@
 ### Added
 
 - Moved mod auto-updating to CCModManager
-- Added CCModManager support
+- Added CCModManager support (go to the options menu and press Gamepad Y)
 - Added "Button denied" sound to the sound glossary
 - Added equipment menu support
 - Added quick menu item submenu support

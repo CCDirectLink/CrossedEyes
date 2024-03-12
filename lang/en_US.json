@@ -71,7 +71,8 @@
             "buttonGroup": "Button group",
             "slider": "Slider",
             "keybinding": "Keybinding",
-            "checkbox": "Checkbox"
+            "checkbox": "Checkbox",
+            "helpSuffix": "Open the mod menu with \\i[gamepad-y]."
         },
         "fontImgToTextMap": {
             "left-stick": "Gamepad: left stick,",

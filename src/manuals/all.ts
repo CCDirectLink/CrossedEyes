@@ -4,6 +4,7 @@ import { injectQuickMenuManuals } from './quick-menu-all'
 export async function addMenuManuals() {
     injectQuickMenuManuals()
     await import('./equipment')
+    await import('./options')
 }
 
 export function openManualScreen(pages: sc.MultiPageBoxGui.ConditionalPage[]) {
