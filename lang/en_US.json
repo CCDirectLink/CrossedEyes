@@ -360,7 +360,9 @@
         "percent": "percent",
         "plus": "plus",
         "minus": "minus",
-        "unknown": "unknown"
+        "unknown": "unknown",
+        "false": "false",
+        "true": "true"
     },
     "hints": {
         "focused": "{hintTitle}",

@@ -68,8 +68,8 @@ export function interrupt() {
 let staticInstance: TextGather
 
 export class TextGather {
-    static set ignoreInteractTo(value: number) {
-        staticInstance.ignoreInteractTo = value
+    static set ignoreInterruptTo(value: number) {
+        staticInstance.ignoreInterruptTo = value
     }
     static get lastMessage() {
         return staticInstance.lastMessage
@@ -81,8 +81,8 @@ export class TextGather {
 
     private connect: { count: number; template: string; args: ValidTextLike[] } | undefined
     private lastMessage: ValidTextLike = ''
-    private ignoreInteract: number = 0
-    private ignoreInteractTo: number = 0
+    private ignoreInterrupt: number = 0
+    private ignoreInterruptTo: number = 0
 
     charSpeak(textLike: ValidTextLike, data: CharacterSpeakData): void {
         this.interrupt()
@@ -143,9 +143,9 @@ export class TextGather {
 
         const interruptCopy = interrupt
         this.interrupt = () => {
-            if (this.ignoreInteract > 0) {
-                this.ignoreInteract--
-            } else if (Date.now() > this.ignoreInteractTo) {
+            if (this.ignoreInterrupt > 0) {
+                this.ignoreInterrupt--
+            } else if (Date.now() > this.ignoreInterruptTo) {
                 TextGather.interruptListeners.forEach(f => f())
                 interruptCopy()
             }
@@ -171,5 +171,6 @@ export class TextGather {
         await import('./mod-manager')
         await import('./equipment-menu')
         await import('./quick-menu-food')
+        await import('./checkbox')
     }
 }

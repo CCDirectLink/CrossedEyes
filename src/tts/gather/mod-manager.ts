@@ -1,4 +1,4 @@
-import { interrupt, speakI, speakIC } from './api'
+import { speakI, speakIC } from './api'
 import { Opts } from '../../plugin'
 import { SpecialAction } from '../../special-action'
 
@@ -43,9 +43,8 @@ sc.ModListEntry.inject({
         SpecialAction.setListener('LSP', 'modMenuDescription', () => speakI(desc))
     },
     focusLost() {
-        this.parent()
-        interrupt()
         SpecialAction.setListener('LSP', 'modMenuDescription', () => {})
+        this.parent()
     },
     onButtonPress() {
         const resp = this.parent() as string | undefined
@@ -58,7 +57,7 @@ sc.ModMenuList.inject({
     setTab(index, ignorePrev, settings) {
         const isSame = this.currentTabIndex == index
         this.parent(index, ignorePrev, settings)
-        if (Opts.tts && !isSame && index == sc.MOD_MENU_TAB_INDEXES.SELECTED) {
+        if (Opts.tts && !isSame && index != sc.MOD_MENU_TAB_INDEXES.SETTINGS) {
             const elements = sc.modMenu.list.currentList.buttonGroup.elements.flat()
             if (elements.length == 0) speakI(Lang.menu.modMenu.empty)
         }

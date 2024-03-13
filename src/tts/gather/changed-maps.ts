@@ -38,7 +38,7 @@ CrossedEyes.initPoststart.push(() => {
 
                 toSpeak += (isNew ? Lang.enviroment.mapEnterNewTemplate : Lang.enviroment.mapEnterTemplate).supplant({ map })
                 speakI(toSpeak)
-                TextGather.ignoreInteractTo = 1
+                TextGather.ignoreInterruptTo = 1
             }
         },
     })

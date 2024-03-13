@@ -252,5 +252,9 @@ declare global {
             iconType: keyof typeof sc.PROP_INTERACT_ICONS
             hoverText?: ig.LangLabel.Data
         }
+
+        interface CheckboxGui {
+            crossedeyesLabel?: string
+        }
     }
 }

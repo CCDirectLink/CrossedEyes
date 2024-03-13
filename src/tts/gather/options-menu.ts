@@ -22,6 +22,7 @@ sc.ItemTabbedBox.TabButton.inject({
     onPressedChange(pressed: boolean) {
         speakArgsC(Lang.menu.options.categorySwitch, this.text!)
         button_setIgnoreFrom(Date.now())
+
         return this.parent(pressed)
     },
 })
@@ -92,12 +93,6 @@ sc.RowButtonGroup.inject({
                 sc.menu.isOptions() && speakI(`${entry.description}`)
             })
         })
-    },
-})
-sc.OPTION_GUIS[sc.OPTION_TYPES.CHECKBOX].inject({
-    onPressed(checkbox: sc.CheckboxGui) {
-        this.parent(checkbox)
-        checkbox == this.button && speakIC(checkbox.pressed)
     },
 })
 sc.OPTION_GUIS[sc.OPTION_TYPES.ARRAY_SLIDER].inject({

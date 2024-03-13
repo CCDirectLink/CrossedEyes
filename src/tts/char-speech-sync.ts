@@ -60,7 +60,7 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
                 this.parent()
                 if (Opts.ttsChar) {
                     this.timer = 10000000
-                    TextGather.ignoreInteractTo = Date.now() + 100
+                    TextGather.ignoreInterruptTo = Date.now() + 100
                 }
             },
             onSkipInteract(type) {
