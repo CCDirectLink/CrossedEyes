@@ -75,12 +75,16 @@ jobs:
             - name: Run pack.sh
               run: ./pack.sh
 
+            - name: Run bundle.sh
+              run: ./bundle.sh
+
             - name: Create release
               id: create_release
               uses: softprops/action-gh-release@v1
               with:
                   files: |
                       *.ccmod
+                        bundle.zip
                   name: ${{ env.VERSION }}
                   tag_name: ${{ env.VERSION }}
                   body: ${{ steps.changelog_reader.outputs.changes }}
