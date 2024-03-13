@@ -33,6 +33,13 @@ patch -p1 pack/package.json < .github/workflows/package.patch
 cp ./TUTORIAL.md pack/CROSSEDEYES_MANUAL.md
 rm pack/mods.json
 
+# launch interactive shell before zipping
+if [ "$1" = 'dev' ]; then
+    cd ./pack
+    echo "do your stuff"
+    fish
+    cd ..
+fi
 cd pack
 rm -rf ../bundle.zip
 zip -r ../bundle.zip *
