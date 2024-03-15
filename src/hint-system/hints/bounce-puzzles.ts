@@ -23,21 +23,22 @@ export class HBounceBlock implements Hint {
         if (!(e instanceof ig.ENTITY.BounceBlock || e instanceof ig.ENTITY.Blocker)) throw new Error()
 
         let dirs: [string, string]
+        const l = Lang.misc.face8
         switch (e.coll.shape!) {
             case ig.COLLSHAPE.RECTANGLE:
                 dirs = [Lang.misc.rectangle, '']
                 break
             case ig.COLLSHAPE.SLOPE_NE:
-                dirs = [Lang.misc.north, Lang.misc.east]
+                dirs = [l.NORTH, l.EAST]
                 break
             case ig.COLLSHAPE.SLOPE_SE:
-                dirs = [Lang.misc.south, Lang.misc.east]
+                dirs = [l.SOUTH, l.EAST]
                 break
             case ig.COLLSHAPE.SLOPE_SW:
-                dirs = [Lang.misc.south, Lang.misc.west]
+                dirs = [l.SOUTH, l.WEST]
                 break
             case ig.COLLSHAPE.SLOPE_NW:
-                dirs = [Lang.misc.north, Lang.misc.west]
+                dirs = [l.NORTH, l.WEST]
                 break
         }
         const lang = { ...Lang.hints.BounceBlock }

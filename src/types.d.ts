@@ -21,6 +21,7 @@ declare global {
     interface String {
         interpolate(...values: (string | number)[]): string
         supplant(vars: ValidTextLike[] | Record<string, ValidTextLike>): string
+        toLowerCaseT<T extends string>(this: T): Lowercase<T>
     }
     type ValidTextLike = string | { toString(): string }
 
@@ -59,6 +60,9 @@ declare global {
             }
             interface Destructible {
                 desType: keyof typeof sc.DESTRUCTIBLE_TYPE
+            }
+            interface BallChanger {
+                settings: ig.ENTITY.BallChanger.Settings
             }
         }
         interface Entity {

@@ -3,6 +3,11 @@
 # Change Log
 
 ## [Unreleased]
+
+### Added
+
+- Added ball changer hint
+
 ## [0.5.8] 2024-03-13
 
 ### Added

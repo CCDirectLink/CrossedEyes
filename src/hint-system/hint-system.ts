@@ -12,7 +12,7 @@ import { HClimbableTerrain } from './hints/climbable-terrain'
 import { HDestructible } from './hints/destructible'
 import { HEnemy, HEnemyCounter } from './hints/enemy'
 import { HProp } from './hints/prop'
-import { HDynamicPlatform, HOLPlatform } from './hints/rhombus-puzzle'
+import { HBallChanger, HDynamicPlatform, HOLPlatform } from './hints/rhombus-puzzle'
 import { HMultiHitSwitch, HOneTimeSwitch, HSwitch } from './hints/switches'
 import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
@@ -74,6 +74,7 @@ export class HintSystem {
         HProp,
         HAnalyzable,
         HDynamicPlatform,
+        HBallChanger,
     ]
     filterType: (typeof HintTypes)[number] | 'Hints' = 'All'
     filterHintType: (typeof HintSubTypes)[number] | undefined

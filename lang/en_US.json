@@ -344,14 +344,21 @@
         "heat": "heat",
         "shock": "shock",
         "wave": "wave",
+        "neutral": "neutral",
         "statDifferenceTemplate": "{sign} {value} {statName}",
         "buffTemplate": "for {duration} seconds: {buffs}"
     },
     "misc": {
-        "north": "North",
-        "east": "East",
-        "south": "South",
-        "west": "West",
+        "face8": {
+            "NORTH": "North",
+            "EAST": "East",
+            "SOUTH": "South",
+            "WEST": "West",
+            "NORTH_EAST": "North east",
+            "SOUTH_EAST": "South east",
+            "SOUTH_WEST": "South west",
+            "NORTH_WEST": "North west"
+        },
         "rectangle": "Rectangle",
         "notSupported": "Not supported.",
         "puzzleSolved": "Puzzle solved.",
@@ -448,6 +455,24 @@
             "name": "Floating moving platform",
             "namePaused": "Floating moving platform, paused",
             "description": "Floats in the air, loops around a certain path."
+        },
+        "BallChanger": {
+            "dir": {
+                "name": "Ball direction changer: {dir}",
+                "description": "Balls change direction to {dir} when they pass through it."
+            },
+            "element": {
+                "name": "Ball element changer: {element}",
+                "description": "Changes the element of the balls that pass through it to {element}."
+            },
+            "resetSpeed": {
+                "name": "Ball accelerator",
+                "description": "Resets the speed of balls that pass through it back to normal."
+            },
+            "speed": {
+                "name": "Ball decelerator",
+                "description": "Slows down balls that pass through it."
+            }
         },
 
         "Switch": {

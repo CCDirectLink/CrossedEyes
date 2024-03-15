@@ -11,12 +11,9 @@ if (!Object.fromEntries) {
     }
 }
 
-Object.keysT = function <K extends string | number | symbol, V>(object: Record<K, V>): K[] {
-    return Object.keys(object) as K[]
-}
-Object.entriesT = function <K extends string | number | symbol, V>(object: { [key in K]?: V }): [K, V][] {
-    return Object.entries(object) as [K, V][]
-}
+Object.keysT = Object.keys as any
+Object.entriesT = Object.entries as any
+String.prototype.toLowerCaseT = String.prototype.toLowerCase as any
 
 if (!Array.prototype.flat) {
     Array.prototype.flat = function <T>(this: T[][]): T[] {
