@@ -44,7 +44,7 @@ export function godmode() {
     const skipItems = new Set([150, 225, 230, 231, 286, 410, 428])
     for (let i = 0; i < sc.inventory.items.length; i++) {
         if (skipItems.has(i)) continue
-        sc.model.player.items[i] = 4
+        sc.model.player.items[i] = 99
         sc.model.player._addNewItem(i)
     }
     sc.model.player.updateStats()
