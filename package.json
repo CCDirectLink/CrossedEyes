@@ -13,13 +13,11 @@
     "plugin": "plugin.js",
     "ccmodDependencies": {},
     "devDependencies": {
-        "@types/adm-zip": "^0.5.5",
         "@types/jquery": "^3.5.29",
         "@types/node": "^11.6.0",
         "@types/ws": "^8.5.10",
         "@typescript-eslint/eslint-plugin": "^7.1.1",
         "@typescript-eslint/parser": "^7.1.1",
-        "adm-zip": "^0.5.10",
         "cc-blitzkrieg": "github:krypciak/cc-blitzkrieg",
         "cc-map-util": "github:krypciak/cc-map-util",
         "cc-vim": "github:krypciak/cc-vim",

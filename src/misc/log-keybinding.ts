@@ -13,8 +13,7 @@ ig.game.addons.preUpdate.push(
                 lastLogSent = Date.now()
 
                 speakIC(Lang.logupload.uploading)
-                const fs: typeof import('fs') = require('fs')
-                let data = fs.readFileSync('biglog.txt').toString()
+                let data = (await blitzkrieg.FsUtil.readFileExternal('biglog.txt')).toString()
                 const lines = data.split('\n')
                 const maxLines = 3000
                 if (lines.length > maxLines) {
@@ -28,8 +27,8 @@ ig.game.addons.preUpdate.push(
                 data += `\n\n----------------OPTIONS-----------------\n${optionsStr}`
 
                 const nvdaLogPath: string = `${process.env.TMP ?? ''}/nvda.log`
-                if (blitzkrieg.FsUtil.doesFileExist(nvdaLogPath)) {
-                    data += `\n\n----------------NVDA LOG----------------\n${await fs.promises.readFile(nvdaLogPath)}`
+                if (await blitzkrieg.FsUtil.exists(nvdaLogPath)) {
+                    data += `\n\n----------------NVDA LOG----------------\n${await blitzkrieg.FsUtil.readFileExternal(nvdaLogPath)}`
                 }
                 const form = new FormData()
                 form.append('file', new File([data], 'crosscode.log'))

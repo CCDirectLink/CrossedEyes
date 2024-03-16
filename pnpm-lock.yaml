@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 devDependencies:
-  '@types/adm-zip':
-    specifier: ^0.5.5
-    version: 0.5.5
   '@types/jquery':
     specifier: ^3.5.29
     version: 3.5.29
@@ -23,12 +20,9 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^7.1.1
     version: 7.1.1(eslint@8.57.0)(typescript@5.4.2)
-  adm-zip:
-    specifier: ^0.5.10
-    version: 0.5.10
   cc-blitzkrieg:
     specifier: github:krypciak/cc-blitzkrieg
-    version: github.com/krypciak/cc-blitzkrieg/744f45b1fb721e4dd551354d33c6f512d6d1c7ba
+    version: github.com/krypciak/cc-blitzkrieg/eba07977f7ea70285f3f2a013de7f54e8ffc2378
   cc-map-util:
     specifier: github:krypciak/cc-map-util
     version: github.com/krypciak/cc-map-util/256929a9a8b77021a953c92d048832ee789839f5
@@ -355,12 +349,6 @@ packages:
       fastq: 1.17.1
     dev: true
 
-  /@types/adm-zip@0.5.5:
-    resolution: {integrity: sha512-YCGstVMjc4LTY5uK9/obvxBya93axZOVOyf2GSUulADzmLhYE45u2nAssCs/fWBs1Ifq5Vat75JTPwd5XZoPJw==}
-    dependencies:
-      '@types/node': 11.15.54
-    dev: true
-
   /@types/jquery@1.10.45:
     resolution: {integrity: sha512-JvoVtPbu1wrcOldn5gvuyJqr7DLX6I657N68Fqj5S7AUutdYZqabQjfP7dY6Gee7/Afo1uajwcORVlQfnsjkLQ==}
     dev: true
@@ -545,11 +533,6 @@ packages:
     resolution: {integrity: sha512-Y9rRfJG5jcKOE0CLisYbojUjIrIEE7AGMzA/Sm4BslANhbS+cDMpgBdcPT91oJ7OuJ9hYJBx59RjbhxVnrF8Xg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
-    dev: true
-
-  /adm-zip@0.5.10:
-    resolution: {integrity: sha512-x0HvcHqVJNTPk/Bw8JbLWlWoo6Wwnsug0fnYYro1HBrjxZ3G7/AZk7Ahv8JwDe1uIcz8eBqvu86FuF1POiG7vQ==}
-    engines: {node: '>=6.0'}
     dev: true
 
   /ajv@6.12.6:
@@ -1307,10 +1290,10 @@ packages:
     version: 0.9.5
     dev: true
 
-  github.com/krypciak/cc-blitzkrieg/744f45b1fb721e4dd551354d33c6f512d6d1c7ba:
-    resolution: {tarball: https://codeload.github.com/krypciak/cc-blitzkrieg/tar.gz/744f45b1fb721e4dd551354d33c6f512d6d1c7ba}
+  github.com/krypciak/cc-blitzkrieg/eba07977f7ea70285f3f2a013de7f54e8ffc2378:
+    resolution: {tarball: https://codeload.github.com/krypciak/cc-blitzkrieg/tar.gz/eba07977f7ea70285f3f2a013de7f54e8ffc2378}
     name: cc-blitzkrieg
-    version: 0.5.2
+    version: 0.5.3
     dev: true
 
   github.com/krypciak/cc-map-util/256929a9a8b77021a953c92d048832ee789839f5:
@@ -1336,7 +1319,6 @@ packages:
     name: ultimate-crosscode-typedefs
     version: 0.0.1
     engines: {node: '>=10.0.0'}
-    prepare: true
     requiresBuild: true
     dependencies:
       '@types/jquery': 1.10.45

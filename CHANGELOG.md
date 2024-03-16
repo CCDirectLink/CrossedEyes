@@ -11,6 +11,7 @@
 ### Fixed
 
 - Fixed map name not getting annouced when switching maps
+- Fixed NVDA addon not working
 
 ## [0.5.8] 2024-03-13
 

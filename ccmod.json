@@ -11,7 +11,7 @@
     },
     "dependencies": {
         "input-api": ">=1.0.0",
-        "cc-blitzkrieg": ">=0.5.2",
+        "cc-blitzkrieg": ">=0.5.4",
         "nax-ccuilib": ">=1.2.5",
         "ccmodmanager": ">=0.9.8",
         "crosscode": ">=1.4.0"
