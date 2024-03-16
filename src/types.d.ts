@@ -1,6 +1,6 @@
 import { PlayerTraceResult } from './environment/loudjump'
 import { Hint, HintUnion, HintSubTypes } from './hint-system/hint-system'
-import { SoundGlossaryEntryP } from './tutorial/sound-glossary'
+import { SoundGlossaryEntryP } from './manuals/hud/sound-glossary'
 
 export {}
 
