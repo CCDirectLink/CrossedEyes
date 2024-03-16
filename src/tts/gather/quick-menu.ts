@@ -8,17 +8,14 @@ import 'nax-ccuilib/src/headers/nax/quick-menu.d.ts'
 import 'nax-ccuilib/src/headers/sc/quick-menu.d.ts'
 
 /* in prestart */
-sc.QuickMenuModel.inject({
-    enterQuickMenu() {
-        this.parent()
+sc.QuickMenu.inject({
+    _enterMenu() {
         speakIC(Lang.menu.quickMenu.name)
-    },
-    exitQuickMenu() {
         this.parent()
-        /* how is this called in the title screen???? dont know */
-        if (sc.model.currentState == sc.GAME_MODEL_STATE.GAME && /* why */ !ig.game.paused) {
-            interrupt()
-        }
+    },
+    _exitMenu() {
+        if (this.ringmenu?.hook?.currentStateName == 'DEFAULT') interrupt()
+        this.parent()
     },
 })
 
