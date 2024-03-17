@@ -52,7 +52,7 @@ devDependencies:
     version: 5.4.2
   ultimate-crosscode-typedefs:
     specifier: github:krypciak/ultimate-crosscode-typedefs
-    version: github.com/krypciak/ultimate-crosscode-typedefs/71a66a06f350f15677098525915265351c99fcd8
+    version: github.com/krypciak/ultimate-crosscode-typedefs/2ee86d8ce226adbbc353a29a9b1d03ee5375338b
   ws:
     specifier: ^8.16.0
     version: 8.16.0
@@ -1314,11 +1314,12 @@ packages:
     version: 1.2.4
     dev: true
 
-  github.com/krypciak/ultimate-crosscode-typedefs/71a66a06f350f15677098525915265351c99fcd8:
-    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/71a66a06f350f15677098525915265351c99fcd8}
+  github.com/krypciak/ultimate-crosscode-typedefs/2ee86d8ce226adbbc353a29a9b1d03ee5375338b:
+    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/2ee86d8ce226adbbc353a29a9b1d03ee5375338b}
     name: ultimate-crosscode-typedefs
     version: 0.0.1
     engines: {node: '>=10.0.0'}
+    prepare: true
     requiresBuild: true
     dependencies:
       '@types/jquery': 1.10.45

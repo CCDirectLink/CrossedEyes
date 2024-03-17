@@ -8,9 +8,13 @@ function getSoundFromColl(coll: ig.CollEntry, type: keyof typeof sc.ACTOR_SOUND)
     return (e as any)[c] ?? e[ig.TERRAIN_DEFAULT]
 }
 let lastStep: boolean = true
+
+let stepCounter: number = 0
 sc.ActorEntity.inject({
     update() {
-        /* copied from the game code */
+        if (this !== (ig.game.playerEntity as any)) return this.parent()
+
+        /* most copied from the game code */
         this.stepStats.terrain = ig.terrain.getTerrain(this.coll, true)
         this.stepStats.centerTerrain = ig.terrain.getTerrain(this.coll, false)
         if (this.stepFx.prevEffect && this.stepFx.prevTerrain != this.stepStats.terrain) {
@@ -32,9 +36,21 @@ sc.ActorEntity.inject({
 
         ig.ActorEntity.prototype.update.call(this)
 
+        if (!this.stepFx.frames) this.stepFx.frames = [2, 5]
         if (!this.jumping && !this.animationFixed && this.stepFx.frames && !Vec2.isZero(this.coll.accelDir) && this.coll.relativeVel >= ig.ACTOR_RUN_THRESHOLD) {
             const frame: number = this.animState.getFrame()
             if (frame != this.stepFx.lastFrame) {
+                stepCounter = (stepCounter + 1) % 6
+                /* reset stepCounter when frame is reset (sync stepCounter with frame) */
+                if (
+                    frame == 0 &&
+                    this.animState.animations &&
+                    this.animState.animations[0] &&
+                    this.stepFx.lastFrame != this.animState.animations[0].getFrameCount() - 1
+                ) {
+                    stepCounter = 0
+                }
+
                 const sound = getSoundFromColl(this.coll, this.soundType)
                 let spawnFx = false
                 let vol: number | undefined
@@ -53,7 +69,7 @@ sc.ActorEntity.inject({
                             vol = 1
                         }
                     }
-                    if (frame == 2) {
+                    if (stepCounter == 2) {
                         ig.SoundHelper.playAtEntity(
                             new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic1 : SoundManager.sounds.hitOrganic2, Opts.wallBumpVolume * vol),
                             this,
@@ -61,7 +77,7 @@ sc.ActorEntity.inject({
                             null,
                             700
                         )
-                    } else if (frame == 5) {
+                    } else if (stepCounter == 5) {
                         ig.SoundHelper.playAtEntity(
                             new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic3 : SoundManager.sounds.hitOrganic4, Opts.wallBumpVolume * vol),
                             this,
@@ -73,12 +89,12 @@ sc.ActorEntity.inject({
                     }
                 }
                 if (vol === undefined || vol < 0.6) {
-                    if (frame == this.stepFx.frames[0]) {
+                    if (stepCounter == 2) {
                         spawnFx = true
                         ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step1!, Opts.footstepVolume as number), this, null, null, 700)
                         this.onMoveEffect && this.onMoveEffect('step')
                     }
-                    if (frame == this.stepFx.frames[1]) {
+                    if (stepCounter == 5) {
                         spawnFx = true
                         ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step2!, Opts.footstepVolume as number), this, null, null, 700)
                         this.onMoveEffect && this.onMoveEffect('step')
