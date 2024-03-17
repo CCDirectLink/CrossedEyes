@@ -8,6 +8,10 @@
 
 - Added ball changer hint
 
+### Changed
+
+- Footstep sounds now play even if not running
+
 ### Fixed
 
 - Fixed map name not getting annouced when switching maps

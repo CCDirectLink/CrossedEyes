@@ -37,7 +37,7 @@ sc.ActorEntity.inject({
         ig.ActorEntity.prototype.update.call(this)
 
         if (!this.stepFx.frames) this.stepFx.frames = [2, 5]
-        if (!this.jumping && !this.animationFixed && this.stepFx.frames && !Vec2.isZero(this.coll.accelDir) && this.coll.relativeVel >= ig.ACTOR_RUN_THRESHOLD) {
+        if (!this.jumping && !this.animationFixed && this.stepFx.frames && !Vec2.isZero(this.coll.accelDir)) {
             const frame: number = this.animState.getFrame()
             if (frame != this.stepFx.lastFrame) {
                 stepCounter = (stepCounter + 1) % 6
