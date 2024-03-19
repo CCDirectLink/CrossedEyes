@@ -17,6 +17,7 @@
 - Fixed map name not getting annouced when switching maps
 - Fixed NVDA addon not working
 - Fixed footstep and wall collision sounds not playing while aiming
+- Fixed character name being repeated after they already said something
 
 ## [0.5.8] 2024-03-13
 

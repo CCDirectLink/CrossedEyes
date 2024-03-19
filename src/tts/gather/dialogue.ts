@@ -41,7 +41,8 @@ sc.VoiceActing.inject({
                 const punctuation = sentence.substring(3)
                 text = Lang.msg.silentTemplate.supplant({ expression, character, punctuation })
             } else {
-                text = Lang.msg.regularTemplate.supplant({ expression, character, sentence })
+                if (sc.message.blocking && prevChar == character) text = sentence
+                else text = Lang.msg.regularTemplate.supplant({ expression, character, sentence })
             }
             sideMsg && (text = Lang.msg.sideMsgTemplate.supplant({ rest: text }))
             prevChar = character
