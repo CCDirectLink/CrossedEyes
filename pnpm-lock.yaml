@@ -28,7 +28,7 @@ devDependencies:
     version: github.com/krypciak/cc-map-util/256929a9a8b77021a953c92d048832ee789839f5
   cc-vim:
     specifier: github:krypciak/cc-vim
-    version: github.com/krypciak/cc-vim/50ff12de740b415192dc394673dd218365420d62
+    version: github.com/krypciak/cc-vim/65b139d5133816a838fda3ad558eb248ebd93fb9
   ccmodmanager:
     specifier: github:CCDirectLink/CCModManager
     version: github.com/CCDirectLink/CCModManager/4b8d9e7b2c9c057c88882369f33418c5d788db1a
@@ -52,7 +52,7 @@ devDependencies:
     version: 5.4.2
   ultimate-crosscode-typedefs:
     specifier: github:krypciak/ultimate-crosscode-typedefs
-    version: github.com/krypciak/ultimate-crosscode-typedefs/2ee86d8ce226adbbc353a29a9b1d03ee5375338b
+    version: github.com/krypciak/ultimate-crosscode-typedefs/1492d0676c584bf7842ba501c776c08d33c52cd1
   ws:
     specifier: ^8.16.0
     version: 8.16.0
@@ -1302,8 +1302,8 @@ packages:
     version: 1.0.0
     dev: true
 
-  github.com/krypciak/cc-vim/50ff12de740b415192dc394673dd218365420d62:
-    resolution: {tarball: https://codeload.github.com/krypciak/cc-vim/tar.gz/50ff12de740b415192dc394673dd218365420d62}
+  github.com/krypciak/cc-vim/65b139d5133816a838fda3ad558eb248ebd93fb9:
+    resolution: {tarball: https://codeload.github.com/krypciak/cc-vim/tar.gz/65b139d5133816a838fda3ad558eb248ebd93fb9}
     name: cc-vim
     version: 1.5.9
     dev: true
@@ -1314,12 +1314,11 @@ packages:
     version: 1.2.4
     dev: true
 
-  github.com/krypciak/ultimate-crosscode-typedefs/2ee86d8ce226adbbc353a29a9b1d03ee5375338b:
-    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/2ee86d8ce226adbbc353a29a9b1d03ee5375338b}
+  github.com/krypciak/ultimate-crosscode-typedefs/1492d0676c584bf7842ba501c776c08d33c52cd1:
+    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/1492d0676c584bf7842ba501c776c08d33c52cd1}
     name: ultimate-crosscode-typedefs
     version: 0.0.1
     engines: {node: '>=10.0.0'}
-    prepare: true
     requiresBuild: true
     dependencies:
       '@types/jquery': 1.10.45

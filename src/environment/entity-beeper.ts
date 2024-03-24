@@ -1,4 +1,3 @@
-import { HintSystem } from '../hint-system/hint-system'
 import { Opts } from '../plugin'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
@@ -33,7 +32,6 @@ export class EntityBeeper {
 
     private deactivateEntity(e: ig.Entity) {
         SoundManager.stopCondinious(this.getId(e))
-        HintSystem.g.deactivateHint(e)
     }
 
     private handleEntity(e: ig.Entity) {
@@ -65,10 +63,6 @@ export class EntityBeeper {
             },
             onKill(...args) {
                 this.parent(...args)
-                self.deactivateEntity(this)
-            },
-            erase() {
-                this.parent()
                 self.deactivateEntity(this)
             },
             update(...args) {

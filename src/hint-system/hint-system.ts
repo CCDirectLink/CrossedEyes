@@ -430,15 +430,18 @@ export class HintSystem {
             update() {
                 this.parent()
                 if (!Opts.hints || (CrossedEyes.isPaused && !sc.quickmodel.visible)) return
+                let i = 0
                 for (const e of [self.focusedHE, ...self.selectedHE]) {
                     if (!e) continue
                     const id = self.getContId(e)
                     SoundManager.handleContiniousEntry(id, e.getAlignedPos(ig.ENTITY_ALIGN.CENTER), 1, 0, SoundManager.getAngleVecToPlayer(e))
                     self.updateHintSound(e)
 
-                    if (e.getQuickMenuSettings!().disabled) {
+                    if (e._killed || e.getQuickMenuSettings!().disabled) {
+                        if (i > 0) self.selectedHE.erase(e)
                         self.deactivateHint(e)
                     }
+                    i++
                 }
             },
             preloadLevel(mapName) {
