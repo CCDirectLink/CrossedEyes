@@ -7,6 +7,12 @@ declare global {
             new (settings: {}): CROSSEDEYES_LEVEL_UP
         }
         var CROSSEDEYES_LEVEL_UP: CROSSEDEYES_LEVEL_UPConstructor
+
+        interface CROSSEDEYES_RELOAD_LEVEL extends ig.ActionStepBase {}
+        interface CROSSEDEYES_RELOAD_LEVELConstructor extends ImpactClass<CROSSEDEYES_RELOAD_LEVEL> {
+            new (settings: {}): CROSSEDEYES_RELOAD_LEVEL
+        }
+        var CROSSEDEYES_RELOAD_LEVEL: CROSSEDEYES_RELOAD_LEVELConstructor
     }
 }
 
@@ -34,6 +40,21 @@ export class TestMap {
                     sc.Model.notifyObserver(p.model, sc.PLAYER_MSG.LEVEL_CHANGE, null)
                 }
                 p.model.addExperience(1000, p.model.level, 0, true, sc.LEVEL_CURVES.STATIC_REGULAR)
+                return true
+            },
+        })
+
+        ig.EVENT_STEP.CROSSEDEYES_RELOAD_LEVEL = ig.EventStepBase.extend({
+            run(_actor) {
+                const tppos = new ig.TeleportPosition()
+                const { x, y } = ig.game.playerEntity.getCenter()
+                const z = ig.game.playerEntity.coll.pos.z
+                tppos.pos = Vec3.createC(x, y, z)
+                tppos.baseZPos = z
+                tppos.level = ig.game.playerEntity.coll.level as unknown as number
+                tppos.face = Vec2.create(ig.game.playerEntity.face)
+                ig.game.teleport(ig.game.mapName, tppos)
+                ig.game.teleporting.timer = 0
                 return true
             },
         })
