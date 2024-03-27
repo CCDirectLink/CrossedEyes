@@ -16,10 +16,12 @@ import { HBallChanger, HDynamicPlatform, HOLPlatform } from './hints/rhombus-puz
 import { HMultiHitSwitch, HOneTimeSwitch, HSwitch } from './hints/switches'
 import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
-import type { Selection } from 'cc-blitzkrieg/types/selection'
 import { isVecInRectArr } from 'cc-map-util/src/rect'
 import { interrupt, speakI, speakIC } from '../tts/gather/api'
 import { isQuickMenuManualVisible } from '../manuals/quick-menu-all'
+import type { PuzzleSelection } from 'cc-blitzkrieg/types/puzzle-selection'
+import type { Selection } from 'cc-blitzkrieg/types/selection'
+import { BattleSelection } from 'cc-blitzkrieg/types/battle-selection'
 
 export const HintTypes = ['All', 'Enemy', 'NPC', 'Interactable', 'Selected'] as const
 export const HintSubTypes = ['Puzzle', 'Plants', 'Chests', 'Climbable', 'Analyzable'] as const
@@ -252,6 +254,22 @@ export class HintSystem {
         const hint = this.getHintFromEntity(e)
         if (hint && hint instanceof sc.QUICK_MENU_TYPES.Hints && !hint.nameGui.hintClass?.disableWalkedOn) {
             speakI(Lang.hints.walkedOff)
+        }
+    }
+
+    private getCurrentSelectionToFilterIn(): Selection | undefined {
+        const psel: PuzzleSelection = blitzkrieg.sels.puzzle.inSelStack.peek()
+        if (psel) {
+            if (psel.data.recordLog && psel.data.recordLog.steps.length > 0) {
+                const solution = blitzkrieg.PuzzleSelectionManager.getPuzzleSolveCondition(psel)
+                if (!solution) return psel
+                if (ig.vars.get(solution[0].substring(1)) !== solution[1]) return psel
+            } else return psel
+        }
+
+        if (sc.model.isCombatMode()) {
+            const bsel: BattleSelection = blitzkrieg.sels.battle.inSelStack.peek()
+            if (bsel) return bsel
         }
     }
 
@@ -509,7 +527,6 @@ export class HintSystem {
                 return this.parent(...args)
             },
             createHint(entity, filter = true) {
-                // ((entity.isQuickMenuVisible && entity.isQuickMenuVisible()) || ig.EntityTools.isInScreen(entity, 0))
                 if (entity && entity.getQuickMenuSettings) {
                     if (filter && self.filterType == 'Selected' && self.selectedHE.findIndex(e => e.uuid == entity.uuid) == -1) return
 
@@ -521,7 +538,7 @@ export class HintSystem {
                         return
 
                     if (filter && self.filterInSelection) {
-                        const sel: Selection = blitzkrieg.sels.puzzle.inSelStack.peek() ?? blitzkrieg.sels.battle.inSelStack.peek()
+                        const sel = self.getCurrentSelectionToFilterIn()
                         const mapPoint = EntityPoint.fromVec(entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER)).to(MapPoint)
                         if (sel && !isVecInRectArr(mapPoint, sel.bb)) return
                     }

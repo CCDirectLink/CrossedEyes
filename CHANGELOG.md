@@ -13,6 +13,7 @@
 
 - Footstep sounds now play even if not running
 - Puzzle filtering is now called selection filtering
+- Puzzle filtering now only takes effect when the puzzle is not solved
 
 ### Fixed
 
