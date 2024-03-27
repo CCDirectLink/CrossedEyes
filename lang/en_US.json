@@ -77,10 +77,12 @@
         "fontImgToTextMap": {
             "left-stick": "Gamepad: left stick,",
             "right-stick": "Gamepad: right stick,",
-            "gamepad-left": "Gamepad: left,",
-            "gamepad-down": "Gamepad: down,",
-            "gamepad-right": "Gamepad: right,",
-            "gamepad-up": "Gamepad: up,",
+            "gamepad-left": "Dpad: left,",
+            "left": "Dpad: left",
+            "gamepad-down": "Dpad: down,",
+            "gamepad-right": "Dpad: right,",
+            "right": "Dpad: right",
+            "gamepad-up": "Dpad: up,",
             "gamepad-l1": "Gamepad: L1,",
             "dash": "Gamepad: L1,",
             "gamepad-r1": "Gamepad: R1,",
@@ -103,8 +105,6 @@
             "right-stick-press": "Gamepad: right stick: press,",
             "gamepad-l1-off": "Gamepad: L1 off,",
             "gamepad-r1-off": "Gamepad: R1 off,",
-            "right": "Dpad: right",
-            "left": "Dpad: left",
             "key-throw": "Mouse: right click",
             "twitter": "twitter",
             "mousewheel": "Mouse wheel",
@@ -288,9 +288,19 @@
                     "content": ["To select and deselect a hint, press \\i[gamepad-x].\nSelected hints stay focused even after the quick menu is closed.\n"]
                 },
                 {
-                    "title": "Quick menu analysis: Aim analysis",
+                    "title": "Quick menu analysis: Selecting hints",
+                    "content": ["To select and deselect a hint, press \\i[gamepad-x].\nSelected hints stay focused even after the quick menu is closed.\n"]
+                },
+                {
+                    "title": "Quick menu analysis: Hint filtering",
                     "content": [
-                        "To turn aim analysis on and off, press \\i[gamepad-y].\nWhen it's on, aiming at objects that have hints will focus the hint.\nYou can also turn on aim bounce with \\i[gamepad-a].\nAim bounce simulates a charged ball bouncing off walls and puzzle elements.\nIt announces all the objects with hints it hit, but doesn't actually shoot anything.\nAt the end, it focused the last hint is the simulated ball hit."
+                        "You can filter hints by categories.\nUse \\i[gamepad-left] and \\i[gamepad-right] to change the current category filter.\nPress \\i[gamepad-up] to announce the current category filter.\n"
+                    ]
+                },
+                {
+                    "title": "Quick menu analysis: Puzzle and battle hint filtering",
+                    "content": [
+                        "You can choose to only see hints in and near puzzle or enemy fight areas.\nThis hides the irrelevant hints, so you can focus better on the task at hand.\nYou can toggle it using \\i[gamepad-down].\nIt's inactive when you're not near puzzles or emeny fights.\nThe puzzle filtering is inactive when the puzzle is already solved.\nThe enemy fight filtering is inactive when you're not in combat mode.\nNote that in order for this to work, the puzzles and fights have to be manually mapped by developer, so it may not work everywhere."
                     ]
                 }
             ],
