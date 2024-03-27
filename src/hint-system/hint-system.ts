@@ -500,7 +500,7 @@ export class HintSystem {
                         speakIC(`${Lang.hints.hintFilter}: ${self.filterList[self.filterIndex]}`)
                     } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_DOWN)) {
                         self.filterInSelection = !self.filterInSelection
-                        speakIC(self.filterInSelection ? Lang.hints.puzzleFilterOn : Lang.hints.puzzleFilterOff)
+                        speakIC(self.filterInSelection ? Lang.hints.selectionFilterOn : Lang.hints.selectionFilterOff)
                         self.updateFilter()
                     }
 
@@ -521,7 +521,7 @@ export class HintSystem {
                         return
 
                     if (filter && self.filterInSelection) {
-                        const sel: Selection = blitzkrieg.sels.puzzle.inSelStack.peek()
+                        const sel: Selection = blitzkrieg.sels.puzzle.inSelStack.peek() ?? blitzkrieg.sels.battle.inSelStack.peek()
                         const mapPoint = EntityPoint.fromVec(entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER)).to(MapPoint)
                         if (sel && !isVecInRectArr(mapPoint, sel.bb)) return
                     }

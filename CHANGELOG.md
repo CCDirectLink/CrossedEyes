@@ -7,10 +7,12 @@
 ### Added
 
 - Added ball changer hint
+- Added hint filtering for battle regions
 
 ### Changed
 
 - Footstep sounds now play even if not running
+- Puzzle filtering is now called selection filtering
 
 ### Fixed
 
