@@ -267,7 +267,7 @@ export class HintSystem {
             } else return psel
         }
 
-        if (sc.model.isCombatMode()) {
+        if (sc.model.isCombatMode() || ig.game.mapName == 'cargo-ship.room2' /* the only fight where you dont enter combat mode (stupid mouse bots) */) {
             const bsel: BattleSelection = blitzkrieg.sels.battle.inSelStack.peek()
             if (bsel) return bsel
         }
