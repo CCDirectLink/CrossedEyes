@@ -66,7 +66,6 @@ declare global {
             }
         }
         interface Entity {
-            uuid: string
             entitySoundInited?: boolean
             isPlayerStandingOnMe?: boolean
         }

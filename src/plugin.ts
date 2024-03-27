@@ -44,8 +44,6 @@ export default class CrossedEyes implements PluginClass {
     }
 
     async prestart() {
-        await import('./misc/entity-uuid')
-
         new LangManager()
         Opts = new MenuOptionsManager(getOptions()).getOpts()
 
