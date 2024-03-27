@@ -22,7 +22,7 @@ sc.QuickMenu.inject({
 sc.RingMenuButton.inject({
     focusGained() {
         this.parent()
-        if (!Opts.tts || this.state == sc.QUICK_MENU_STATE.NONE) return
+        if (!Opts.tts) return
 
         speakI(this.title)
         SpecialAction.setListener('LSP', 'quickMenuDescription', () => {
