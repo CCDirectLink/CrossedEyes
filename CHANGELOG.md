@@ -8,6 +8,7 @@
 
 - Added ball changer hint
 - Added hint filtering for battle regions
+- Added puzzle skipping help page
 
 ### Changed
 

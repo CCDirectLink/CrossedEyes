@@ -314,6 +314,12 @@
                     "content": [
                         "To turn wall scanning on and off, press \\i[gamepad-y].\nWhen it's on, a wall sound will play at the first wall in the direction you aimed.\nRegular wall sounds and jump hints are also muted when this mode is on and aiming.\n"
                     ]
+                },
+                {
+                    "title": "Quick menu: Puzzle solving",
+                    "content": [
+                        "While standing near a puzzle, you can solve it immediately by pressing the 'Skip Puzzle' button in the quick menu.\nNote that in order for the puzzle to be skippable it has to be manually mapped by the developer, so not all puzzles are currently skippable."
+                    ]
                 }
             ]
         },
