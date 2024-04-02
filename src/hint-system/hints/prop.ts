@@ -1,10 +1,10 @@
 import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
-import { Hint, HintData } from '../hint-system'
+import { HintBase, HintData } from '../hint-system'
 import { HClimbableTerrain } from './climbable-terrain'
 
-export class HProp implements Hint {
-    entryName = 'Prop'
+export class HProp implements HintBase {
+    entryName = 'Prop' as const
 
     private props: Record</* propName */ string, HintData> = Lang.hints.props
 

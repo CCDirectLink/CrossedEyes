@@ -1,9 +1,9 @@
 import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
-import { Hint, HintData } from '../hint-system'
+import { HintBase, HintData } from '../hint-system'
 
-export class HEnemy implements Hint {
-    entryName = 'Enemy'
+export class HEnemy implements HintBase {
+    entryName = 'Enemy' as const
 
     private static config: Record</* enemyName */ string, Record</*state*/ string, { lang: HintData; condition?: (e: ig.Entity) => boolean; noEmitSound?: boolean }>>
     private static lang: Record</* enemy type */ string, HintData | Record</* state */ string, HintData>>
@@ -55,8 +55,8 @@ export class HEnemy implements Hint {
     }
 }
 
-export class HEnemyCounter implements Hint {
-    entryName = 'EnemyCounter'
+export class HEnemyCounter implements HintBase {
+    entryName = 'EnemyCounter' as const
     disableWalkedOn = true
 
     constructor() {

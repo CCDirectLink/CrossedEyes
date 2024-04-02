@@ -1,9 +1,9 @@
 import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
-import { Hint, HintData } from '../hint-system'
+import { HintBase, HintData } from '../hint-system'
 
-export class HOLPlatform implements Hint {
-    entryName = 'OLPlatform'
+export class HOLPlatform implements HintBase {
+    entryName = 'OLPlatform' as const
 
     constructor() {
         /* run in prestart */
@@ -25,8 +25,8 @@ export class HOLPlatform implements Hint {
     }
 }
 
-export class HDynamicPlatform implements Hint {
-    entryName = 'DynamicPlatform'
+export class HDynamicPlatform implements HintBase {
+    entryName = 'DynamicPlatform' as const
 
     constructor() {
         /* run in prestart */
@@ -50,8 +50,8 @@ export class HDynamicPlatform implements Hint {
     }
 }
 
-export class HBallChanger implements Hint {
-    entryName = 'BallChanger'
+export class HBallChanger implements HintBase {
+    entryName = 'BallChanger' as const
 
     typeToLangMap: Record<keyof typeof sc.BALL_CHANGER_TYPE, keyof typeof Lang.hints.BallChanger> = {
         CHANGE_DIR: 'dir',

@@ -1,6 +1,6 @@
 import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
-import { Hint, HintData } from '../hint-system'
+import { HintBase, HintData } from '../hint-system'
 
 /* NOTE: I call a thing that move me from map to another map "tpr" */
 
@@ -45,8 +45,8 @@ function getDestMapName(e: TprsFlagSupported): string {
 
 let justEnteredTpr: boolean = false
 
-export class HDoor implements Hint {
-    entryName = 'Door'
+export class HDoor implements HintBase {
+    entryName = 'Door' as const
 
     constructor() {
         /* run in prestart */
@@ -101,8 +101,8 @@ export class HDoor implements Hint {
     }
 }
 
-export class HTeleportField implements Hint {
-    entryName = 'TeleportField'
+export class HTeleportField implements HintBase {
+    entryName = 'TeleportField' as const
     disableWalkedOn = true
 
     constructor() {
@@ -146,8 +146,8 @@ export class HTeleportField implements Hint {
     }
 }
 
-export class HTeleportGround implements Hint {
-    entryName = 'TeleportGround'
+export class HTeleportGround implements HintBase {
+    entryName = 'TeleportGround' as const
 
     constructor() {
         /* run in prestart */
@@ -174,8 +174,8 @@ export class HTeleportGround implements Hint {
     }
 }
 
-export class HElevator implements Hint {
-    entryName = 'Elevator'
+export class HElevator implements HintBase {
+    entryName = 'Elevator' as const
 
     constructor() {
         /* run in prestart */

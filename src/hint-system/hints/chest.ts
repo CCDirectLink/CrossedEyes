@@ -1,9 +1,9 @@
 import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
-import { Hint, HintData, HintSystem } from '../hint-system'
+import { HintBase, HintData, HintSystem } from '../hint-system'
 
-export class HChest implements Hint {
-    entryName = 'Chest'
+export class HChest implements HintBase {
+    entryName = 'Chest' as const
 
     constructor() {
         /* run in prestart */

@@ -26,6 +26,8 @@ export class AimAnalyzer implements PauseListener {
 
     wallScanHandle?: ig.SoundHandle
 
+    private aimBounceEndpointWhitelist: Set<string> = new Set([])
+
     constructor() {
         /* in prestart */
         AimAnalyzer.g = this
@@ -76,6 +78,7 @@ export class AimAnalyzer implements PauseListener {
                 }
             },
         })
+
         sc.QuickMenuAnalysis.inject({
             update() {
                 this.parent()

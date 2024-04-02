@@ -1,9 +1,9 @@
 import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
-import { Hint, HintData } from '../hint-system'
+import { HintBase, HintData } from '../hint-system'
 
-export class HBounceBlock implements Hint {
-    entryName = 'BounceBlock'
+export class HBounceBlock implements HintBase {
+    entryName = 'BounceBlock' as const
 
     constructor() {
         /* run in prestart */
@@ -52,8 +52,8 @@ export class HBounceBlock implements Hint {
     }
 }
 
-export class HBounceSwitch implements Hint {
-    entryName = 'BounceSwitch'
+export class HBounceSwitch implements HintBase {
+    entryName = 'BounceSwitch' as const
 
     constructor() {
         /* run in prestart */

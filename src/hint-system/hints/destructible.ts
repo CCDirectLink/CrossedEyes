@@ -1,9 +1,9 @@
 import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
-import { Hint, HintData } from '../hint-system'
+import { HintBase, HintData } from '../hint-system'
 
-export class HDestructible implements Hint {
-    entryName = 'Destructible'
+export class HDestructible implements HintBase {
+    entryName = 'Destructible' as const
 
     private descturcibles: Record</* propName */ string, HintData> = Lang.hints.destructibles
 

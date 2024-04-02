@@ -1,8 +1,8 @@
 import { Lang } from '../../lang-manager'
-import { Hint, HintData, HintSystem } from '../hint-system'
+import { HintBase, HintData, HintSystem } from '../hint-system'
 
-export class HAnalyzable implements Hint {
-    entryName = 'Analyzable'
+export class HAnalyzable implements HintBase {
+    entryName = 'Analyzable' as const
 
     constructor() {
         /* run in prestart */

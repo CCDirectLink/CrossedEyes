@@ -30,16 +30,23 @@ export interface HintData {
     name: string
     description: string
 }
-export interface Hint {
+export interface HintBase {
     entryName: string
     disableWalkedOn?: boolean
 
     getDataFromEntity<T extends ig.Entity>(entity: T, settings: sc.QuickMenuTypesBaseSettings): HintData
 }
 
+export interface Hint extends HintBase {
+    entryName: RegisteredHintTypes
+}
+
 export type ReqHintEntry = { entity: ig.Entity; nameGui: { description: sc.TextGui; title: sc.TextGui; description2: string | null } }
 
 export type HintUnion = sc.QUICK_MENU_TYPES.Hints | sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Enemy
+
+type GetReturns<T> = T extends new (...args: unknown[]) => infer E ? E : never
+export type RegisteredHintTypes = GetReturns<HintSystem['puzzleTypes'][number]>['entryName']
 
 export class HintSystem {
     static g: HintSystem
@@ -56,7 +63,7 @@ export class HintSystem {
     static customColors: { [key in (typeof HintSubTypes)[number]]?: sc.ANALYSIS_COLORS } = {}
 
     registeredTypes: Record<string, Hint>
-    puzzleTypes: (new () => Hint)[] = [
+    puzzleTypes = [
         HBounceBlock,
         HBounceSwitch,
         HSwitch,
@@ -77,7 +84,7 @@ export class HintSystem {
         HAnalyzable,
         HDynamicPlatform,
         HBallChanger,
-    ]
+    ] as const satisfies (new () => HintBase)[]
     filterType: (typeof HintTypes)[number] | 'Hints' = 'All'
     filterHintType: (typeof HintSubTypes)[number] | undefined
     filterList: string[]

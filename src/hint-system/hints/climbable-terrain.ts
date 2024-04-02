@@ -1,11 +1,11 @@
 import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
-import { Hint, HintData, HintSystem } from '../hint-system'
+import { HintBase, HintData, HintSystem } from '../hint-system'
 
 const crypto: typeof import('crypto') = (0, eval)('require("crypto")')
 
-export class HClimbableTerrain implements Hint {
-    entryName = 'Climbable'
+export class HClimbableTerrain implements HintBase {
+    entryName = 'Climbable' as const
 
     private static wProps: Record<string, HintData>
     private static sProps: Record<string, HintData>

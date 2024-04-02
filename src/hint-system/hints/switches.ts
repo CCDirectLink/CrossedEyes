@@ -1,9 +1,9 @@
 import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
-import { Hint, HintData } from '../hint-system'
+import { HintBase, HintData } from '../hint-system'
 
-export class HSwitch implements Hint {
-    entryName = 'Switch'
+export class HSwitch implements HintBase {
+    entryName = 'Switch' as const
 
     constructor() {
         /* run in prestart */
@@ -23,8 +23,8 @@ export class HSwitch implements Hint {
     }
 }
 
-export class HOneTimeSwitch implements Hint {
-    entryName = 'OneTimeSwitch'
+export class HOneTimeSwitch implements HintBase {
+    entryName = 'OneTimeSwitch' as const
 
     constructor() {
         /* run in prestart */
@@ -41,8 +41,8 @@ export class HOneTimeSwitch implements Hint {
     }
 }
 
-export class HMultiHitSwitch implements Hint {
-    entryName = 'MultiHitSwitch'
+export class HMultiHitSwitch implements HintBase {
+    entryName = 'MultiHitSwitch' as const
 
     constructor() {
         /* run in prestart */
