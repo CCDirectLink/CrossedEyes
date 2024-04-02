@@ -52,7 +52,7 @@ devDependencies:
     version: 5.4.2
   ultimate-crosscode-typedefs:
     specifier: github:krypciak/ultimate-crosscode-typedefs
-    version: github.com/krypciak/ultimate-crosscode-typedefs/9c05191a103a3963b0efe722355038cf779cfa45
+    version: github.com/krypciak/ultimate-crosscode-typedefs/73e67c039adb15f244261bca45211ca9cb8971d2
   ws:
     specifier: ^8.16.0
     version: 8.16.0
@@ -1314,8 +1314,8 @@ packages:
     version: 1.2.4
     dev: true
 
-  github.com/krypciak/ultimate-crosscode-typedefs/9c05191a103a3963b0efe722355038cf779cfa45:
-    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/9c05191a103a3963b0efe722355038cf779cfa45}
+  github.com/krypciak/ultimate-crosscode-typedefs/73e67c039adb15f244261bca45211ca9cb8971d2:
+    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/73e67c039adb15f244261bca45211ca9cb8971d2}
     name: ultimate-crosscode-typedefs
     version: 0.0.1
     engines: {node: '>=10.0.0'}

@@ -3,6 +3,17 @@
 # Change Log
 
 ## [Unreleased]
+
+### Added
+
+### Changed
+
+- Also announce the body part in the equipment menu
+
+### Fixed
+
+- Fixed equipment menu items not updating after equipping something new
+
 ## [0.5.9] 2024-03-27
 
 ### Added

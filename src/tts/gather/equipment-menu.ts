@@ -2,6 +2,7 @@ import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
 import { SpecialAction } from '../../special-action'
 import { interrupt, speakArgsC, speakI } from './api'
+import { button_excludeButtonClass } from './button'
 
 /* in prestart */
 
@@ -39,6 +40,28 @@ sc.EquipRightContainer.inject({
                 })
             }
         })
+    },
+})
+
+button_excludeButtonClass(sc.BodyPartButton)
+sc.BodyPartButton.inject({
+    focusGained() {
+        this.parent()
+        if (this.parentEntry && Opts.tts) {
+            const bodyPart: string = this.parentEntry.text.text!.toString()
+            speakI(`${bodyPart}: ${this.textChild.text!.toString()}`)
+
+            SpecialAction.setListener('LSP', 'equipmentMenuDescription', () => {
+                speakI((this.data as ig.LangLabel).value)
+            })
+        }
+    },
+})
+
+sc.EquipBodyPartContainer.Entry.inject({
+    init(bodyPart, equip, x, y, globalButton, topY) {
+        this.parent(bodyPart, equip, x, y, globalButton, topY)
+        this.button.parentEntry = this
     },
 })
 

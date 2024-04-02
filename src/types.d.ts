@@ -259,5 +259,9 @@ declare global {
         interface CheckboxGui {
             crossedeyesLabel?: string
         }
+
+        interface BodyPartButton {
+            parentEntry?: sc.EquipBodyPartContainer.Entry
+        }
     }
 }
