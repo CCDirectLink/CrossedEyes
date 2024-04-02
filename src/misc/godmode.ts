@@ -30,15 +30,10 @@ export function godmode() {
     sc.newgame.toggle('infinite-sp')
     sc.model.player.setLevel(99)
     sc.model.player.equip = { head: 657, leftArm: 577, rightArm: 607, torso: 583, feet: 596 }
-    for (let i = 0; i < sc.model.player.skillPoints.length; i++) {
-        sc.model.player.skillPoints[i] = 200
-    }
-    for (let i = 0; i < 400; i++) {
-        sc.model.player.learnSkill(i)
-    }
-    for (let i = 0; i < sc.model.player.skillPoints.length; i++) {
-        sc.model.player.skillPoints[i] = 0
-    }
+
+    sc.model.player.skillPoints.fill(200)
+    for (let i = 0; i < 400; i++) sc.model.player.learnSkill(i)
+    sc.model.player.skillPoints.fill(0)
 
     /* filter out circuit override givers */
     const skipItems = new Set([150, 225, 230, 231, 286, 410, 428])
@@ -48,4 +43,19 @@ export function godmode() {
         sc.model.player._addNewItem(i)
     }
     sc.model.player.updateStats()
+
+    /* unlock all areas */
+    for (const area in sc.map.areas) sc.map.updateVisitedArea(area)
+
+    /* unlock all maps */
+    for (const areaName in sc.map.areas) {
+        const area = new sc.AreaLoadable(areaName)
+        area.load(() => {
+            for (const floor of area.data.floors) {
+                for (const map of floor.maps) {
+                    ig.vars.set(`maps.${map.path.toCamel().toPath('', '')}`, {})
+                }
+            }
+        })
+    }
 }
