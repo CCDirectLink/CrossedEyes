@@ -12,7 +12,7 @@
     "dependencies": {
         "input-api": ">=1.0.0",
         "cc-blitzkrieg": ">=0.5.5",
-        "nax-ccuilib": ">=1.2.5",
+        "nax-ccuilib": ">=1.2.6",
         "ccmodmanager": ">=0.9.9",
         "crosscode": ">=1.4.0"
     },
