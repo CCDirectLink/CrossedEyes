@@ -6,13 +6,18 @@ import { HEnemy } from './hints/enemy'
 /* in prestart */
 ig.ENTITY.Enemy.inject({
     getQuickMenuSettings() {
-        if (!Opts.hints) {
-            return this.parent!()
-        }
+        if (!Opts.hints) return this.parent!()
         const isProperEnemy: boolean = this.params && this.visibility.analyzable && sc.combat.isEnemyAnalyzable(this.enemyName)
         return isProperEnemy
             ? { type: 'Enemy', disabled: false }
-            : { type: 'Hints', hintName: 'Enemy', hintType: 'Puzzle', disabled: !HEnemy.check(this), dontEmitSound: !HEnemy.shouldEmitSound(this) }
+            : {
+                  type: 'Hints',
+                  hintName: 'Enemy',
+                  hintType: 'Puzzle',
+                  disabled: !HEnemy.check(this),
+                  dontEmitSound: !HEnemy.shouldEmitSound(this),
+                  aimBounceWhitelist: HEnemy.isAimBounceWhitelisted(this),
+              }
     },
     isBallDestroyer(_collPos, _collRes) {
         if (!Opts.hints) {

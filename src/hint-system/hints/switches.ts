@@ -10,7 +10,7 @@ export class HSwitch implements HintBase {
         const self = this
         ig.ENTITY.Switch.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !Opts.hints }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !Opts.hints, aimBounceWhitelist: true }
             },
         })
     }
@@ -31,7 +31,7 @@ export class HOneTimeSwitch implements HintBase {
         const self = this
         ig.ENTITY.OneTimeSwitch.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(Opts.hints && !this.isOn) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(Opts.hints && !this.isOn), aimBounceWhitelist: true }
             },
         })
     }

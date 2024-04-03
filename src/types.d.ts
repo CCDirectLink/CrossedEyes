@@ -1,5 +1,5 @@
 import { PlayerTraceResult } from './environment/loudjump'
-import { Hint, HintUnion, HintSubTypes } from './hint-system/hint-system'
+import { Hint, HintUnion, HintSubTypes, RegisteredHintTypes } from './hint-system/hint-system'
 import { SoundGlossaryEntryP } from './manuals/hud/sound-glossary'
 
 export {}
@@ -140,9 +140,10 @@ declare global {
         var EnemyHintMenu: EnemyHintMenuConstructor
 
         interface QuickMenuTypesBaseSettings {
-            hintName?: string
+            hintName?: RegisteredHintTypes
             hintType?: (typeof HintSubTypes)[number]
             dontEmitSound?: boolean
+            aimBounceWhitelist?: boolean
         }
 
         interface QuickMenuAnalysis {

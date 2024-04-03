@@ -6,6 +6,8 @@
 
 ### Added
 
+- Added aim bounce end hint whitelist
+
 ### Changed
 
 - Also announce the body part in the equipment menu

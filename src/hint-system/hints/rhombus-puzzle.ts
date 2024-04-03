@@ -74,6 +74,7 @@ export class HBallChanger implements HintBase {
                     hintName: self.entryName,
                     hintType: 'Puzzle',
                     disabled: !Opts.hints,
+                    aimBounceWhitelist: true,
                 }
             },
         })

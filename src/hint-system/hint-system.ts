@@ -43,7 +43,7 @@ export interface Hint extends HintBase {
 
 export type ReqHintEntry = { entity: ig.Entity; nameGui: { description: sc.TextGui; title: sc.TextGui; description2: string | null } }
 
-export type HintUnion = sc.QUICK_MENU_TYPES.Hints | sc.QUICK_MENU_TYPES.NPC | sc.QUICK_MENU_TYPES.Enemy
+export type HintUnion = sc.QUICK_MENU_TYPES.Hints | sc.QUICK_MENU_TYPES.NPC | (Omit<sc.QUICK_MENU_TYPES.Enemy, 'entity'> & { entity: ig.Entity })
 
 type GetReturns<T> = T extends new (...args: unknown[]) => infer E ? E : never
 export type RegisteredHintTypes = GetReturns<HintSystem['puzzleTypes'][number]>['entryName']
@@ -182,8 +182,9 @@ export class HintSystem {
             .filter(e => e)
             .sort(
                 (a, b) =>
-                    Vec2.distance((a.entity as ig.Entity).getAlignedPos(ig.ENTITY_ALIGN.CENTER), pPos) -
-                    Vec2.distance((b.entity as ig.Entity).getAlignedPos(ig.ENTITY_ALIGN.CENTER), pPos)
+                    /* prettier-ignore */
+                    Vec2.distance(a.entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER), pPos) -
+                    Vec2.distance(b.entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER), pPos)
             ) as HintUnion[])
 
         this.currentSelectIndex += add

@@ -26,8 +26,6 @@ export class AimAnalyzer implements PauseListener {
 
     wallScanHandle?: ig.SoundHandle
 
-    private aimBounceEndpointWhitelist: Set<string> = new Set([])
-
     constructor() {
         /* in prestart */
         AimAnalyzer.g = this
@@ -129,13 +127,19 @@ export class AimAnalyzer implements PauseListener {
             HintSystem.g.deactivateHint(HintSystem.g.focusedHE)
         }
         if (isAiming() && ig.game.playerEntity.gui.crosshair?.active) {
-            const allHints = this.predictBounceHints()
+            let allHints = this.predictBounceHints()
 
             if (tillBounce || !sc.model.player.getCore(sc.PLAYER_CORE.CHARGE)) {
                 const bounceIndex = allHints.findIndex(h => h.hit)
                 if (bounceIndex != -1) {
                     allHints.splice(bounceIndex)
                 }
+            }
+            if (allHints.length > 1 && allHints.find(h => h.hit)) {
+                const last = allHints.last()
+                if (last.hit) throw new Error('what?')
+                const isWhitelisted = last.hint.entity.getQuickMenuSettings!().aimBounceWhitelist
+                if (!isWhitelisted) allHints.splice(allHints.findIndex(h => h.hit))
             }
             let uuids: string = allHints
                 .map(hint => (hint.hit ? 'b' : hint.hint.entity.uuid))

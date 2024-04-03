@@ -2,10 +2,12 @@ import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
 import { HintBase, HintData } from '../hint-system'
 
+type EnemyConfig = { lang: HintData; condition?: (e: ig.Entity) => boolean; noEmitSound?: boolean; aimBounceWhitelist?: boolean }
+
 export class HEnemy implements HintBase {
     entryName = 'Enemy' as const
 
-    private static config: Record</* enemyName */ string, Record</*state*/ string, { lang: HintData; condition?: (e: ig.Entity) => boolean; noEmitSound?: boolean }>>
+    private static config: Record</* enemyName */ string, Record</*state*/ string, EnemyConfig>>
     private static lang: Record</* enemy type */ string, HintData | Record</* state */ string, HintData>>
 
     private static getLang(e: ig.ENTITY.Enemy): undefined | HintData {
@@ -22,15 +24,26 @@ export class HEnemy implements HintBase {
         return !!this.getLang(e)
     }
 
-    static shouldEmitSound(e: ig.ENTITY.Enemy): boolean {
+    private static getEnemyConfig(e: ig.ENTITY.Enemy): { emitSound: boolean; match?: EnemyConfig } {
         /* this is only considered if HEnemy.check return true */
         const conf = this.config[e.enemyName]!
-        if (!conf) return false
+        if (!conf) return { emitSound: false }
         const states = Object.entries(conf)
-        if (states.length == 0) true
+        if (states.length == 0) return { emitSound: true }
         const stateMatch = states.find(o => e.currentState == o[0])
-        if (!stateMatch) return true
-        return !stateMatch[1].noEmitSound
+        if (!stateMatch) return { emitSound: true }
+        const match = stateMatch[1]
+        return { emitSound: !!match.noEmitSound, match }
+    }
+
+    static shouldEmitSound(e: ig.ENTITY.Enemy): boolean {
+        return this.getEnemyConfig(e).emitSound
+    }
+
+    static isAimBounceWhitelisted(e: ig.ENTITY.Enemy): boolean {
+        const { match } = this.getEnemyConfig(e)
+        if (!match) return false
+        return !!match.aimBounceWhitelist
     }
 
     constructor() {
@@ -38,10 +51,11 @@ export class HEnemy implements HintBase {
         /* injection is done in hint-system/enemy-override.ts */
         HEnemy.config = {
             'target-bot': {
-                DO_HIT: { lang: Lang.hints.enemies['target-bot'].canShoot },
+                DO_HIT: { lang: Lang.hints.enemies['target-bot'].canShoot, aimBounceWhitelist: true },
                 PERMA_HIT: {
                     lang: Lang.hints.enemies['target-bot'].canShoot,
                     condition: e => e.name == 'targetBot1' && (ig.vars.get('tmp.turrentHit') as number) < 10,
+                    aimBounceWhitelist: true,
                 },
                 DO_NOT_HIT: { lang: Lang.hints.enemies['target-bot'].blocker, noEmitSound: true },
             },

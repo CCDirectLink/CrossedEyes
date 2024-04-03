@@ -10,12 +10,12 @@ export class HBounceBlock implements HintBase {
         const self = this
         ig.ENTITY.BounceBlock.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(Opts.hints && this.blockState != 2) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(Opts.hints && this.blockState != 2), aimBounceWhitelist: true }
             },
         })
         ig.ENTITY.Blocker.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(Opts.hints && this.active) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(Opts.hints && this.active), aimBounceWhitelist: true }
             },
         })
     }
@@ -60,7 +60,7 @@ export class HBounceSwitch implements HintBase {
         const self = this
         ig.ENTITY.BounceSwitch.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
-                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(Opts.hints && !this.isOn) }
+                return { type: 'Hints', hintName: self.entryName, hintType: 'Puzzle', disabled: !(Opts.hints && !this.isOn), aimBounceWhitelist: true }
             },
         })
     }
