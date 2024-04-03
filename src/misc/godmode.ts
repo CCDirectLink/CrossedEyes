@@ -46,6 +46,8 @@ export function godmode() {
 
     /* unlock all areas */
     for (const area in sc.map.areas) sc.map.updateVisitedArea(area)
+    /* unlock cargo ship area */
+    sc.map.areas['cargo-ship'].condition = 'true'
 
     /* unlock all maps */
     for (const areaName in sc.map.areas) {
