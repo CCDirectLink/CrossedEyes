@@ -5,6 +5,16 @@ import { Lang } from '../lang-manager'
 import { HProp } from '../hint-system/hints/prop'
 import { speakIC } from '../tts/gather/api'
 
+declare global {
+    namespace sc {
+        interface MapInteractEntry {
+            stateUpdate?: boolean
+
+            customUpdate(this: this): void
+        }
+    }
+}
+
 const range = 6 * 16
 
 export class InteractableHandler {

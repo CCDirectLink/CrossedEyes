@@ -23,6 +23,63 @@ import type { PuzzleSelection } from 'cc-blitzkrieg/types/puzzle-selection'
 import type { Selection } from 'cc-blitzkrieg/types/selection'
 import { BattleSelection } from 'cc-blitzkrieg/types/battle-selection'
 
+declare global {
+    namespace ig {
+        interface Entity {
+            isPlayerStandingOnMe?: boolean
+        }
+    }
+    namespace sc {
+        namespace QUICK_MENU_TYPES {
+            interface Hints extends sc.QuickMenuTypesBase {
+                nameGui: sc.HintsMenu
+            }
+            interface HintsConstructor extends ImpactClass<Hints> {
+                new (type: string, settings: sc.QuickMenuTypesBaseSettings, screen: sc.QuickFocusScreen): Hints
+            }
+            var Hints: HintsConstructor
+        }
+
+        interface BasicHintMenu extends ig.BoxGui {
+            getText: () => [string, string, string | null]
+            ninepatch: ig.NinePatch
+            title: sc.TextGui
+            description: sc.TextGui
+            description2: string | null
+
+            setPosition(this: this, hook: ig.GuiHook, e: ig.Entity): void
+            getCenter(this: this, a: ig.GuiHook): number
+            updateData(this: this): number
+        }
+        interface BasicHintMenuConstructor extends ImpactClass<BasicHintMenu> {
+            new (getText: () => ReturnType<BasicHintMenu['getText']>): BasicHintMenu
+        }
+        var BasicHintMenu: BasicHintMenuConstructor
+
+        interface HintsMenu extends sc.BasicHintMenu {
+            hintClass?: Hint
+        }
+        interface HintsMenuConstructor extends ImpactClass<HintsMenu> {
+            new (settings: sc.QuickMenuTypesBaseSettings): HintsMenu
+        }
+        var HintsMenu: HintsMenuConstructor
+
+        interface QuickMenuTypesBaseSettings {
+            hintName?: RegisteredHintTypes
+            hintType?: (typeof HintSubTypes)[number]
+            dontEmitSound?: boolean
+            aimBounceWhitelist?: boolean
+        }
+
+        interface QuickMenuAnalysis {
+            entities: HintUnion[]
+
+            createHint(this: this, entity: Nullable<ig.Entity> | undefined, filter?: boolean): HintUnion | undefined
+            populateHintList(this: this): void
+        }
+    }
+}
+
 export const HintTypes = ['All', 'Enemy', 'NPC', 'Interactable', 'Selected'] as const
 export const HintSubTypes = ['Puzzle', 'Plants', 'Chests', 'Climbable', 'Analyzable'] as const
 

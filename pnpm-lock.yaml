@@ -32,6 +32,9 @@ devDependencies:
   ccmodmanager:
     specifier: github:CCDirectLink/CCModManager
     version: github.com/CCDirectLink/CCModManager/4b8d9e7b2c9c057c88882369f33418c5d788db1a
+  crosscode-demonizer:
+    specifier: github:krypciak/crosscode-demonizer
+    version: github.com/krypciak/crosscode-demonizer/cdad0efd133ae13ab12bbcd382081f71cde7d7e8
   esbuild:
     specifier: ^0.20.1
     version: 0.20.1
@@ -1308,6 +1311,12 @@ packages:
     version: 1.5.9
     dev: true
 
+  github.com/krypciak/crosscode-demonizer/cdad0efd133ae13ab12bbcd382081f71cde7d7e8:
+    resolution: {tarball: https://codeload.github.com/krypciak/crosscode-demonizer/tar.gz/cdad0efd133ae13ab12bbcd382081f71cde7d7e8}
+    name: crosscode-demonizer
+    version: 1.0.0
+    dev: true
+
   github.com/krypciak/nax-ccuilib/a7c59076124ee794cc3813d3e62d127fe57c1c6a:
     resolution: {tarball: https://codeload.github.com/krypciak/nax-ccuilib/tar.gz/a7c59076124ee794cc3813d3e62d127fe57c1c6a}
     name: nax-ccuilib
@@ -1319,7 +1328,6 @@ packages:
     name: ultimate-crosscode-typedefs
     version: 0.0.1
     engines: {node: '>=10.0.0'}
-    prepare: true
     requiresBuild: true
     dependencies:
       '@types/jquery': 1.10.45

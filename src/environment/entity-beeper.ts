@@ -3,6 +3,14 @@ import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { EntityUtil } from './entity-util'
 
+declare global {
+    namespace ig {
+        interface Entity {
+            entitySoundInited?: boolean
+        }
+    }
+}
+
 export class EntityBeeper {
     private static tprRange = 16 * 16
 

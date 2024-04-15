@@ -2,6 +2,16 @@ import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
 import { HintBase, HintData } from '../hint-system'
 
+declare global {
+    namespace ig {
+        namespace ENTITY {
+            interface Destructible {
+                desType: keyof typeof sc.DESTRUCTIBLE_TYPE
+            }
+        }
+    }
+}
+
 export class HDestructible implements HintBase {
     entryName = 'Destructible' as const
 

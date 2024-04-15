@@ -6,6 +6,62 @@ import { getReadableText, speakArgsC, speakC, speakIC } from '../../tts/gather/a
 import { sc_MENU_SUBMENU_CROSSEDEYESHUD_SOUND_GLOSSARY } from './crossedeyes-hud'
 import { getSoundGlossaryEntries } from './sound-glossary-entries'
 
+declare global {
+    namespace sc {
+        namespace SoundGlossary {
+            interface List extends sc.ListTabbedPane {}
+            interface ListConstructor extends ImpactClass<List> {
+                new (): List
+            }
+            var List: ListConstructor
+
+            interface Menu extends sc.ListInfoMenu {
+                list: sc.SoundGlossary.List
+                info: sc.SoundGlossary.InfoBox
+                isEntrySelected: boolean
+                currentSelectedButton: sc.SoundGlossary.ListEntry
+                isSoundOn: boolean
+
+                toggleSoundSelected(this: this, button: sc.SoundGlossary.ListEntry): void
+                getContiniousId(this: this, entry: SoundGlossaryEntryP): string
+                startSound(this: this): void
+                stopSound(this: this): void
+                updateSound(this: this): void
+            }
+            interface MenuConstructor extends ImpactClass<Menu> {
+                new (): Menu
+            }
+            var Menu: MenuConstructor
+
+            interface ListEntry extends sc.ListBoxButton {
+                entry: SoundGlossaryEntryP
+                title: sc.TextGui
+
+                keepButtonPressed(this: this, state: boolean): void
+            }
+            interface ListEntryConstructor extends ImpactClass<ListEntry> {
+                new (entry: SoundGlossaryEntryP): ListEntry
+            }
+            var ListEntry: ListEntryConstructor
+
+            interface InfoBox extends ig.BoxGui {
+                gfx: ig.Image
+                ninepatch: ig.NinePatch
+                title: sc.TextGui
+                description: sc.TextGui
+
+                show(this: this): void
+                hide(this: this): void
+                setData(this: this, entry: SoundGlossaryEntryP): void
+            }
+            interface InfoBoxConstructor extends ImpactClass<InfoBox> {
+                new (): InfoBox
+            }
+            var InfoBox: InfoBoxConstructor
+        }
+    }
+}
+
 export interface SoundGlossaryEntry {
     config: SoundManager.ContiniousSettings
     range?: number

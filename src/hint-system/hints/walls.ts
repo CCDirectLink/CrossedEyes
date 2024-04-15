@@ -2,6 +2,16 @@ import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
 import { HintBase, HintData } from '../hint-system'
 
+declare global {
+    namespace ig {
+        namespace ENTITY {
+            interface WallBlocker {
+                parentWall: ig.ENTITY.WallBase
+            }
+        }
+    }
+}
+
 export class HWalls implements HintBase {
     entryName = 'Walls' as const
 

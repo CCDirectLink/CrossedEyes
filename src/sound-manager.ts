@@ -1,6 +1,36 @@
 import { PauseListener } from './misc/menu-pause'
 import CrossedEyes from './plugin'
 
+declare global {
+    namespace ig {
+        interface SoundHandleBase {
+            pos: null | {
+                point: Vec2
+                point3d: Vec3 /* only thing modified */
+                entity: ig.Entity | null
+                align: ig.ENTITY_ALIGN | null
+                offset: null
+                range: number
+                rangeType: ig.SOUND_RANGE_TYPE
+            }
+            dontPauseInQuickAnalysis?: boolean
+            path: string
+        }
+        interface SoundWebAudio {
+            origVolume?: number
+        }
+
+        // @ts-expect-error
+        type SoundHandle = ig.SoundHandleWebAudio // | ig.SoundHandleDefault
+        // @ts-expect-error
+        type Sound = ig.SoundWebAudio
+        // @ts-expect-error
+        type SoundConstructor = SoundWebAudioConstructor
+        // @ts-expect-error
+        var Sound: SoundConstructor
+    }
+}
+
 export namespace SoundManager {
     export type ContiniousSettings = {
         condition?: () => boolean

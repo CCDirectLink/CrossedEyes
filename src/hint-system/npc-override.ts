@@ -1,5 +1,20 @@
 import { HintSystem } from './hint-system'
 
+declare global {
+    namespace sc {
+        interface NPCHintMenu extends sc.BasicHintMenu {}
+        interface NPCHintMenuConstructor extends ImpactClass<NPCHintMenu> {
+            new (text: string, settings: sc.QuickMenuTypesBaseSettings): NPCHintMenu
+        }
+        var NPCHintMenu: NPCHintMenuConstructor
+
+        namespace QUICK_MENU_TYPES {
+            interface NPC {
+                nameGui: sc.NPCHintMenu
+            }
+        }
+    }
+}
 /* in prestart */
 sc.NPCHintMenu = sc.BasicHintMenu.extend({
     init(origText: string, settings: sc.QuickMenuTypesBaseSettings) {

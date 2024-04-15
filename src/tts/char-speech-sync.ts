@@ -3,6 +3,18 @@ import { Opts } from '../plugin'
 import { TextGather, interrupt, speakIC } from './gather/api'
 import { SpeechEndListener, TTS } from './tts'
 
+declare global {
+    namespace ig {
+        interface MessageAreaGui {
+            skip(this: this, nextMsg?: boolean): void
+        }
+    }
+    namespace sc {
+        interface SideMessageBoxGui {
+            beepSound: ig.Sound | null
+        }
+    }
+}
 const startDate = Date.now()
 
 export class CharacterSpeechSynchronizer implements SpeechEndListener {

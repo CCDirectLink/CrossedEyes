@@ -3,6 +3,22 @@ import { Opts } from '../plugin'
 import { HintSystem } from './hint-system'
 import { HEnemy } from './hints/enemy'
 
+declare global {
+    namespace sc {
+        namespace QUICK_MENU_TYPES {
+            interface Enemy {
+                entity: ig.ENTITY.Enemy
+                nameGui: sc.EnemyHintMenu
+            }
+        }
+        interface EnemyHintMenu extends sc.BasicHintMenu {}
+        interface EnemyHintMenuConstructor extends ImpactClass<EnemyHintMenu> {
+            new (enemy: ig.ENTITY.Enemy): EnemyHintMenu
+        }
+        var EnemyHintMenu: EnemyHintMenuConstructor
+    }
+}
+
 /* in prestart */
 ig.ENTITY.Enemy.inject({
     getQuickMenuSettings() {

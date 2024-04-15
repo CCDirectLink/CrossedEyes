@@ -2,6 +2,16 @@ import { Lang } from '../../lang-manager'
 import { Opts } from '../../plugin'
 import { HintBase, HintData } from '../hint-system'
 
+declare global {
+    namespace ig {
+        namespace ENTITY {
+            interface BallChanger {
+                settings: ig.ENTITY.BallChanger.Settings
+            }
+        }
+    }
+}
+
 export class HOLPlatform implements HintBase {
     entryName = 'OLPlatform' as const
 

@@ -4,6 +4,13 @@ import { SpecialAction } from '../../special-action'
 import { interrupt, speakArgsC, speakI } from './api'
 import { button_excludeButtonClass } from './button'
 
+declare global {
+    namespace sc {
+        interface BodyPartButton {
+            parentEntry?: sc.EquipBodyPartContainer.Entry
+        }
+    }
+}
 /* in prestart */
 
 sc.EquipMenu.inject({

@@ -1,7 +1,10 @@
 import { TestMap } from './test-map'
 
+/* https://github.com/krypciak/crosscode-demonizer */
+import 'crosscode-demonizer/src/demomod/types.d.ts'
+
 /* in prestart */
-if (!ig.isdemo /* https://github.com/krypciak/crosscode-demonizer */) {
+if (!ig.isdemo) {
     sc.TitleScreenButtonGui.inject({
         init() {
             this.parent()

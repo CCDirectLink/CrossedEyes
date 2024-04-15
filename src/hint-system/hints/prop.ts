@@ -3,6 +3,15 @@ import { Opts } from '../../plugin'
 import { HintBase, HintData } from '../hint-system'
 import { HClimbableTerrain } from './climbable-terrain'
 
+declare global {
+    namespace sc {
+        interface PropInteract {
+            iconType: keyof typeof sc.PROP_INTERACT_ICONS
+            hoverText?: ig.LangLabel.Data
+        }
+    }
+}
+
 export class HProp implements HintBase {
     entryName = 'Prop' as const
 

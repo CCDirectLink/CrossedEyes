@@ -27,6 +27,8 @@ import './misc/modify-prototypes'
 
 export let Opts: OptsType<ReturnType<typeof getOptions>>
 
+export type ObjectValues<T> = T[keyof T]
+
 export default class CrossedEyes implements PluginClass {
     static dir: string
     static mod: Mod1

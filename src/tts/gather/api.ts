@@ -4,6 +4,8 @@ import { SpecialAction } from '../../special-action'
 import { FontToImgMap } from '../font-img-to-text-map'
 import { CharacterSpeakData } from '../tts'
 
+export type ValidTextLike = string | { toString(): string }
+
 export function getReadableText(orig: string): string {
     let text: string = orig
         .trim()

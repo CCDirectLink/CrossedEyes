@@ -1,5 +1,14 @@
 import { Opts } from '../plugin'
 import { SoundManager } from '../sound-manager'
+declare global {
+    namespace ig {
+        namespace ACTION_STEP {
+            interface PLAY_SOUND {
+                origVolume: number
+            }
+        }
+    }
+}
 
 /* prestart */
 function getSoundFromColl(coll: ig.CollEntry, type: keyof typeof sc.ACTOR_SOUND): sc.ACTOR_SOUND_BASE {

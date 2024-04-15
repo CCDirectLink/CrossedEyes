@@ -1,7 +1,28 @@
 import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
-import { Opts } from '../plugin'
+import { ObjectValues, Opts } from '../plugin'
 import { SoundManager } from '../sound-manager'
 import CrossedEyes from '../plugin'
+
+declare global {
+    namespace sc {
+        interface CrossedEyesPositionPredictor extends ig.ActorEntity {
+            rfc: {
+                on: boolean
+                timer: number
+                startTime: number
+            }
+            rfcr: PlayerTraceResult
+
+            runPlayerTrace(this: this, seconds: number, vel: number, fps?: number): PlayerTraceResult
+            stopRunning(this: this): void
+            checkQuickRespawn(this: this): void
+        }
+        interface CrossedEyesPositionPredictorConstructor extends ImpactClass<CrossedEyesPositionPredictor> {
+            new (x: number, y: number, z: number, settings: ig.Entity.Settings): CrossedEyesPositionPredictor
+        }
+        var CrossedEyesPositionPredictor: CrossedEyesPositionPredictorConstructor
+    }
+}
 
 interface TickData {
     timerTimer: number

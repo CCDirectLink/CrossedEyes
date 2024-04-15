@@ -4,6 +4,14 @@ import { SpecialAction } from '../../special-action'
 import { interrupt, speakArgsC, speakI, speakIC } from './api'
 import { button_setIgnoreFrom } from './button'
 
+declare global {
+    namespace sc {
+        interface RowButtonGroup {
+            elements: (sc.ButtonGui & { optionRow: sc.OptionRow })[][]
+        }
+    }
+}
+
 sc.OptionsMenu.inject({
     exitMenu() {
         this.parent()

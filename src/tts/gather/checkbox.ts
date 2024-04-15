@@ -1,6 +1,8 @@
 import { Lang } from '../../lang-manager'
 import { speakIC } from './api'
 
+import './checkbox.d'
+
 /* in prestart */
 sc.CheckboxGui.inject({
     invokeButtonPress() {

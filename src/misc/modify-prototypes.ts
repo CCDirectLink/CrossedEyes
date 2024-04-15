@@ -1,4 +1,23 @@
+import { ValidTextLike } from '../tts/gather/api'
+
 /* in preload */
+export {}
+declare global {
+    interface Object {
+        fromEntries<T, K extends string | number | symbol>(entries: [K, T][]): Record<K, T>
+        keysT<K extends string | number | symbol, V>(object: Record<K, V>): K[]
+        entriesT<K extends string | number | symbol, V>(object: { [key in K]?: V }): [K, V][]
+    }
+    interface Array<T> {
+        flat(): T extends Array<any> ? T : T[]
+    }
+    interface String {
+        interpolate(...values: (string | number)[]): string
+        supplant(vars: ValidTextLike[] | Record<string, ValidTextLike>): string
+        toLowerCaseT<T extends string>(this: T): Lowercase<T>
+    }
+}
+
 if (!Object.fromEntries) {
     Object.fromEntries = function <T, K extends string | number | symbol>(entries: [K, T][]): Record<K, T> {
         return entries.reduce(
