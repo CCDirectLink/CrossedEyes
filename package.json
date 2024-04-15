@@ -18,18 +18,19 @@
         "@types/ws": "^8.5.10",
         "@typescript-eslint/eslint-plugin": "^7.1.1",
         "@typescript-eslint/parser": "^7.1.1",
-        "cc-blitzkrieg": "github:krypciak/cc-blitzkrieg",
-        "cc-map-util": "github:krypciak/cc-map-util",
-        "cc-vim": "github:krypciak/cc-vim",
-        "ccmodmanager": "github:CCDirectLink/CCModManager",
-        "crosscode-demonizer": "github:krypciak/crosscode-demonizer",
         "esbuild": "^0.20.1",
         "eslint": "^8.57.0",
         "eslint-config-prettier": "^9.1.0",
-        "nax-ccuilib": "github:krypciak/nax-ccuilib",
         "prettier": "3.2.5",
         "typescript": "^5.4.2",
+        "ws": "^8.16.0",
+
         "ultimate-crosscode-typedefs": "github:krypciak/ultimate-crosscode-typedefs",
-        "ws": "^8.16.0"
+        "cc-map-util": "github:krypciak/cc-map-util",
+        "nax-ccuilib": "github:krypciak/nax-ccuilib",
+        "cc-blitzkrieg": "github:krypciak/cc-blitzkrieg",
+        "cc-vim": "github:krypciak/cc-vim",
+        "ccmodmanager": "github:CCDirectLink/CCModManager",
+        "crosscode-demonizer": "github:krypciak/crosscode-demonizer"
     }
 }
