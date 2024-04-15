@@ -1,7 +1,7 @@
 import { Lang } from '../../lang-manager'
 import { speakIC } from './api'
 
-import './checkbox.d'
+import './checkbox-types.d.ts'
 
 /* in prestart */
 sc.CheckboxGui.inject({
