@@ -149,7 +149,7 @@ declare global {
         interface QuickMenuAnalysis {
             entities: HintUnion[]
 
-            createHint(this: this, entity: ig.Entity, filter?: boolean): HintUnion | undefined
+            createHint(this: this, entity: Nullable<ig.Entity> | undefined, filter?: boolean): HintUnion | undefined
             populateHintList(this: this): void
         }
 

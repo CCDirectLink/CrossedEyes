@@ -21,15 +21,6 @@ export class TestMap {
 
     constructor() {
         /* in prestart */
-        sc.CrossCode.inject({
-            transitionEnded() {
-                if (!TestMap.startWithTestMap) return this.parent()
-
-                ig.game.teleport('crossedeyes/test', new ig.TeleportPosition('entrance'), 'NEW')
-                TestMap.startWithTestMap = false
-            },
-        })
-
         ig.EVENT_STEP.CROSSEDEYES_LEVEL_UP = ig.EventStepBase.extend({
             run(_actor) {
                 const p = ig.game.playerEntity
@@ -68,7 +59,10 @@ export class TestMap {
         } else {
             ig.interact.entries.forEach(e => ig.interact.removeEntry(e))
         }
-        ig.game.start(sc.START_MODE.STORY, 0)
+        sc.model.enterNewGame()
+        sc.model.enterGame()
+
+        ig.game.teleport('crossedeyes/test', new ig.TeleportPosition('entrance'), 'NEW')
         ig.game.setPaused(false)
         godmode()
     }
