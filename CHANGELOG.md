@@ -8,6 +8,7 @@
 
 - Added aim bounce end hint whitelist
 - Added basic inventory menu support
+- Added Y level coordinate announcing (more info in the quick menu help pages)
 
 ### Changed
 

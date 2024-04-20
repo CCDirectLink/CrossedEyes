@@ -262,6 +262,7 @@
         },
         "quickMenu": {
             "name": "Quick Menu",
+            "yLevel": "Y level: {y}",
             "itemHelpPages": [
                 {
                     "title": "Quick menu items",
@@ -319,6 +320,12 @@
                     "title": "Quick menu: Puzzle solving",
                     "content": [
                         "While standing near a puzzle, you can solve it immediately by pressing the 'Skip Puzzle' button in the quick menu.\nNote that in order for the puzzle to be skippable it has to be manually mapped by the developer, so not all puzzles are currently skippable."
+                    ]
+                },
+                {
+                    "title": "Quick menu: Player Y level",
+                    "content": [
+                        "You can get the current player Y coordinate with \\i[gamepad-select].\nFor reference, the player can jump onto a step that is 16 units tall.\nThis may be useful in platforming sections."
                     ]
                 }
             ]

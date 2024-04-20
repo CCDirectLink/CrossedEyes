@@ -72,6 +72,7 @@ export default class CrossedEyes implements PluginClass {
         await import('./misc/announce-version')
         await import('./misc/menu-pause')
         await import('./misc/title-screen-button')
+        await import('./misc/quick-menu-y-level-announcer')
         await addMenuManuals()
         updateQuickRingMenuLayoutLock()
     }
@@ -80,6 +81,6 @@ export default class CrossedEyes implements PluginClass {
         CrossedEyes.initPoststart.forEach(p => p())
         await import('./misc/log-keybinding')
 
-        localStorage.getItem('crossedeyesDev') == 'true' && TestMap.start()
+        if (localStorage.getItem('crossedeyesDev') == 'true') TestMap.start()
     }
 }
