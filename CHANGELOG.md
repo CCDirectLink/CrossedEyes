@@ -7,6 +7,7 @@
 ### Added
 
 - Added aim bounce end hint whitelist
+- Added basic inventory menu support
 
 ### Changed
 

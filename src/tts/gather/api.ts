@@ -174,5 +174,6 @@ export class TextGather {
         await import('./equipment-menu')
         await import('./quick-menu-food')
         await import('./checkbox')
+        await import('./inventory')
     }
 }
