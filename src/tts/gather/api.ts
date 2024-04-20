@@ -172,7 +172,6 @@ export class TextGather {
         await import('./tutorial-popup')
         await import('./mod-manager')
         await import('./equipment-menu')
-        await import('./quick-menu-food')
         await import('./checkbox')
         await import('./inventory')
     }
