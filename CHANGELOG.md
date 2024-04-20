@@ -17,7 +17,8 @@
 ### Fixed
 
 - Fixed equipment menu items not updating after equipping something new
-- Bump NVDA addon version to the latest availible
+- Bump NVDA addon version to the latest available
+- Fixed awful typos all over the place
 
 ## [0.5.9] 2024-03-27
 
@@ -35,12 +36,12 @@
 
 ### Fixed
 
-- Fixed map name not getting annouced when switching maps
+- Fixed map name not getting announced when switching maps
 - Fixed NVDA addon not working
 - Fixed footstep and wall collision sounds not playing while aiming
 - Fixed character name being repeated after they already said something
-- Fixed hint selection persisting even after the entity dissapeared
-- Fixed custom quick menu buttons not getting annouced
+- Fixed hint selection persisting even after the entity disappeared
+- Fixed custom quick menu buttons not getting announced
 
 ## [0.5.8] 2024-03-13
 
@@ -50,7 +51,7 @@
 - Added CCModManager support (go to the options menu and press Gamepad Y)
 - Added "Button denied" sound to the sound glossary
 - Added equipment menu support
-- Added quick menu item submenu support
+- Added quick menu item sub menu support
 - Added analysis menu help menu
 - Added quick menu help menu
 - Added a mod icon
@@ -63,21 +64,21 @@
 
 - Added a few puzzle elements to sound glossary
 - Added info sign hint
-- Added tutorial popups announcing
+- Added tutorial pop-ups announcing
 - Added hint filtering to only show the hints relevant to the puzzle
 - Added puzzle skip button to the quick menu
 
 ### Fixed
 
 - Fixed auto updater not working (you have to update to this version manually)
-- Mod version should be annouced properly now
+- Mod version should be announced properly now
 
 ## [0.5.6] 2024-02-04
 
 ### Added
 
 - Announce walking onto hints
-- Added recived item announcing
+- Added received item announcing
 - Add "Floating Moving Platform" puzzle entity hint
 
 ### Fixed
@@ -117,7 +118,7 @@
 
 ### Fixed
 
-- Added back a nessesery missing container from Cargo Hold 3
+- Added back a necessary missing container from Cargo Hold 3
 - Fix some entities being falsly treated as interactables
 
 ## [0.5.3] 2024-01-22
@@ -139,7 +140,7 @@
 ### Fixed
 
 - Fix potential crash on jump
-- Fix deck tutorial target bot not beaing a hint
+- Fix deck tutorial target bot not being a hint
 - Don't say the map name when it's missing
 
 ## [0.5.2] 2024-01-15
@@ -147,7 +148,7 @@
 ### Added
 
 - Added TUTORIAL.md to bundle.zip as CROSSEDEYES_MANUAL.md
-- Removed useless clutter (cargo boxes) from early maps to make them easier and less annyoing
+- Removed useless clutter (cargo boxes) from early maps to make them easier and less annoying
 
 ### Fixes
 
@@ -163,9 +164,9 @@
 ### Added
 
 - Added jump volume slider
-- Added hints for props that lead to higher palces
+- Added hints for props that lead to higher places
 - Add wall scan aim mode
-- Automaticly determine NVDA text speed to adjust dialogue beeping sounds
+- Automatically determine NVDA text speed to adjust dialogue beeping sounds
 - Added wall bump volume slider
 - Added destination map on doors and paths
 - Added a simple text tutorial
@@ -182,14 +183,14 @@
 - Fix aim bounce toggling when entering the quick menu (for some people)
 - Fix wall bumping not working on diagonal walls
 - Fix wall sounds glitching on corners
-- Fix wall sounds beaing slightly behind when the player is moving
+- Fix wall sounds being slightly behind when the player is moving
 - Fix L1 not selecting a hint on analysis screen entry
 
 ## [0.5.0] 2024-01-06
 
 ### Added
 
-- Added a ball bounce predition system
+- Added a ball bounce prediction system
 
 ### Changes
 
@@ -201,10 +202,10 @@
 ### Fixes
 
 - Wall and jump hint sounds are not on anymore when the player is floating
-- Fixed enemies emmiting sounds after death
+- Fixed enemies emitting sounds after death
 - Deactive toggled hints when the entity is killed
 - Fix gradual game slowdown
-- Fixed NVDA plugn?? (maybe)
+- Fixed NVDA plugin?? (maybe)
 
 ## [0.4.9] 2023-12-29
 
@@ -239,10 +240,10 @@
 
 ### Added
 
-- Added a note in README about os support and the controller requiremenet
+- Added a note in README about os support and the controller requirement
 - Say `uploading` immediately after pressing the F4 keybinding
 - Add save/load menu tts
-- Added text beeing toggle
+- Added text being toggle
 - Announce map name when switching maps
 
 ### Fixes
@@ -268,6 +269,6 @@
 
 ### Changes
 
-- README improvments.
+- README improvements.
 - Side character messages now end with the speech end.
 - Side character messages don't have a beeping text sound anymore.
