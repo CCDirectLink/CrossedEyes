@@ -16,6 +16,7 @@
 ### Fixed
 
 - Fixed equipment menu items not updating after equipping something new
+- Bump NVDA addon version to the latest availible
 
 ## [0.5.9] 2024-03-27
 
