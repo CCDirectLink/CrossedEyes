@@ -1,5 +1,5 @@
-import 'nax-ccuilib/src/headers/nax/quick-menu-public-api.d.ts'
-import 'nax-ccuilib/src/headers/nax/quick-menu.d.ts'
+import type * as _ from 'nax-ccuilib/src/headers/nax/quick-menu-public-api.d.ts'
+import type * as __ from 'nax-ccuilib/src/headers/nax/quick-menu.d.ts'
 import { Lang } from './lang-manager'
 import { Options } from './options-manager'
 import { Opts } from './plugin'

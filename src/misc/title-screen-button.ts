@@ -1,7 +1,7 @@
 import { TestMap } from './test-map'
 
 /* https://github.com/krypciak/crosscode-demonizer */
-import 'crosscode-demonizer/src/demomod/types.d.ts'
+import type * as _ from 'crosscode-demonizer/src/demomod/types.d.ts'
 
 /* in prestart */
 if (!ig.isdemo) {

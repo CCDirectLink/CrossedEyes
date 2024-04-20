@@ -1,5 +1,5 @@
 import { Opts } from '../plugin'
-import 'nax-ccuilib/src/headers/nax/quick-menu-public-api.d.ts'
+import type * as _ from 'nax-ccuilib/src/headers/nax/quick-menu-public-api.d.ts'
 
 export function updateQuickRingMenuLayoutLock() {
     nax.ccuilib.QuickRingMenuWidgets.lockLayout = Opts.lockDiorbitalMenu
