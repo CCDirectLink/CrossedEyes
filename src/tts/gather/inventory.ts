@@ -13,7 +13,7 @@ sc.ItemBoxButton.inject({
         SpecialAction.setListener('LSP', 'inventoryItemDescription', () => speakI(this.data.description))
 
         const id: sc.ItemID = this.data.id
-        if (sc.inventory.isBuffID(id)) {
+        if (Number(id) > 0 && sc.inventory.isBuffID(id)) {
             SpecialAction.setListener('R2', 'quickMenuConsumeableModifiers', () => {
                 const buffs = getBuffTexts(id)!
                 const duration = getBuffDuration(id)!

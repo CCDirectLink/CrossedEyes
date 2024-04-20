@@ -4,12 +4,6 @@
 
 ## [Unreleased]
 
-### Fixed
-
-- Removed duplicate quick menu analysis help menu entry
-
-## [0.6.0] 2024-04-20
-
 ### Added
 
 - Added aim bounce end hint whitelist
@@ -25,6 +19,7 @@
 - Fixed equipment menu items not updating after equipping something new
 - Bump NVDA addon version to the latest available
 - Fixed awful typos all over the place
+- Removed duplicate quick menu analysis help menu entry
 
 ## [0.5.9] 2024-03-27
 
