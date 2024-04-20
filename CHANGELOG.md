@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Removed duplicate quick menu analysis help menu entry
+
+## [0.6.0] 2024-04-20
+
 ### Added
 
 - Added aim bounce end hint whitelist

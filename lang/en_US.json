@@ -289,10 +289,6 @@
                     "content": ["To select and deselect a hint, press \\i[gamepad-x].\n Selected hints stay focused even after the quick menu is closed.\n "]
                 },
                 {
-                    "title": "Quick menu analysis: Selecting hints",
-                    "content": ["To select and deselect a hint, press \\i[gamepad-x].\n Selected hints stay focused even after the quick menu is closed.\n "]
-                },
-                {
                     "title": "Quick menu analysis: Hint filtering",
                     "content": [
                         "You can filter hints by categories.\n Use \\i[gamepad-left] and \\i[gamepad-right] to change the current category filter.\n Press \\i[gamepad-up] to announce the current category filter.\n "
