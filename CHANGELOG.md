@@ -3,6 +3,11 @@
 # Change Log
 
 ## [Unreleased]
+
+### Fixed
+
+- Fix options of some mods (dmitmel tweak pack) not being announced
+
 ## [0.6.0] 2024-04-20
 
 ### Added

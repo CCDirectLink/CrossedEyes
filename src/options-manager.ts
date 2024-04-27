@@ -148,7 +148,7 @@ export class MenuOptionsManager<T extends Options> {
         Object.entries(this.Opts.flatOpts).forEach(([_option, _config]) => {
             const option = _option as keyof typeof Lang.opts
             const config = _config as Option & { id: number }
-            const obj: any = { ...Lang.opts[option] }
+            const obj = { ...Lang.opts[option] }
             Object.assign(obj, config)
             ig.lang.labels.sc.gui.options[config.id] = obj
         })

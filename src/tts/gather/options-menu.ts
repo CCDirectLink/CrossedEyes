@@ -78,8 +78,9 @@ sc.RowButtonGroup.inject({
             if (!or) {
                 return
             }
-            const entry: { name: string; description: string } = ig.lang.labels.sc.gui.options[or.optionName]
-            if (entry && Date.now() - lastRowButtonGroupSpeak > 100) {
+            const name = ig.lang.get(`sc.gui.options.${or.optionName}.name`)
+            const description = ig.lang.get(`sc.gui.options.${or.optionName}.description`)
+            if (name && Date.now() - lastRowButtonGroupSpeak > 100) {
                 lastRowButtonGroupSpeak = Date.now()
                 if (or.option.type == 'BUTTON_GROUP') {
                     if (or.optionName == lastButtonGroup) {
@@ -94,11 +95,11 @@ sc.RowButtonGroup.inject({
                     lastButtonGroup = undefined
                 }
                 const optStr = optionValueToString(or.optionName)
-                const text: string = `${entry.name}, ${optStr[0]}, ${optStr[1]}`
+                const text: string = `${name}, ${optStr[0]}, ${optStr[1]}`
                 speakI(text)
             }
             SpecialAction.setListener('LSP', 'optionsRead', () => {
-                sc.menu.isOptions() && speakI(`${entry.description}`)
+                sc.menu.isOptions() && speakI(`${description}`)
             })
         })
     },
