@@ -1,4 +1,4 @@
-import { HintSystem } from './hint-system'
+import { HintSystem } from '../hint-system'
 
 declare global {
     namespace sc {

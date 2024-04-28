@@ -4,7 +4,6 @@ import { Opts } from '../plugin'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'
-import { AimAnalyzer, isAiming } from './aim-analyze'
 import { HAnalyzable } from './hints/analyzable'
 import { HBounceBlock, HBounceSwitch } from './hints/bounce-puzzles'
 import { HChest } from './hints/chest'
@@ -17,53 +16,13 @@ import { HMultiHitSwitch, HOneTimeSwitch, HSwitch } from './hints/switches'
 import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
 import { isVecInRectArr } from 'cc-map-util/src/rect'
-import { interrupt, speakI, speakIC } from '../tts/gather/api'
-import { isQuickMenuManualVisible } from '../manuals/quick-menu-all'
+import { interrupt, speakIC } from '../tts/gather/api'
 import type { PuzzleSelection } from 'cc-blitzkrieg/types/puzzle-selection'
 import type { Selection } from 'cc-blitzkrieg/types/selection'
 import { BattleSelection } from 'cc-blitzkrieg/types/battle-selection'
 
 declare global {
-    namespace ig {
-        interface Entity {
-            isPlayerStandingOnMe?: boolean
-        }
-    }
     namespace sc {
-        namespace QUICK_MENU_TYPES {
-            interface Hints extends sc.QuickMenuTypesBase {
-                nameGui: sc.HintsMenu
-            }
-            interface HintsConstructor extends ImpactClass<Hints> {
-                new (type: string, settings: sc.QuickMenuTypesBaseSettings, screen: sc.QuickFocusScreen): Hints
-            }
-            var Hints: HintsConstructor
-        }
-
-        interface BasicHintMenu extends ig.BoxGui {
-            getText: () => [string, string, string | null]
-            ninepatch: ig.NinePatch
-            title: sc.TextGui
-            description: sc.TextGui
-            description2: string | null
-
-            setPosition(this: this, hook: ig.GuiHook, e: ig.Entity): void
-            getCenter(this: this, a: ig.GuiHook): number
-            updateData(this: this): number
-        }
-        interface BasicHintMenuConstructor extends ImpactClass<BasicHintMenu> {
-            new (getText: () => ReturnType<BasicHintMenu['getText']>): BasicHintMenu
-        }
-        var BasicHintMenu: BasicHintMenuConstructor
-
-        interface HintsMenu extends sc.BasicHintMenu {
-            hintClass?: Hint
-        }
-        interface HintsMenuConstructor extends ImpactClass<HintsMenu> {
-            new (settings: sc.QuickMenuTypesBaseSettings): HintsMenu
-        }
-        var HintsMenu: HintsMenuConstructor
-
         interface QuickMenuTypesBaseSettings {
             hintName?: RegisteredHintTypes
             hintType?: (typeof HintSubTypes)[number]
@@ -80,8 +39,8 @@ declare global {
     }
 }
 
-export const HintTypes = ['All', 'Enemy', 'NPC', 'Interactable', 'Selected'] as const
-export const HintSubTypes = ['Puzzle', 'Plants', 'Chests', 'Climbable', 'Analyzable'] as const
+const HintTypes = ['All', 'Enemy', 'NPC', 'Interactable', 'Selected'] as const
+const HintSubTypes = ['Puzzle', 'Plants', 'Chests', 'Climbable', 'Analyzable'] as const
 
 export interface HintData {
     name: string
@@ -98,12 +57,33 @@ export interface Hint extends HintBase {
     entryName: RegisteredHintTypes
 }
 
-export type ReqHintEntry = { entity: ig.Entity; nameGui: { description: sc.TextGui; title: sc.TextGui; description2: string | null } }
-
 export type HintUnion = sc.QUICK_MENU_TYPES.Hints | sc.QUICK_MENU_TYPES.NPC | (Omit<sc.QUICK_MENU_TYPES.Enemy, 'entity'> & { entity: ig.Entity })
 
 type GetReturns<T> = T extends new (...args: unknown[]) => infer E ? E : never
-export type RegisteredHintTypes = GetReturns<HintSystem['puzzleTypes'][number]>['entryName']
+type RegisteredHintTypes = GetReturns<(typeof puzzleTypes)[number]>['entryName']
+
+const puzzleTypes = [
+    HBounceBlock,
+    HBounceSwitch,
+    HSwitch,
+    HOneTimeSwitch,
+    HMultiHitSwitch,
+    HDoor,
+    HTeleportField,
+    HTeleportGround,
+    HElevator,
+    HWalls,
+    HDestructible,
+    HEnemy,
+    HEnemyCounter,
+    HOLPlatform,
+    HChest,
+    HClimbableTerrain,
+    HProp,
+    HAnalyzable,
+    HDynamicPlatform,
+    HBallChanger,
+] as const satisfies (new () => HintBase)[]
 
 export class HintSystem {
     static g: HintSystem
@@ -119,29 +99,7 @@ export class HintSystem {
 
     static customColors: { [key in (typeof HintSubTypes)[number]]?: sc.ANALYSIS_COLORS } = {}
 
-    registeredTypes: Record<string, Hint>
-    puzzleTypes = [
-        HBounceBlock,
-        HBounceSwitch,
-        HSwitch,
-        HOneTimeSwitch,
-        HMultiHitSwitch,
-        HDoor,
-        HTeleportField,
-        HTeleportGround,
-        HElevator,
-        HWalls,
-        HDestructible,
-        HEnemy,
-        HEnemyCounter,
-        HOLPlatform,
-        HChest,
-        HClimbableTerrain,
-        HProp,
-        HAnalyzable,
-        HDynamicPlatform,
-        HBallChanger,
-    ] as const satisfies (new () => HintBase)[]
+    registeredTypes!: Record<string, Hint>
     filterType: (typeof HintTypes)[number] | 'Hints' = 'All'
     filterHintType: (typeof HintSubTypes)[number] | undefined
     filterList: string[]
@@ -164,7 +122,7 @@ export class HintSystem {
         return `hint_${e.uuid}`
     }
 
-    private getHintFromEntity(e: ig.Entity): HintUnion {
+    getHintFromEntity(e: ig.Entity): HintUnion {
         let hint = this.quickMenuAnalysisInstance.entities.find(h => h.entity.uuid == e.uuid)
         if (!hint) {
             this.quickMenuAnalysisInstance.populateHintList()
@@ -233,37 +191,7 @@ export class HintSystem {
         handle.dontPauseInQuickAnalysis = this.selectedHE.includes(e)
     }
 
-    private selectNextHint(add: number) {
-        const pPos: Vec3 = ig.game.playerEntity.getAlignedPos(ig.ENTITY_ALIGN.CENTER)
-        const sorted: HintUnion[] = (this.sorted = this.quickMenuAnalysisInstance.entities
-            .filter(e => e)
-            .sort(
-                (a, b) =>
-                    /* prettier-ignore */
-                    Vec2.distance(a.entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER), pPos) -
-                    Vec2.distance(b.entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER), pPos)
-            ) as HintUnion[])
-
-        this.currentSelectIndex += add
-        if (this.currentSelectIndex == sorted.length) {
-            this.currentSelectIndex = 0
-        } else if (this.currentSelectIndex < 0) {
-            this.currentSelectIndex = sorted.length - 1
-        }
-        const entry: HintUnion = sorted[this.currentSelectIndex]
-
-        if (entry) {
-            this.focusMode = true
-            sc.quickmodel.cursorMoved = true
-            sc.quickmodel.cursor = Vec2.createC(entry.hook.pos.x + entry.hook.size.x / 2, entry.hook.pos.y + entry.hook.size.y / 2)
-            this.quickMenuAnalysisInstance.cursor.moveTo(sc.quickmodel.cursor.x, sc.quickmodel.cursor.y, true)
-
-            this.prevEntry && this.prevEntry.focusLost()
-            this.prevEntry = entry
-        }
-    }
-
-    private updateFilter() {
+    updateFilter() {
         if (this.filterIndex < 0) {
             this.filterIndex = this.filterList.length - 1
         } else if (this.filterIndex >= this.filterList.length) {
@@ -287,41 +215,6 @@ export class HintSystem {
         }
     }
 
-    private checkHintTogglePressed() {
-        if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE2 /* x */) && !isQuickMenuManualVisible()) {
-            if (this.focusedHE) {
-                const foundHEI = this.selectedHE.findIndex(e => e.uuid == this.focusedHE!.uuid)
-                if (foundHEI != -1) {
-                    this.selectedHE.splice(foundHEI, 1)
-                    speakIC(Lang.hints.unselected)
-                } else {
-                    this.activateHint(this.focusedHE, false)
-                }
-            }
-        }
-    }
-
-    private groundEntrySet(e: ig.Entity) {
-        if (Opts.tts) {
-            const hint = this.getHintFromEntity(e)
-            if (hint && hint instanceof sc.QUICK_MENU_TYPES.Hints && !hint.nameGui.hintClass?.disableWalkedOn) {
-                const title = Lang.hints.walkedOntoTemplate.supplant({
-                    rest: hint.nameGui.getText()[0],
-                })
-                speakI(title)
-            }
-        }
-        e.isPlayerStandingOnMe = true
-    }
-    private groundEntryUnset(e: ig.Entity) {
-        e.isPlayerStandingOnMe = false
-        if (!Opts.tts) return
-        const hint = this.getHintFromEntity(e)
-        if (hint && hint instanceof sc.QUICK_MENU_TYPES.Hints && !hint.nameGui.hintClass?.disableWalkedOn) {
-            speakI(Lang.hints.walkedOff)
-        }
-    }
-
     private getCurrentSelectionToFilterIn(): Selection | undefined {
         const psel: PuzzleSelection = blitzkrieg.sels.puzzle.inSelStack.peek()
         if (psel) {
@@ -338,6 +231,14 @@ export class HintSystem {
         }
     }
 
+    private registerHintTypes() {
+        this.registeredTypes = {}
+        for (const type of puzzleTypes) {
+            const inst: Hint = new type()
+            this.registeredTypes[inst.entryName] = inst
+        }
+    }
+
     constructor() {
         /* runs in prestart */
         CrossedEyes.initPoststart.push(() => this.initPoststart())
@@ -346,151 +247,11 @@ export class HintSystem {
         this.filterList.slice(this.filterList.indexOf('Hints'))
         this.updateFilter()
 
-        this.registeredTypes = {}
-        for (const type of this.puzzleTypes) {
-            const inst: Hint = new type()
-            this.registeredTypes[inst.entryName] = inst
-        }
+        this.registerHintTypes()
 
         SoundManager.continiousCleanupFilters.push('hint')
 
         const self = this
-        sc.QuickMenuTypesBase.inject({
-            isMouseOver() {
-                if (
-                    Opts.hints &&
-                    sc.quickmodel.isQuickCheck() &&
-                    !ig.interact.isBlocked() &&
-                    this.focusable &&
-                    sc.quickmodel.isDeviceSynced() &&
-                    ig.input.currentDevice == ig.INPUT_DEVICES.GAMEPAD &&
-                    !sc.quickmodel.cursorMoved &&
-                    self.focusMode &&
-                    self.sorted.indexOf(this) != self.currentSelectIndex
-                ) {
-                    return false
-                }
-                return this.parent()
-            },
-        })
-
-        sc.QUICK_MENU_TYPES.Hints = sc.QuickMenuTypesBase.extend({
-            init(type: string, settings: sc.QuickMenuTypesBaseSettings, screen: sc.QuickFocusScreen) {
-                this.parent(type, settings, screen)
-                this.setIconColor(HintSystem.customColors[settings.hintType!] ?? sc.ANALYSIS_COLORS.ORANGE)
-                // this.showType = sc.SHOW_TYPE.DEFAULT
-                this.showType = sc.SHOW_TYPE.INSTANT
-
-                this.nameGui = new sc.HintsMenu(settings)
-                this.nameGui.setPivot(this.nameGui.hook.size.x / 2, 0)
-                this.nameGui.hook.transitions = {
-                    DEFAULT: { state: {}, time: 0.1, timeFunction: KEY_SPLINES.EASE },
-                    HIDDEN: { state: { alpha: 0, scaleX: 0.3, offsetY: 8 }, time: 0.2, timeFunction: KEY_SPLINES.LINEAR },
-                }
-                this.nameGui.doStateTransition('HIDDEN', true)
-                this.screen.addSubGui(this.nameGui)
-            },
-            onAnalysisEnter() {
-                this.nameGui.setPosition(this.hook, this.entity)
-                this.parent()
-            },
-            onAnalysisExit() {
-                this.parent()
-                this.nameGui.doStateTransition('HIDDEN')
-            },
-            focusGained() {
-                this.parent()
-                this.nameGui.doStateTransition('DEFAULT')
-                self.activateHint(this.entity)
-            },
-            focusLost() {
-                this.parent()
-                this.nameGui.doStateTransition('HIDDEN')
-                self.deactivateHint(this.entity)
-            },
-            alignGuiPosition() {
-                this.parent()
-                this.nameGui.setPosition(this.hook, this.entity)
-            },
-        })
-
-        sc.BasicHintMenu = ig.BoxGui.extend({
-            ninepatch: new ig.NinePatch('media/gui/menu.png', {
-                width: 8,
-                height: 8,
-                left: 8,
-                top: 8,
-                right: 8,
-                bottom: 8,
-                offsets: { default: { x: 432, y: 304 }, flipped: { x: 456, y: 304 } },
-            }),
-            transitions: {
-                HIDDEN: { state: { alpha: 0 }, time: 0.2, timeFunction: KEY_SPLINES.LINEAR },
-                DEFAULT: { state: {}, time: 0.2, timeFunction: KEY_SPLINES.EASE },
-            },
-            init(getText: (prependConditionalText?: boolean) => [string, string, string | null]) {
-                this.getText = getText
-                const width = this.updateData()
-                this.parent(width, 17 + this.description.textBlock.size.y)
-                this.addChildGui(this.title)
-                this.addChildGui(this.description)
-                this.doStateTransition('HIDDEN', true)
-            },
-            updateData(): number {
-                const [title, desc1, desc2] = this.getText()
-                this.title = new sc.TextGui(title, { font: sc.fontsystem.smallFont })
-                this.title.setAlign(ig.GUI_ALIGN.X_CENTER, ig.GUI_ALIGN.Y_TOP)
-                this.title.setPos(0, 2)
-                const width = Math.max(127, 20 + this.title.textBlock.size.x)
-                this.description = new sc.TextGui(desc1, { font: sc.fontsystem.tinyFont, maxWidth: width - 7 })
-                this.description.setPos(5, 15)
-
-                this.description2 = desc2
-                return width
-            },
-            setPosition(hook: ig.GuiHook, e: ig.Entity) {
-                if (hook.screenCoords) {
-                    const pos: Vec2 = Vec2.createC(0, 0)
-                    pos.x = hook.screenCoords.x + hook.size.x / 2 - this.hook.size.x / 2
-                    pos.y = hook.screenCoords.y - (e.coll.size.y + 14)
-                    if (pos.x < 0) {
-                        pos.x = pos.x * -1
-                        pos.x = pos.x + 1
-                    } else if (pos.x + this.hook.size.x > ig.system.width) {
-                        pos.x = ig.system.width - (pos.x + this.hook.size.x + 1)
-                    } else {
-                        pos.x = 0
-                    }
-                    if (pos.y < 0) {
-                        pos.y = e.coll.size.y + 6
-                    } else {
-                        pos.y = -(e.coll.size.y + 14)
-                    }
-                    pos.y += 55
-                    this.setPos(this.getCenter(hook) + pos.x, hook.pos.y + pos.y)
-                }
-            },
-            getCenter(a: ig.GuiHook) {
-                return a.pos.x + a.size.x / 2 - this.hook!.size.x / 2
-            },
-        })
-        sc.HintsMenu = sc.BasicHintMenu.extend({
-            init(settings: sc.QuickMenuTypesBaseSettings) {
-                this.parent(() => {
-                    this.hintClass = self.registeredTypes[settings.hintName!]
-                    let data: HintData = this.hintClass.getDataFromEntity(settings.entity, settings)
-                    if (!this.hintClass.disableWalkedOn && settings.entity.isPlayerStandingOnMe) {
-                        data = {
-                            name: Lang.hints.onItTopTemplate.supplant({
-                                rest: data.name,
-                            }),
-                            description: data.description,
-                        }
-                    }
-                    return [data.name, data.description, null]
-                })
-            },
-        })
 
         let justEnteredQuickMenu = false
         sc.GameModel.inject({
@@ -544,53 +305,7 @@ export class HintSystem {
             },
         })
 
-        let prevGroundEntity: ig.Entity | false = false
-        ig.ENTITY.Player.inject({
-            update() {
-                this.parent()
-                if (!Opts.hints) return
-                if (AimAnalyzer.g.aimAnalyzeOn && isAiming()) {
-                    self.checkHintTogglePressed()
-                }
-                const groundEntry = ig.game.playerEntity.coll?._collData?.groundEntry
-                if (!groundEntry) {
-                    if (prevGroundEntity) {
-                        self.groundEntryUnset(prevGroundEntity)
-                        prevGroundEntity = false
-                    }
-                } else if (groundEntry.entity !== prevGroundEntity) {
-                    if (prevGroundEntity) self.groundEntryUnset(prevGroundEntity)
-                    self.groundEntrySet(groundEntry.entity)
-                    prevGroundEntity = groundEntry.entity
-                }
-            },
-        })
-
         sc.QuickMenuAnalysis.inject({
-            update(...args) {
-                if (sc.quickmodel.isQuickCheck() && Opts.hints && !isQuickMenuManualVisible()) {
-                    let add = ig.gamepad.isButtonPressed(ig.BUTTONS.LEFT_SHOULDER) ? -1 : ig.gamepad.isButtonPressed(ig.BUTTONS.RIGHT_SHOULDER) ? 1 : 0
-                    if (add != 0) {
-                        self.selectNextHint(add)
-                    }
-
-                    let filterAdd = ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_LEFT) ? -1 : ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_RIGHT) ? 1 : 0
-                    if (filterAdd) {
-                        self.filterIndex += filterAdd
-                        self.updateFilter()
-                        speakIC(`${self.filterList[self.filterIndex]}`)
-                    } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_UP)) {
-                        speakIC(`${Lang.hints.hintFilter}: ${self.filterList[self.filterIndex]}`)
-                    } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.DPAD_DOWN)) {
-                        self.filterInSelection = !self.filterInSelection
-                        speakIC(self.filterInSelection ? Lang.hints.selectionFilterOn : Lang.hints.selectionFilterOff)
-                        self.updateFilter()
-                    }
-
-                    self.checkHintTogglePressed()
-                }
-                return this.parent(...args)
-            },
             createHint(entity, filter = true) {
                 if (entity && entity.getQuickMenuSettings) {
                     if (filter && self.filterType == 'Selected' && self.selectedHE.findIndex(e => e.uuid == entity.uuid) == -1) return
@@ -659,14 +374,22 @@ export class HintSystem {
             },
         })
 
+        import('./hint-gui')
+        import('./ground-hint')
+        import('./input/next-hint')
+        import('./input/selected')
+        import('./input/filter')
+
         import('../misc/quick-menu-enabler')
-        import('./npc-override')
-        import('./enemy-override')
+        import('./override/npc')
+        import('./override/enemy')
     }
 
     initPoststart() {
         const selEvent = () => this.filterInSelection && this.quickMenuAnalysisInstance.populateHintList()
         blitzkrieg.sels.puzzle.walkInListeners.push(selEvent)
         blitzkrieg.sels.puzzle.walkOutListeners.push(selEvent)
+        blitzkrieg.sels.battle.walkInListeners.push(selEvent)
+        blitzkrieg.sels.battle.walkOutListeners.push(selEvent)
     }
 }

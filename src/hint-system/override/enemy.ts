@@ -1,7 +1,7 @@
-import { Lang } from '../lang-manager'
-import { Opts } from '../plugin'
-import { HintSystem } from './hint-system'
-import { HEnemy } from './hints/enemy'
+import { Lang } from '../../lang-manager'
+import { Opts } from '../../plugin'
+import { HintSystem } from '../hint-system'
+import { HEnemy } from '../hints/enemy'
 
 declare global {
     namespace sc {
