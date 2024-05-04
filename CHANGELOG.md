@@ -4,11 +4,15 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added an aim bounce help entry to the analysis menu
+
 ### Fixed
 
-- Fix options of some mods (dmitmel tweak pack) not being announced
-- Fix aim bounce turning on when entering the analysis menu
-- Fix entity beeping sounds persisting even after their death
+- Fixed options of some mods (dmitmel tweak pack) not being announced
+- Fixed aim bounce turning on when entering the analysis menu
+- Fixed entity beeping sounds persisting even after their death
 
 ## [0.6.0] 2024-04-20
 

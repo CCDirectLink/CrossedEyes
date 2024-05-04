@@ -289,6 +289,14 @@
                     "content": ["To select and deselect a hint, press \\i[gamepad-x].\n Selected hints stay focused even after the quick menu is closed.\n "]
                 },
                 {
+                    "title": "Quick menu analysis: Aim analysis",
+                    "content": ["To toggle aim analysis, press \\i[gamepad-y].\n When it's activated, hints that you directly aim at will be focused. \n The hint will be unfocused when you aim away."]
+                },
+                {
+                    "title": "Quick menu analysis: Aim bounce",
+                    "content": ["To toggle aim bounce, press \\i[gamepad-a].\n Aim bounce only does something when charge mode is enabled and aim analysis is active. \n This mode simulates the ball bouncing off walls and puzzle elements. \n It says what the ball bounced off, and it focuses the last hint the ball hit."]
+                },
+                {
                     "title": "Quick menu analysis: Hint filtering",
                     "content": [
                         "You can filter hints by categories.\n Use \\i[gamepad-left] and \\i[gamepad-right] to change the current category filter.\n Press \\i[gamepad-up] to announce the current category filter.\n "
