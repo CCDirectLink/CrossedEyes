@@ -67,17 +67,12 @@ export class AimAnalyzer implements PauseListener {
             },
         })
 
-        sc.RingMenuButton.inject({
-            invokeButtonPress() {
-                this.parent()
-                /* deactivate the X button after entering a quick menu mode to fix aim bounce toggling on enter */
-                for (const states of ig.gamepad.activeGamepads) {
-                    states.pressedStates[ig.BUTTONS.FACE0] = false
-                }
-            },
-        })
-
+        let quickMenuAnalysisEnterTime: number = 0
         sc.QuickMenuAnalysis.inject({
+            enter() {
+                this.parent()
+                quickMenuAnalysisEnterTime = Date.now()
+            },
             update() {
                 this.parent()
                 if (Opts.hints && sc.quickmodel.activeState && !isQuickMenuManualVisible()) {
@@ -85,7 +80,7 @@ export class AimAnalyzer implements PauseListener {
                         if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
                             self.aimAnalyzeOn = !self.aimAnalyzeOn
                             speakIC(self.aimAnalyzeOn ? Lang.hints.aimAnalysisOn : Lang.hints.aimAnalysisOff)
-                        } else if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE0 /* a */)) {
+                        } else if (quickMenuAnalysisEnterTime + 200 < Date.now() && ig.gamepad.isButtonPressed(ig.BUTTONS.FACE0 /* a */)) {
                             self.aimBounceOn = !self.aimBounceOn
                             speakIC(self.aimBounceOn ? Lang.hints.aimBounceOn : Lang.hints.aimBounceOff)
                         }

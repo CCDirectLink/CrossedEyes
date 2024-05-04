@@ -31,7 +31,7 @@ devDependencies:
     version: github.com/krypciak/cc-vim/65b139d5133816a838fda3ad558eb248ebd93fb9
   ccmodmanager:
     specifier: github:CCDirectLink/CCModManager
-    version: github.com/CCDirectLink/CCModManager/4b8d9e7b2c9c057c88882369f33418c5d788db1a
+    version: github.com/CCDirectLink/CCModManager/e2d3df0a2e330fae81a77e04448ea46a28a90c0c
   crosscode-demonizer:
     specifier: github:krypciak/crosscode-demonizer
     version: github.com/krypciak/crosscode-demonizer/cdad0efd133ae13ab12bbcd382081f71cde7d7e8
@@ -55,7 +55,7 @@ devDependencies:
     version: 5.4.2
   ultimate-crosscode-typedefs:
     specifier: github:krypciak/ultimate-crosscode-typedefs
-    version: github.com/krypciak/ultimate-crosscode-typedefs/08facde29474cd886afd29e3338278a9c6baf24b
+    version: github.com/krypciak/ultimate-crosscode-typedefs/0ce6a4c9ca779d663c401a732b14f287bcbeb85c
   ws:
     specifier: ^8.16.0
     version: 8.16.0
@@ -1287,10 +1287,10 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/CCDirectLink/CCModManager/4b8d9e7b2c9c057c88882369f33418c5d788db1a:
-    resolution: {tarball: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/4b8d9e7b2c9c057c88882369f33418c5d788db1a}
+  github.com/CCDirectLink/CCModManager/e2d3df0a2e330fae81a77e04448ea46a28a90c0c:
+    resolution: {tarball: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/e2d3df0a2e330fae81a77e04448ea46a28a90c0c}
     name: ccmodmanager
-    version: 0.9.5
+    version: 0.9.10
     dev: true
 
   github.com/krypciak/cc-blitzkrieg/ea3141402192315b726a9de24691f148be7134bd:
@@ -1323,12 +1323,11 @@ packages:
     version: 1.2.4
     dev: true
 
-  github.com/krypciak/ultimate-crosscode-typedefs/08facde29474cd886afd29e3338278a9c6baf24b:
-    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/08facde29474cd886afd29e3338278a9c6baf24b}
+  github.com/krypciak/ultimate-crosscode-typedefs/0ce6a4c9ca779d663c401a732b14f287bcbeb85c:
+    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/0ce6a4c9ca779d663c401a732b14f287bcbeb85c}
     name: ultimate-crosscode-typedefs
     version: 0.0.1
     engines: {node: '>=10.0.0'}
-    prepare: true
     requiresBuild: true
     dependencies:
       '@types/jquery': 1.10.45
