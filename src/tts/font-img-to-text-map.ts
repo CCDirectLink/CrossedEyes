@@ -65,6 +65,8 @@ export class FontToImgMap {
             'arrow-left': '',
             'page-left': '!left',
             'page-right': '!right',
+            'ccmodmanager-testing-on': '',
+            'ccmodmanager-testing-off': '',
         }
     }
 }

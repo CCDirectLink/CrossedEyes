@@ -25,6 +25,9 @@ sc.ModListEntry.inject({
         if (lm) str += `${lm.active ? Lang.menu.modMenu.enabled : Lang.menu.modMenu.disabled}, `
         if (m.awaitingRestart) str += `${Lang.menu.modMenu.awaitingRestart}, `
         if (lm?.hasUpdate) str += `${Lang.menu.modMenu.hasUpdateAvailible}, `
+        const iconText = this.nameIconPrefixesText.text?.toString()
+        if (iconText?.includes('testing-on')) str += `${Lang.menu.modMenu.testingOn}, `
+        else if (iconText?.includes('testing-off')) str += `${Lang.menu.modMenu.testingOff}, `
 
         speakI(str)
 

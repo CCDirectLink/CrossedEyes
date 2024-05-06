@@ -7,6 +7,7 @@
 ### Added
 
 - Added an aim bounce help entry to the analysis menu
+- Added announcing of CCModManager mod testing status
 
 ### Fixed
 

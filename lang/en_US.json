@@ -347,7 +347,9 @@
             "stars": "Stars",
             "tags": "Tags",
             "author": "Author",
-            "authors": "Authors"
+            "authors": "Authors",
+            "testingOn": "Testing enabled",
+            "testingOff": "Testing disabled"
         },
         "nextPage": "Has next page...",
         "noMorePages": "No more pages."
