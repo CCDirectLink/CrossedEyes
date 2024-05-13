@@ -29,18 +29,11 @@ Just pick your platform of choice and make sure the zip has `crossedeyes` at the
 
 ## Updating
 
-The mod should update automaticly, no need to reinstall anything.
+The mod should update automatically, no need to reinstall anything.
 
 ## Showcases
 
 - [v0.4.0 on YouTube](https://www.youtube.com/watch?v=ham2pcznMnM)  
-
-## Dependencies
-
-If you're installing from the bundle, the dependencies are already included.  
-
-- [cc-blitzkrieg](https://github.com/krypciak/cc-blitzkrieg) **_[Quick download](https://github.com/krypciak/cc-blitzkrieg/releases/latest)_**  
-- [input-api](https://github.com/CCDirectLink/input-api) **_[Quick download](https://github.com/CCDirectLink/input-api/releases/latest)_**  
 
 # For developers
 
