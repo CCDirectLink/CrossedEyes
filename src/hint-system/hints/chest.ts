@@ -9,7 +9,7 @@ export class HChest implements HintBase {
         /* run in prestart */
         HintSystem.customColors['Chests'] = sc.ANALYSIS_COLORS.GREEN
         const self = this
-        ig.ENTITY.Chest.inject({
+        ig.ENTITY.Chest?.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
                 return { type: 'Hints', hintName: self.entryName, hintType: 'Chests', disabled: !(Opts.hints && !this.isOpen) }
             },

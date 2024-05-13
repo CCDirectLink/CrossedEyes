@@ -170,9 +170,11 @@ export class TextGather {
         await import('./quick-menu')
         await import('./save-menu')
         await import('./tutorial-popup')
+        await import('./checkbox')
+
+        if (ig.isdemo) return
         await import('./mod-manager')
         await import('./equipment-menu')
-        await import('./checkbox')
         await import('./inventory')
     }
 }

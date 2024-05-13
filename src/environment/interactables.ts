@@ -33,7 +33,7 @@ export class InteractableHandler {
         /* in prestart */
         SoundManager.continiousCleanupFilters.push('interact')
         const self = this
-        ig.ENTITY.Chest.inject({
+        ig.ENTITY.Chest?.inject({
             openUp() {
                 this.parent()
                 SoundManager.stopCondinious(self.getId(this))
@@ -47,10 +47,10 @@ export class InteractableHandler {
             setState(state) {
                 this.parent(state)
                 if (this.entity instanceof ig.ENTITY.NPC && (this.entity.xenoDialog || this.entity.xenoDialogGui)) return
-                if (this.entity instanceof ig.ENTITY.Chest && this.entity.isOpen) return
+                if (ig.ENTITY.Chest && this.entity instanceof ig.ENTITY.Chest && this.entity.isOpen) return
 
                 /* this should be in init but if I do it in init then this.entity.propName is still uninitialized */
-                if (this.entity instanceof ig.ENTITY.Prop && HProp.getInteractLang(this.entity)) {
+                if (ig.ENTITY.Prop && this.entity instanceof ig.ENTITY.Prop && HProp.getInteractLang(this.entity)) {
                     const config = SoundManager.continious[self.getId(this.entity)]
                     if (config) {
                         if (!('paths' in config)) throw new Error('invalid pickContiniousSettingsPath settings: paths not included')

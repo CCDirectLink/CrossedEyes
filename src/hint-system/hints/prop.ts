@@ -33,7 +33,7 @@ export class HProp implements HintBase {
         /* run in prestart */
         const self = this
 
-        sc.PropInteract.inject({
+        sc.PropInteract?.inject({
             init(prop, settings) {
                 this.parent(prop, settings)
                 this.iconType = settings.icon ?? 'INFO'

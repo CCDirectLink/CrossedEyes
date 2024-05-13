@@ -18,7 +18,7 @@ export class HOLPlatform implements HintBase {
     constructor() {
         /* run in prestart */
         const self = this
-        ig.ENTITY.OLPlatform.inject({
+        ig.ENTITY.OLPlatform?.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
                 return {
                     type: 'Hints',
@@ -41,7 +41,7 @@ export class HDynamicPlatform implements HintBase {
     constructor() {
         /* run in prestart */
         const self = this
-        ig.ENTITY.DynamicPlatform.inject({
+        ig.ENTITY.DynamicPlatform?.inject({
             getQuickMenuSettings(): Omit<sc.QuickMenuTypesBaseSettings, 'entity'> {
                 return {
                     type: 'Hints',
@@ -73,7 +73,7 @@ export class HBallChanger implements HintBase {
     constructor() {
         /* run in prestart */
         const self = this
-        ig.ENTITY.BallChanger.inject({
+        ig.ENTITY.BallChanger?.inject({
             init(x, y, z, settings) {
                 this.parent(x, y, z, settings)
                 this.settings = settings

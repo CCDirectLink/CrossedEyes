@@ -83,6 +83,6 @@ export default class CrossedEyes implements PluginClass {
         CrossedEyes.initPoststart.forEach(p => p())
         await import('./misc/log-keybinding')
 
-        if (localStorage.getItem('crossedeyesDev') == 'true') TestMap.start()
+        if (!ig.isdemo && localStorage.getItem('crossedeyesDev') == 'true') TestMap.start()
     }
 }
