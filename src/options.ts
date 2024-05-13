@@ -9,41 +9,6 @@ import { updateQuickRingMenuLayoutLock } from './misc/quick-menu-layout-enforce'
 export function getOptions() {
     return {
         [sc.OPTION_CATEGORY.ASSISTS]: {
-            crossedeyes: {
-                lockDiorbitalMenu: {
-                    type: 'CHECKBOX',
-                    init: true,
-                    changeEvent: () => {
-                        updateQuickRingMenuLayoutLock()
-                    },
-                    saveToLocalStorage: true,
-                },
-                spacialAudio: {
-                    type: 'CHECKBOX',
-                    init: true,
-                },
-                loudWalls: {
-                    type: 'CHECKBOX',
-                    init: true,
-                },
-                loudEntities: {
-                    type: 'CHECKBOX',
-                    init: true,
-                },
-                hints: {
-                    type: 'CHECKBOX',
-                    init: true,
-                },
-                textBeeping: {
-                    type: 'CHECKBOX',
-                    init: true,
-                },
-                hudVisible: {
-                    type: 'CHECKBOX',
-                    init: true,
-                    saveToLocalStorage: true,
-                },
-            },
             battle: {
                 enemyVulnerableMulti: {
                     type: 'OBJECT_SLIDER',
@@ -194,6 +159,41 @@ export function getOptions() {
                     step: 0.1,
                     fill: true,
                     showPercentage: true,
+                },
+            },
+            functionality: {
+                textBeeping: {
+                    type: 'CHECKBOX',
+                    init: true,
+                },
+                spacialAudio: {
+                    type: 'CHECKBOX',
+                    init: true,
+                },
+                loudWalls: {
+                    type: 'CHECKBOX',
+                    init: true,
+                },
+                loudEntities: {
+                    type: 'CHECKBOX',
+                    init: true,
+                },
+                hints: {
+                    type: 'CHECKBOX',
+                    init: true,
+                },
+                hudVisible: {
+                    type: 'CHECKBOX',
+                    init: true,
+                    saveToLocalStorage: true,
+                },
+                lockDiorbitalMenu: {
+                    type: 'CHECKBOX',
+                    init: true,
+                    changeEvent: () => {
+                        updateQuickRingMenuLayoutLock()
+                    },
+                    saveToLocalStorage: true,
                 },
             },
         },

@@ -9,6 +9,10 @@
 - Added an aim bounce help entry to the analysis menu
 - Added announcing of CCModManager mod testing status
 
+### Changed
+
+- Renamed the "CrossedEyes" options category to "Functionality" and moved it to the bottom of the list
+
 ### Fixed
 
 - Fixed options of some mods (dmitmel tweak pack) not being announced
