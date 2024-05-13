@@ -275,6 +275,7 @@ export class HintSystem {
                 if (!Opts.hints || (CrossedEyes.isPaused && !sc.quickmodel.visible)) return
                 let i = 0
                 for (const e of [self.focusedHE, ...self.selectedHE]) {
+                    i++
                     if (!e) continue
                     const id = self.getContId(e)
                     SoundManager.handleContiniousEntry(id, e.getAlignedPos(ig.ENTITY_ALIGN.CENTER), 1, 0, SoundManager.getAngleVecToPlayer(e))
@@ -284,7 +285,6 @@ export class HintSystem {
                         if (i > 0) self.selectedHE.erase(e)
                         self.deactivateHint(e)
                     }
-                    i++
                 }
             },
             preloadLevel(mapName) {

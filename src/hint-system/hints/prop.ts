@@ -48,7 +48,7 @@ export class HProp implements HintBase {
                     type: 'Hints',
                     hintName: self.entryName,
                     hintType: 'Chests',
-                    disabled: !(Opts.hints && (self.props[this.propName] || HProp.getInteractLang(this))),
+                    disabled: this._hidden || !(Opts.hints && (self.props[this.propName] || HProp.getInteractLang(this))),
                 }
             },
         })
