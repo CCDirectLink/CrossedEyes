@@ -23,6 +23,7 @@ sc.VoiceActing.inject({
         if (Opts.ttsChar) {
             let character: string = ig.LangLabel.getText(exp.character.data.name)
             if (character == '???') character = Lang.msg.unknownCharacter
+            else if (character == 'MISSING LABEL') character = Lang.msg.unnamedNpc
 
             const sentence: string = label.toString()
             let expression: string = ''

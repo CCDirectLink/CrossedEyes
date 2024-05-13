@@ -14,6 +14,7 @@
 - Fixed options of some mods (dmitmel tweak pack) not being announced
 - Fixed aim bounce turning on when entering the analysis menu
 - Fixed entity beeping sounds persisting even after their death
+- Fixed unnamed NPC names being announced as MISSING LABEL
 
 ## [0.6.0] 2024-04-20
 

@@ -1,3 +1,4 @@
+import { Lang } from '../../lang-manager'
 import { HintSystem } from '../hint-system'
 
 declare global {
@@ -21,22 +22,22 @@ sc.NPCHintMenu = sc.BasicHintMenu.extend({
         const npc: ig.ENTITY.NPC = settings.entity as unknown as ig.ENTITY.NPC
         let text: string = ''
         let description: string = ''
-        if (origText.startsWith('\\c[3]Trader')) {
+        if (origText.startsWith(ig.lang.get('sc.gui.trade.trader'))) {
             text = origText
-            description = `Interactable ${origText}`
+            description = Lang.hints.NPC.interactableDescriptionTemplate.supplant({ rest: origText })
         } else if (npc.displayNameRandom) {
-            text = `Random Player NPC named ${origText}`
+            text = Lang.hints.NPC.namedPlayerTemplate.supplant({ name: npc.displayNameRandom })
             description = text
-        } else if (origText == 'Random NPC') {
-            text = 'Random NPC'
-            description = 'Unnamed NPC'
+        } else if (origText == 'CustomLogicUnnamedNPC') {
+            text = Lang.msg.unnamedNpc
+            description = Lang.msg.unnamedNpc
         } else if (npc.character.data.name && ig.LangLabel.getText(npc.character.data.name) != 'MISSING LABEL') {
             const name = ig.LangLabel.getText(npc.character.data.name)
-            text = `NPC ${name}`
-            description = `do to`
+            text = Lang.hints.NPC.namedTemplate.supplant({ name })
+            description = Lang.hints.NPC.namedDescriptionTemplate.supplant({ name })
         } else {
-            text = 'Random NPC'
-            description = 'Unnamed NPC'
+            text = Lang.msg.unnamedNpc
+            description = Lang.msg.unnamedNpc
         }
         this.parent(() => {
             return [text, description, null]
@@ -54,7 +55,7 @@ sc.QUICK_MENU_TYPES.NPC.inject({
         }
         if (!this.focusable) {
             this.focusable = true
-            text = 'Random NPC'
+            text = 'CustomLogicUnnamedNPC'
         }
         this.nameGui = new sc.NPCHintMenu(text, settings)
         this.nameGui.setPivot(this.nameGui.hook.size.x / 2, 0)

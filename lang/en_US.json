@@ -290,11 +290,15 @@
                 },
                 {
                     "title": "Quick menu analysis: Aim analysis",
-                    "content": ["To toggle aim analysis, press \\i[gamepad-y].\n When it's activated, hints that you directly aim at will be focused. \n The hint will be unfocused when you aim away."]
+                    "content": [
+                        "To toggle aim analysis, press \\i[gamepad-y].\n When it's activated, hints that you directly aim at will be focused. \n The hint will be unfocused when you aim away."
+                    ]
                 },
                 {
                     "title": "Quick menu analysis: Aim bounce",
-                    "content": ["To toggle aim bounce, press \\i[gamepad-a].\n Aim bounce only does something when charge mode is enabled and aim analysis is active. \n This mode simulates the ball bouncing off walls and puzzle elements. \n It says what the ball bounced off, and it focuses the last hint the ball hit."]
+                    "content": [
+                        "To toggle aim bounce, press \\i[gamepad-a].\n Aim bounce only does something when charge mode is enabled and aim analysis is active. \n This mode simulates the ball bouncing off walls and puzzle elements. \n It says what the ball bounced off, and it focuses the last hint the ball hit."
+                    ]
                 },
                 {
                     "title": "Quick menu analysis: Hint filtering",
@@ -416,6 +420,13 @@
         "onItTopTemplate": "On it, {rest}",
         "walkedOntoTemplate": "Walked onto: {rest}.",
         "walkedOff": "Walked off.",
+
+        "NPC": {
+            "namedTemplate": "NPC named {name}",
+            "namedDescriptionTemplate": "NPC named {name}",
+            "namedPlayerTemplate": "Player NPC named {name}",
+            "interactableDescriptionTemplate": "Interactable {rest}"
+        },
 
         "Analyzable": { "name": "Analyzable: {name}", "description": "None." },
 
@@ -551,6 +562,7 @@
     },
     "msg": {
         "unknownCharacter": "Unknown",
+        "unnamedNpc": "Unnamed NPC",
         "regularTemplate": "{expression} {character} says: {sentence}",
         "silentTemplate": "{expression} {character} is silent{punctuation}",
         "sideMsgTemplate": "Side: {rest}",
