@@ -8,6 +8,7 @@
 
 - Added an aim bounce help entry to the analysis menu
 - Added announcing of CCModManager mod testing status
+- Added an option that disables the player idle animation (on by default)
 
 ### Changed
 

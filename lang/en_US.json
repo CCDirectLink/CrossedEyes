@@ -7,6 +7,10 @@
         "loudEntities": { "name": "Entity noises", "description": "Makes entities emit noise while nearby." },
         "hints": { "name": "Hint system", "description": "The hint system allows you to see what objects are around you." },
         "textBeeping": { "name": "Text beeping", "description": "Enable text beeping when characters talk." },
+        "disableIdlePose": {
+            "name": "Disable idle pose",
+            "description": "Disabled the animation that rotates the player south east after 10 seconds of inactivity."
+        },
         "hudVisible": { "name": "CrossedEyes button visibility", "description": "Show the CrossedEyes hud button in the pause menu." },
         "enemyVulnerableMulti": { "name": "Enemy vulnerable multiplier", "description": "Extend the length of enemy vulnerability." },
         "tts": { "name": "Enable TTS", "description": "Enable TTS." },

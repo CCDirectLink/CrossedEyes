@@ -19,7 +19,7 @@ importers:
         version: 8.5.10
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.1.1
-        version: 7.1.1(@typescript-eslint/parser@7.1.1)(eslint@8.57.0)(typescript@5.4.2)
+        version: 7.1.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.4.2))(eslint@8.57.0)(typescript@5.4.2)
       '@typescript-eslint/parser':
         specifier: ^7.1.1
         version: 7.1.1(eslint@8.57.0)(typescript@5.4.2)
@@ -58,7 +58,7 @@ importers:
         version: 5.4.2
       ultimate-crosscode-typedefs:
         specifier: github:krypciak/ultimate-crosscode-typedefs
-        version: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/0ce6a4c9ca779d663c401a732b14f287bcbeb85c
+        version: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/8a2cfdccfb7750f1a3578f57a7608ed1f3462519
       ws:
         specifier: ^8.16.0
         version: 8.16.0
@@ -380,22 +380,18 @@ packages:
 
   cc-blitzkrieg@https://codeload.github.com/krypciak/cc-blitzkrieg/tar.gz/ea3141402192315b726a9de24691f148be7134bd:
     resolution: {tarball: https://codeload.github.com/krypciak/cc-blitzkrieg/tar.gz/ea3141402192315b726a9de24691f148be7134bd}
-    name: cc-blitzkrieg
     version: 0.5.4
 
   cc-map-util@https://codeload.github.com/krypciak/cc-map-util/tar.gz/256929a9a8b77021a953c92d048832ee789839f5:
     resolution: {tarball: https://codeload.github.com/krypciak/cc-map-util/tar.gz/256929a9a8b77021a953c92d048832ee789839f5}
-    name: cc-map-util
     version: 1.0.0
 
   cc-vim@https://codeload.github.com/krypciak/cc-vim/tar.gz/65b139d5133816a838fda3ad558eb248ebd93fb9:
     resolution: {tarball: https://codeload.github.com/krypciak/cc-vim/tar.gz/65b139d5133816a838fda3ad558eb248ebd93fb9}
-    name: cc-vim
     version: 1.5.9
 
   ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/e2d3df0a2e330fae81a77e04448ea46a28a90c0c:
     resolution: {tarball: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/e2d3df0a2e330fae81a77e04448ea46a28a90c0c}
-    name: ccmodmanager
     version: 0.9.10
 
   chalk@4.1.2:
@@ -418,7 +414,6 @@ packages:
 
   crosscode-demonizer@https://codeload.github.com/krypciak/crosscode-demonizer/tar.gz/cdad0efd133ae13ab12bbcd382081f71cde7d7e8:
     resolution: {tarball: https://codeload.github.com/krypciak/crosscode-demonizer/tar.gz/cdad0efd133ae13ab12bbcd382081f71cde7d7e8}
-    name: crosscode-demonizer
     version: 1.0.0
 
   debug@4.3.4:
@@ -644,7 +639,6 @@ packages:
 
   nax-ccuilib@https://codeload.github.com/krypciak/nax-ccuilib/tar.gz/a7c59076124ee794cc3813d3e62d127fe57c1c6a:
     resolution: {tarball: https://codeload.github.com/krypciak/nax-ccuilib/tar.gz/a7c59076124ee794cc3813d3e62d127fe57c1c6a}
-    name: nax-ccuilib
     version: 1.2.4
 
   once@1.4.0:
@@ -772,9 +766,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  ultimate-crosscode-typedefs@https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/0ce6a4c9ca779d663c401a732b14f287bcbeb85c:
-    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/0ce6a4c9ca779d663c401a732b14f287bcbeb85c}
-    name: ultimate-crosscode-typedefs
+  ultimate-crosscode-typedefs@https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/8a2cfdccfb7750f1a3578f57a7608ed1f3462519:
+    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/8a2cfdccfb7750f1a3578f57a7608ed1f3462519}
     version: 0.0.1
     engines: {node: '>=10.0.0'}
 
@@ -948,7 +941,7 @@ snapshots:
     dependencies:
       '@types/node': 11.15.54
 
-  '@typescript-eslint/eslint-plugin@7.1.1(@typescript-eslint/parser@7.1.1)(eslint@8.57.0)(typescript@5.4.2)':
+  '@typescript-eslint/eslint-plugin@7.1.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.4.2))(eslint@8.57.0)(typescript@5.4.2)':
     dependencies:
       '@eslint-community/regexpp': 4.10.0
       '@typescript-eslint/parser': 7.1.1(eslint@8.57.0)(typescript@5.4.2)
@@ -963,6 +956,7 @@ snapshots:
       natural-compare: 1.4.0
       semver: 7.6.0
       ts-api-utils: 1.3.0(typescript@5.4.2)
+    optionalDependencies:
       typescript: 5.4.2
     transitivePeerDependencies:
       - supports-color
@@ -975,6 +969,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 7.1.1
       debug: 4.3.4
       eslint: 8.57.0
+    optionalDependencies:
       typescript: 5.4.2
     transitivePeerDependencies:
       - supports-color
@@ -991,6 +986,7 @@ snapshots:
       debug: 4.3.4
       eslint: 8.57.0
       ts-api-utils: 1.3.0(typescript@5.4.2)
+    optionalDependencies:
       typescript: 5.4.2
     transitivePeerDependencies:
       - supports-color
@@ -1007,6 +1003,7 @@ snapshots:
       minimatch: 9.0.3
       semver: 7.6.0
       ts-api-utils: 1.3.0(typescript@5.4.2)
+    optionalDependencies:
       typescript: 5.4.2
     transitivePeerDependencies:
       - supports-color
@@ -1463,7 +1460,7 @@ snapshots:
 
   typescript@5.4.2: {}
 
-  ultimate-crosscode-typedefs@https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/0ce6a4c9ca779d663c401a732b14f287bcbeb85c:
+  ultimate-crosscode-typedefs@https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/8a2cfdccfb7750f1a3578f57a7608ed1f3462519:
     dependencies:
       '@types/jquery': 1.10.45
       '@types/node': 11.15.54

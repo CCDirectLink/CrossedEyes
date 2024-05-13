@@ -1,28 +1,29 @@
 import { Mod1 } from 'cc-blitzkrieg/src/types'
-import { MenuOptionsManager, OptsType } from './options-manager'
-import { LoudWalls } from './environment/loudwalls'
-import { SoundManager } from './sound-manager'
-import { TTS } from './tts/tts'
-import { SpecialAction } from './special-action'
+import { PluginClass } from 'ultimate-crosscode-typedefs/modloader/mod'
 import { EntityBeeper } from './environment/entity-beeper'
+import { InteractableHandler } from './environment/interactables'
+import { LoudJump } from './environment/loudjump'
+import { LoudWalls } from './environment/loudwalls'
 import { AimAnalyzer } from './hint-system/aim-analyze'
 import { HintSystem } from './hint-system/hint-system'
-import { LoudJump } from './environment/loudjump'
-import { InteractableHandler } from './environment/interactables'
-import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
-import { RuntimeResources } from './misc/runtime-assets'
-import { SoundGlossary } from './manuals/hud/sound-glossary'
-import { CrossedEyesHud } from './manuals/hud/crossedeyes-hud'
 import { LangManager } from './lang-manager'
-import { getOptions } from './options'
-import { updateQuickRingMenuLayoutLock } from './misc/quick-menu-layout-enforce'
-import { PauseListener } from './misc/menu-pause'
-import { PluginClass } from 'ultimate-crosscode-typedefs/modloader/mod'
-import { TestMap } from './misc/test-map'
 import { addMenuManuals } from './manuals/all'
+import { CrossedEyesHud } from './manuals/hud/crossedeyes-hud'
+import { SoundGlossary } from './manuals/hud/sound-glossary'
+import { injectIdlePosDisable } from './misc/idle-pose-disable'
+import { PauseListener } from './misc/menu-pause'
+import { updateQuickRingMenuLayoutLock } from './misc/quick-menu-layout-enforce'
+import { RuntimeResources } from './misc/runtime-assets'
+import { TestMap } from './misc/test-map'
+import { getOptions } from './options'
+import { MenuOptionsManager, OptsType } from './options-manager'
+import { SoundManager } from './sound-manager'
+import { SpecialAction } from './special-action'
+import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
+import { TTS } from './tts/tts'
 
-import type * as _ from 'cc-vim'
 import type * as __ from 'cc-blitzkrieg'
+import type * as _ from 'cc-vim'
 import './misc/modify-prototypes'
 
 export let Opts: OptsType<ReturnType<typeof getOptions>>
@@ -73,6 +74,7 @@ export default class CrossedEyes implements PluginClass {
         await import('./misc/menu-pause')
         await import('./misc/title-screen-button')
         await import('./misc/quick-menu-y-level-announcer')
+        injectIdlePosDisable()
         await addMenuManuals()
         updateQuickRingMenuLayoutLock()
     }

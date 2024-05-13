@@ -5,6 +5,7 @@ import { Options } from './options-manager'
 import { Opts } from './plugin'
 import { TTS, TTS_TYPES } from './tts/tts'
 import { updateQuickRingMenuLayoutLock } from './misc/quick-menu-layout-enforce'
+import { updateIdlePose } from './misc/idle-pose-disable'
 
 export function getOptions() {
     return {
@@ -170,6 +171,11 @@ export function getOptions() {
                     type: 'CHECKBOX',
                     init: true,
                 },
+                disableIdlePose: {
+                    type: 'CHECKBOX',
+                    init: true,
+                    changeEvent: () => updateIdlePose(),
+                },
                 loudWalls: {
                     type: 'CHECKBOX',
                     init: true,
@@ -190,9 +196,7 @@ export function getOptions() {
                 lockDiorbitalMenu: {
                     type: 'CHECKBOX',
                     init: true,
-                    changeEvent: () => {
-                        updateQuickRingMenuLayoutLock()
-                    },
+                    changeEvent: () => updateQuickRingMenuLayoutLock(),
                     saveToLocalStorage: true,
                 },
             },
