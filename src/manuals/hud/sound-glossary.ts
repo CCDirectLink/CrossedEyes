@@ -220,6 +220,7 @@ export class SoundGlossary {
             },
             onLeftRightPress() {
                 sc.BUTTON_SOUND.submit.play()
+                menu.stopSound()
                 return { skipSounds: true }
             },
             onContentCreation(index, settings) {
@@ -276,8 +277,6 @@ export class SoundGlossary {
             },
             hideMenu() {
                 this.parent()
-                this.isEntrySelected = false
-                this.currentSelectedButton?.keepButtonPressed(false)
                 this.stopSound()
                 SpecialAction.setListener('LSP', 'soundglossary', () => {})
             },
@@ -308,6 +307,8 @@ export class SoundGlossary {
                 this.isSoundOn = true
             },
             stopSound() {
+                this.isEntrySelected = false
+                this.currentSelectedButton?.keepButtonPressed(false)
                 this.isSoundOn = false
                 const entry = this.currentSelectedButton?.entry
                 if (!entry) return

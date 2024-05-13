@@ -22,6 +22,7 @@
 - Fixed unnamed NPC names being announced as MISSING LABEL
 - Fixed aim analysis hint selection persisting when entering the quick menu
 - Fixed hint selecting persisting after the upgrade field in Rhombus Dungeon was used
+- Fixed sound selection persisting after switching categories in the Sound Glossary
 
 ## [0.6.0] 2024-04-20
 
