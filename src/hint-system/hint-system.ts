@@ -136,10 +136,9 @@ export class HintSystem {
             interrupt()
             SpecialAction.setListener('LSP', 'hintDescription', () => {})
             SpecialAction.setListener('R2', 'hintDescription', () => {})
-
-            if (this.focusedHE == e) {
-                this.focusedHE = undefined
-            }
+        }
+        if (this.focusedHE == e) {
+            this.focusedHE = undefined
         }
     }
 
@@ -303,9 +302,6 @@ export class HintSystem {
                 this.parent()
                 if (sc.quickmodel.cursorMoved) self.focusMode = false
             },
-        })
-
-        sc.QuickMenuAnalysis.inject({
             createHint(entity, filter = true) {
                 if (entity && entity.getQuickMenuSettings) {
                     if (filter && self.filterType == 'Selected' && self.selectedHE.findIndex(e => e.uuid == entity.uuid) == -1) return
@@ -371,6 +367,14 @@ export class HintSystem {
                 this.focusContainer.reset()
                 this.doStateTransition('DEFAULT')
                 self.currentSelectIndex = -1
+            },
+        })
+
+        sc.QuickMenu.inject({
+            _enterMenu() {
+                /* unfocus the focused hint (by aim analysis) when entering the quick menu */
+                self.deactivateHint(self.focusedHE)
+                this.parent()
             },
         })
 

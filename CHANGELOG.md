@@ -20,6 +20,7 @@
 - Fixed aim bounce turning on when entering the analysis menu
 - Fixed entity beeping sounds persisting even after their death
 - Fixed unnamed NPC names being announced as MISSING LABEL
+- Fixed aim analysis hint selection persisting when entering the quick menu
 
 ## [0.6.0] 2024-04-20
 
