@@ -1,11 +1,11 @@
 <!-- markdownlint-disable MD013 MD024 MD001 MD045 -->
 # Blind accessibility mod for crosscode (WIP)
 
-### Please report all bugs on the [CrossCode Modding](https://discord.com/invite/3Xw69VjXfW) disord
+### Please report all bugs on the [CrossCode Modding](https://discord.com/invite/3Xw69VjXfW) discord
 
 [![Discord](https://img.shields.io/discord/382339402338402315?logo=discord&logoColor=white&label=CrossCode%20Modding)](https://discord.com/invite/3Xw69VjXfW)
 
-## Will it work on my mashine?
+## Will it work on my machine?
 
 The mod has support for Windows, Linux, and probably MacOS (untested).  
 You need to have a controller to play this mod, as performing numerous tasks without sight is impossible using a keyboard and mouse.  
