@@ -101,6 +101,9 @@ export class SoundManager implements PauseListener {
         barrierGoUp: 'media/sound/puzzle/barrier-up.ogg',
         barrierGoDown: 'media/sound/puzzle/barrier-down.ogg',
         menuBlocked: 'media/sound/menu/menu-blocked.ogg',
+        ballChangerChangeDir: 'media/sound/puzzle/redirect.ogg',
+        ballChangerChangeSpeedUp: 'media/sound/puzzle/speed-up.ogg',
+        ballChangerChangeSlowDown: 'media/sound/puzzle/slow-down.ogg',
     } as const
 
     constructor() {

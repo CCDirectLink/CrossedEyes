@@ -88,6 +88,15 @@ export function getSoundGlossaryEntries() {
                     ],
                 },
             },
+            BallChanger_CHANGE_DIR: {
+                config: { paths: ['ballChangerChangeDir'] },
+            },
+            BallChanger_CHANGE_SPEED_UP: {
+                config: { paths: ['ballChangerChangeSpeedUp'] },
+            },
+            BallChanger_CHANGE_SPEED_DOWN: {
+                config: { paths: ['ballChangerChangeSlowDown'] },
+            },
         },
         Entities: {
             interactableNearby: {

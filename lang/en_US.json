@@ -210,6 +210,18 @@
                     "OLPlatformMove": {
                         "name": "Moving block",
                         "description": "Plays when the moving block extends or retracts."
+                    },
+                    "BallChanger_CHANGE_DIR": {
+                        "name": "Ball direction changer",
+                        "description": "Plays when a ball files into a ball direction changer."
+                    },
+                    "BallChanger_CHANGE_SPEED_UP": {
+                        "name": "Ball accelerator",
+                        "description": "Plays when a ball files into a ball accelerator."
+                    },
+                    "BallChanger_CHANGE_SPEED_DOWN": {
+                        "name": "Ball decelerator",
+                        "description": "Plays when a ball files into a ball decelerator."
                     }
                 },
                 "Entities": {

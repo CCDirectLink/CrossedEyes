@@ -7,6 +7,7 @@
 ### Added
 
 - Announce looping back to the beginning and to the end when navigating through the hints with Gamepad: L1 and Gamepad R1
+- Added Sound Glossary entries for: ball direction changer, ball accelerator and ball decelerator
 
 ## [0.6.1] 2024-05-13
 
