@@ -3,6 +3,11 @@
 # Change Log
 
 ## [Unreleased]
+
+### Added
+
+- Announce looping back to the beginning and to the end when navigating through the hints with Gamepad: L1 and Gamepad R1
+
 ## [0.6.1] 2024-05-13
 
 ### Added

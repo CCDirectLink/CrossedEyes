@@ -1,5 +1,7 @@
+import { Lang } from '../../lang-manager'
 import { isQuickMenuManualVisible } from '../../manuals/quick-menu-all'
 import { Opts } from '../../plugin'
+import { speakIC } from '../../tts/gather/api'
 import { HintSystem, HintUnion } from '../hint-system'
 
 function selectNextHint(add: number) {
@@ -14,22 +16,30 @@ function selectNextHint(add: number) {
         ) as HintUnion[])
 
     HintSystem.g.currentSelectIndex += add
+    let nextHintSelectionTextPrefix: string | undefined
     if (HintSystem.g.currentSelectIndex == sorted.length) {
         HintSystem.g.currentSelectIndex = 0
+        nextHintSelectionTextPrefix = Lang.hints.hintSelectLoopBeg
     } else if (HintSystem.g.currentSelectIndex < 0) {
         HintSystem.g.currentSelectIndex = sorted.length - 1
+        nextHintSelectionTextPrefix = Lang.hints.hintSelectLoopEnd
     }
     const entry: HintUnion = sorted[HintSystem.g.currentSelectIndex]
 
-    if (entry) {
-        HintSystem.g.focusMode = true
-        sc.quickmodel.cursorMoved = true
-        sc.quickmodel.cursor = Vec2.createC(entry.hook.pos.x + entry.hook.size.x / 2, entry.hook.pos.y + entry.hook.size.y / 2)
-        HintSystem.g.quickMenuAnalysisInstance.cursor.moveTo(sc.quickmodel.cursor.x, sc.quickmodel.cursor.y, true)
-
-        HintSystem.g.prevEntry && HintSystem.g.prevEntry.focusLost()
-        HintSystem.g.prevEntry = entry
+    if (!entry) {
+        speakIC(Lang.hints.noHints)
+        return
     }
+
+    HintSystem.g.focusMode = true
+    sc.quickmodel.cursorMoved = true
+    sc.quickmodel.cursor = Vec2.createC(entry.hook.pos.x + entry.hook.size.x / 2, entry.hook.pos.y + entry.hook.size.y / 2)
+    HintSystem.g.quickMenuAnalysisInstance.cursor.moveTo(sc.quickmodel.cursor.x, sc.quickmodel.cursor.y, true)
+
+    HintSystem.g.prevEntry && HintSystem.g.prevEntry.focusLost()
+    HintSystem.g.prevEntry = entry
+
+    HintSystem.g.nextHintSelectionTextPrefix = nextHintSelectionTextPrefix
 }
 
 sc.QuickMenuAnalysis.inject({

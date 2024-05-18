@@ -117,6 +117,8 @@ export class HintSystem {
     selectedHE: ig.Entity[] = []
     focusedHE?: ig.Entity
 
+    nextHintSelectionTextPrefix?: string
+
     private getContId(e: ig.Entity) {
         if (!e?.uuid) throw new Error('undefined uuid')
         return `hint_${e.uuid}`
@@ -153,7 +155,12 @@ export class HintSystem {
         if (!hint) return
 
         const isSelected = this.selectedHE.includes(e)
-        speakIC((isSelected ? Lang.hints.focusedSelected : Lang.hints.focused).supplant({ hintTitle: hint.nameGui.title.text! }))
+        let text: string = (isSelected ? Lang.hints.focusedSelected : Lang.hints.focused).supplant({ hintTitle: hint.nameGui.title.text! })
+        if (this.nextHintSelectionTextPrefix) {
+            text = this.nextHintSelectionTextPrefix + text
+            this.nextHintSelectionTextPrefix = undefined
+        }
+        speakIC(text)
 
         SpecialAction.setListener('LSP', 'hintDescription', () => {
             speakIC(hint.nameGui.description.text!)
