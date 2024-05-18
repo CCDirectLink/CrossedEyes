@@ -20,6 +20,7 @@ import { interrupt, speakIC } from '../tts/gather/api'
 import type { PuzzleSelection } from 'cc-blitzkrieg/types/puzzle-selection'
 import type { Selection } from 'cc-blitzkrieg/types/selection'
 import { BattleSelection } from 'cc-blitzkrieg/types/battle-selection'
+import { HHiddenBlock } from './hints/hidden-block'
 
 declare global {
     namespace sc {
@@ -83,6 +84,7 @@ const puzzleTypes = [
     HAnalyzable,
     HDynamicPlatform,
     HBallChanger,
+    HHiddenBlock,
 ] as const satisfies (new () => HintBase)[]
 
 export class HintSystem {

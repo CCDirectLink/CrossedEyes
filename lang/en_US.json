@@ -485,6 +485,12 @@
             },
             "default": { "name": "Destructible, Unmapped", "description": "report this to the developer!" }
         },
+        "HiddenBlock": {
+            "stairs": {
+                "name": "Stairs",
+                "description": "You can climb them to get to higher places."
+            }
+        },
         "enemies": {
             "target-bot": {
                 "canShoot": { "name": "Target Bot, shootable", "description": "Shoot me!" },
