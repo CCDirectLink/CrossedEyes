@@ -13,7 +13,7 @@
         "input-api": ">=1.0.0",
         "cc-blitzkrieg": ">=0.5.6",
         "nax-ccuilib": ">=1.2.6",
-        "ccmodmanager": ">=0.9.10",
+        "ccmodmanager": ">=0.9.11",
         "crosscode": ">=1.4.0"
     },
     "plugin": "plugin.js"
