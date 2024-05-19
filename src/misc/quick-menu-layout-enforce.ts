@@ -5,11 +5,15 @@ export function updateQuickRingMenuLayoutLock() {
     nax.ccuilib.QuickRingMenuWidgets.lockLayout = Opts.lockDiorbitalMenu
     if (nax.ccuilib.QuickRingMenuWidgets.lockLayout) {
         nax.ccuilib.QuickRingMenuWidgets.ringConfiguration = {
-            [nax.ccuilib.quickRingUtil.getIdFromRingPos(0, 0)]: '11_items',
-            [nax.ccuilib.quickRingUtil.getIdFromRingPos(0, 2)]: '11_analyze',
-            [nax.ccuilib.quickRingUtil.getIdFromRingPos(0, 4)]: '11_party',
-            [nax.ccuilib.quickRingUtil.getIdFromRingPos(0, 6)]: '11_map',
-            [nax.ccuilib.quickRingUtil.getIdFromRingPos(0, 7)]: 'cc-blitzkrieg_puzzleSkip',
+            0: '11_items',
+            1: 'crossedeyes-yLevelAnnounce',
+            2: '11_analyze',
+            4: '11_party',
+            6: '11_map',
+            1000: 'crossedeyes-aimAnalysis',
+            1002: 'crossedeyes-wallScan',
+            1012: 'cc-blitzkrieg_puzzleSkip',
+            1014: 'crossedeyes-aimBounce',
         }
     }
 }

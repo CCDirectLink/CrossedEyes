@@ -278,7 +278,29 @@
         },
         "quickMenu": {
             "name": "Quick Menu",
-            "yLevel": "Y level: {y}",
+            "widgets": {
+                "yLevel": {
+                    "title": "Announce y level",
+                    "description": "Get the current player Y coordinate.",
+                    "announceTemplate": "{y}"
+                },
+                "aimAnalysis": {
+                    "title": "Aim analysis",
+                    "description": "Focuses hints that you aim at."
+                },
+                "aimBounce": {
+                    "title": "Aim bounce",
+                    "description": "Simulates a ball bouncing and focuses hints that it hit."
+                },
+                "wallScan": {
+                    "title": "Wall scan",
+                    "description": "Play a sound at the wall you aim at."
+                },
+                "cliffSafeguard": {
+                    "title": "Cliff safeguard",
+                    "description": ""
+                }
+            },
             "itemHelpPages": [
                 {
                     "title": "Quick menu items",
@@ -295,35 +317,33 @@
                     ]
                 },
                 {
-                    "title": "Quick menu analysis: Hint sounds",
+                    "title": "Hint sounds",
                     "content": [
                         "The speed of continuous hint sounds changes based on your relative Y position.\n The lower the player is relative to the hint, the slower the continuous sound is.\n The higher the player is relative to the hint, the faster the continuous sound is.\n When you face away from the hint, or in other words, the hint is behind you, the pitch of the continuous sound decreases."
                     ]
                 },
                 {
-                    "title": "Quick menu analysis: Selecting hints",
+                    "title": "Selecting hints",
                     "content": ["To select and deselect a hint, press \\i[gamepad-x].\n Selected hints stay focused even after the quick menu is closed.\n "]
                 },
                 {
-                    "title": "Quick menu analysis: Aim analysis",
+                    "title": "Widget: Aim analysis",
+                    "content": ["When Aim analysis is activated, hints that you directly aim at will be focused.\n The hint will be unfocused when you aim away."]
+                },
+                {
+                    "title": "Widget: Aim bounce",
                     "content": [
-                        "To toggle aim analysis, press \\i[gamepad-y].\n When it's activated, hints that you directly aim at will be focused. \n The hint will be unfocused when you aim away."
+                        "Aim bounce only does something when Aim analysis is active. \n This mode simulates the ball bouncing off walls and puzzle elements. \n It says what the ball bounced off, and it focuses the last hint the ball hit."
                     ]
                 },
                 {
-                    "title": "Quick menu analysis: Aim bounce",
-                    "content": [
-                        "To toggle aim bounce, press \\i[gamepad-a].\n Aim bounce only does something when charge mode is enabled and aim analysis is active. \n This mode simulates the ball bouncing off walls and puzzle elements. \n It says what the ball bounced off, and it focuses the last hint the ball hit."
-                    ]
-                },
-                {
-                    "title": "Quick menu analysis: Hint filtering",
+                    "title": "Hint filtering",
                     "content": [
                         "You can filter hints by categories.\n Use \\i[gamepad-left] and \\i[gamepad-right] to change the current category filter.\n Press \\i[gamepad-up] to announce the current category filter.\n "
                     ]
                 },
                 {
-                    "title": "Quick menu analysis: Puzzle and battle hint filtering",
+                    "title": "Puzzle and battle hint filtering",
                     "content": [
                         "You can choose to only see hints in and near puzzle or enemy fight areas.\n This hides the irrelevant hints, so you can focus better on the task at hand.\n You can toggle it using \\i[gamepad-down].\n It's inactive when you're not near puzzles or enemy fights.\n The puzzle filtering is inactive when the puzzle is already solved.\n The enemy fight filtering is inactive when you're not in combat mode.\n Note that in order for this to work, the puzzles and fights have to be manually mapped by developer, so it may not work everywhere."
                     ]
@@ -332,24 +352,32 @@
             "noneHelpPages": [
                 {
                     "title": "Quick menu",
-                    "content": ["Welcome to the quick menu!\n Navigate through a ring of buttons with \\i[left-stick].\n "]
-                },
-                {
-                    "title": "Quick menu: Wall scanning",
                     "content": [
-                        "To turn wall scanning on and off, press \\i[gamepad-y].\n When it's on, a wall sound will play at the first wall in the direction you aimed.\n Regular wall sounds and jump hints are also muted when this mode is on and aiming.\n "
+                        "Welcome to the quick menu!\n Navigate through a ring of widgets with \\i[left-stick].\n Activate the widgets with \\i[gamepad-a].\n The quick menu has 2 rings.\n You can switch between them with \\i[gamepad-r1] and \\i[gamepad-l1].\n "
                     ]
                 },
                 {
-                    "title": "Quick menu: Puzzle solving",
+                    "title": "Widget: Wall scan",
                     "content": [
-                        "While standing near a puzzle, you can solve it immediately by pressing the 'Skip Puzzle' button in the quick menu.\n Note that in order for the puzzle to be skippable it has to be manually mapped by the developer, so not all puzzles are currently skippable."
+                        "When wall scanning is on, a wall sound will play at the first wall in the direction you aimed.\n Regular wall sounds and jump hints are also muted when this mode is on and aiming."
                     ]
                 },
                 {
-                    "title": "Quick menu: Player Y level",
+                    "title": "Widget: Skip puzzle",
                     "content": [
-                        "You can get the current player Y coordinate with \\i[gamepad-select].\n For reference, the player can jump onto a step that is 16 units tall.\n This may be useful in platforming sections."
+                        "While standing near a puzzle, you can solve it immediately by using the widget.\n Note that in order for the puzzle to be skippable it has to be manually mapped by the developer, so not all puzzles are currently skippable."
+                    ]
+                },
+                {
+                    "title": "Widget: Player Y level",
+                    "content": [
+                        "Pressing this widget will announce the current player Y coordinate.\n For reference, the player can jump onto a step that is 16 units tall.\n This may be useful in platforming sections."
+                    ]
+                },
+                {
+                    "title": "Different widgets",
+                    "content": [
+                        "Widgets not explained here are explained somewhere else.\n For example, the Aim Analysis and Aim Bounce widgets are explained in the Analysis Menu help entries."
                     ]
                 }
             ]
@@ -430,12 +458,6 @@
         "hintFilter": "Hint filter",
         "selectionFilterOn": "Selection filter: on",
         "selectionFilterOff": "Selection filter: off",
-        "aimAnalysisOn": "Aim analysis: on.",
-        "aimAnalysisOff": "Aim analysis: off.",
-        "aimBounceOn": "Aim bounce: on.",
-        "aimBounceOff": "Aim bounce: off.",
-        "wallScanOn": "Wall scan: on.",
-        "wallScanOff": "Wall scan: off.",
         "onItTopTemplate": "On it, {rest}",
         "walkedOntoTemplate": "Walked onto: {rest}.",
         "walkedOff": "Walked off.",

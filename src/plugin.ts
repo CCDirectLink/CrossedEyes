@@ -74,6 +74,7 @@ export default class CrossedEyes implements PluginClass {
         await import('./misc/menu-pause')
         await import('./misc/title-screen-button')
         await import('./misc/quick-menu-y-level-announcer')
+        await import('./environment/cliff-safeguard')
         injectIdlePosDisable()
         await addMenuManuals()
         updateQuickRingMenuLayoutLock()

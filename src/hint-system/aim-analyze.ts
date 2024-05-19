@@ -5,8 +5,6 @@ import { TTS } from '../tts/tts'
 import { SoundManager } from '../sound-manager'
 import { Lang } from '../lang-manager'
 import { PauseListener } from '../misc/menu-pause'
-import { speakIC } from '../tts/gather/api'
-import { isQuickMenuManualVisible } from '../manuals/quick-menu-all'
 
 export function isAiming(): boolean {
     return ig.input.state('aim') || ig.gamepad.isRightStickDown()
@@ -32,6 +30,15 @@ export class AimAnalyzer implements PauseListener {
         CrossedEyes.pauseables.push(this)
         TTS.g.onSpeechEndListeners.push(this)
         const self = this
+
+        let quickMenuExitedTime: number = 0
+        sc.QuickMenuModel.inject({
+            exitQuickMenu() {
+                this.parent()
+                quickMenuExitedTime = ig.Timer.time
+            },
+        })
+
         ig.ENTITY.Player.inject({
             update() {
                 this.parent()
@@ -59,39 +66,58 @@ export class AimAnalyzer implements PauseListener {
             },
         })
 
-        let quickMenuExitedTime: number = 0
-        sc.QuickMenuModel.inject({
-            exitQuickMenu() {
-                this.parent()
-                quickMenuExitedTime = ig.Timer.time
+        const aimAnalysisId = 'crossedeyes-aimAnalysis'
+        self.aimAnalyzeOn = localStorage[`ccuilib-quickmenuwidget-${aimAnalysisId}`] == 'true'
+        nax.ccuilib.QuickRingMenuWidgets.addWidget({
+            name: aimAnalysisId,
+            title: Lang.menu.quickMenu.widgets.aimAnalysis.title,
+            description: Lang.menu.quickMenu.widgets.aimAnalysis.description,
+            pressEvent: button => {
+                self.aimAnalyzeOn = button.isToggleOn()
             },
+            toggle: true,
+            image: () => ({
+                gfx: new ig.Image('media/gui/circuit-icons.png'),
+                srcPos: { x: 193, y: 25 },
+                pos: { x: 4, y: 4 },
+                size: { x: 24, y: 24 },
+            }),
         })
 
-        let quickMenuAnalysisEnterTime: number = 0
-        sc.QuickMenuAnalysis.inject({
-            enter() {
-                this.parent()
-                quickMenuAnalysisEnterTime = Date.now()
+        const aimBounceId = 'crossedeyes-aimBounce'
+        self.aimBounceOn = localStorage[`ccuilib-quickmenuwidget-${aimBounceId}`] == 'true'
+        nax.ccuilib.QuickRingMenuWidgets.addWidget({
+            name: aimBounceId,
+            title: Lang.menu.quickMenu.widgets.aimBounce.title,
+            description: Lang.menu.quickMenu.widgets.aimBounce.description,
+            pressEvent: button => {
+                self.aimBounceOn = button.isToggleOn()
             },
-            update() {
-                this.parent()
-                if (Opts.hints && sc.quickmodel.activeState && !isQuickMenuManualVisible()) {
-                    if (sc.quickmodel.isQuickCheck()) {
-                        if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
-                            self.aimAnalyzeOn = !self.aimAnalyzeOn
-                            speakIC(self.aimAnalyzeOn ? Lang.hints.aimAnalysisOn : Lang.hints.aimAnalysisOff)
-                        } else if (quickMenuAnalysisEnterTime + 200 < Date.now() && ig.gamepad.isButtonPressed(ig.BUTTONS.FACE0 /* a */)) {
-                            self.aimBounceOn = !self.aimBounceOn
-                            speakIC(self.aimBounceOn ? Lang.hints.aimBounceOn : Lang.hints.aimBounceOff)
-                        }
-                    } else if (sc.quickmodel.isQuickNone()) {
-                        if (ig.gamepad.isButtonPressed(ig.BUTTONS.FACE3 /* y */)) {
-                            self.wallScanOn = !self.wallScanOn
-                            speakIC(self.wallScanOn ? Lang.hints.wallScanOn : Lang.hints.wallScanOff)
-                        }
-                    }
-                }
+            toggle: true,
+            image: () => ({
+                gfx: new ig.Image('media/gui/circuit-icons.png'),
+                srcPos: { x: 1, y: 97 },
+                pos: { x: 4, y: 4 },
+                size: { x: 24, y: 24 },
+            }),
+        })
+
+        const wallScanId = 'crossedeyes-wallScan'
+        self.wallScanOn = localStorage[`ccuilib-quickmenuwidget-${wallScanId}`] == 'true'
+        nax.ccuilib.QuickRingMenuWidgets.addWidget({
+            name: wallScanId,
+            title: Lang.menu.quickMenu.widgets.wallScan.title,
+            description: Lang.menu.quickMenu.widgets.wallScan.description,
+            pressEvent: button => {
+                self.wallScanOn = button.isToggleOn()
             },
+            toggle: true,
+            image: () => ({
+                gfx: new ig.Image('media/gui/circuit-icons.png'),
+                srcPos: { x: 97, y: 193 },
+                pos: { x: 4, y: 4 },
+                size: { x: 24, y: 24 },
+            }),
         })
     }
 

@@ -10,6 +10,10 @@
 - Added Sound Glossary entries for: ball direction changer, ball accelerator and ball decelerator
 - Mapped battles and puzzled up to including rhombus dungeon
 
+### Changed
+
+- Aim analysis, Aim bounce, Wall scan, Announce Y Level are widgets (more info in quick menu help)
+
 ## [0.6.1] 2024-05-13
 
 ### Added
