@@ -24,6 +24,7 @@
         "dashVoulme": { "name": "Dash volume", "description": "Dash volume multiplier." },
         "wallVolume": { "name": "Wall volume", "description": "Wall volume multiplier." },
         "wallBumpVolume": { "name": "Wall bumping volume", "description": "Wall bumping volume multiplier." },
+        "cliffSafeguardVolume": { "name": "Cliff safeguard volume", "description": "Cliff safeguard volume multiplier." },
         "jumpHintsVolume": { "name": "Jump hints volume", "description": "Jump hints volume multiplier." },
         "wallScanVolume": { "name": "Wall scan volume", "description": "Wall scan volume multiplier." },
         "hintsVolume": { "name": "Hints volume", "description": "Hints volume multiplier." },
@@ -154,6 +155,10 @@
                     "collision": {
                         "name": "Collision",
                         "description": "Plays when you run into an obstacle that stops your movement.\n The more your movement is blocked by the obstacle, the louder the sound."
+                    },
+                    "cliffSafeguard": {
+                        "name": "Cliff safeguard",
+                        "description": "Plays when the cliff safeguard prevented you from falling from a cliff."
                     },
                     "jumphintWater": {
                         "name": "Jump hint: water",
@@ -298,7 +303,7 @@
                 },
                 "cliffSafeguard": {
                     "title": "Cliff safeguard",
-                    "description": ""
+                    "description": "Prevents you from jumping and falling off cliffs."
                 }
             },
             "itemHelpPages": [

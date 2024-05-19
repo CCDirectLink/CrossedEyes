@@ -91,6 +91,9 @@ export class SoundManager implements PauseListener {
         bounce2: 'media/sound/battle/ball-bounce-2.ogg',
         bounce3: 'media/sound/battle/ball-bounce-3.ogg',
 
+        cliffSafeguard1: 'media/sound/scenes/dash.ogg',
+        cliffSafeguard2: 'media/sound/scenes/dash-2.ogg',
+
         // sound glossary stuff
         dash: 'media/sound/battle/dash-3.ogg',
         soundglossaryJump: 'media/sound/crossedeyes/soundglossary/jump.ogg',
@@ -124,16 +127,7 @@ export class SoundManager implements PauseListener {
                 }
             },
         })
-        // let i = 0
-        // ig.SoundManager.inject({
-        //     update() {
-        //         this.parent()
-        //         if ((i += ig.system.ingameTick) > 10) {
-        //             i = 0
-        //             SoundManager.cleanupDeadSounds()
-        //         }
-        //     },
-        // })
+
         /* preload sounds */
         Object.values(SoundManager.sounds).forEach(path => new ig.Sound(path))
 

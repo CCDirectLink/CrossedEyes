@@ -10,6 +10,7 @@ export function updateQuickRingMenuLayoutLock() {
             2: '11_analyze',
             4: '11_party',
             6: '11_map',
+            7: 'crossedeyes-cliffSafeguard',
             1000: 'crossedeyes-aimAnalysis',
             1002: 'crossedeyes-wallScan',
             1012: 'cc-blitzkrieg_puzzleSkip',

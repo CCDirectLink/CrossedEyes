@@ -29,6 +29,16 @@ export function getSoundGlossaryEntries() {
                     getVolume: () => Opts.wallBumpVolume,
                 },
             },
+            cliffSafeguard: {
+                config: {
+                    eventSteps: [
+                        { volume: Opts.cliffSafeguardVolume, type: 'PLAY_SOUND', sound: SoundManager.sounds.cliffSafeguard1 },
+                        { time: 0.2, type: 'WAIT' },
+                        { volume: Opts.cliffSafeguardVolume, type: 'PLAY_SOUND', sound: SoundManager.sounds.cliffSafeguard2 },
+                        { time: 0.2, type: 'WAIT' },
+                    ],
+                },
+            },
             jumphintWater: {
                 config: SoundManager.pickContiniousSettingsPath(LoudJump.continiousConfig, 0),
                 dirs: loudjumpDirs,

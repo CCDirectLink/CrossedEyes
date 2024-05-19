@@ -16,12 +16,13 @@ function getSoundFromColl(coll: ig.CollEntry, type: keyof typeof sc.ACTOR_SOUND)
         e = sc.ACTOR_SOUND[type] || sc.ACTOR_SOUND.none
     return (e as any)[c] ?? e[ig.TERRAIN_DEFAULT]
 }
-let lastStep: boolean = true
+let lastCollStep: boolean = true
 
 let stepCounter: number = 0
 sc.ActorEntity.inject({
     update() {
-        if (this !== (ig.game.playerEntity as any)) return this.parent()
+        const player = this as unknown as ig.ENTITY.Player
+        if (player !== ig.game.playerEntity) return this.parent()
 
         /* most copied from the game code */
         this.stepStats.terrain = ig.terrain.getTerrain(this.coll, true)
@@ -62,10 +63,10 @@ sc.ActorEntity.inject({
 
                 const sound = getSoundFromColl(this.coll, this.soundType)
                 let spawnFx = false
-                let vol: number | undefined
+                let collVol: number | undefined
                 if (this.coll._collData?.collided && this == (ig.game.playerEntity as sc.ActorEntity)) {
                     const dist = Vec3.distance(Vec3.create(), this.coll.vel)
-                    vol = dist.map(40, 180, 1, 0.4)
+                    collVol = dist.map(40, 180, 1, 0.4)
                     if (dist > 170) {
                         const minDist = Math.min(
                             Vec2.distance(Vec2.createC(0, 1), this.coll._collData.blockDir),
@@ -75,12 +76,12 @@ sc.ActorEntity.inject({
                         )
                         /* check if the player is going diagoally */
                         if (minDist > 0.5) {
-                            vol = 1
+                            collVol = 1
                         }
                     }
                     if (stepCounter == 2) {
                         ig.SoundHelper.playAtEntity(
-                            new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic1 : SoundManager.sounds.hitOrganic2, Opts.wallBumpVolume * vol),
+                            new ig.Sound(lastCollStep ? SoundManager.sounds.hitOrganic1 : SoundManager.sounds.hitOrganic2, Opts.wallBumpVolume * collVol),
                             this,
                             null,
                             null,
@@ -88,24 +89,55 @@ sc.ActorEntity.inject({
                         )
                     } else if (stepCounter == 5) {
                         ig.SoundHelper.playAtEntity(
-                            new ig.Sound(lastStep ? SoundManager.sounds.hitOrganic3 : SoundManager.sounds.hitOrganic4, Opts.wallBumpVolume * vol),
+                            new ig.Sound(lastCollStep ? SoundManager.sounds.hitOrganic3 : SoundManager.sounds.hitOrganic4, Opts.wallBumpVolume * collVol),
                             this,
                             null,
                             null,
                             700
                         )
-                        lastStep = !lastStep
+                        lastCollStep = !lastCollStep
                     }
                 }
-                if (vol === undefined || vol < 0.6) {
+
+                let cliffSafeguardVol: number = 0
+                let cliffSafeguardPos: Vec2 | undefined
+                if (player.crossedeyes_cliffSafeguardVelCancel && !Vec2.isZero(player.crossedeyes_cliffSafeguardVelCancel)) {
+                    const accelDir = Vec2.create(player.coll.accelDir)
+
+                    const velCancel = Vec2.create(player.crossedeyes_cliffSafeguardVelCancel)
+                    Vec2.divC(velCancel, 3)
+
+                    let dot = Math.abs(Vec2.dot(velCancel, accelDir))
+                    if (Math.abs(velCancel.x) > 0 && Math.abs(velCancel.y) > 0) {
+                        dot *= 1.5
+                    }
+
+                    cliffSafeguardVol = dot.limit(0, 1).round(2)
+                    cliffSafeguardPos = Vec2.create(velCancel)
+                }
+
+                if (cliffSafeguardVol > 0) {
+                    const vol = (cliffSafeguardVol + 0.2) * Opts.cliffSafeguardVolume
+                    const pos = Vec2.sub(Vec3.create(player.coll.pos), Vec2.mulC(cliffSafeguardPos!, 16 * 5)) as Vec3
+
+                    if (stepCounter == 0) {
+                        SoundManager.playSound('cliffSafeguard1', 1, vol, pos)
+                    }
+                    if (stepCounter == 3) {
+                        SoundManager.playSound('cliffSafeguard2', 1, vol, pos)
+                    }
+                }
+
+                if (cliffSafeguardVol != 1 && (collVol === undefined || collVol < 0.6)) {
+                    const vol = cliffSafeguardVol.map(0.7, 1, 1, 0.3).limit(0, 1) * Opts.footstepVolume
                     if (stepCounter == 2) {
                         spawnFx = true
-                        ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step1!, Opts.footstepVolume as number), this, null, null, 700)
+                        ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step1!, vol), this, null, null, 700)
                         this.onMoveEffect && this.onMoveEffect('step')
                     }
                     if (stepCounter == 5) {
                         spawnFx = true
-                        ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step2!, Opts.footstepVolume as number), this, null, null, 700)
+                        ig.SoundHelper.playAtEntity(SoundManager.muliplySoundVol(sound.step2!, vol), this, null, null, 700)
                         this.onMoveEffect && this.onMoveEffect('step')
                     }
                 }

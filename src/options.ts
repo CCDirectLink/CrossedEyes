@@ -116,6 +116,15 @@ export function getOptions() {
                     fill: true,
                     showPercentage: true,
                 },
+                cliffSafeguardVolume: {
+                    type: 'OBJECT_SLIDER',
+                    init: 1,
+                    min: 0,
+                    max: 2,
+                    step: 0.1,
+                    fill: true,
+                    showPercentage: true,
+                },
                 jumpHintsVolume: {
                     type: 'OBJECT_SLIDER',
                     init: 1,

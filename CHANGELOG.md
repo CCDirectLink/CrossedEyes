@@ -9,6 +9,7 @@
 - Announce looping back to the beginning and to the end when navigating through the hints with Gamepad: L1 and Gamepad R1
 - Added Sound Glossary entries for: ball direction changer, ball accelerator and ball decelerator
 - Mapped battles and puzzled up to including rhombus dungeon
+- Added cliff safeguard widget (more info in quick menu help)
 
 ### Changed
 
