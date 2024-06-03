@@ -1,4 +1,4 @@
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 
 ig.EVENT_STEP.SET_PLAYER_CORE.inject({
     start() {

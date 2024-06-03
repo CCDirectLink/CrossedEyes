@@ -1,4 +1,4 @@
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 import CrossedEyes from '../plugin'
 import { HintSystem, HintUnion } from './hint-system'
 import { TTS } from '../tts/tts'

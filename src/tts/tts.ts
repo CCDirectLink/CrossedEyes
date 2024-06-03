@@ -1,4 +1,5 @@
-import { ObjectValues, Opts } from '../plugin'
+import { Opts } from '../options'
+import { ObjectValues } from '../plugin'
 import { TextGather } from './gather/api'
 import { AddonInstaller, TTSNvda } from './tts-nvda'
 import { TTSWebSpeech } from './tts-web-speech'
@@ -17,7 +18,7 @@ export interface TTSInterface {
 }
 
 export const TTS_TYPES = {
-    'Web Speech': 0,
+    WebSpeech: 0,
     NVDA: 1,
 } as const
 

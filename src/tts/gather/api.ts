@@ -1,5 +1,5 @@
 import { Lang } from '../../lang-manager'
-import { Opts } from '../../plugin'
+import { Opts } from '../../options'
 import { SpecialAction } from '../../special-action'
 import { FontToImgMap } from '../font-img-to-text-map'
 import { CharacterSpeakData } from '../tts'

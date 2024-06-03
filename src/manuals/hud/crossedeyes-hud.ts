@@ -1,5 +1,6 @@
 import { Lang } from '../../lang-manager'
-import CrossedEyes, { Opts } from '../../plugin'
+import { Opts } from '../../options'
+import CrossedEyes from '../../plugin'
 
 declare global {
     namespace sc {

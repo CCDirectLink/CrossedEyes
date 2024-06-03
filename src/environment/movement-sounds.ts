@@ -1,4 +1,4 @@
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 import { SoundManager } from '../sound-manager'
 declare global {
     namespace ig {

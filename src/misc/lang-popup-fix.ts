@@ -1,4 +1,4 @@
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 
 /* in prestart */
 sc.OptionLangPopUp.inject({

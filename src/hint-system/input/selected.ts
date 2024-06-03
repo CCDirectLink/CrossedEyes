@@ -1,6 +1,6 @@
 import { Lang } from '../../lang-manager'
 import { isQuickMenuManualVisible } from '../../manuals/quick-menu-all'
-import { Opts } from '../../plugin'
+import { Opts } from '../../options'
 import { speakIC } from '../../tts/gather/api'
 import { AimAnalyzer, isAiming } from '../aim-analyze'
 import { HintSystem } from '../hint-system'

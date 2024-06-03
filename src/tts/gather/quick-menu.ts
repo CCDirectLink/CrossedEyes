@@ -1,5 +1,6 @@
 import { Lang } from '../../lang-manager'
-import CrossedEyes, { Opts } from '../../plugin'
+import { Opts } from '../../options'
+import CrossedEyes from '../../plugin'
 import { SpecialAction } from '../../special-action'
 import { interrupt, speakI, speakIC } from './api'
 

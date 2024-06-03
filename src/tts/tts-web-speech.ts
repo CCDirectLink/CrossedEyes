@@ -1,4 +1,4 @@
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 import { CharacterSpeakData, TTS, TTSInterface } from './tts'
 
 export class TTSWebSpeech implements TTSInterface {

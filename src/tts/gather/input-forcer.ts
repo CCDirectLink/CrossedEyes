@@ -1,4 +1,4 @@
-import { Opts } from '../../plugin'
+import { Opts } from '../../options'
 import { interrupt, speakI } from './api'
 
 /* in prestart */

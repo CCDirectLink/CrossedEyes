@@ -1,5 +1,5 @@
 import { SoundManager } from '../sound-manager'
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 import { HintSystem } from '../hint-system/hint-system'
 import { Lang } from '../lang-manager'
 import { HProp } from '../hint-system/hints/prop'

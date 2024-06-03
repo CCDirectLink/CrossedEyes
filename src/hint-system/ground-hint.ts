@@ -1,5 +1,5 @@
 import { Lang } from '../lang-manager'
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 import { speakI } from '../tts/gather/api'
 import { HintSystem } from './hint-system'
 

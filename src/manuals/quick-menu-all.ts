@@ -1,5 +1,5 @@
 import { Lang } from '../lang-manager'
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 import { isManualVisible, openManualScreen } from './all'
 
 let manual: sc.MultiPageBoxGui

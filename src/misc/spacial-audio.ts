@@ -1,4 +1,4 @@
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 
 /* in prestart */
 window.IG_FORCE_HTML5_AUDIO = true

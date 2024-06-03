@@ -1,4 +1,4 @@
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 import type * as _ from 'nax-ccuilib/src/headers/nax/quick-menu-public-api.d.ts'
 
 export function updateQuickRingMenuLayoutLock() {

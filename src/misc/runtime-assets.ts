@@ -1,5 +1,5 @@
 import CrossedEyes from '../plugin'
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 
 export class RuntimeResources {
     constructor() {

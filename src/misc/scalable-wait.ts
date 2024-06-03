@@ -1,4 +1,4 @@
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 
 declare global {
     namespace ig.ACTION_STEP {

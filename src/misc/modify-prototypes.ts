@@ -1,7 +1,6 @@
 import { ValidTextLike } from '../tts/gather/api'
 
 /* in preload */
-export {}
 declare global {
     interface Object {
         fromEntries<T, K extends string | number | symbol>(entries: [K, T][]): Record<K, T>

@@ -1,5 +1,5 @@
 import { Lang } from '../../lang-manager'
-import { Opts } from '../../plugin'
+import { Opts } from '../../options'
 import { SpecialAction } from '../../special-action'
 import { interrupt, speakArgsC, speakI } from './api'
 import { button_excludeButtonClass } from './button'

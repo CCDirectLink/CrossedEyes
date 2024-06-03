@@ -1,5 +1,5 @@
 import { Lang } from '../../lang-manager'
-import { Opts } from '../../plugin'
+import { Opts } from '../../options'
 import { HintBase, HintData } from '../hint-system'
 
 type EnemyConfig = { lang: HintData; condition?: (e: ig.Entity) => boolean; noEmitSound?: boolean; aimBounceWhitelist?: boolean }

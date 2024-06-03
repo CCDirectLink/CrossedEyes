@@ -1,6 +1,6 @@
 import { EntityPoint, MapPoint } from 'cc-map-util/src/pos'
 import { Lang } from '../lang-manager'
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { SpecialAction } from '../special-action'

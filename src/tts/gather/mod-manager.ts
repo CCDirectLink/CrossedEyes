@@ -1,5 +1,5 @@
 import { speakI, speakIC } from './api'
-import { Opts } from '../../plugin'
+import { Opts } from '../../options'
 import { SpecialAction } from '../../special-action'
 
 import type * as _ from 'ccmodmanager/types/gui/list-entry'
@@ -60,8 +60,8 @@ sc.ModMenuList.inject({
     setTab(index, ignorePrev, settings) {
         const isSame = this.currentTabIndex == index
         this.parent(index, ignorePrev, settings)
-        if (Opts.tts && !isSame && index != sc.MOD_MENU_TAB_INDEXES.SETTINGS) {
-            const elements = sc.modMenu.list.currentList.buttonGroup.elements.flat()
+        if (Opts.tts && !isSame) {
+            const elements = sc.modMenuGui.list.currentList.buttonGroup.elements.flat()
             if (elements.length == 0) speakI(Lang.menu.modMenu.empty)
         }
     },

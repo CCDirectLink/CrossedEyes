@@ -1,4 +1,4 @@
-import { Opts } from '../../plugin'
+import { Opts } from '../../options'
 import { speak, speakI } from './api'
 
 let ignoreFrom: number = 0

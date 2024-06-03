@@ -15,8 +15,6 @@ import { PauseListener } from './misc/menu-pause'
 import { updateQuickRingMenuLayoutLock } from './misc/quick-menu-layout-enforce'
 import { RuntimeResources } from './misc/runtime-assets'
 import { TestMap } from './misc/test-map'
-import { getOptions } from './options'
-import { MenuOptionsManager, OptsType } from './options-manager'
 import { SoundManager } from './sound-manager'
 import { SpecialAction } from './special-action'
 import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
@@ -25,8 +23,7 @@ import { TTS } from './tts/tts'
 import type * as __ from 'cc-blitzkrieg'
 import type * as _ from 'cc-vim'
 import './misc/modify-prototypes'
-
-export let Opts: OptsType<ReturnType<typeof getOptions>>
+import { registerOpts } from './options'
 
 export type ObjectValues<T> = T[keyof T]
 
@@ -48,7 +45,7 @@ export default class CrossedEyes implements PluginClass {
 
     async prestart() {
         new LangManager()
-        Opts = new MenuOptionsManager(getOptions()).getOpts()
+        registerOpts()
 
         new RuntimeResources()
         new SoundManager()

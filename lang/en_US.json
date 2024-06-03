@@ -14,7 +14,7 @@
         "hudVisible": { "name": "CrossedEyes button visibility", "description": "Show the CrossedEyes hud button in the pause menu." },
         "enemyVulnerableMulti": { "name": "Enemy vulnerable multiplier", "description": "Extend the length of enemy vulnerability." },
         "tts": { "name": "Enable TTS", "description": "Enable TTS." },
-        "ttsType": { "name": "TTS Type", "description": "Reader type, Requires a restart!" },
+        "ttsType": { "name": "TTS Type", "description": "Reader type, Requires a restart!", "buttonNames": ["Web Speech", "NVDA"] },
         "ttsChar": { "name": "TTS Character text", "description": "Read character text." },
         "ttsSpeed": { "name": "TTS Speed", "description": "TTS volume." },
         "ttsVolume": { "name": "TTS Volume", "description": "TTS Volume (may not work)." },
@@ -30,6 +30,12 @@
         "hintsVolume": { "name": "Hints volume", "description": "Hints volume multiplier." },
         "interactableVolume": { "name": "Interactable volume", "description": "Interactable volume multiplier." },
         "entityHintsVolume": { "name": "Entity hints volume", "description": "Entity hints volume multiplier." }
+    },
+    "optsCategories": {
+        "general": "General",
+        "volumes": "Volumes",
+        "tts": "TTS",
+        "functionality": "Functionality"
     },
     "logupload": {
         "uploading": "Uploading...",

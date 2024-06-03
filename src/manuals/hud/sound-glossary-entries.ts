@@ -4,7 +4,7 @@ import { LoudJump } from '../../environment/loudjump'
 import { LoudWalls } from '../../environment/loudwalls'
 import { HintSystem } from '../../hint-system/hint-system'
 import { Lang } from '../../lang-manager'
-import { Opts } from '../../plugin'
+import { Opts } from '../../options'
 import { SoundManager } from '../../sound-manager'
 import { SoundGlossaryEntry } from './sound-glossary'
 

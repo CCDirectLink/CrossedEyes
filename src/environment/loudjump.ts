@@ -1,7 +1,8 @@
 import { AimAnalyzer, isAiming } from '../hint-system/aim-analyze'
-import { ObjectValues, Opts } from '../plugin'
+import { ObjectValues } from '../plugin'
 import { SoundManager } from '../sound-manager'
 import CrossedEyes from '../plugin'
+import { Opts } from '../options'
 
 declare global {
     namespace sc {

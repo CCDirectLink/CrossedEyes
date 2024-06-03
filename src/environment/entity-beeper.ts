@@ -1,4 +1,4 @@
-import { Opts } from '../plugin'
+import { Opts } from '../options'
 import CrossedEyes from '../plugin'
 import { SoundManager } from '../sound-manager'
 import { EntityUtil } from './entity-util'
