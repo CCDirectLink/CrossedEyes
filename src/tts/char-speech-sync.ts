@@ -125,11 +125,11 @@ export class CharacterSpeechSynchronizer implements SpeechEndListener {
     }
     onSpeechEnd(): void {
         if (Opts.ttsChar) {
-            if (this.sideMessageHudGuiIns.timer > 10000) {
+            if (this.sideMessageHudGuiIns?.timer > 10000) {
                 this.sideMessageHudGuiIns.timer = 1
                 this.sideMessageHudGuiIns.visibleBoxes.last().text.finish()
             }
-            if (sc.message.blocking && !sc.message.hasChoice()) {
+            if (sc.message?.blocking && !sc.message.hasChoice()) {
                 this.messageOverlayGuiIns.messageArea.skip(false)
             }
             if (TTS.g?.ttsInstance?.calibrateSpeed && this.rateCalibData.length <= this.rateCalibCount && (this.rateCalibData.last() ?? [])[0] > startDate) {
