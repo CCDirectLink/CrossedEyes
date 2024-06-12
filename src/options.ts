@@ -5,7 +5,7 @@ import { updateIdlePose } from './misc/idle-pose-disable'
 import type { Options, Option } from 'ccmodmanager/types/mod-options'
 import { Lang } from './lang-manager'
 
-export let Opts: ReturnType<typeof sc.modMenu.registerAndGetModOptions<ReturnType<typeof registerOpts>>>
+export let Opts: ReturnType<typeof modmanager.registerAndGetModOptions<ReturnType<typeof registerOpts>>>
 
 export function registerOpts() {
     const opts = {
@@ -155,13 +155,13 @@ export function registerOpts() {
                         init: TTS_TYPES.WebSpeech,
                         enum: TTS_TYPES,
                         changeEvent: () => TTS.g.setup(),
-                        hidden: () => !sc.modMenu.options['crossedeyes'].tts,
+                        hidden: () => !modmanager.options['crossedeyes'].tts,
                         updateMenuOnChange: true,
                     },
                     ttsChar: {
                         type: 'CHECKBOX',
                         init: true,
-                        hidden: () => !sc.modMenu.options['crossedeyes'].tts,
+                        hidden: () => !modmanager.options['crossedeyes'].tts,
                     },
                     ttsSpeed: {
                         type: 'OBJECT_SLIDER',
@@ -171,7 +171,7 @@ export function registerOpts() {
                         step: 0.1,
                         fill: true,
                         showPercentage: true,
-                        hidden: () => !sc.modMenu.options['crossedeyes'].tts || sc.modMenu.options['crossedeyes'].ttsType != TTS_TYPES.WebSpeech,
+                        hidden: () => !modmanager.options['crossedeyes'].tts || modmanager.options['crossedeyes'].ttsType != TTS_TYPES.WebSpeech,
                     },
                     ttsVolume: {
                         type: 'OBJECT_SLIDER',
@@ -181,7 +181,7 @@ export function registerOpts() {
                         step: 0.1,
                         fill: true,
                         showPercentage: true,
-                        hidden: () => !sc.modMenu.options['crossedeyes'].tts || sc.modMenu.options['crossedeyes'].ttsType != TTS_TYPES.WebSpeech,
+                        hidden: () => !modmanager.options['crossedeyes'].tts || modmanager.options['crossedeyes'].ttsType != TTS_TYPES.WebSpeech,
                     },
                     ttsPitch: {
                         type: 'OBJECT_SLIDER',
@@ -191,7 +191,7 @@ export function registerOpts() {
                         step: 0.1,
                         fill: true,
                         showPercentage: true,
-                        hidden: () => !sc.modMenu.options['crossedeyes'].tts || sc.modMenu.options['crossedeyes'].ttsType != TTS_TYPES.WebSpeech,
+                        hidden: () => !modmanager.options['crossedeyes'].tts || modmanager.options['crossedeyes'].ttsType != TTS_TYPES.WebSpeech,
                     },
                 },
             },
@@ -241,7 +241,7 @@ export function registerOpts() {
             },
         },
     } as const satisfies Options
-    Opts = sc.modMenu.registerAndGetModOptions(
+    Opts = modmanager.registerAndGetModOptions(
         {
             modId: 'crossedeyes',
             title: Lang.crossedeyes,

@@ -27,6 +27,8 @@ import { registerOpts } from './options'
 
 export type ObjectValues<T> = T[keyof T]
 
+// TODO: mod options submenu descriptions
+
 export default class CrossedEyes implements PluginClass {
     static dir: string
     static mod: Mod1

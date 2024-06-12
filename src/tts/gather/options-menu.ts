@@ -43,7 +43,7 @@ sc.OptionRow.inject({
         this._rowGroup.elements[this.row].forEach(e => (e.optionRow = this))
     },
 })
-sc.ModOptionsOptionRow.inject({
+modmanager.gui.OptionsOptionRow.inject({
     init(...args) {
         this.parent(...args)
         this._rowGroup.elements[this.row].forEach(e => (e.optionRow = this))
@@ -99,7 +99,7 @@ sc.RowButtonGroup.inject({
             let name: string
             const description: string = or.optionDes
 
-            const isModOptions = or instanceof sc.ModOptionsOptionRow
+            const isModOptions = or instanceof modmanager.gui.OptionsOptionRow
             if (isModOptions) {
                 name = or.guiOption.name
             } else {
@@ -111,7 +111,7 @@ sc.RowButtonGroup.inject({
                 let val: string | number | boolean
                 if (isModOptions) {
                     entry = or.guiOption
-                    val = sc.modMenu.options[or.guiOption.modId][or.guiOption.baseId]
+                    val = modmanager.options[or.guiOption.modId][or.guiOption.baseId]
                 } else {
                     entry = sc.OPTIONS_DEFINITION[or.optionName]
                     val = sc.options.get(or.optionName) as any

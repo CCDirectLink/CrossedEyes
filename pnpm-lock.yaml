@@ -34,7 +34,7 @@ importers:
         version: https://codeload.github.com/krypciak/cc-vim/tar.gz/65b139d5133816a838fda3ad558eb248ebd93fb9
       ccmodmanager:
         specifier: github:CCDirectLink/CCModManager
-        version: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/ab30cbacd653d45d2922da9d399c8197c5d1ac1d
+        version: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/c74a5e17cfbfba3d3ba156d4520d0181a0a8a104
       crosscode-demonizer:
         specifier: github:krypciak/crosscode-demonizer
         version: https://codeload.github.com/krypciak/crosscode-demonizer/tar.gz/cdad0efd133ae13ab12bbcd382081f71cde7d7e8
@@ -390,9 +390,9 @@ packages:
     resolution: {tarball: https://codeload.github.com/krypciak/cc-vim/tar.gz/65b139d5133816a838fda3ad558eb248ebd93fb9}
     version: 1.5.9
 
-  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/ab30cbacd653d45d2922da9d399c8197c5d1ac1d:
-    resolution: {tarball: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/ab30cbacd653d45d2922da9d399c8197c5d1ac1d}
-    version: 0.9.11
+  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/c74a5e17cfbfba3d3ba156d4520d0181a0a8a104:
+    resolution: {tarball: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/c74a5e17cfbfba3d3ba156d4520d0181a0a8a104}
+    version: 0.9.13
 
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
@@ -1075,7 +1075,7 @@ snapshots:
 
   cc-vim@https://codeload.github.com/krypciak/cc-vim/tar.gz/65b139d5133816a838fda3ad558eb248ebd93fb9: {}
 
-  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/ab30cbacd653d45d2922da9d399c8197c5d1ac1d: {}
+  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/c74a5e17cfbfba3d3ba156d4520d0181a0a8a104: {}
 
   chalk@4.1.2:
     dependencies:
