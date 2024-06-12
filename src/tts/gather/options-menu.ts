@@ -137,7 +137,9 @@ sc.RowButtonGroup.inject({
                 lastRowButtonGroupSpeak = 0
             }
             SpecialAction.setListener('LSP', 'optionsRead', () => {
-                sc.menu.isOptions() && speakI(`${description}`)
+                if (sc.menu.currentMenu == sc.MENU_SUBMENU.MOD_OPTIONS || sc.menu.isOptions()) {
+                    speakI(`${description}`)
+                }
             })
         })
     },

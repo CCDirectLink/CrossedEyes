@@ -1,4 +1,5 @@
 import { Opts } from '../../options'
+import { SpecialAction } from '../../special-action'
 import { speak, speakI } from './api'
 
 let ignoreFrom: number = 0
@@ -26,6 +27,12 @@ sc.ButtonGui.inject({
                     sayChoice = false
                 } else {
                     speakI(this.text!)
+                }
+
+                if (typeof this.data === 'string') {
+                    SpecialAction.setListener('LSP', 'optionsRead', () => {
+                        speakI(`${this.data}`)
+                    })
                 }
             }
         }
