@@ -15,6 +15,7 @@
         "nax-ccuilib": ">=1.2.7",
         "ccmodmanager": ">=0.9.14",
         "cc-nwjs-manager": ">=1.0.3",
+        "cc-record": ">=1.0.1",
         "crosscode": ">=1.4.0"
     },
     "plugin": "plugin.js"

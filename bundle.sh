@@ -8,11 +8,12 @@ MOD_URLS=(
     "nax-ccuilib" "https://github.com/krypciak/nax-ccuilib/releases/download/v@VERSION/nax-ccuilib.ccmod"
     "nax-module-cache" "https://github.com/krypciak/nax-module-cache/releases/download/v1.0.2/nax-module-cache.ccmod"
     "cc-nwjs-manager" "https://github.com/krypciak/cc-nwjs-manager/releases/download/v@VERSION/cc-nwjs-manager-@VERSION.ccmod"
+    "cc-record" "https://github.com/krypciak/cc-record/releases/download/v@VERSION/cc-record-@VERSION.ccmod"
 )
 mkdir -p pack/assets/mods
-for ((i = 0 ; i < ${#MOD_URLS[@]} ; i+=2)); do
+for ((i = 0; i < ${#MOD_URLS[@]}; i += 2)); do
     name=${MOD_URLS[$i]}
-    url=${MOD_URLS[$i+1]}
+    url=${MOD_URLS[$i + 1]}
     version="$(jq ".dependencies[\"${name}\"]" ccmod.json | tail -c +4 | head -c -2)"
     url=$(echo $url | sed "s/@VERSION/${version}/g")
     echo -e "\n----------------Downloading $name v$version"
@@ -29,7 +30,7 @@ cp -r pack/*CCLoader*/* 'pack/'
 rm -rf pack/*CCLoader*
 rm -rf pack/ccloader.tar.gz
 
-patch -p1 pack/package.json < .github/workflows/package.patch
+patch -p1 pack/package.json <.github/workflows/package.patch
 
 cp ./TUTORIAL.md pack/CROSSEDEYES_MANUAL.md
 rm pack/mods.json

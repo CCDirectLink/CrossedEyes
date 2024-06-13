@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Added 
+
+- Added gameplay recording and sending functionality
+
 ### Changed
 
 - Moved all mod options from the main options menu to the new mod manager options sub-menu
