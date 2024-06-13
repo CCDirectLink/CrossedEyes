@@ -1,4 +1,5 @@
 import { Lang } from '../../lang-manager'
+import { ObjectKeysT } from '../../misc/modify-prototypes'
 import CrossedEyes from '../../plugin'
 import { SoundManager } from '../../sound-manager'
 import { SpecialAction } from '../../special-action'
@@ -75,7 +76,7 @@ export interface SoundGlossaryEntryP extends SoundGlossaryEntry {
 
 export class SoundGlossary {
     private glossary = getSoundGlossaryEntries()
-    private categories = Object.keysT(this.glossary)
+    private categories = ObjectKeysT(this.glossary)
 
     private getLangDataFromEntry(entry: SoundGlossaryEntryP) {
         // @ts-expect-error

@@ -14,7 +14,7 @@
     "ccmodDependencies": {},
     "devDependencies": {
         "@types/jquery": "^3.5.29",
-        "@types/node": "^11.6.0",
+        "@types/node": "^18.19.32",
         "@types/ws": "^8.5.10",
         "@typescript-eslint/eslint-plugin": "^7.1.1",
         "@typescript-eslint/parser": "^7.1.1",

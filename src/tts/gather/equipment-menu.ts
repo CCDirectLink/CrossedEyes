@@ -1,4 +1,5 @@
 import { Lang } from '../../lang-manager'
+import { ObjectEntriesT, ObjectKeysT } from '../../misc/modify-prototypes'
 import { Opts } from '../../options'
 import { SpecialAction } from '../../special-action'
 import { interrupt, speakArgsC, speakI } from './api'
@@ -112,7 +113,7 @@ function statDifference() {
 
 function getStats(): [keyof typeof Lang.stats, number][] {
     const params = EquipStatusContainer.baseParams
-    return Object.entriesT(statIdToLangIdMap)
+    return ObjectEntriesT(statIdToLangIdMap)
         .map(([statId, langId]) => {
             const gui = params[statId]
             const changedNum = gui.changeValueGui.targetNumber
@@ -138,7 +139,7 @@ function modifierDifference() {
 type Modifiers = keyof typeof sc.MODIFIERS
 function getModifiers(): [Modifiers, number][] {
     const modifiers = EquipStatusContainer.allModifiers
-    return Object.keysT(sc.MODIFIERS)
+    return ObjectKeysT(sc.MODIFIERS)
         .map(modifierId => {
             const gui = modifiers[modifierId]
             const changedNum = gui.changeValueGui.targetNumber

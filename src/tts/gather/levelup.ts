@@ -1,4 +1,5 @@
 import { Lang } from '../../lang-manager'
+import { ObjectEntriesT } from '../../misc/modify-prototypes'
 import { Opts } from '../../options'
 import { interrupt, speak } from './api'
 
@@ -21,7 +22,7 @@ sc.PlayerLevelNotifier.inject({
             focus: Lang.stats.focus,
         } as const
 
-        const strings: string[] = Object.entriesT(names)
+        const strings: string[] = ObjectEntriesT(names)
             .map(([key, statName]) => {
                 const value = levelStatData[key]
                 if (value) return Lang.stats.statDifferenceTemplate.supplant({ sign: Lang.misc.plus, value, statName })

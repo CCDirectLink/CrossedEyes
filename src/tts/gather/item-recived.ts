@@ -1,4 +1,5 @@
 import { Lang } from '../../lang-manager'
+import { ObjectEntriesT } from '../../misc/modify-prototypes'
 import { Opts } from '../../options'
 import CrossedEyes from '../../plugin'
 import { speak } from './api'
@@ -13,8 +14,8 @@ sc.ItemHudBox.inject({
             let itemName = new sc.ItemContent(id).textGui.text!.toString().trim()
             if (itemName.endsWith('x')) itemName = itemName.slice(0, itemName.length - 1)
             const item = sc.inventory.items[parseInt(id)]
-            const rarity = Lang.menu.itemRarityMap[Object.entriesT(sc.ITEMS_RARITY).find(([_, rarity]) => rarity == item.rarity)![0]]
-            const type = Lang.menu.itemTypesMap[Object.entriesT(sc.ITEMS_TYPES).find(([_, type]) => type == item.type)![0]]
+            const rarity = Lang.menu.itemRarityMap[ObjectEntriesT(sc.ITEMS_RARITY).find(([_, rarity]) => rarity == item.rarity)![0]]
+            const type = Lang.menu.itemTypesMap[ObjectEntriesT(sc.ITEMS_TYPES).find(([_, type]) => type == item.type)![0]]
             const count = recivedItemRecord[id]
             if (count == 1) {
                 speak(Lang.menu.oneItemRecivedTemplate.supplant({ itemName, rarity, type }))

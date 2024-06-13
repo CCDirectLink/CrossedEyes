@@ -12,8 +12,8 @@ importers:
         specifier: ^3.5.29
         version: 3.5.29
       '@types/node':
-        specifier: ^11.6.0
-        version: 11.15.54
+        specifier: ^18.19.32
+        version: 18.19.34
       '@types/ws':
         specifier: ^8.5.10
         version: 8.5.10
@@ -260,8 +260,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/node@11.15.54':
-    resolution: {integrity: sha512-1RWYiq+5UfozGsU6MwJyFX6BtktcT10XRjvcAQmskCtMcW3tPske88lM/nHv7BQG1w9KBXI1zPGuu5PnNCX14g==}
+  '@types/node@18.19.34':
+    resolution: {integrity: sha512-eXF4pfBNV5DAMKGbI02NnDtWrQ40hAN558/2vvS4gMpMIxaf6JmD7YjnZbq0Q9TDSSkKBamime8ewRoomHdt4g==}
 
   '@types/semver@6.2.7':
     resolution: {integrity: sha512-blctEWbzUFzQx799RZjzzIdBJOXmE37YYEyDtKkx5Dg+V7o/zyyAxLPiI98A2jdTtDgxZleMdfV+7p8WbRJ1OQ==}
@@ -778,6 +778,9 @@ packages:
     version: 0.0.1
     engines: {node: '>=10.0.0'}
 
+  undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
@@ -936,7 +939,9 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/node@11.15.54': {}
+  '@types/node@18.19.34':
+    dependencies:
+      undici-types: 5.26.5
 
   '@types/semver@6.2.7': {}
 
@@ -946,7 +951,7 @@ snapshots:
 
   '@types/ws@8.5.10':
     dependencies:
-      '@types/node': 11.15.54
+      '@types/node': 18.19.34
 
   '@typescript-eslint/eslint-plugin@7.1.1(@typescript-eslint/parser@7.1.1(eslint@8.57.0)(typescript@5.4.2))(eslint@8.57.0)(typescript@5.4.2)':
     dependencies:
@@ -1472,8 +1477,10 @@ snapshots:
   ultimate-crosscode-typedefs@https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/55d98202c766b3eaee763b7525478f2e75444a8b:
     dependencies:
       '@types/jquery': 1.10.45
-      '@types/node': 11.15.54
+      '@types/node': 18.19.34
       '@types/semver': 6.2.7
+
+  undici-types@5.26.5: {}
 
   uri-js@4.4.1:
     dependencies:

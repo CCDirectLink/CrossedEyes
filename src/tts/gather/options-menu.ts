@@ -4,6 +4,7 @@ import { Opts } from '../../options'
 import { SpecialAction } from '../../special-action'
 import { interrupt, speakArgsC, speakI, speakIC } from './api'
 import { button_setIgnoreFrom } from './button'
+import { ObjectEntriesT } from '../../misc/modify-prototypes'
 
 declare global {
     namespace sc {
@@ -73,7 +74,7 @@ function optionValueToString(entry: sc.OptionDefinition | GuiOption, val: string
         case 'LANGUAGE':
             return [
                 '',
-                Object.entriesT(sc.LANGUAGE)
+                ObjectEntriesT(sc.LANGUAGE)
                     .sort(([_, langA], [__, langB]) => langA - langB)
                     .map(e => e[0])[val as number],
             ]

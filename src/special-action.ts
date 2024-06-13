@@ -1,3 +1,4 @@
+import { ObjectKeysT } from './misc/modify-prototypes'
 import CrossedEyes from './plugin'
 
 export class SpecialAction {
@@ -22,7 +23,7 @@ export class SpecialAction {
 
     onPreUpdate() {
         /* run by ig.game.addons.preUpdate */
-        for (const actionName of Object.keysT(this.actions)) {
+        for (const actionName of ObjectKeysT(this.actions)) {
             const action = this.actions[actionName]
             if (action.check()) {
                 Object.values(action.callbacks).forEach(c => c())
