@@ -11,9 +11,10 @@
     },
     "dependencies": {
         "input-api": ">=1.0.0",
-        "cc-blitzkrieg": ">=0.5.6",
+        "cc-blitzkrieg": ">=0.5.8",
         "nax-ccuilib": ">=1.2.7",
-        "ccmodmanager": ">=0.9.13",
+        "ccmodmanager": ">=0.9.14",
+        "cc-nwjs-manager": ">=1.0.3",
         "crosscode": ">=1.4.0"
     },
     "plugin": "plugin.js"

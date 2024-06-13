@@ -29,6 +29,9 @@ importers:
       cc-map-util:
         specifier: github:krypciak/cc-map-util
         version: https://codeload.github.com/krypciak/cc-map-util/tar.gz/256929a9a8b77021a953c92d048832ee789839f5
+      cc-nwjs-manager:
+        specifier: github:krypciak/cc-nwjs-manager
+        version: https://codeload.github.com/krypciak/cc-nwjs-manager/tar.gz/735c94278db0ca89a64a5e77db238b15e1764688
       cc-vim:
         specifier: github:krypciak/cc-vim
         version: https://codeload.github.com/krypciak/cc-vim/tar.gz/65b139d5133816a838fda3ad558eb248ebd93fb9
@@ -385,6 +388,10 @@ packages:
   cc-map-util@https://codeload.github.com/krypciak/cc-map-util/tar.gz/256929a9a8b77021a953c92d048832ee789839f5:
     resolution: {tarball: https://codeload.github.com/krypciak/cc-map-util/tar.gz/256929a9a8b77021a953c92d048832ee789839f5}
     version: 1.0.0
+
+  cc-nwjs-manager@https://codeload.github.com/krypciak/cc-nwjs-manager/tar.gz/735c94278db0ca89a64a5e77db238b15e1764688:
+    resolution: {tarball: https://codeload.github.com/krypciak/cc-nwjs-manager/tar.gz/735c94278db0ca89a64a5e77db238b15e1764688}
+    version: 1.0.2
 
   cc-vim@https://codeload.github.com/krypciak/cc-vim/tar.gz/65b139d5133816a838fda3ad558eb248ebd93fb9:
     resolution: {tarball: https://codeload.github.com/krypciak/cc-vim/tar.gz/65b139d5133816a838fda3ad558eb248ebd93fb9}
@@ -1072,6 +1079,8 @@ snapshots:
   cc-blitzkrieg@https://codeload.github.com/krypciak/cc-blitzkrieg/tar.gz/ea3141402192315b726a9de24691f148be7134bd: {}
 
   cc-map-util@https://codeload.github.com/krypciak/cc-map-util/tar.gz/256929a9a8b77021a953c92d048832ee789839f5: {}
+
+  cc-nwjs-manager@https://codeload.github.com/krypciak/cc-nwjs-manager/tar.gz/735c94278db0ca89a64a5e77db238b15e1764688: {}
 
   cc-vim@https://codeload.github.com/krypciak/cc-vim/tar.gz/65b139d5133816a838fda3ad558eb248ebd93fb9: {}
 

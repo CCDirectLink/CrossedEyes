@@ -20,14 +20,13 @@ import { SpecialAction } from './special-action'
 import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
 import { TTS } from './tts/tts'
 
+import type * as ___ from 'cc-nwjs-manager/types/plugin'
 import type * as __ from 'cc-blitzkrieg'
 import type * as _ from 'cc-vim'
 import './misc/modify-prototypes'
 import { registerOpts } from './options'
 
 export type ObjectValues<T> = T[keyof T]
-
-// TODO: mod options submenu descriptions
 
 export default class CrossedEyes implements PluginClass {
     static dir: string
@@ -38,6 +37,8 @@ export default class CrossedEyes implements PluginClass {
     static pauseables: PauseListener[] = []
     static isPaused: boolean = false /* see ./misc/menu-pause */
 
+    private noInit: boolean = false
+
     constructor(mod: Mod1) {
         CrossedEyes.dir = mod.baseDirectory
         CrossedEyes.mod = mod
@@ -46,6 +47,11 @@ export default class CrossedEyes implements PluginClass {
     }
 
     async prestart() {
+        if (!nwjsManager.ensureVersion('0.72.0')) {
+            this.noInit = true
+            return
+        }
+
         new LangManager()
         registerOpts()
 
@@ -80,6 +86,7 @@ export default class CrossedEyes implements PluginClass {
     }
 
     async poststart() {
+        if (this.noInit) return
         CrossedEyes.initPoststart.forEach(p => p())
         await import('./misc/log-keybinding')
 
