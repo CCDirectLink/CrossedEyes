@@ -129,11 +129,8 @@ export class AddonInstaller {
 
         const pythonWebsocketClientVersion = '1.6.4'
         const addonsDir = `${process.env.APPDATA ?? ''}/nvda/addons`
-        const zipFilePath = `${process.env.TEMP}/websocket-client.zip`
-        const downloadPromise: Promise<void> = blitzkrieg.FsUtil.downloadFile(
-            `https://codeload.github.com/websocket-client/websocket-client/zip/refs/tags/v${pythonWebsocketClientVersion}`,
-            zipFilePath
-        )
+
+        const websocketArchiveDataPromise = fetch(`https://codeload.github.com/websocket-client/websocket-client/zip/refs/tags/v${pythonWebsocketClientVersion}`)
 
         async function cp(name: string) {
             const from = `${CrossedEyes.dir}/nvdaplugin/${name}`
@@ -148,10 +145,10 @@ export class AddonInstaller {
             cp('crosscode/manifest.ini'),
             cp('crosscode/appModules/crosscode.py'),
             blitzkrieg.FsUtil.mkdirs(websocketClientParentPath),
-            downloadPromise
         ])
 
-        await blitzkrieg.FsUtil.unzipFile(zipFilePath, websocketClientParentPath)
+        const websocketArchiveData = await (await websocketArchiveDataPromise).arrayBuffer()
+        await blitzkrieg.FsUtil.unzipArchive(websocketArchiveData, websocketClientParentPath)
 
         Opts.ttsType = TTS_TYPES.NVDA
         console.log('install succesfull')

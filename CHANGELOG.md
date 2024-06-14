@@ -12,6 +12,10 @@
 
 - Moved all mod options from the main options menu to the new mod manager options sub-menu
 
+### Fixed
+
+- Fixed NVDA addon installation on some system configurations
+
 ## [0.6.2] 2024-05-27
 
 ### Added

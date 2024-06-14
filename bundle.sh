@@ -20,7 +20,7 @@ for ((i = 0; i < ${#MOD_URLS[@]}; i += 2)); do
     [ ! -f "pack/assets/mods/${name}"* ] && wget -nv "$url" -O "pack/assets/mods/$name.ccmod"
 done
 
-cp crossedeyes*.ccmod pack/assets/mods/
+cp crossedeyes*.ccmod pack/assets/mods/crossedeyes.ccmod
 
 echo -e "\n----------------Downloading CCLoader"
 ccloader_url="$(curl -s 'https://api.github.com/repos/CCDirectLink/CCLoader/releases/latest' | jq '.tarball_url' | head -c -2 | tail -c +2)"
