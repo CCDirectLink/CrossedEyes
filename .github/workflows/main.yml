@@ -58,7 +58,9 @@ jobs:
               run: |
                   sed -i "/\[Unreleased\]/a ## [$VERSION_NUMERIC] newDateHere" ./CHANGELOG.md
                   sed -i "s/newDateHere/$(date '+%Y-%m-%d')/g" ./CHANGELOG.md
-                  git add ./CHANGELOG.md
+                  if [ $IS_PREREALESE = false ]; then 
+                    git add ./CHANGELOG.md
+                  fi
 
             - name: Commit changes
               run: |
