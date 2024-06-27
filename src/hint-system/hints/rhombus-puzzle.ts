@@ -1,4 +1,5 @@
 import { Lang } from '../../lang-manager'
+import { StringToLowerCaseT } from '../../misc/modify-prototypes'
 import { Opts } from '../../options'
 import { HintBase, HintData } from '../hint-system'
 
@@ -99,7 +100,7 @@ export class HBallChanger implements HintBase {
             lang.name = lang.name.supplant({ dir })
             lang.description = lang.description.supplant({ dir })
         } else if (ctype.type == 'CHANGE_ELEMENT') {
-            const element = Lang.stats[ctype.settings.element.toLowerCaseT()]
+            const element = Lang.stats[StringToLowerCaseT(ctype.settings.element)]
             lang.name = lang.name.supplant({ element })
             lang.description = lang.description.supplant({ element })
         }

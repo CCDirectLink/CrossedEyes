@@ -4,13 +4,12 @@ import { ValidTextLike } from '../tts/gather/api'
 declare global {
     interface String {
         supplant(vars: ValidTextLike[] | Record<string, ValidTextLike>): string
-        toLowerCaseT<T extends string>(this: T): Lowercase<T>
     }
 }
 
 export const ObjectKeysT: <K extends string | number | symbol, V>(object: Record<K, V>) => K[] = Object.keys as any
 export const ObjectEntriesT: <K extends string | number | symbol, V>(object: { [key in K]?: V }) => [K, V][] = Object.entries as any
-export const StringToLowerCaseT = String.prototype.toLowerCase as any
+export const StringToLowerCaseT: <T extends string>(string: T) => Lowercase<T> = (str) => str.toLowerCase() as any
 
 String.prototype.supplant = function (this: string, o: any) {
     return this.replace(/{([^{}]*)}/g, function (a: any, b: any) {
