@@ -314,7 +314,7 @@ export class SoundGlossary {
                 const entry = this.currentSelectedButton?.entry
                 if (!entry) return
                 const id = this.getContiniousId(entry)
-                SoundManager.stopCondinious(id)
+                SoundManager.stopContinious(id)
             },
             updateSound() {
                 if (!this.isSoundOn) return

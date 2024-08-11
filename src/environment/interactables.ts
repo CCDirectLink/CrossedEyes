@@ -36,7 +36,7 @@ export class InteractableHandler {
         ig.ENTITY.Chest?.inject({
             openUp() {
                 this.parent()
-                SoundManager.stopCondinious(self.getId(this))
+                SoundManager.stopContinious(self.getId(this))
             },
         })
         sc.MapInteractEntry.inject({
@@ -75,7 +75,7 @@ export class InteractableHandler {
                     } else if (this.state == sc.INTERACT_ENTRY_STATE.NEAR) {
                         SoundManager.handleContiniousEntry(id, this.entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER), range, 0)
                     } else {
-                        SoundManager.stopCondinious(id)
+                        SoundManager.stopContinious(id)
                     }
                     this.stateUpdate = false
                 }

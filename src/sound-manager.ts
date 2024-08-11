@@ -153,7 +153,7 @@ export class SoundManager implements PauseListener {
 
     pause(): void {
         for (const id in SoundManager.continious) {
-            SoundManager.stopCondinious(id)
+            SoundManager.stopContinious(id)
         }
     }
 
@@ -200,7 +200,7 @@ export class SoundManager implements PauseListener {
         if (!entry) return false
 
         if (entry.condition && !entry.condition()) {
-            SoundManager.stopCondinious(id)
+            SoundManager.stopContinious(id)
             return false
         }
 
@@ -263,7 +263,7 @@ export class SoundManager implements PauseListener {
         return false
     }
 
-    static stopCondinious(id: string): boolean {
+    static stopContinious(id: string): boolean {
         const entry = SoundManager.continious[id]
         if (!entry) return false
         if ('paths' in entry) {
@@ -285,7 +285,7 @@ export class SoundManager implements PauseListener {
 
     static purgeContinious(id: string) {
         if (SoundManager.continious[id]) {
-            SoundManager.stopCondinious(id)
+            SoundManager.stopContinious(id)
             delete SoundManager.continious[id]
         }
     }

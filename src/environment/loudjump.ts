@@ -330,7 +330,7 @@ export class LoudJump {
 
     playRes(id: string, dir: Vec2, res: PlayerTraceResult, type: TrackType) {
         if (type == TRACK_TYPE.None) {
-            SoundManager.stopCondinious(id)
+            SoundManager.stopContinious(id)
             return
         }
 

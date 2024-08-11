@@ -39,7 +39,7 @@ export class EntityBeeper {
     }
 
     private deactivateEntity(e: ig.Entity) {
-        SoundManager.stopCondinious(this.getId(e))
+        SoundManager.stopContinious(this.getId(e))
     }
 
     private handleEntity(e: ig.Entity) {
@@ -52,7 +52,7 @@ export class EntityBeeper {
         if (SoundManager.continious[id]) {
             const sett = e.getQuickMenuSettings!()
             if (sett.disabled || sett.dontEmitSound) {
-                SoundManager.stopCondinious(id)
+                SoundManager.stopContinious(id)
             } else {
                 const pos = e.getAlignedPos(ig.ENTITY_ALIGN.CENTER)
                 SoundManager.handleContiniousEntry(id, pos, undefined, 0, SoundManager.getAngleVecToPlayer(e))

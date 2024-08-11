@@ -53,7 +53,7 @@ export class LoudWalls {
             const check = LoudWalls.checkDirection(Vec2.create(dir), range, ig.COLLTYPE.PROJECTILE)
 
             if (check.type !== 'collided') {
-                SoundManager.stopCondinious(dirId)
+                SoundManager.stopContinious(dirId)
                 continue
             }
 

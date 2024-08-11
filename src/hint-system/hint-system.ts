@@ -136,7 +136,7 @@ export class HintSystem {
     }
 
     deactivateHint(e: ig.Entity | undefined) {
-        if (e && !(this.focusedHE == e && this.selectedHE.includes(e)) && SoundManager.stopCondinious(this.getContId(e))) {
+        if (e && !(this.focusedHE == e && this.selectedHE.includes(e)) && SoundManager.stopContinious(this.getContId(e))) {
             interrupt()
             SpecialAction.setListener('LSP', 'hintDescription', () => {})
             SpecialAction.setListener('R2', 'hintDescription', () => {})
