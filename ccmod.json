@@ -12,10 +12,8 @@
     "dependencies": {
         "input-api": ">=1.0.0",
         "cc-blitzkrieg": ">=0.5.9",
-        "nax-ccuilib": ">=1.2.7",
-        "ccmodmanager": ">=0.9.15",
-        "cc-nwjs-manager": ">=1.0.4",
-        "cc-record": ">=1.0.4",
+        "nax-ccuilib": ">=1.2.9",
+        "ccmodmanager": ">=0.9.21",
         "crosscode": ">=1.4.0"
     },
     "plugin": "plugin.js"

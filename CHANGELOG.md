@@ -3,6 +3,11 @@
 # Change Log
 
 ## [Unreleased]
+
+### Fixed
+
+- Fix game hard freezes due to NW.js update failures (removed `cc-nwjs-manager` and `cc-record` from dependencies)
+
 ## [0.6.3] 2024-06-27
 
 ### Added 

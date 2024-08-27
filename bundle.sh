@@ -7,8 +7,6 @@ MOD_URLS=(
     "ccmodmanager" "https://github.com/CCDirectLink/CCModManager/releases/download/v@VERSION/ccmodmanager-@VERSION.ccmod"
     "nax-ccuilib" "https://github.com/krypciak/nax-ccuilib/releases/download/v@VERSION/nax-ccuilib.ccmod"
     "nax-module-cache" "https://github.com/krypciak/nax-module-cache/releases/download/v1.0.2/nax-module-cache.ccmod"
-    "cc-nwjs-manager" "https://github.com/krypciak/cc-nwjs-manager/releases/download/v@VERSION/cc-nwjs-manager-@VERSION.ccmod"
-    "cc-record" "https://github.com/krypciak/cc-record/releases/download/v@VERSION/cc-record-@VERSION.ccmod"
 )
 mkdir -p pack/assets/mods
 for ((i = 0; i < ${#MOD_URLS[@]}; i += 2)); do
