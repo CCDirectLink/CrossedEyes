@@ -1,4 +1,3 @@
-import { EntityPoint, MapPoint } from 'cc-map-util/src/pos'
 import { Lang } from '../lang-manager'
 import { Opts } from '../options'
 import CrossedEyes from '../plugin'
@@ -15,12 +14,12 @@ import { HBallChanger, HDynamicPlatform, HOLPlatform } from './hints/rhombus-puz
 import { HMultiHitSwitch, HOneTimeSwitch, HSwitch } from './hints/switches'
 import { HDoor, HElevator, HTeleportField, HTeleportGround } from './hints/tprs'
 import { HWalls } from './hints/walls'
-import { isVecInRectArr } from 'cc-map-util/src/rect'
 import { interrupt, speakIC } from '../tts/gather/api'
 import type { PuzzleSelection } from 'cc-blitzkrieg/types/puzzle-selection'
 import type { Selection } from 'cc-blitzkrieg/types/selection'
 import { BattleSelection } from 'cc-blitzkrieg/types/battle-selection'
 import { HHiddenBlock } from './hints/hidden-block'
+import { Rect } from '../misc/geometry'
 
 declare global {
     namespace sc {
@@ -324,8 +323,8 @@ export class HintSystem {
 
                     if (filter && self.filterInSelection) {
                         const sel = self.getCurrentSelectionToFilterIn()
-                        const mapPoint = EntityPoint.fromVec(entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER)).to(MapPoint)
-                        if (sel && !isVecInRectArr(mapPoint, sel.bb)) return
+                        const mapPoint = Vec2.divC(Vec2.create(entity.getAlignedPos(ig.ENTITY_ALIGN.CENTER)), 16)
+                        if (sel && !Rect.isVecInArr(sel.bb, mapPoint)) return
                     }
 
                     const sett = entity.getQuickMenuSettings() as sc.QuickMenuTypesBaseSettings

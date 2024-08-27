@@ -21,7 +21,6 @@ import { CharacterSpeechSynchronizer } from './tts/char-speech-sync'
 import { TTS } from './tts/tts'
 
 import type * as __ from 'cc-blitzkrieg'
-import type * as _ from 'cc-vim'
 import './misc/modify-prototypes'
 import { registerOpts } from './options'
 
