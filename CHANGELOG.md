@@ -7,6 +7,7 @@
 ### Fixed
 
 - Fix game hard freezes due to NW.js update failures (removed `cc-nwjs-manager` and `cc-record` from dependencies)
+- Fix quick menu layout enforcing
 
 ## [0.6.3] 2024-06-27
 

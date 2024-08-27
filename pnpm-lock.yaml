@@ -28,7 +28,7 @@ importers:
         version: https://codeload.github.com/krypciak/cc-blitzkrieg/tar.gz/b789433c10134d0c4b46a935121a2b7daf876943
       ccmodmanager:
         specifier: github:CCDirectLink/CCModManager
-        version: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/d06889a833f2b4e3d9956c936f28357a7bf5ce3d
+        version: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/51581da969149f1a77160dd7148bc2a058f344e2
       crosscode-demonizer:
         specifier: github:krypciak/crosscode-demonizer
         version: https://codeload.github.com/krypciak/crosscode-demonizer/tar.gz/cdad0efd133ae13ab12bbcd382081f71cde7d7e8
@@ -42,8 +42,8 @@ importers:
         specifier: ^9.1.0
         version: 9.1.0(eslint@8.57.0)
       nax-ccuilib:
-        specifier: github:krypciak/nax-ccuilib
-        version: https://codeload.github.com/krypciak/nax-ccuilib/tar.gz/7d1de5da278145b78bc5c0d8ccb8839d24aedef2
+        specifier: github:conorlawton/nax-ccuilib
+        version: https://codeload.github.com/conorlawton/nax-ccuilib/tar.gz/05a605315f96640aabaca93d7c6a70a57a2cfba4
       prettier:
         specifier: 3.2.5
         version: 3.2.5
@@ -380,8 +380,8 @@ packages:
     resolution: {tarball: https://codeload.github.com/krypciak/cc-blitzkrieg/tar.gz/b789433c10134d0c4b46a935121a2b7daf876943}
     version: 0.5.8
 
-  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/d06889a833f2b4e3d9956c936f28357a7bf5ce3d:
-    resolution: {tarball: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/d06889a833f2b4e3d9956c936f28357a7bf5ce3d}
+  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/51581da969149f1a77160dd7148bc2a058f344e2:
+    resolution: {tarball: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/51581da969149f1a77160dd7148bc2a058f344e2}
     version: 0.9.21
 
   chalk@4.1.2:
@@ -642,9 +642,9 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  nax-ccuilib@https://codeload.github.com/krypciak/nax-ccuilib/tar.gz/7d1de5da278145b78bc5c0d8ccb8839d24aedef2:
-    resolution: {tarball: https://codeload.github.com/krypciak/nax-ccuilib/tar.gz/7d1de5da278145b78bc5c0d8ccb8839d24aedef2}
-    version: 1.2.6
+  nax-ccuilib@https://codeload.github.com/conorlawton/nax-ccuilib/tar.gz/05a605315f96640aabaca93d7c6a70a57a2cfba4:
+    resolution: {tarball: https://codeload.github.com/conorlawton/nax-ccuilib/tar.gz/05a605315f96640aabaca93d7c6a70a57a2cfba4}
+    version: 1.2.9
 
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
@@ -1103,7 +1103,7 @@ snapshots:
     dependencies:
       '@types/jszip': 3.4.1
 
-  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/d06889a833f2b4e3d9956c936f28357a7bf5ce3d: {}
+  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/51581da969149f1a77160dd7148bc2a058f344e2: {}
 
   chalk@4.1.2:
     dependencies:
@@ -1408,7 +1408,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  nax-ccuilib@https://codeload.github.com/krypciak/nax-ccuilib/tar.gz/7d1de5da278145b78bc5c0d8ccb8839d24aedef2: {}
+  nax-ccuilib@https://codeload.github.com/conorlawton/nax-ccuilib/tar.gz/05a605315f96640aabaca93d7c6a70a57a2cfba4: {}
 
   once@1.4.0:
     dependencies:

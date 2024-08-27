@@ -1,10 +1,21 @@
 import { Opts } from '../options'
 import type * as _ from 'nax-ccuilib/src/headers/nax/quick-menu-public-api.d.ts'
+import type { Opts as CCUILibOptsType } from 'nax-ccuilib/src/options'
+import type { Opts as CCModManagerOptsType } from 'ccmodmanager/types/options'
 
 export function updateQuickRingMenuLayoutLock() {
-    nax.ccuilib.QuickRingMenuWidgets.lockLayout = Opts.lockDiorbitalMenu
-    if (nax.ccuilib.QuickRingMenuWidgets.lockLayout) {
-        nax.ccuilib.QuickRingMenuWidgets.ringConfiguration = {
+    const CCModManagerOpts = modmanager.options['ccmodmanager'] as typeof CCModManagerOptsType
+    CCModManagerOpts.manualEnforcerRead = {
+        ...CCModManagerOpts.manualEnforcerRead,
+        'CCUILib-quickmenu': true,
+    }
+
+    const CCUILibOpts = modmanager.options['nax-ccuilib'] as typeof CCUILibOptsType
+    CCUILibOpts.lockLayout = Opts.lockDiorbitalMenu
+
+    CCUILibOpts.lockLayout = Opts.lockDiorbitalMenu
+    if (CCUILibOpts.lockLayout) {
+        CCUILibOpts.ringConfiguration = {
             0: '11_items',
             1: 'crossedeyes-yLevelAnnounce',
             2: '11_analyze',
