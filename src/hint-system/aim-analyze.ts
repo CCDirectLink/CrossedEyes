@@ -184,8 +184,8 @@ export class AimAnalyzer implements PauseListener {
         bouncePoints: number,
         maxPoint: number,
         maxBounce: number,
-        outArr: ig.Physics.CollEntry[][] = []
-    ): (ig.Physics.CollEntry[] & { bouncePos?: Vec3 })[] {
+        outArr: ig.CollEntry[][] = []
+    ): (ig.CollEntry[] & { bouncePos?: Vec3 })[] {
         const player = ig.game.playerEntity
         let zPos = player.coll.pos.z
         if (player.maxJumpHeight !== undefined && player.maxJumpHeight >= 0) {
@@ -198,7 +198,7 @@ export class AimAnalyzer implements PauseListener {
 
         let c_res: { dir?: Vec2 } = {}
         const res = ig.game.physics.initTraceResult(c_res)
-        const hitEntityList: ig.Physics.CollEntry[] = []
+        const hitEntityList: ig.CollEntry[] = []
 
         ig.game.physics._trackEntityTouch = true
         const collided = ig.game.trace(
@@ -225,7 +225,7 @@ export class AimAnalyzer implements PauseListener {
 
         let ballBlocked = false
         outArr.push([])
-        const arr: ig.Physics.CollEntry[] & { bouncePos?: Vec3 } = outArr.last()
+        const arr: ig.CollEntry[] & { bouncePos?: Vec3 } = outArr.last()
         for (let i = 0; i < hitEntityList.length; ++i) {
             const entry = hitEntityList[i]
             arr.push(entry)

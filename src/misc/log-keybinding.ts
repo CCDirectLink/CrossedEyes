@@ -2,6 +2,13 @@ import { Lang } from '../lang-manager'
 import { speakIC } from '../tts/gather/api'
 
 /* in poststart */
+declare global {
+    namespace ig.Input {
+        interface KnownActions {
+            copylog: true
+        }
+    }
+}
 
 ig.input.bind(ig.KEY.F4, 'copylog')
 let lastLogSent: number = 0

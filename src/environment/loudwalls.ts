@@ -9,7 +9,7 @@ const c_tmpPoint: Vec3 = { x: 0, y: 0, z: 0 }
 
 const range: number = 5 * 16
 
-type CheckDirectionReturn = { type: 'none' | 'blocked' | 'collided'; pos: Vec3; distance: number; hitE?: ig.Physics.CollEntry[] }
+type CheckDirectionReturn = { type: 'none' | 'blocked' | 'collided'; pos: Vec3; distance: number; hitE?: ig.CollEntry[] }
 
 export class LoudWalls {
     static g: LoudWalls
@@ -86,7 +86,7 @@ export class LoudWalls {
         Vec2.length(dir, distance)
 
         const result: ig.Physics.TraceResult = ig.game.physics.initTraceResult(c_res)
-        const hitEntityList: ig.Physics.CollEntry[] = []
+        const hitEntityList: ig.CollEntry[] = []
         trackEntityTouch && (ig.game.physics._trackEntityTouch = true)
         const collided: boolean = ig.game.trace(
             result,

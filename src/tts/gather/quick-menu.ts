@@ -4,9 +4,7 @@ import CrossedEyes from '../../plugin'
 import { SpecialAction } from '../../special-action'
 import { interrupt, speakI, speakIC } from './api'
 
-import type * as _ from 'nax-ccuilib/src/headers/nax/quick-menu-public-api.d.ts'
-import type * as __ from 'nax-ccuilib/src/headers/nax/quick-menu.d.ts'
-import type * as ___ from 'nax-ccuilib/src/headers/sc/quick-menu.d.ts'
+import type {} from 'nax-ccuilib/src/ui/quick-menu/quick-menu-extension'
 
 /* in prestart */
 sc.QuickMenu.inject({

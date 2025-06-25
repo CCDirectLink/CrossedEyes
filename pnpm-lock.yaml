@@ -28,7 +28,7 @@ importers:
         version: https://codeload.github.com/krypciak/cc-blitzkrieg/tar.gz/b789433c10134d0c4b46a935121a2b7daf876943
       ccmodmanager:
         specifier: github:CCDirectLink/CCModManager
-        version: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/51581da969149f1a77160dd7148bc2a058f344e2
+        version: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/e4a407a2d6501125e3c5036d5f8b6326e73d94ee
       crosscode-demonizer:
         specifier: github:krypciak/crosscode-demonizer
         version: https://codeload.github.com/krypciak/crosscode-demonizer/tar.gz/cdad0efd133ae13ab12bbcd382081f71cde7d7e8
@@ -42,8 +42,8 @@ importers:
         specifier: ^9.1.0
         version: 9.1.0(eslint@8.57.0)
       nax-ccuilib:
-        specifier: github:conorlawton/nax-ccuilib
-        version: https://codeload.github.com/conorlawton/nax-ccuilib/tar.gz/05a605315f96640aabaca93d7c6a70a57a2cfba4
+        specifier: github:krypciak/nax-ccuilib
+        version: https://codeload.github.com/krypciak/nax-ccuilib/tar.gz/aa2dfe3d05827668a914a76ef6b05f4103dfe4c5
       prettier:
         specifier: 3.2.5
         version: 3.2.5
@@ -52,7 +52,7 @@ importers:
         version: 5.4.2
       ultimate-crosscode-typedefs:
         specifier: github:krypciak/ultimate-crosscode-typedefs
-        version: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/19a95a62bda5b310c911772e4d2c0010646a21ef
+        version: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/e5b5e72594e01ef96e2d0cba21f61c1bd97d4092
       ws:
         specifier: ^8.16.0
         version: 8.16.0
@@ -380,9 +380,9 @@ packages:
     resolution: {tarball: https://codeload.github.com/krypciak/cc-blitzkrieg/tar.gz/b789433c10134d0c4b46a935121a2b7daf876943}
     version: 0.5.8
 
-  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/51581da969149f1a77160dd7148bc2a058f344e2:
-    resolution: {tarball: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/51581da969149f1a77160dd7148bc2a058f344e2}
-    version: 0.9.21
+  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/e4a407a2d6501125e3c5036d5f8b6326e73d94ee:
+    resolution: {tarball: https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/e4a407a2d6501125e3c5036d5f8b6326e73d94ee}
+    version: 1.0.3
 
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
@@ -642,9 +642,9 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  nax-ccuilib@https://codeload.github.com/conorlawton/nax-ccuilib/tar.gz/05a605315f96640aabaca93d7c6a70a57a2cfba4:
-    resolution: {tarball: https://codeload.github.com/conorlawton/nax-ccuilib/tar.gz/05a605315f96640aabaca93d7c6a70a57a2cfba4}
-    version: 1.2.9
+  nax-ccuilib@https://codeload.github.com/krypciak/nax-ccuilib/tar.gz/aa2dfe3d05827668a914a76ef6b05f4103dfe4c5:
+    resolution: {tarball: https://codeload.github.com/krypciak/nax-ccuilib/tar.gz/aa2dfe3d05827668a914a76ef6b05f4103dfe4c5}
+    version: 1.4.1
 
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
@@ -789,8 +789,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  ultimate-crosscode-typedefs@https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/19a95a62bda5b310c911772e4d2c0010646a21ef:
-    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/19a95a62bda5b310c911772e4d2c0010646a21ef}
+  ultimate-crosscode-typedefs@https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/e5b5e72594e01ef96e2d0cba21f61c1bd97d4092:
+    resolution: {tarball: https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/e5b5e72594e01ef96e2d0cba21f61c1bd97d4092}
     version: 0.0.1
     engines: {node: '>=10.0.0'}
 
@@ -1103,7 +1103,7 @@ snapshots:
     dependencies:
       '@types/jszip': 3.4.1
 
-  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/51581da969149f1a77160dd7148bc2a058f344e2: {}
+  ccmodmanager@https://codeload.github.com/CCDirectLink/CCModManager/tar.gz/e4a407a2d6501125e3c5036d5f8b6326e73d94ee: {}
 
   chalk@4.1.2:
     dependencies:
@@ -1408,7 +1408,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  nax-ccuilib@https://codeload.github.com/conorlawton/nax-ccuilib/tar.gz/05a605315f96640aabaca93d7c6a70a57a2cfba4: {}
+  nax-ccuilib@https://codeload.github.com/krypciak/nax-ccuilib/tar.gz/aa2dfe3d05827668a914a76ef6b05f4103dfe4c5: {}
 
   once@1.4.0:
     dependencies:
@@ -1527,7 +1527,7 @@ snapshots:
 
   typescript@5.4.2: {}
 
-  ultimate-crosscode-typedefs@https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/19a95a62bda5b310c911772e4d2c0010646a21ef:
+  ultimate-crosscode-typedefs@https://codeload.github.com/krypciak/ultimate-crosscode-typedefs/tar.gz/e5b5e72594e01ef96e2d0cba21f61c1bd97d4092:
     dependencies:
       '@types/jquery': 1.10.45
       '@types/node': 11.15.54

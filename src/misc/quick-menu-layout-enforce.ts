@@ -1,5 +1,5 @@
 import { Opts } from '../options'
-import type * as _ from 'nax-ccuilib/src/headers/nax/quick-menu-public-api.d.ts'
+import type {} from 'nax-ccuilib/src/ui/quick-menu/quick-menu-extension'
 import type { Opts as CCUILibOptsType } from 'nax-ccuilib/src/options'
 import type { Opts as CCModManagerOptsType } from 'ccmodmanager/types/options'
 
@@ -13,7 +13,6 @@ export function updateQuickRingMenuLayoutLock() {
     const CCUILibOpts = modmanager.options['nax-ccuilib'] as typeof CCUILibOptsType
     CCUILibOpts.lockLayout = Opts.lockDiorbitalMenu
 
-    CCUILibOpts.lockLayout = Opts.lockDiorbitalMenu
     if (CCUILibOpts.lockLayout) {
         CCUILibOpts.ringConfiguration = {
             0: '11_items',
