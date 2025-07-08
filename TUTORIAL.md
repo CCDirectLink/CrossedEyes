@@ -28,7 +28,7 @@ You move with the left stick.
 Walls make continous noise with volume depending on how close they are to the player.  
 Only 4 directions are checked: north, south, east and west.  
 
-[Sound: Wall](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/wall.ogg)  
+[Sound: Wall](https://github.com/CCDirectLink/CrossedEyes/raw/refs/heads/master/assets/media/sound/crossedeyes/wall.ogg)  
 
 ### Wall bumping sounds  
 
@@ -39,9 +39,9 @@ It's volume depends on how much velocity is lost by the collision.
 
 For 8 directions around the player different sound cues can play depending on certain conditions:
 
-- There's a platform you can jump onto across a hole. [Sound](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/land.ogg)  
-- You can gain height. [Sound](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/higher.ogg)  
-- You can lose height. [Sound](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/lower.ogg)  
+- There's a platform you can jump onto across a hole. [Sound](https://github.com/CCDirectLink/CrossedEyes/raw/refs/heads/master/assets/media/sound/crossedeyes/land.ogg)  
+- You can gain height. [Sound](https://github.com/CCDirectLink/CrossedEyes/raw/refs/heads/master/assets/media/sound/crossedeyes/higher.ogg)  
+- You can lose height. [Sound](https://github.com/CCDirectLink/CrossedEyes/raw/refs/heads/master/assets/media/sound/crossedeyes/lower.ogg)  
 - You fall into water.
 
 ### Entity sounds  
@@ -49,10 +49,10 @@ For 8 directions around the player different sound cues can play depending on ce
 Certain entities emit sound.  
 For example:
   
-- [Enemies](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/entity.ogg)
+- [Enemies](https://github.com/CCDirectLink/CrossedEyes/raw/refs/heads/master/assets/media/sound/crossedeyes/entity.ogg)
 - Destructibles (same sound as for enemies)
 - Switches (same sound as for enemies)
-- [Doors and paths](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/tpr.ogg)  
+- [Doors and paths](https://github.com/CCDirectLink/CrossedEyes/raw/refs/heads/master/assets/media/sound/crossedeyes/tpr.ogg)  
 
 All mod settings are in the assists options category.  
 You can adjust the volume of all mod sound cues.  
@@ -65,8 +65,8 @@ Some entities are interactable. For example:
 - Some NPCs
 - Elevators
 
-[Sound: Interactable is nearby](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/interactable.ogg)  
-[Sound: Press A to interact](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/interact.ogg)  
+[Sound: Interactable is nearby](https://github.com/CCDirectLink/CrossedEyes/raw/refs/heads/master/assets/media/sound/crossedeyes/interactable.ogg)  
+[Sound: Press A to interact](https://github.com/CCDirectLink/CrossedEyes/raw/refs/heads/master/assets/media/sound/crossedeyes/interact.ogg)  
 
 ## Aiming
 
@@ -89,7 +89,7 @@ A lot of entities have hints attached on them, for example:
 - Enemies
 - Terrain hints
 
-[Sound: hint is focused](https://github.com/krypciak/test/raw/main/assets/media/sound/crossedeyes/hint.ogg)
+[Sound: hint is focused](https://github.com/CCDirectLink/CrossedEyes/raw/refs/heads/master/assets/media/sound/crossedeyes/hint.ogg)
 
 To access the hints, you need to open the quick menu with L2.  
 To open the analysis menu from there you go right with the left stick and press A.  
